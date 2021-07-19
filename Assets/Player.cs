@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
 
     public double angle = 90;
     double speed;
-    double minSpeed = 2;
+    double minSpeed = 0.5f;
     double breakSpeed = 1;
     double maxSpeed = 10;
     double turnSpeed = 180;

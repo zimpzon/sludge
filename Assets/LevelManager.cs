@@ -1,6 +1,7 @@
 using Sludge.PlayerInputs;
 using Sludge.Replays;
 using Sludge.SludgeObjects;
+using SludgeColors;
 using System;
 using System.Collections;
 using TMPro;
@@ -23,6 +24,7 @@ public class LevelManager : MonoBehaviour
             TimeStrings[i] = ((i * TickSizeMs) / 1000.0f).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
     }
 
+    public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
     public TMP_Text TextLevelTime;
     public TMP_InputField TextReplayData;
