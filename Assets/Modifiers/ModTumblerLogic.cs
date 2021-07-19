@@ -4,8 +4,6 @@ using UnityEngine;
 
 namespace Sludge.Modifiers
 {
-    // TODO: Grow darker or lighter, depending on original color?
-
     public class ModTumblerLogic : SludgeModifier
     {
         enum State { LookForPlayer, WarmUp, Move };

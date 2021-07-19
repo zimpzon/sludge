@@ -13,6 +13,8 @@ namespace SludgeColors
         public Color Edges;
         public Color Player;
         public Color Laser;
+        public Color Exit1;
+        public Color Exit2;
         public Color EnemyA1;
         public Color EnemyA2;
         public Color EnemyB1;
@@ -37,6 +39,8 @@ namespace SludgeColors
         Edges,
         Player,
         Laser,
+        Exit1,
+        Exit2,
         EnemyA1,
         EnemyA2,
         EnemyB1,
@@ -65,6 +69,8 @@ namespace SludgeColors
                 SchemeColor.Edges => scheme.Edges,
                 SchemeColor.Player => scheme.Player,
                 SchemeColor.Laser => scheme.Laser,
+                SchemeColor.Exit1 => scheme.Exit1,
+                SchemeColor.Exit2 => scheme.Exit2,
                 SchemeColor.EnemyA1 => scheme.EnemyA1,
                 SchemeColor.EnemyA2 => scheme.EnemyA2,
                 SchemeColor.EnemyB1 => scheme.EnemyB1,

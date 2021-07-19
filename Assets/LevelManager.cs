@@ -1,3 +1,4 @@
+using Sludge.Editor;
 using Sludge.PlayerInputs;
 using Sludge.Replays;
 using Sludge.SludgeObjects;
@@ -6,13 +7,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-
-// Helpers: floor tiles that auto align, floor tiles that auto align new direction(ex 90 degrees turn, roller coaster ride.
-// Teleports.
-// Concerns: Need graphics + color schemes. 9 colors like N++?
-// Graphics: Minimalism - different shapes? Combined shapes? Moving? Rotation, scaling.
-// Ghost - start at beginning is a little easier.
-// 
+using UnityEngine.Tilemaps;
 
 public class LevelManager : MonoBehaviour
 {
@@ -24,6 +19,8 @@ public class LevelManager : MonoBehaviour
             TimeStrings[i] = ((i * TickSizeMs) / 1000.0f).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
     }
 
+    public Tilemap Tilemap;
+    public TileListScriptableObject TileList;
     public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
     public TMP_Text TextLevelTime;
@@ -45,6 +42,7 @@ public class LevelManager : MonoBehaviour
     private Vector3 playerStartPos;
     public int Keys;
     bool levelComplete;
+    EditorLogic editor = new EditorLogic();
 
     public static void SetStatusText(string text)
     {
@@ -80,8 +78,9 @@ public class LevelManager : MonoBehaviour
             }
 
             ResetLevel();
+            yield return editor.EditorLoop();
 
-            bool? isReplay = null;
+            bool ? isReplay = null;
             while (isReplay == null)
             {
                 if (Input.GetAxisRaw("Vertical") > 0)

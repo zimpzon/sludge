@@ -9,7 +9,7 @@ namespace Sludge.SludgeObjects
         
         void Awake()
         {
-            Modifiers = transform.GetComponents<SludgeModifier>();
+            Modifiers = transform.GetComponentsInChildren<SludgeModifier>();
         }
 
         public virtual void Reset()
