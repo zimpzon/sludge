@@ -9,26 +9,28 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class LevelManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     static string[] TimeStrings = new string[6250]; // 0.00 to 99.99 (100 / 0.016)
 
-    static LevelManager()
+    static GameManager()
     {
         for (int i = 0; i < TimeStrings.Length; ++i)
             TimeStrings[i] = ((i * TickSizeMs) / 1000.0f).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
     }
 
+    public Canvas CanvasMainMenu;
+    public Canvas CanvasEditor;
+    public Canvas CanvasLevel;
     public Tilemap Tilemap;
     public TileListScriptableObject TileList;
     public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
     public TMP_Text TextLevelTime;
-    public TMP_InputField TextReplayData;
 
     public static PlayerInput PlayerInput = new PlayerInput();
     public static LevelReplay LevelReplay = new LevelReplay();
-    public static LevelManager Instance;
+    public static GameManager Instance;
     public static Vector3 PlayerPos;
     public Player Player;
     public SludgeObject[] SludgeObjects;
@@ -42,7 +44,6 @@ public class LevelManager : MonoBehaviour
     private Vector3 playerStartPos;
     public int Keys;
     bool levelComplete;
-    EditorLogic editor = new EditorLogic();
 
     public static void SetStatusText(string text)
     {
@@ -65,12 +66,9 @@ public class LevelManager : MonoBehaviour
         {
             GC.Collect();
 
-            //TextReplayData.gameObject.SetActive(LevelReplay.HasReplay());
-
             if (LevelReplay.HasReplay())
             {
                 SetStatusText("<Press W to start or R to replay>");
-                TextReplayData.text = LevelReplay.ToReplayString();
             }
             else
             {
@@ -78,7 +76,6 @@ public class LevelManager : MonoBehaviour
             }
 
             ResetLevel();
-            yield return editor.EditorLoop();
 
             bool ? isReplay = null;
             while (isReplay == null)
@@ -92,13 +89,10 @@ public class LevelManager : MonoBehaviour
                 {
                     SetStatusText("<Replay>");
                     isReplay = true;
-                    LevelReplay.FromString(TextReplayData.text);
                 }
 
                 yield return null;
             }
-
-            TextReplayData.gameObject.SetActive(false);
 
             yield return Playing(isReplay.Value);
         }

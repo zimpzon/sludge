@@ -21,7 +21,7 @@ namespace Sludge.Modifiers
 
         public override void EngineTick()
         {
-            double t = SludgeUtil.TimeMod(LevelManager.Instance.EngineTime * TimeMultiplier + TimeOffset);
+            double t = SludgeUtil.TimeMod(GameManager.Instance.EngineTime * TimeMultiplier + TimeOffset);
             t = Ease.Apply(Easing, t);
             if (PingPong)
                 t = Ease.PingPong(t);

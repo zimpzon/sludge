@@ -58,18 +58,18 @@ public class Player : MonoBehaviour
 
         bool isTurning = false;
 
-        if (LevelManager.PlayerInput.Left != 0)
+        if (GameManager.PlayerInput.Left != 0)
         {
             isTurning = true;
-            angle -= LevelManager.TickSize * (turnSpeed + speed * turnMultiplier);
+            angle -= GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
             if (angle < 0)
                 angle += 360;
         }
 
-        if (LevelManager.PlayerInput.Right != 0)
+        if (GameManager.PlayerInput.Right != 0)
         {
             isTurning = true;
-            angle += LevelManager.TickSize * (turnSpeed + speed * turnMultiplier);
+            angle += GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
             if (angle > 360)
                 angle -= 360;
         }
@@ -87,24 +87,24 @@ public class Player : MonoBehaviour
             }
             else if (absDiff < 15)
             {
-                angle -= SludgeUtil.Stabilize(Mathf.Sign((float)diff) * LevelManager.TickSize * turnSpeed * 0.1);
+                angle -= SludgeUtil.Stabilize(Mathf.Sign((float)diff) * GameManager.TickSize * turnSpeed * 0.1);
             }
         }
 
         angle = SludgeUtil.Stabilize(angle);
 
-        speed = SludgeUtil.Stabilize(speed - LevelManager.TickSize * friction);
+        speed = SludgeUtil.Stabilize(speed - GameManager.TickSize * friction);
         if (speed < minSpeed)
             speed = minSpeed;
 
-        if (LevelManager.PlayerInput.Up != 0)
+        if (GameManager.PlayerInput.Up != 0)
         {
-            speed = SludgeUtil.Stabilize(speed + LevelManager.TickSize * accelerateSpeed);
+            speed = SludgeUtil.Stabilize(speed + GameManager.TickSize * accelerateSpeed);
             if (speed > maxSpeed)
                 speed = maxSpeed;
         }
 
-        if (LevelManager.PlayerInput.Down != 0)
+        if (GameManager.PlayerInput.Down != 0)
         {
             speed = breakSpeed;
         }
@@ -112,8 +112,8 @@ public class Player : MonoBehaviour
         double lookX = SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * angle)));
         double lookY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * angle)));
 
-        playerX += speed * LevelManager.TickSize * lookX;
-        playerY += speed * LevelManager.TickSize * lookY;
+        playerX += speed * GameManager.TickSize * lookX;
+        playerY += speed * GameManager.TickSize * lookY;
         playerX = SludgeUtil.Stabilize(playerX);
         playerY = SludgeUtil.Stabilize(playerY);
 

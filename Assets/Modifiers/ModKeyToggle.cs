@@ -36,13 +36,13 @@ public class ModKeyToggle : SludgeModifier
 
     public override void EngineTick()
     {
-        if (doorCollider.enabled && LevelManager.Instance.Keys == DisableAtKeyCount)
+        if (doorCollider.enabled && GameManager.Instance.Keys == DisableAtKeyCount)
         {
             StopAllCoroutines();
             StartCoroutine(DisableMe());
         }
 
-        if (!doorCollider.enabled && LevelManager.Instance.Keys == EnableAtKeyCount)
+        if (!doorCollider.enabled && GameManager.Instance.Keys == EnableAtKeyCount)
         {
             StopAllCoroutines();
             StartCoroutine(EnableMe());
@@ -52,7 +52,7 @@ public class ModKeyToggle : SludgeModifier
     IEnumerator DisableMe()
     {
         const float AnimTime = 0.25f;
-        double startTime = LevelManager.Instance.EngineTime;
+        double startTime = GameManager.Instance.EngineTime;
         Color color = baseColor;
         Vector3 scale = baseScale;
 
@@ -60,7 +60,7 @@ public class ModKeyToggle : SludgeModifier
 
         while (true)
         {
-            float t = (float)(LevelManager.Instance.EngineTime - startTime) / AnimTime;
+            float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
             color.a = 1.0f - t;
             spriteRenderer.color = color;
             trans.localScale = scale;
@@ -77,7 +77,7 @@ public class ModKeyToggle : SludgeModifier
     IEnumerator EnableMe()
     {
         const float AnimTime = 0.25f;
-        double startTime = LevelManager.Instance.EngineTime;
+        double startTime = GameManager.Instance.EngineTime;
         Color color = baseColor;
         Vector3 scale = baseScale;
 
@@ -86,7 +86,7 @@ public class ModKeyToggle : SludgeModifier
 
         while (true)
         {
-            float t = (float)(LevelManager.Instance.EngineTime - startTime) / AnimTime;
+            float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
             color.a = t;
             spriteRenderer.color = color;
             trans.localScale = scale;

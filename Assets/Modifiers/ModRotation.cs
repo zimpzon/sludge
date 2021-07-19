@@ -17,7 +17,7 @@ namespace Sludge.Modifiers
 
         public override void EngineTick()
         {
-            float rotation = (float)SludgeUtil.Stabilize((LevelManager.Instance.EngineTime * RoundsPerSecond * 360) + StartDegrees);
+            float rotation = (float)SludgeUtil.Stabilize((GameManager.Instance.EngineTime * RoundsPerSecond * 360) + StartDegrees);
             trans.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
         }
     }

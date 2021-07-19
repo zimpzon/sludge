@@ -19,7 +19,7 @@ public class SchemeColorApplier : MonoBehaviour
 
     Color GetColor(Color baseColor)
     {
-        var schemeColor = ColorScheme.GetColor(LevelManager.Instance.ColorScheme, SchemeColor);
+        var schemeColor = ColorScheme.GetColor(GameManager.Instance.ColorScheme, SchemeColor);
         schemeColor.a = baseColor.a;
 
         if (BrightnessOffset != 0.0f)
@@ -38,6 +38,9 @@ public class SchemeColorApplier : MonoBehaviour
 
     void ApplyColor()
     {
+        if (GameManager.Instance?.ColorScheme == null)
+            return;
+
         var spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {

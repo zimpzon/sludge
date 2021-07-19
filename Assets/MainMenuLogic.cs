@@ -1,11 +1,14 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace Sludge.Editor
 {
-	public class EditorLogic
+	public class MainMenuLogic : MonoBehaviour
 	{
-		public IEnumerator EditorLoop()
+		public TMP_Text[] menuItems;
+
+		public IEnumerator MainMenuLoop()
 		{
 			while (true)
 			{

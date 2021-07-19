@@ -75,7 +75,7 @@ namespace Sludge.Modifiers
             double step = 20;
             while (state == State.WarmUp && iterations-- > 0)
             {
-                rotation += rotationSpeed * LevelManager.TickSize;
+                rotation += rotationSpeed * GameManager.TickSize;
                 UpdateTransform();
                 rotationSpeed += step;
                 yield return null;
@@ -93,11 +93,11 @@ namespace Sludge.Modifiers
         {
             while (state == State.Move)
             {
-                x += speed * LevelManager.TickSize * moveDir.x;
-                y += speed * LevelManager.TickSize * moveDir.y;
+                x += speed * GameManager.TickSize * moveDir.x;
+                y += speed * GameManager.TickSize * moveDir.y;
                 x = SludgeUtil.Stabilize(x);
                 y = SludgeUtil.Stabilize(y);
-                rotation += rotationSpeed * LevelManager.TickSize;
+                rotation += rotationSpeed * GameManager.TickSize;
                 UpdateTransform();
 
                 yield return null;
@@ -108,7 +108,7 @@ namespace Sludge.Modifiers
         {
             while (state == State.LookForPlayer)
             {
-                var playerDir = (LevelManager.PlayerPos - trans.position);
+                var playerDir = (GameManager.PlayerPos - trans.position);
                 playerDir.x = (float)SludgeUtil.Stabilize(playerDir.x);
                 playerDir.y = (float)SludgeUtil.Stabilize(playerDir.y);
 

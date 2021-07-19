@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Sludge.Editor
 {
-	public class EditorLogic
+	public class EditorLogic : MonoBehaviour
 	{
 		public IEnumerator EditorLoop()
 		{

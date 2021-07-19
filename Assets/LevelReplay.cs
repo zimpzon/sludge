@@ -44,10 +44,10 @@ namespace Sludge.Replays
 
 		public void CheckErrors()
         {
-			float errorAngle = (float)LevelManager.Instance.Player.angle - Elements[replayIndex].Angle;
-			float errorX = LevelManager.Instance.Player.transform.position.x - Elements[replayIndex].PlayerX;
-			float errorY = LevelManager.Instance.Player.transform.position.y - Elements[replayIndex].PlayerY;
-			LevelManager.SetStatusText($"errorAngle: {errorAngle:0.00000000}, errorX: {errorX:0.00000000}, errorY: {errorY:0.00000000}");
+			float errorAngle = (float)GameManager.Instance.Player.angle - Elements[replayIndex].Angle;
+			float errorX = GameManager.Instance.Player.transform.position.x - Elements[replayIndex].PlayerX;
+			float errorY = GameManager.Instance.Player.transform.position.y - Elements[replayIndex].PlayerY;
+			GameManager.SetStatusText($"errorAngle: {errorAngle:0.00000000}, errorX: {errorX:0.00000000}, errorY: {errorY:0.00000000}");
 		}
 
 		public void RecordState(int inputState, int frameCounter)
@@ -58,9 +58,9 @@ namespace Sludge.Replays
 			Elements[Count].InputState = (byte)inputState;
 			Elements[Count].FrameCounter = frameCounter;
 
-			Elements[Count].Angle = (float)LevelManager.Instance.Player.angle;
-			Elements[Count].PlayerX = LevelManager.Instance.Player.transform.position.x;
-			Elements[Count].PlayerY = LevelManager.Instance.Player.transform.position.y;
+			Elements[Count].Angle = (float)GameManager.Instance.Player.angle;
+			Elements[Count].PlayerX = GameManager.Instance.Player.transform.position.x;
+			Elements[Count].PlayerY = GameManager.Instance.Player.transform.position.y;
 
 			lastInputState = inputState;
 			Count++;

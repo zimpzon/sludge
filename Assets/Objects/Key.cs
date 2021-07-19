@@ -11,7 +11,7 @@ public class Key : SludgeObject
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        LevelManager.Instance.KeyPickup(this);
+        GameManager.Instance.KeyPickup(this);
         gameObject.SetActive(false);
     }
 }
