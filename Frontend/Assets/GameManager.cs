@@ -1,4 +1,3 @@
-using Sludge.Editor;
 using Sludge.PlayerInputs;
 using Sludge.Replays;
 using Sludge.SludgeObjects;
@@ -20,10 +19,13 @@ public class GameManager : MonoBehaviour
     }
 
     public Canvas CanvasMainMenu;
-    public Canvas CanvasEditor;
-    public Canvas CanvasLevel;
+    public Canvas CanvasMyLevels;
+    public Canvas CanvasLevelEditor;
+    public Canvas CanvasGame;
+
     public Tilemap Tilemap;
     public TileListScriptableObject TileList;
+    public ColorSchemeScriptableObject UiColorScheme;
     public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
     public TMP_Text TextLevelTime;
@@ -50,14 +52,40 @@ public class GameManager : MonoBehaviour
         Instance.TextStatus.text = text;
     }
 
+    void SmartStartup()
+    {
+        // If multiple canvases are enabled pick just one and disable the rest.
+        Canvas selectedCanvas = null;
+        if (CanvasMainMenu?.isActiveAndEnabled == true) selectedCanvas = CanvasMainMenu;
+        else if (CanvasMyLevels?.isActiveAndEnabled == true) selectedCanvas = CanvasMyLevels;
+        else if (CanvasLevelEditor?.isActiveAndEnabled == true) selectedCanvas = CanvasLevelEditor;
+        else if (CanvasGame?.isActiveAndEnabled == true) selectedCanvas = CanvasGame;
+
+        if (selectedCanvas != null)
+        {
+            CanvasMainMenu.gameObject.SetActive(false);
+            CanvasMyLevels.gameObject.SetActive(false);
+            CanvasLevelEditor.gameObject.SetActive(false);
+            CanvasGame.gameObject.SetActive(false);
+
+            selectedCanvas.gameObject.SetActive(true);
+        }
+    }
+
     void Awake()
     {
         Instance = this;
-        Player = FindObjectOfType<Player>();
-        playerStartPos = Player.transform.position;
-        SludgeObjects = FindObjectsOfType<SludgeObject>();
 
-        StartCoroutine(LevelLoop());
+        //Player = FindObjectOfType<Player>();
+        //playerStartPos = Player.transform.position;
+        //SludgeObjects = FindObjectsOfType<SludgeObject>();
+
+        //StartCoroutine(LevelLoop());
+    }
+
+    void Start()
+    {
+        SmartStartup();
     }
 
     IEnumerator LevelLoop()
