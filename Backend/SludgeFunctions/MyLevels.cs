@@ -4,6 +4,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using Sludge.Shared;
 
 namespace Sludge
 {
@@ -12,12 +14,14 @@ namespace Sludge
         const string MyLevelsPath = "mylevels";
 
         [FunctionName("mylevels")]
-        public static async Task<IActionResult> RunMyLevels([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, ILogger log)
+        public static async Task<IActionResult> MyLevels([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, ILogger log)
         {
             string token = req.Query["token"];
-            string userId = req.Query["userId"];
+            string userId = token;
             string myLevelsPath = $"{MyLevelsPath}/{userId}";
             var levelBlobs = await Statics.BlobStorage.GetBlobPaths(myLevelsPath);
+
+            var result = new List<LevelData>();
             foreach(var level in levelBlobs)
             {
 
@@ -27,7 +31,7 @@ namespace Sludge
         }
 
         [FunctionName("createlevel")]
-        public static async Task<IActionResult> RunCreatelevel([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, ILogger log)
+        public static async Task<IActionResult> Createlevel([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, ILogger log)
         {
             string token = req.Query["token"];
             string userId = req.Query["userId"];
