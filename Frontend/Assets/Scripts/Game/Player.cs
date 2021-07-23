@@ -44,7 +44,7 @@ public class Player : MonoBehaviour
         trail.Clear();
         trail.enabled = false;
         Alive = true;
-        angle = 90;
+        angle = mainTransform.rotation.eulerAngles.z;
         playerX = SludgeUtil.Stabilize(pos.x);
         playerY = SludgeUtil.Stabilize(pos.y);
         trail.enabled = true;

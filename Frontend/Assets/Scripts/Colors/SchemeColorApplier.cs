@@ -1,6 +1,8 @@
 using SludgeColors;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class SchemeColorApplier : MonoBehaviour
 {
@@ -59,6 +61,20 @@ public class SchemeColorApplier : MonoBehaviour
         if (tilemap != null)
         {
             tilemap.color = GetColor(tilemap.color);
+            return;
+        }
+
+        var image = GetComponent<Image>();
+        if (image != null)
+        {
+            image.color = GetColor(image.color);
+            return;
+        }
+
+        var text = GetComponent<TextMeshProUGUI>();
+        if (text != null)
+        {
+            text.color = GetColor(text.color);
             return;
         }
     }

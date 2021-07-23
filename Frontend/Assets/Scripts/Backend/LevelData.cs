@@ -5,11 +5,12 @@ namespace Sludge.Shared
 {
     public class LevelData
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public float StartTimeMs { get; set; }
-        public float TimeMasterMs { get; set; }
-        public int PlayerStartX { get; set; }
-        public int PlayerStartY { get; set; }
+        public string Id;
+        public string Name;
+        public double StartTimeSeconds;
+        public double EliteCompletionTimeSeconds;
+        public double PlayerX;
+        public double PlayerY;
+        public double PlayerAngle;
     }
 }

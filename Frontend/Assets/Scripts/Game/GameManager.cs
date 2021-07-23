@@ -1,6 +1,7 @@
 using Sludge.PlayerInputs;
 using Sludge.Replays;
 using Sludge.SludgeObjects;
+using Sludge.Utility;
 using SludgeColors;
 using System;
 using System.Collections;
@@ -8,16 +9,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+// First script to run
 public class GameManager : MonoBehaviour
 {
-    static string[] TimeStrings = new string[6250]; // 0.00 to 99.99 (100 / 0.016)
-
-    static GameManager()
-    {
-        for (int i = 0; i < TimeStrings.Length; ++i)
-            TimeStrings[i] = ((i * TickSizeMs) / 1000.0f).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-    }
-
     public Canvas CanvasMainMenu;
     public Canvas CanvasGame;
 
@@ -50,36 +44,17 @@ public class GameManager : MonoBehaviour
         Instance.TextStatus.text = text;
     }
 
-    void SmartStartup()
-    {
-        // If multiple canvases are enabled pick just one and disable the rest.
-        Canvas selectedCanvas = null;
-        if (CanvasMainMenu?.isActiveAndEnabled == true) selectedCanvas = CanvasMainMenu;
-        else if (CanvasGame?.isActiveAndEnabled == true) selectedCanvas = CanvasGame;
-
-        if (selectedCanvas != null)
-        {
-            CanvasMainMenu.gameObject.SetActive(false);
-            CanvasGame.gameObject.SetActive(false);
-
-            selectedCanvas.gameObject.SetActive(true);
-        }
-    }
-
     void Awake()
     {
         Instance = this;
+
+        Startup.StaticInit();
 
         //Player = FindObjectOfType<Player>();
         //playerStartPos = Player.transform.position;
         //SludgeObjects = FindObjectsOfType<SludgeObject>();
 
         //StartCoroutine(LevelLoop());
-    }
-
-    void Start()
-    {
-        SmartStartup();
     }
 
     IEnumerator LevelLoop()
@@ -197,7 +172,7 @@ public class GameManager : MonoBehaviour
     void DoTick(bool isReplay)
     {
         int timeIdx = Mathf.Min(9999, FrameCounter);
-        TextLevelTime.text = TimeStrings[timeIdx];
+        TextLevelTime.text = Strings.TimeStrings[timeIdx];
 
         if (isReplay)
         {

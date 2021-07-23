@@ -3,7 +3,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class UiSelectionMarker : MonoBehaviour
 {
-    public GameObject target;
+    public GameObject target { get; private set; }
+
     public RectTransform TL;
     public RectTransform TR;
     public RectTransform BL;
@@ -14,6 +15,25 @@ public class UiSelectionMarker : MonoBehaviour
     private void OnValidate()
     {
         UpdatePositions(target, 5);
+    }
+
+    public void SetTarget(GameObject newTarget)
+    {
+        target = newTarget;
+        if (target != null)
+        {
+            // Set parent and anchors to match the highlighted item
+            transform.SetParent(target.transform.parent, worldPositionStays: false);
+
+            var targetRectTrans = target.GetComponent<RectTransform>();
+
+            rectTrans.anchorMin = targetRectTrans.anchorMin;
+            rectTrans.anchorMax = targetRectTrans.anchorMax;
+            rectTrans.offsetMin = targetRectTrans.offsetMin;
+            rectTrans.offsetMax = targetRectTrans.offsetMax;
+            rectTrans.pivot = targetRectTrans.pivot;
+            rectTrans.sizeDelta = Vector2.zero;
+        }
     }
 
     public void UpdatePositions(GameObject uiObject, float offset)
@@ -47,7 +67,7 @@ public class UiSelectionMarker : MonoBehaviour
 
     void Update()
     {
-        float offset = (Mathf.Sin(Time.time * 10) + 1) * 2 + 3;
+        float offset = (Mathf.Sin(Time.time * 10) + 1) * 2 + 1;
         UpdatePositions(target, offset);
     }
 }
