@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Sludge.Shared;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,7 @@ public static class LevelList
 			if (textAsset == null)
 				break;
 
-			var levelData = JsonUtility.FromJson<LevelData>(textAsset.text);
+			var levelData = JsonConvert.DeserializeObject<LevelData>(textAsset.text);
 			levelData.Id = $"E{count:00}";
 			if (string.IsNullOrEmpty(levelData.Name))
 				levelData.Name = $"Level {count}";

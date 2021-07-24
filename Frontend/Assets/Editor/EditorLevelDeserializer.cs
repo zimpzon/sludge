@@ -1,6 +1,7 @@
+using Newtonsoft.Json;
+using Sludge.Shared;
 using System.IO;
 using System.Linq;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,8 +13,9 @@ public class EditorLevelDeserializer : MonoBehaviour
         var levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         var levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
 
-        var level = LevelSerializer.Run(levelElements, levelSettings);
-        string json = JsonUtility.ToJson(level);
-        File.WriteAllText("Assets/Resources/Levels/1.txt", json, Encoding.UTF8);
+        string filePath = EditorUtility.OpenFilePanel("Load level", "Assets/Resources/Levels", "json");
+        string json = File.ReadAllText(filePath);
+        var levelData = JsonConvert.DeserializeObject<LevelData>(json);
+        LevelDeserializer.Run(levelData, levelElements, levelSettings);
     }
 }

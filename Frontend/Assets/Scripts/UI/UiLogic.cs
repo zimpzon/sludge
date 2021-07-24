@@ -2,6 +2,7 @@ using Sludge.PlayerInputs;
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
+using Sludge.Utility;
 
 namespace Sludge.Editor
 {
@@ -19,20 +20,24 @@ namespace Sludge.Editor
 
 		Vector2 panelLevelSelectHidePos;
 		Vector2 panelLevelSelectShowPos = new Vector3(110, -46);
+		Vector2 panelMainMenuHidePos;
+		Vector2 panelMainMenuShowPos;
 
 		PlayerInput playerInput = new PlayerInput();
 
 		private void Awake()
         {
-			if (GameRoot.activeSelf)
-            {
-				// Easy debugging
-				PanelBackground.SetActive(false);
-				PanelMainMenu.SetActive(false);
-				PanelLevelSelect.SetActive(false);
-				PanelGame.SetActive(true);
-				return;
-			}
+			Startup.StaticInit();
+
+			//if (GameRoot.activeSelf)
+   //         {
+			//	// Easy debugging
+			//	PanelBackground.SetActive(false);
+			//	PanelMainMenu.SetActive(false);
+			//	PanelLevelSelect.SetActive(false);
+			//	PanelGame.SetActive(true);
+			//	return;
+			//}
 
 			if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -44,9 +49,11 @@ namespace Sludge.Editor
 			PanelLevelSelect.SetActive(true);
 
 			panelLevelSelectHidePos = PanelLevelSelect.GetComponent<RectTransform>().anchoredPosition;
+			panelMainMenuShowPos = PanelMainMenu.GetComponent<RectTransform>().anchoredPosition;
+			panelMainMenuHidePos = panelMainMenuShowPos + Vector2.left * 760;
 		}
 
-        private void Start()
+		private void Start()
         {
 			UiSelectionMarker.gameObject.SetActive(true);
 			LevelLayout.CreateLevels(LevelList.Levels);
@@ -96,6 +103,23 @@ namespace Sludge.Editor
 			}
 		}
 
+		IEnumerator PlayLoop(UiLevel uiLevel)
+		{
+			GameManager.Instance.LoadLevel(uiLevel.levelData);
+
+			var panelMain = PanelMainMenu.GetComponent<RectTransform>();
+			PanelBackground.SetActive(false);
+			yield return panelMain.DOAnchorPos(panelMainMenuHidePos, 0.1f).SetEase(Ease.OutCubic).WaitForCompletion();
+
+			GameManager.Instance.StartLevel();
+
+			while (true)
+			{
+				playerInput.GetHumanInput();
+				yield return null;
+			}
+		}
+
 		string latestSelectedLevelId;
 
 		void ReselectLatestLevel()
@@ -120,8 +144,9 @@ namespace Sludge.Editor
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
 				var uiLevel = go.GetComponent<UiLevel>();
-				PanelLevelSelect.GetComponent<UiLevelSelection>().TextLevelName.text = uiLevel.levelData.Name + " (selected)";
-				latestSelectedLevelId = uiLevel.levelData.Id;
+				panelTrans.DOAnchorPos(panelLevelSelectHidePos, 0.1f);
+
+				StartCoroutine(PlayLoop(uiLevel));
 			};
 
 			UiNavigation.OnNavigationChanged = (go) =>

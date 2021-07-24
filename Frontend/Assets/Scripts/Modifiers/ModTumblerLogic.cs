@@ -8,7 +8,7 @@ namespace Sludge.Modifiers
     {
         enum State { LookForPlayer, WarmUp, Move };
 
-        public SpriteRenderer spikeRenderer;
+        SpriteRenderer spikeRenderer;
         IEnumerator lookForPlayer;
         IEnumerator warmUp;
         IEnumerator move;
@@ -33,6 +33,7 @@ namespace Sludge.Modifiers
             homePos = trans.position;
             scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
             scanLevelFilter.SetLayerMask(SludgeUtil.StaticLevelLayerMask);
+            spikeRenderer = transform.Find("Spikes").gameObject.GetComponent<SpriteRenderer>();
         }
 
         public override void Reset()

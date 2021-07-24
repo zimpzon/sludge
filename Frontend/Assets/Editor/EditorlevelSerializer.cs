@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,8 @@ public class EditorLevelSerializer : MonoBehaviour
         var levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
 
         var level = LevelSerializer.Run(levelElements, levelSettings);
-        string json = JsonUtility.ToJson(level);
-        string filePath = EditorUtility.OpenFilePanel("Save level", "Assets/Resources/Levels", "json");
+        string json = JsonConvert.SerializeObject(level);
+        string filePath = EditorUtility.SaveFilePanel("Save level", "Assets/Resources/Levels", "mylevel", "json");
         File.WriteAllText(filePath, json, Encoding.UTF8);
     }
 }

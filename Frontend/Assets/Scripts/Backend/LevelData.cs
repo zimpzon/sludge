@@ -9,10 +9,12 @@ namespace Sludge.Shared
         public string Name;
         public double StartTimeSeconds;
         public double EliteCompletionTimeSeconds;
-        public double PlayerX;
-        public double PlayerY;
-        public double PlayerAngle;
-        public Vector3Int TileBounds;
+        public LevelDataTransform PlayerTransform;
+        public int TilesX;
+        public int TilesY;
+        public int TilesW;
+        public int TilesH;
         public List<int> TileIndices = new List<int>();
+        public List<LevelDataObject> Objects = new List<LevelDataObject>();
     }
 }

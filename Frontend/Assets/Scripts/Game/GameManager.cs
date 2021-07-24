@@ -1,11 +1,12 @@
 using Sludge.Colors;
 using Sludge.PlayerInputs;
 using Sludge.Replays;
+using Sludge.Shared;
 using Sludge.SludgeObjects;
-using Sludge.Tiles;
 using Sludge.Utility;
 using System;
 using System.Collections;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -17,7 +18,6 @@ public class GameManager : MonoBehaviour
     public Canvas CanvasGame;
 
     public Tilemap Tilemap;
-    public TileListScriptableObject TileList;
     public ColorSchemeScriptableObject UiColorScheme;
     public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
@@ -36,8 +36,11 @@ public class GameManager : MonoBehaviour
     public const double TickSize = 0.016;
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000 / TickSizeMs;
-    private Vector3 playerStartPos;
     public int Keys;
+
+    LevelElements levelElements;
+    LevelSettings levelSettings;
+    Vector3 playerStartPos;
     bool levelComplete;
 
     public static void SetStatusText(string text)
@@ -48,14 +51,25 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+    }
 
-        Startup.StaticInit();
+    private void Start()
+    {
+        levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
+        levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
+        Player = FindObjectOfType<Player>();
+    }
 
-        //Player = FindObjectOfType<Player>();
-        //playerStartPos = Player.transform.position;
-        //SludgeObjects = FindObjectsOfType<SludgeObject>();
+    public void StartLevel()
+    {
+        ResetLevel();
+        StartCoroutine(LevelLoop());
+    }
 
-        //StartCoroutine(LevelLoop());
+    public void LoadLevel(LevelData levelData)
+    {
+        LevelDeserializer.Run(levelData, levelElements, levelSettings);
+        SludgeObjects = FindObjectsOfType<SludgeObject>();
     }
 
     IEnumerator LevelLoop()

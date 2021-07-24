@@ -8,4 +8,5 @@ public class LevelElements : MonoBehaviour
     public Tilemap Tilemap;
     public GameObject ObjectsRoot;
     public TileListScriptableObject TileList;
+    public ObjectListScriptableObject ObjectPrefabList;
 }
