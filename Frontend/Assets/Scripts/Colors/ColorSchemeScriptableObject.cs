@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SludgeColors
+namespace Sludge.Colors
 {
     [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/ColorSchemeScriptableObject", order = 1)]
     public class ColorSchemeScriptableObject : ScriptableObject

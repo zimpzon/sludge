@@ -1,4 +1,4 @@
-using SludgeColors;
+using Sludge.Colors;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;

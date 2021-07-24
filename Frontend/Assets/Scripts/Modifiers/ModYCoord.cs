@@ -1,11 +1,20 @@
 using Sludge.Easing;
 using Sludge.Utility;
+using System;
 using UnityEngine;
 
 namespace Sludge.Modifiers
 {
+    [Serializable]
+    public class Param
+    {
+        public float Range1 = 5;
+        public float Range2 = 5;
+    }
+
     public class ModYCoord : SludgeModifier
     {
+        public Param param;
         public float Range = 5;
         public double TimeOffset = 0.0;
         public double TimeMultiplier = 1.0;

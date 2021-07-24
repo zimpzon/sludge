@@ -1,8 +1,7 @@
 using Sludge.Shared;
+using Sludge.SludgeObjects;
+using Sludge.Tiles;
 using Sludge.Utility;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public static class LevelSerializer
@@ -14,7 +13,7 @@ public static class LevelSerializer
         data.Id = levelSettings.LevelId;
         data.Name = levelSettings.LevelName;
         data.StartTimeSeconds = levelSettings.StartTimeSeconds;
-        data.StartTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
+        data.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
 
         // Player
         data.PlayerX = SludgeUtil.Stabilize(elements.Player.transform.position.x);
@@ -22,30 +21,26 @@ public static class LevelSerializer
         data.PlayerAngle = SludgeUtil.Stabilize(elements.Player.transform.eulerAngles.z);
 
         // Tilemap
-        Tilemap(data, elements.Tilemap);
+        Tilemap(data, elements.Tilemap, elements.TileList);
 
         // Objects
+        var objects = elements.ObjectsRoot.GetComponentsInChildren<SludgeObject>();
+        // Each object (de)serializes itself. All have transform. Pos, rot, scale(?)
         return data;
     }
 
-    static void Tilemap(LevelData data, Tilemap map)
+    static void Tilemap(LevelData data, Tilemap map, TileListScriptableObject tileList)
     {
         var bounds = map.cellBounds;
         TileBase[] allTiles = map.GetTilesBlock(bounds);
 
-        for (int x = 0; x < bounds.size.x; x++)
+        for (int y = 0; y < bounds.size.y; y++)
         {
-            for (int y = 0; y < bounds.size.y; y++)
+            for (int x = 0; x < bounds.size.x; x++)
             {
                 TileBase tile = allTiles[x + y * bounds.size.x];
-                if (tile != null)
-                {
-                    Debug.Log("x:" + x + " y:" + y + " tile:" + tile.name);
-                }
-                else
-                {
-                    Debug.Log("x:" + x + " y:" + y + " tile: (null)");
-                }
+                int tileIdx = tileList.GetTileIndex(tile);
+                data.TileIndices.Add(tileIdx);
             }
         }
     }

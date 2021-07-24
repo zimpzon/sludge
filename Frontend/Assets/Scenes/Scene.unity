@@ -8283,6 +8283,7 @@ MonoBehaviour:
   Player: {fileID: 233701586}
   Tilemap: {fileID: 270485058}
   ObjectsRoot: {fileID: 1823264092}
+  TileList: {fileID: 11400000, guid: 4c732a02b57b5e5438527fa842f7e27c, type: 2}
 --- !u!1 &1580330340
 GameObject:
   m_ObjectHideFlags: 0
@@ -13826,7 +13827,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2037007297
 RectTransform:
   m_ObjectHideFlags: 0

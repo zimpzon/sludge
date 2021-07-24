@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Sludge.Shared
 {
@@ -12,5 +12,7 @@ namespace Sludge.Shared
         public double PlayerX;
         public double PlayerY;
         public double PlayerAngle;
+        public Vector3Int TileBounds;
+        public List<int> TileIndices = new List<int>();
     }
 }
