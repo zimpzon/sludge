@@ -11,7 +11,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-// Outline: I need that stupid render thing it seems.
 // First script to run
 public class GameManager : MonoBehaviour
 {
@@ -59,6 +58,7 @@ public class GameManager : MonoBehaviour
 
         if (!StartedFromMenu)
         {
+            SludgeObjects = FindObjectsOfType<SludgeObject>();
             Player.SetHomePosition();
             StartLevel();
         }
@@ -74,7 +74,6 @@ public class GameManager : MonoBehaviour
     {
         LevelDeserializer.Run(levelData, levelElements, levelSettings);
         Player.SetHomePosition();
-
         SludgeObjects = FindObjectsOfType<SludgeObject>();
     }
 

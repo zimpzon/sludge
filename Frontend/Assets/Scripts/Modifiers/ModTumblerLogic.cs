@@ -124,7 +124,7 @@ namespace Sludge.Modifiers
                     Physics2D.CircleCast(trans.position, 0.1f, playerDir, scanForPlayerFilter, scanHits);
                     int hitMask = 1 << scanHits[0].transform.gameObject.layer;
                     bool hasLoS = hitMask == SludgeUtil.PlayerLayerMask;
-                    //Debug.DrawLine(trans.position, scanHits[0].point, hasLoS ? Color.green : Color.red);
+                    Debug.DrawLine(trans.position, scanHits[0].point, hasLoS ? Color.green : Color.red);
                     if (hasLoS)
                     {
                         moveDir = playerDir;

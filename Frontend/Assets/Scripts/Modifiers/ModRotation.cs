@@ -5,6 +5,7 @@ namespace Sludge.Modifiers
 {
     public class ModRotation : SludgeModifier
     {
+        public bool Active = true;
         public double RoundsPerSecond = 0.5;
         public double StartDegrees;
 
@@ -17,6 +18,9 @@ namespace Sludge.Modifiers
 
         public override void EngineTick()
         {
+            if (!Active)
+                return;
+
             float rotation = (float)SludgeUtil.Stabilize((GameManager.Instance.EngineTime * RoundsPerSecond * 360) + StartDegrees);
             trans.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
         }

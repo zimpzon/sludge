@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ModKeyToggle : SludgeModifier
 {
-    public int DisableAtKeyCount = 1;
-    public int EnableAtKeyCount = 1;
+    public bool Active = true;
+    public int DisableAtKeyCount = -1;
+    public int EnableAtKeyCount = -1;
     public bool StartEnabled = true;
 
     Color baseColor;
@@ -36,6 +37,9 @@ public class ModKeyToggle : SludgeModifier
 
     public override void EngineTick()
     {
+        if (!Active)
+            return;
+
         if (doorCollider.enabled && GameManager.Instance.Keys == DisableAtKeyCount)
         {
             StopAllCoroutines();

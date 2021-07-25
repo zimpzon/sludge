@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2283164253740808619}
   - component: {fileID: 2283164253740808616}
   - component: {fileID: 2283164253740808617}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Tumbler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 669d20c55391d264c94b7eb8cb753820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spikeRenderer: {fileID: 2283164253900182262}
 --- !u!1 &2283164253900182152
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,7 +109,7 @@ GameObject:
   - component: {fileID: 2283164253900182153}
   - component: {fileID: 2283164253900182262}
   - component: {fileID: 2283164253900182263}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Spikes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +172,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: -1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.60784316, g: 0.3803922, b: 0.58431375, a: 1}
+  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -195,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 0
+  SchemeColor: 1
   BrightnessOffset: 0
 --- !u!1 &2283164253984276005
 GameObject:
@@ -208,7 +207,7 @@ GameObject:
   - component: {fileID: 2283164253984276002}
   - component: {fileID: 2283164253984276003}
   - component: {fileID: 2283164253984276000}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,7 +270,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.60784316, g: 0.3803922, b: 0.58431375, a: 1}
+  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -293,5 +292,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 0
+  SchemeColor: 1
   BrightnessOffset: 0
