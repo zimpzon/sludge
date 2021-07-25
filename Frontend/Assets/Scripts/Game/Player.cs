@@ -1,9 +1,10 @@
 using Sludge.Utility;
 using UnityEngine;
 
-// Super Slug / Turbo Slug
 public class Player : MonoBehaviour
 {
+    public static Vector3 Position;
+
     public SpriteRenderer bodyRenderer;
     public TrailRenderer trail;
     public bool Alive = false;
@@ -17,19 +18,27 @@ public class Player : MonoBehaviour
     double turnMultiplier = 8;
     double accelerateSpeed = 100;
     double friction = 25;
-    Transform mainTransform;
+    Transform trans;
     ParticleSystem deathParticles;
     double playerX;
     double playerY;
+    double homeX;
+    double homeY;
+    double homeAngle;
+
+    public void SetHomePosition()
+    {
+        homeX = SludgeUtil.Stabilize(trans.position.x);
+        homeY = SludgeUtil.Stabilize(trans.position.y);
+        homeAngle = SludgeUtil.Stabilize(trans.rotation.eulerAngles.z);
+    }
 
     void Awake()
     {
         deathParticles = GetComponentInChildren<ParticleSystem>();
         var particleMain = deathParticles.main;
         particleMain.startColor = bodyRenderer.color;
-        mainTransform = transform;
-
-        Prepare(mainTransform.position);
+        trans = transform;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -38,17 +47,20 @@ public class Player : MonoBehaviour
         Alive = false;
     }
 
-    public void Prepare(Vector3 pos)
+    public void Prepare()
     {
         speed = minSpeed;
         trail.Clear();
         trail.enabled = false;
         Alive = true;
-        angle = mainTransform.rotation.eulerAngles.z;
-        playerX = SludgeUtil.Stabilize(pos.x);
-        playerY = SludgeUtil.Stabilize(pos.y);
-        trail.enabled = true;
+
+        playerX = homeX;
+        playerY = homeY;
+        angle = homeAngle;
+
         UpdateTransform();
+
+        trail.enabled = true;
     }
 
     public void EngineTick()
@@ -61,17 +73,17 @@ public class Player : MonoBehaviour
         if (GameManager.PlayerInput.Left != 0)
         {
             isTurning = true;
-            angle -= GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
-            if (angle < 0)
-                angle += 360;
+            angle += GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
+            if (angle > 360)
+                angle -= 360;
         }
 
         if (GameManager.PlayerInput.Right != 0)
         {
             isTurning = true;
-            angle += GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
-            if (angle > 360)
-                angle -= 360;
+            angle -= GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
+            if (angle < 0)
+                angle += 360;
         }
 
         if (!isTurning)
@@ -109,7 +121,7 @@ public class Player : MonoBehaviour
             speed = breakSpeed;
         }
 
-        double lookX = SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * angle)));
+        double lookX = -SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * angle)));
         double lookY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * angle)));
 
         playerX += speed * GameManager.TickSize * lookX;
@@ -122,7 +134,9 @@ public class Player : MonoBehaviour
 
     void UpdateTransform()
     {
-        mainTransform.rotation = Quaternion.AngleAxis((float)angle, Vector3.back);
-        mainTransform.position = new Vector3((float)playerX, (float)playerY, 0);
+        trans.rotation = Quaternion.Euler(0, 0, (float)angle);
+        trans.position = new Vector3((float)playerX, (float)playerY, 0);
+
+        Position = trans.position;
     }
 }

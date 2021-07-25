@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System.IO;
 using System.Linq;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,7 +14,10 @@ public class EditorLevelSerializer : MonoBehaviour
 
         var level = LevelSerializer.Run(levelElements, levelSettings);
         string json = JsonConvert.SerializeObject(level);
+
         string filePath = EditorUtility.SaveFilePanel("Save level", "Assets/Resources/Levels", "mylevel", "json");
-        File.WriteAllText(filePath, json, Encoding.UTF8);
+        File.WriteAllText(filePath, json);
+        File.Delete(filePath + ".meta"); // FU, Unity
+        AssetDatabase.Refresh();
     }
 }

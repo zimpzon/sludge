@@ -11,11 +11,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+// Outline: I need that stupid render thing it seems.
 // First script to run
 public class GameManager : MonoBehaviour
 {
-    public Canvas CanvasMainMenu;
-    public Canvas CanvasGame;
+    public static bool StartedFromMenu;
 
     public Tilemap Tilemap;
     public ColorSchemeScriptableObject UiColorScheme;
@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
     public static PlayerInput PlayerInput = new PlayerInput();
     public static LevelReplay LevelReplay = new LevelReplay();
     public static GameManager Instance;
-    public static Vector3 PlayerPos;
     public Player Player;
     public SludgeObject[] SludgeObjects;
     public double UnityTime;
@@ -40,7 +39,6 @@ public class GameManager : MonoBehaviour
 
     LevelElements levelElements;
     LevelSettings levelSettings;
-    Vector3 playerStartPos;
     bool levelComplete;
 
     public static void SetStatusText(string text)
@@ -58,6 +56,12 @@ public class GameManager : MonoBehaviour
         levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
         Player = FindObjectOfType<Player>();
+
+        if (!StartedFromMenu)
+        {
+            Player.SetHomePosition();
+            StartLevel();
+        }
     }
 
     public void StartLevel()
@@ -69,6 +73,8 @@ public class GameManager : MonoBehaviour
     public void LoadLevel(LevelData levelData)
     {
         LevelDeserializer.Run(levelData, levelElements, levelSettings);
+        Player.SetHomePosition();
+
         SludgeObjects = FindObjectsOfType<SludgeObject>();
     }
 
@@ -123,8 +129,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeObjects[i].Reset();
 
-        Player.Prepare(playerStartPos);
-        PlayerPos = Player.transform.position;
+        Player.Prepare();
 
         UpdateSludgeObjects();
     }
@@ -158,8 +163,6 @@ public class GameManager : MonoBehaviour
     void UpdateAll()
     {
         UpdatePlayer();
-        PlayerPos = Player.transform.position;
-
         UpdateSludgeObjects();
     }
 

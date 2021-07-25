@@ -33,6 +33,8 @@ public static class LevelDeserializer
                 elements.Tilemap.SetTile(tilePos, tile);
             }
         }
+
+        elements.Tilemap.CompressBounds();
         tilemapCollider.generationType = CompositeCollider2D.GenerationType.Synchronous;
 
         // Objects

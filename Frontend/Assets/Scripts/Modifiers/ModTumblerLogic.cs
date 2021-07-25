@@ -109,7 +109,7 @@ namespace Sludge.Modifiers
         {
             while (state == State.LookForPlayer)
             {
-                var playerDir = (GameManager.PlayerPos - trans.position);
+                var playerDir = (Player.Position - trans.position);
                 playerDir.x = (float)SludgeUtil.Stabilize(playerDir.x);
                 playerDir.y = (float)SludgeUtil.Stabilize(playerDir.y);
 

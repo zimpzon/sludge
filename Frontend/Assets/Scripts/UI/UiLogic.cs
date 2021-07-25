@@ -27,17 +27,8 @@ namespace Sludge.Editor
 
 		private void Awake()
         {
+			GameManager.StartedFromMenu = true;
 			Startup.StaticInit();
-
-			//if (GameRoot.activeSelf)
-   //         {
-			//	// Easy debugging
-			//	PanelBackground.SetActive(false);
-			//	PanelMainMenu.SetActive(false);
-			//	PanelLevelSelect.SetActive(false);
-			//	PanelGame.SetActive(true);
-			//	return;
-			//}
 
 			if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -145,7 +136,6 @@ namespace Sludge.Editor
 			{
 				var uiLevel = go.GetComponent<UiLevel>();
 				panelTrans.DOAnchorPos(panelLevelSelectHidePos, 0.1f);
-
 				StartCoroutine(PlayLoop(uiLevel));
 			};
 
