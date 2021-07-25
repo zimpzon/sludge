@@ -1,4 +1,5 @@
 using Sludge.SludgeObjects;
+using Sludge.Utility;
 using UnityEngine;
 
 public class Key : SludgeObject
@@ -11,7 +12,10 @@ public class Key : SludgeObject
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        GameManager.Instance.KeyPickup(this);
-        gameObject.SetActive(false);
+        if (1 << collision.gameObject.layer == SludgeUtil.PlayerLayerMask)
+        {
+            GameManager.Instance.KeyPickup(this);
+            gameObject.SetActive(false);
+        }
     }
 }

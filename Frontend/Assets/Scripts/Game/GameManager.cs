@@ -14,13 +14,12 @@ using UnityEngine.Tilemaps;
 // First script to run
 public class GameManager : MonoBehaviour
 {
-    public static bool StartedFromMenu;
-
     public Tilemap Tilemap;
     public ColorSchemeScriptableObject UiColorScheme;
     public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
     public TMP_Text TextLevelTime;
+    public Material OutlineMaterial;
 
     public static PlayerInput PlayerInput = new PlayerInput();
     public static LevelReplay LevelReplay = new LevelReplay();
@@ -40,6 +39,13 @@ public class GameManager : MonoBehaviour
     LevelSettings levelSettings;
     bool levelComplete;
 
+    private void OnValidate()
+    {
+        UpdateColors(ColorScheme);
+        UpdateUiColors(UiColorScheme);
+        OutlineMaterial.color = Sludge.Colors.ColorScheme.GetColor(ColorScheme, SchemeColor.Edges);
+    }
+
     public static void SetStatusText(string text)
     {
         Instance.TextStatus.text = text;
@@ -47,7 +53,32 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        Startup.StaticInit();
+
         Instance = this;
+        OnValidate();
+    }
+
+    public void SetScheme(ColorSchemeScriptableObject scheme)
+    {
+        ColorScheme = scheme;
+        UiColorScheme = scheme;
+        UpdateColors(ColorScheme);
+        UpdateUiColors(UiColorScheme);
+    }
+
+    void UpdateColors(ColorSchemeScriptableObject scheme)
+    {
+        var allColorAppliers = FindObjectsOfType<SchemeColorApplier>(includeInactive: true);
+        foreach (var applier in allColorAppliers)
+            applier.ApplyColor(scheme);
+    }
+
+    void UpdateUiColors(ColorSchemeScriptableObject scheme)
+    {
+        var allUiColorAppliers = FindObjectsOfType<UiSchemeColorApplier>(includeInactive: true);
+        foreach (var applier in allUiColorAppliers)
+            applier.ApplyColor(scheme);
     }
 
     private void Start()
@@ -55,13 +86,6 @@ public class GameManager : MonoBehaviour
         levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
         Player = FindObjectOfType<Player>();
-
-        if (!StartedFromMenu)
-        {
-            SludgeObjects = FindObjectsOfType<SludgeObject>();
-            Player.SetHomePosition();
-            StartLevel();
-        }
     }
 
     public void StartLevel()
@@ -72,7 +96,9 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevel(LevelData levelData)
     {
-        LevelDeserializer.Run(levelData, levelElements, levelSettings);
+        if (levelData != null)
+            LevelDeserializer.Run(levelData, levelElements, levelSettings);
+
         Player.SetHomePosition();
         SludgeObjects = FindObjectsOfType<SludgeObject>();
     }

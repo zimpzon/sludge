@@ -2,12 +2,12 @@ using Sludge.PlayerInputs;
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
-using Sludge.Utility;
 
 namespace Sludge.Editor
 {
 	public class UiLogic : MonoBehaviour
 	{
+		public bool StartCurrentScene = false;
 		public GameObject PanelBackground;
 		public GameObject PanelMainMenu;
 		public GameObject PanelLevelSelect;
@@ -27,9 +27,6 @@ namespace Sludge.Editor
 
 		private void Awake()
         {
-			GameManager.StartedFromMenu = true;
-			Startup.StaticInit();
-
 			if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
 				ButtonExit.SetActive(false);
@@ -48,7 +45,15 @@ namespace Sludge.Editor
         {
 			UiSelectionMarker.gameObject.SetActive(true);
 			LevelLayout.CreateLevels(LevelList.Levels);
-			StartCoroutine(MainMenuLoop());
+
+			if (StartCurrentScene)
+			{
+				StartCoroutine(PlayLoop(uiLevel: null));
+			}
+			else
+			{
+				StartCoroutine(MainMenuLoop());
+			}
 		}
 
 		void SetSelectionMarker(GameObject uiObject)
@@ -96,12 +101,13 @@ namespace Sludge.Editor
 
 		IEnumerator PlayLoop(UiLevel uiLevel)
 		{
-			GameManager.Instance.LoadLevel(uiLevel.levelData);
+			GameManager.Instance.LoadLevel(uiLevel?.levelData);
 
 			var panelMain = PanelMainMenu.GetComponent<RectTransform>();
 			PanelBackground.SetActive(false);
 			yield return panelMain.DOAnchorPos(panelMainMenuHidePos, 0.1f).SetEase(Ease.OutCubic).WaitForCompletion();
 
+			SetSelectionMarker(null);
 			GameManager.Instance.StartLevel();
 
 			while (true)

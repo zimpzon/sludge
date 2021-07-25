@@ -10,17 +10,17 @@ public class UiSchemeColorApplier : MonoBehaviour
 
     void Start()
     {
-        ApplyColor();
+        ApplyColor(GameManager.Instance?.UiColorScheme);
     }
 
     void OnValidate()
     {
-        ApplyColor();
+        ApplyColor(GameManager.Instance?.UiColorScheme);
     }
 
-    Color GetColor(Color baseColor)
+    Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)
     {
-        var schemeColor = ColorScheme.GetColor(GameManager.Instance.UiColorScheme, SchemeColor);
+        var schemeColor = ColorScheme.GetColor(scheme, SchemeColor);
         schemeColor.a = baseColor.a;
 
         if (BrightnessOffset != 0.0f)
@@ -37,29 +37,29 @@ public class UiSchemeColorApplier : MonoBehaviour
         return schemeColor;
     }
 
-    void ApplyColor()
+    public void ApplyColor(ColorSchemeScriptableObject scheme)
     {
-        if (GameManager.Instance?.ColorScheme == null)
+        if (scheme == null)
             return;
 
         var image = GetComponent<Image>();
         if (image != null)
         {
-            image.color = GetColor(image.color);
+            image.color = GetColor(image.color, scheme);
             return;
         }
 
         var rawImage = GetComponent<RawImage>();
         if (rawImage != null)
         {
-            rawImage.color = GetColor(rawImage.color);
+            rawImage.color = GetColor(rawImage.color, scheme);
             return;
         }
 
         var text = GetComponent<TextMeshProUGUI>();
         if (text != null)
         {
-            text.color = GetColor(text.color);
+            text.color = GetColor(text.color, scheme);
             return;
         }
     }

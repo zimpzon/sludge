@@ -11,17 +11,17 @@ public class SchemeColorApplier : MonoBehaviour
 
     void Start()
     {
-        ApplyColor();
+        ApplyColor(GameManager.Instance?.ColorScheme);
     }
 
     void OnValidate()
     {
-        ApplyColor();
+        ApplyColor(GameManager.Instance?.ColorScheme);
     }
 
-    Color GetColor(Color baseColor)
+    Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)
     {
-        var schemeColor = ColorScheme.GetColor(GameManager.Instance.ColorScheme, SchemeColor);
+        var schemeColor = ColorScheme.GetColor(scheme, SchemeColor);
         schemeColor.a = baseColor.a;
 
         if (BrightnessOffset != 0.0f)
@@ -38,43 +38,43 @@ public class SchemeColorApplier : MonoBehaviour
         return schemeColor;
     }
 
-    void ApplyColor()
+    public void ApplyColor(ColorSchemeScriptableObject scheme)
     {
-        if (GameManager.Instance?.ColorScheme == null)
+        if (scheme == null)
             return;
 
         var spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
-            spriteRenderer.color = GetColor(spriteRenderer.color);
+            spriteRenderer.color = GetColor(spriteRenderer.color, scheme);
             return;
         }
 
         var camera = GetComponent<Camera>();
         if (camera != null)
         {
-            camera.backgroundColor = GetColor(camera.backgroundColor);
+            camera.backgroundColor = GetColor(camera.backgroundColor, scheme);
             return;
         }
 
         var tilemap = GetComponent<Tilemap>();
         if (tilemap != null)
         {
-            tilemap.color = GetColor(tilemap.color);
+            tilemap.color = GetColor(tilemap.color, scheme);
             return;
         }
 
         var image = GetComponent<Image>();
         if (image != null)
         {
-            image.color = GetColor(image.color);
+            image.color = GetColor(image.color, scheme);
             return;
         }
 
         var text = GetComponent<TextMeshProUGUI>();
         if (text != null)
         {
-            text.color = GetColor(text.color);
+            text.color = GetColor(text.color, scheme);
             return;
         }
     }

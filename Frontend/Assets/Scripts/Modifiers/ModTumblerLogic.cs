@@ -30,10 +30,14 @@ namespace Sludge.Modifiers
         {
             myCollider = GetComponent<Collider2D>();
             trans = transform;
-            homePos = trans.position;
             scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
             scanLevelFilter.SetLayerMask(SludgeUtil.StaticLevelLayerMask);
             spikeRenderer = transform.Find("Spikes").gameObject.GetComponent<SpriteRenderer>();
+            homePos = trans.position;
+        }
+
+        private void Start()
+        {
         }
 
         public override void Reset()

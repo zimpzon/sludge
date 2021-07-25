@@ -6,7 +6,7 @@ namespace Sludge.Colors
     public class ColorSchemeScriptableObject : ScriptableObject
     {
         public string schemeName;
-
+        public Color[] Palette;
         public Color Background;
         public Color Walls;
         public Color Text;
@@ -29,6 +29,17 @@ namespace Sludge.Colors
         public Color Time2;
         public Color GhostTrigger1;
         public Color GhostTrigger2;
+
+        public void OnValidate()
+        {
+            var allColorAppliers = FindObjectsOfType<SchemeColorApplier>(includeInactive: true);
+            foreach (var applier in allColorAppliers)
+                applier.ApplyColor(this);
+
+            var allUiColorAppliers = FindObjectsOfType<UiSchemeColorApplier>(includeInactive: true);
+            foreach (var applier in allUiColorAppliers)
+                applier.ApplyColor(this);
+        }
     }
 
     public enum SchemeColor
