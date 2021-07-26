@@ -57,7 +57,7 @@ public class ModKeyToggle : SludgeModifier
 
     IEnumerator DisableMe()
     {
-        const float AnimTime = 0.25f;
+        const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
         Color color = baseColor;
         Vector3 scale = baseScale;
@@ -83,7 +83,7 @@ public class ModKeyToggle : SludgeModifier
 
     IEnumerator EnableMe()
     {
-        const float AnimTime = 0.25f;
+        const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
         Color color = baseColor;
         Vector3 scale = baseScale;

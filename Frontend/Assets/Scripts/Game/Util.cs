@@ -21,7 +21,7 @@ namespace Sludge.Utility
             return new Vector2(x, y);
         }
 
-        public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
+        public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "Player");
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
         public static int PlayerLayerMask = LayerMask.GetMask("Player");
         public static int StaticLevelLayerMask = LayerMask.GetMask("StaticLevel");

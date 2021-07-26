@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
 
     public double angle = 90;
     double speed;
-    double minSpeed = 0;//0.5f;
+    double minSpeed = 0.5f;
     double breakSpeed = 1;
     double maxSpeed = 10;
     double turnSpeed = 180;
@@ -52,6 +52,11 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Kill();
+    }
+
+    public void Kill()
+    {
         deathParticles.Emit(50);
         Alive = false;
     }
@@ -84,10 +89,12 @@ public class Player : MonoBehaviour
             return;
 
         bool isTurning = false;
+        bool isTurningLeft = false;
 
         if (GameManager.PlayerInput.Left != 0)
         {
             isTurning = true;
+            isTurningLeft = true;
             angle += GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
             if (angle > 360)
                 angle -= 360;
@@ -186,13 +193,22 @@ public class Player : MonoBehaviour
         if (tentacleHitRight)
             tentacleRightScale = 0.1f;
 
-        // Don't use tentacles when turning, they can prevent turning which is very annoying!
-        if (!isTurning && (tentacleHitLeft || tentacleHitRight))
+        if (tentacleHitLeft || tentacleHitRight)
         {
             double correctionSign = distanceLeft > distanceRight ? -1 : 1;
             double correctionForce = distanceLeft > distanceRight ? correctionLeft : correctionRight;
             const double CorrectionScale = 1000;
-            angle += SludgeUtil.Stabilize(correctionSign * correctionForce * GameManager.TickSize * CorrectionScale);
+
+            double angleAdjust = SludgeUtil.Stabilize(correctionSign * correctionForce * GameManager.TickSize * CorrectionScale);
+            if (isTurning)
+            {
+                // If player is turning, only assist in the same direction they are turning.
+                if (isTurningLeft && angleAdjust < 0)
+                    angleAdjust = 0;
+                if (!isTurningLeft && angleAdjust > 0)
+                    angleAdjust = 0;
+            }
+            angle += angleAdjust;
         }
 
         void ScaleTentacle(Transform tentacleTrans, ref float scale, float targetScale)

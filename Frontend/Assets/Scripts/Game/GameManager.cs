@@ -10,15 +10,18 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 // First script to run
 public class GameManager : MonoBehaviour
 {
+    public Image TimeBar;
     public Tilemap Tilemap;
     public ColorSchemeScriptableObject UiColorScheme;
     public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
     public TMP_Text TextLevelTime;
+    public TMP_Text TextLevelName;
     public Material OutlineMaterial;
 
     public static PlayerInput PlayerInput = new PlayerInput();
@@ -34,6 +37,8 @@ public class GameManager : MonoBehaviour
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000 / TickSizeMs;
     public int Keys;
+    LevelData currentLevelData = new LevelData { StartTimeSeconds = 30, EliteCompletionTimeSeconds = 20, Name = "(started from editor)" };
+    double timeLeft;
 
     LevelElements levelElements;
     LevelSettings levelSettings;
@@ -97,8 +102,12 @@ public class GameManager : MonoBehaviour
     public void LoadLevel(LevelData levelData)
     {
         if (levelData != null)
+        {
             LevelDeserializer.Run(levelData, levelElements, levelSettings);
+            currentLevelData = levelData;
+        }
 
+        TextLevelName.text = currentLevelData.Name;
         Player.SetHomePosition();
         SludgeObjects = FindObjectsOfType<SludgeObject>();
     }
@@ -111,7 +120,7 @@ public class GameManager : MonoBehaviour
 
             if (LevelReplay.HasReplay())
             {
-                SetStatusText("<Press W to start or R to replay>");
+                SetStatusText("<Press W to start, R to replay or back to exit>");
             }
             else
             {
@@ -120,10 +129,11 @@ public class GameManager : MonoBehaviour
 
             ResetLevel();
 
-            bool ? isReplay = null;
+            bool? isReplay = null;
             while (isReplay == null)
             {
-                if (Input.GetAxisRaw("Vertical") > 0)
+                PlayerInput.GetHumanInput();
+                if (PlayerInput.Up > 0)
                 {
                     SetStatusText("");
                     isReplay = false;
@@ -132,6 +142,10 @@ public class GameManager : MonoBehaviour
                 {
                     SetStatusText("<Replay>");
                     isReplay = true;
+                }
+                else if (PlayerInput.BackTap)
+                {
+                    StopAllCoroutines();
                 }
 
                 yield return null;
@@ -166,6 +180,8 @@ public class GameManager : MonoBehaviour
         else
             LevelReplay.BeginRecording();
 
+        timeLeft = currentLevelData.StartTimeSeconds;
+
         while (Player.Alive)
         {
             UnityTime += Time.deltaTime;
@@ -185,8 +201,24 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
     }
 
+    public void LevelCompleted(Exit exit)
+    {
+        levelComplete = true;
+    }
+
+    public void KeyPickup(Key key)
+    {
+        Keys++;
+    }
+
+    public void TimePillPickup(TimePill key)
+    {
+        timeLeft += 2;
+    }
+
     void UpdateAll()
     {
+        UpdateTime();
         UpdatePlayer();
         UpdateSludgeObjects();
     }
@@ -202,24 +234,26 @@ public class GameManager : MonoBehaviour
         Player.EngineTick();
     }
 
-    public void LevelCompleted(Exit exit)
-    {
-        levelComplete = true;
-    }
+    const float MaxTime = 60;
 
-    public void KeyPickup(Key key)
+    void UpdateTime()
     {
-        Keys++;
-    }
+        if (timeLeft <= 0)
+        {
+            timeLeft = 0;
+            Player.Kill();
+        }
 
-    void DoTick(bool isReplay)
-    {
-        int timeIdx = Mathf.Min(9999, FrameCounter);
+        int timeIdx = Mathf.Min(9999, (int)(timeLeft * TicksPerSecond));
         if (timeIdx >= Strings.TimeStrings.Length)
             timeIdx = Strings.TimeStrings.Length - 1;
 
         TextLevelTime.text = Strings.TimeStrings[timeIdx];
+        TimeBar.fillAmount = (float)(timeLeft / MaxTime);
+    }
 
+    void DoTick(bool isReplay)
+    {
         if (isReplay)
         {
             int state = LevelReplay.GetReplayState(FrameCounter);
@@ -233,6 +267,7 @@ public class GameManager : MonoBehaviour
 
         EngineTimeMs = FrameCounter * TickSizeMs;
         EngineTime = EngineTimeMs * 0.001;
+        timeLeft -= TickSize;
 
         UpdateAll();
 
