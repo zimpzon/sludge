@@ -1,4 +1,5 @@
 using Sludge.Modifiers;
+using Sludge.Utility;
 using System.Collections;
 using UnityEngine;
 
@@ -33,6 +34,7 @@ public class ModKeyToggle : SludgeModifier
         spriteRenderer.enabled = StartEnabled;
         spriteRenderer.color = baseColor;
         trans.localScale = baseScale;
+        this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
     }
 
     public override void EngineTick()
@@ -61,6 +63,7 @@ public class ModKeyToggle : SludgeModifier
         Vector3 scale = baseScale;
 
         doorCollider.enabled = false;
+        this.gameObject.layer = SludgeUtil.ObjectsLayerNumber;
 
         while (true)
         {

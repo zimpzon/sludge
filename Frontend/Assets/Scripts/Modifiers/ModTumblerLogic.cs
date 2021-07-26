@@ -13,25 +13,21 @@ namespace Sludge.Modifiers
         IEnumerator warmUp;
         IEnumerator move;
         Vector3 moveDir;
-        Collider2D myCollider;
         Transform trans;
         RaycastHit2D[] scanHits = new RaycastHit2D[1];
         ContactFilter2D scanForPlayerFilter = new ContactFilter2D();
-        ContactFilter2D scanLevelFilter = new ContactFilter2D();
         Vector3 homePos;
         double x;
         double y;
         double rotation;
         double rotationSpeed;
-        double speed = 25.0;
+        double speed = 10.0;
         State state;
 
         void Awake()
         {
-            myCollider = GetComponent<Collider2D>();
             trans = transform;
             scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
-            scanLevelFilter.SetLayerMask(SludgeUtil.StaticLevelLayerMask);
             spikeRenderer = transform.Find("Spikes").gameObject.GetComponent<SpriteRenderer>();
             homePos = trans.position;
         }
@@ -76,8 +72,8 @@ namespace Sludge.Modifiers
         {
             spikeRenderer.enabled = true;
 
-            int iterations = 60;
-            double step = 20;
+            int iterations = 30;
+            double step = 50;
             while (state == State.WarmUp && iterations-- > 0)
             {
                 rotation += rotationSpeed * GameManager.TickSize;

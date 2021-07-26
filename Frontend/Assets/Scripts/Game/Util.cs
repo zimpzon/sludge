@@ -14,8 +14,18 @@ namespace Sludge.Utility
         public static double TimeMod(double time)
             => time - (int)time;
 
-        public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "DynamicBlocks", "Player");
+        public static Vector2 LookAngle(double angle)
+        {
+            float x = -(float)Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * angle)));
+            float y = (float)Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * angle)));
+            return new Vector2(x, y);
+        }
+
+        public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
+        public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
         public static int PlayerLayerMask = LayerMask.GetMask("Player");
         public static int StaticLevelLayerMask = LayerMask.GetMask("StaticLevel");
+        public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");
+        public static int ObjectsLayerNumber = LayerMask.NameToLayer("Objects");
     }
 }

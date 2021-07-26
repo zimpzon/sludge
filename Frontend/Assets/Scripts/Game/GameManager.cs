@@ -215,6 +215,9 @@ public class GameManager : MonoBehaviour
     void DoTick(bool isReplay)
     {
         int timeIdx = Mathf.Min(9999, FrameCounter);
+        if (timeIdx >= Strings.TimeStrings.Length)
+            timeIdx = Strings.TimeStrings.Length - 1;
+
         TextLevelTime.text = Strings.TimeStrings[timeIdx];
 
         if (isReplay)
