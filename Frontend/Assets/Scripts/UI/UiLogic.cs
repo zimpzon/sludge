@@ -52,10 +52,12 @@ namespace Sludge.Editor
 			{
 				var panelGame = PanelGame.GetComponent<RectTransform>();
 				panelGame.DOAnchorPos(panelGameShowPos, 0.1f).SetEase(Ease.OutCubic);
+				StopAllCoroutines();
 				StartCoroutine(PlayLoop(uiLevel: null));
 			}
 			else
 			{
+				StopAllCoroutines();
 				StartCoroutine(MainMenuLoop());
 			}
 		}
@@ -89,6 +91,9 @@ namespace Sludge.Editor
 			var panelGame = PanelGame.GetComponent<RectTransform>();
 			panelGame.DOAnchorPos(panelGameHidePos, 0.1f).SetEase(Ease.OutCubic);
 
+			var panelMain = PanelMainMenu.GetComponent<RectTransform>();
+			panelMain.DOAnchorPos(panelMainMenuShowPos, 0.1f).SetEase(Ease.OutCubic);
+
 			UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
@@ -116,7 +121,7 @@ namespace Sludge.Editor
 			panelGame.DOAnchorPos(panelGameShowPos, 0.1f).SetEase(Ease.OutCubic);
 
 			var panelMain = PanelMainMenu.GetComponent<RectTransform>();
-			yield return panelMain.DOAnchorPos(panelMainMenuHidePos, 0.1f).SetEase(Ease.OutCubic).WaitForCompletion();
+			panelMain.DOAnchorPos(panelMainMenuHidePos, 0.1f).SetEase(Ease.OutCubic);
 
 			SetSelectionMarker(null);
 			GameManager.Instance.StartLevel();
@@ -126,9 +131,12 @@ namespace Sludge.Editor
 				playerInput.GetHumanInput();
 				if (playerInput.BackTap)
                 {
+					// From game back to menus. For now go to level select.
 					StopAllCoroutines();
-					panelMain.DOAnchorPos(panelMainMenuHidePos, 0.1f).SetEase(Ease.OutCubic).WaitForCompletion();
-					StartCoroutine(MainMenuLoop());
+					panelGame.DOAnchorPos(panelGameHidePos, 0.1f).SetEase(Ease.OutCubic);
+					panelMain.DOAnchorPos(panelMainMenuShowPos, 0.1f).SetEase(Ease.OutCubic);
+					PanelBackground.SetActive(true);
+					StartCoroutine(LevelSelectLoop());
 					break;
                 }
 

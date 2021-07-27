@@ -95,7 +95,6 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
-        ResetLevel();
         StartCoroutine(LevelLoop());
     }
 
@@ -103,13 +102,18 @@ public class GameManager : MonoBehaviour
     {
         if (levelData != null)
         {
+            // This will update tilemap and may cause collisions if Unity gets a chance to check (I'm not sure how it happens, but player kept dying).
+            Debug.Log($"Loading level");
             LevelDeserializer.Run(levelData, levelElements, levelSettings);
             currentLevelData = levelData;
         }
 
         TextLevelName.text = currentLevelData.Name;
+        Debug.Log($"Setting player home");
         Player.SetHomePosition();
+
         SludgeObjects = FindObjectsOfType<SludgeObject>();
+        ResetLevel();
     }
 
     IEnumerator LevelLoop()
@@ -157,6 +161,7 @@ public class GameManager : MonoBehaviour
 
     void ResetLevel()
     {
+        Debug.Log($"ResetLevel()");
         EngineTime = 0;
         EngineTimeMs = 0;
         FrameCounter = 0;
@@ -244,9 +249,8 @@ public class GameManager : MonoBehaviour
             Player.Kill();
         }
 
-        int timeIdx = Mathf.Min(9999, (int)(timeLeft * TicksPerSecond));
-        if (timeIdx >= Strings.TimeStrings.Length)
-            timeIdx = Strings.TimeStrings.Length - 1;
+        int timeIdx = (int)(timeLeft * 1000.0);
+        timeIdx = Mathf.Clamp(timeIdx, 0, Strings.TimeStrings.Length - 1);
 
         TextLevelTime.text = Strings.TimeStrings[timeIdx];
         TimeBar.fillAmount = (float)(timeLeft / MaxTime);

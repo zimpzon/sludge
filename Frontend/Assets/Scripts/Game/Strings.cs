@@ -2,12 +2,12 @@
 {
     public static class Strings
     {
-        public static string[] TimeStrings = new string[6250]; // 0.00 to 99.99 (100 / 0.016)
+        public static string[] TimeStrings = new string[60000]; // 0.000 to 59.999
 
         public static void Init()
         {
             for (int i = 0; i < TimeStrings.Length; ++i)
-                TimeStrings[i] = ((i * GameManager.TickSizeMs) / 1000.0f).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+                TimeStrings[i] = (i / 1000.0).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }
