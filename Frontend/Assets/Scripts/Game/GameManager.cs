@@ -12,10 +12,13 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
+// OnLevelCompleted: Compare with best. Show how close to elite. Make player want elite.
+
 // First script to run
 public class GameManager : MonoBehaviour
 {
-    public Image TimeBar;
+    public Image TimeBarLeft;
+    public Image TimeBarRight;
     public Tilemap Tilemap;
     public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
@@ -95,6 +98,9 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevel(LevelData levelData)
     {
+        // Total hack: The player dies if the new level has a collider at his OLD start position. The same thing could happen to other objects sensitive to collision!
+        Tilemap.gameObject.SetActive(false);
+
         if (levelData != null)
         {
             // This will update tilemap and may cause collisions if Unity gets a chance to check (I'm not sure how it happens, but player kept dying).
@@ -102,13 +108,19 @@ public class GameManager : MonoBehaviour
             LevelDeserializer.Run(levelData, levelElements, levelSettings);
             currentLevelData = levelData;
         }
+        else
+        {
+            currentLevelData.StartTimeSeconds = levelSettings.StartTimeSeconds;
+            currentLevelData.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
+        }
 
         TextLevelName.text = currentLevelData.Name;
-        Debug.Log($"Setting player home");
         Player.SetHomePosition();
 
         SludgeObjects = FindObjectsOfType<SludgeObject>();
         ResetLevel();
+
+        Tilemap.gameObject.SetActive(true);
     }
 
     IEnumerator LevelLoop()
@@ -234,7 +246,7 @@ public class GameManager : MonoBehaviour
         Player.EngineTick();
     }
 
-    const float MaxTime = 60;
+    const float MaxTime = 30;
 
     void UpdateTime()
     {
@@ -248,7 +260,9 @@ public class GameManager : MonoBehaviour
         timeIdx = Mathf.Clamp(timeIdx, 0, Strings.TimeStrings.Length - 1);
 
         TextLevelTime.text = Strings.TimeStrings[timeIdx];
-        TimeBar.fillAmount = (float)(timeLeft / MaxTime);
+        float fillAmount = (float)(timeLeft / MaxTime);
+        TimeBarLeft.fillAmount = fillAmount;
+        TimeBarRight.fillAmount = fillAmount;
     }
 
     void DoTick(bool isReplay)

@@ -1,6 +1,7 @@
 using Sludge.Modifiers;
 using Sludge.Shared;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public static class LevelDeserializer
@@ -13,14 +14,24 @@ public static class LevelDeserializer
         levelSettings.StartTimeSeconds = data.StartTimeSeconds;
         levelSettings.EliteCompletionTimeSeconds = data.EliteCompletionTimeSeconds;
 
-        // Player
-        data.PlayerTransform.Set(elements.Player.transform);
+        // Clear existing objects
+        for (int i = elements.ObjectsRoot.transform.childCount - 1; i >= 0; --i)
+        {
+            GameObject.DestroyImmediate(elements.ObjectsRoot.transform.GetChild(i).gameObject);
+        }
 
-        // Tiles
-        elements.Tilemap.ClearAllTiles();
-        var tilePos = new Vector3Int();
+        // Clear existing tiles
         var tilemapCollider = elements.Tilemap.gameObject.GetComponent<CompositeCollider2D>();
         tilemapCollider.generationType = CompositeCollider2D.GenerationType.Manual;
+        elements.Tilemap.ClearAllTiles();
+        elements.Tilemap.CompressBounds();
+        tilemapCollider.GenerateGeometry();
+
+        // Place player
+        data.PlayerTransform.Set(elements.Player.transform);
+
+        // Place new tiles
+        var tilePos = new Vector3Int();
 
         for (int y = 0; y < data.TilesH; ++y)
         {
@@ -38,17 +49,16 @@ public static class LevelDeserializer
         tilemapCollider.GenerateGeometry();
         elements.Tilemap.CompressBounds();
 
-        // Objects
-        for (int i = elements.ObjectsRoot.transform.childCount - 1; i >= 0; --i)
-        {
-            GameObject.DestroyImmediate(elements.ObjectsRoot.transform.GetChild(i).gameObject);
-        }
-
+        // Place new Objects
         for (int i = 0; i < data.Objects.Count; ++i)
         {
             var storedObj = data.Objects[i];
             var prefab = elements.ObjectPrefabList.ObjectPrefabs[storedObj.ObjectIdx];
+#if UNITY_EDITOR
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+#else
             var instance = GameObject.Instantiate(prefab);
+#endif
             storedObj.Transform.Set(instance.transform);
 
             var modifiers = instance.GetComponentsInChildren<SludgeModifier>();
