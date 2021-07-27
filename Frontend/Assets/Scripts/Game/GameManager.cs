@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
 {
     public Image TimeBar;
     public Tilemap Tilemap;
-    public ColorSchemeScriptableObject UiColorScheme;
     public ColorSchemeScriptableObject ColorScheme;
     public TMP_Text TextStatus;
     public TMP_Text TextLevelTime;
@@ -47,7 +46,7 @@ public class GameManager : MonoBehaviour
     private void OnValidate()
     {
         UpdateColors(ColorScheme);
-        UpdateUiColors(UiColorScheme);
+        UpdateUiColors(ColorScheme);
         OutlineMaterial.color = Sludge.Colors.ColorScheme.GetColor(ColorScheme, SchemeColor.Edges);
     }
 
@@ -58,18 +57,21 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         Startup.StaticInit();
 
-        Instance = this;
+        levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
+        levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
+        Player = FindObjectOfType<Player>();
+
         OnValidate();
     }
 
     public void SetScheme(ColorSchemeScriptableObject scheme)
     {
         ColorScheme = scheme;
-        UiColorScheme = scheme;
         UpdateColors(ColorScheme);
-        UpdateUiColors(UiColorScheme);
+        UpdateUiColors(ColorScheme);
     }
 
     void UpdateColors(ColorSchemeScriptableObject scheme)
@@ -84,13 +86,6 @@ public class GameManager : MonoBehaviour
         var allUiColorAppliers = FindObjectsOfType<UiSchemeColorApplier>(includeInactive: true);
         foreach (var applier in allUiColorAppliers)
             applier.ApplyColor(scheme);
-    }
-
-    private void Start()
-    {
-        levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
-        levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
-        Player = FindObjectOfType<Player>();
     }
 
     public void StartLevel()

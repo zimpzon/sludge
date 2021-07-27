@@ -12,7 +12,7 @@ public class UiLevelsLayout : MonoBehaviour
     public LevelItem GetLevelFromId(string levelId)
         => LevelItems.Where(li => li.levelScript.levelData.Id == levelId).First();
 
-    public void CreateLevels(List<LevelData> levels)
+    public void CreateLevelsSelection(List<LevelData> levels)
     {
         for (int i = 0; i < levels.Count; ++i)
         {
@@ -39,8 +39,6 @@ public class UiLevelsLayout : MonoBehaviour
         for (int i = 0; i < levels.Count; ++i)
         {
             var level = levels[i];
-            int row = i / ItemsPerRow;
-
             int idxUp = i - ItemsPerRow;
             int idxDown = i + ItemsPerRow;
 
