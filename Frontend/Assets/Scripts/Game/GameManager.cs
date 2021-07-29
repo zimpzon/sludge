@@ -268,6 +268,7 @@ public class GameManager : MonoBehaviour
         timeLeft -= TickSize;
 
         UpdateAll();
+        Physics2D.Simulate((float)TickSize);
 
         FrameCounter++;
     }

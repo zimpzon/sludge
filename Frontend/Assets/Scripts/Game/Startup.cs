@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using UnityEngine;
 
 namespace Sludge.Utility
 {
@@ -9,6 +10,7 @@ namespace Sludge.Utility
             Strings.Init();
             LevelList.LoadLevels();
             DOTween.Init();
+            Physics2D.simulationMode = SimulationMode2D.Script;
         }
     }
 }

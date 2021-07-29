@@ -11,6 +11,9 @@ namespace Sludge.Utility
             return temp / 1000.0;
         }
 
+        public static Vector3 StabilizeVector(Vector3 v)
+            => new Vector3((float)Stabilize(v.x), (float)Stabilize(v.y), (float)Stabilize(v.z));
+
         public static double TimeMod(double time)
             => time - (int)time;
 

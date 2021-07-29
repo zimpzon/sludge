@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     double homeY;
     double homeAngle;
     ContactFilter2D wallScanFilter = new ContactFilter2D();
-    public int OnConveyorBelt;
+    int onConveyorBeltCount;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -43,6 +43,21 @@ public class Player : MonoBehaviour
     // Forces: summed up and added every frame. Diminished over multiple frames.
     double forceX;
     double forceY;
+
+    public void ConveyourBeltEnter()
+    {
+        Debug.Log($"Enter, frame = {GameManager.Instance.FrameCounter}");
+        onConveyorBeltCount++;
+    }
+
+    public void ConveyourBeltExit()
+    {
+        Debug.Log($"Exit, frame = {GameManager.Instance.FrameCounter}");
+        onConveyorBeltCount--;
+        // When resetting game colliderexits are fired after resetting player, so we get an exit event after setting onConveyorBeltCount to 0.
+        if (onConveyorBeltCount < 0)
+            onConveyorBeltCount = 0;
+    }
 
     public void AddOverridePosition(double x, double y)
     {
@@ -94,7 +109,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (OnConveyorBelt > 0)
+        if (onConveyorBeltCount > 0)
             return;
 
         Kill();
@@ -113,7 +128,7 @@ public class Player : MonoBehaviour
         trail.Clear();
         trail.enabled = false;
         Alive = true;
-        OnConveyorBelt = 0;
+        onConveyorBeltCount = 0;
 
         impulseX = 0;
         impulseY = 0;
@@ -174,7 +189,7 @@ public class Player : MonoBehaviour
             angle = SludgeUtil.AngleNormalized0To360(angle);
         }
 
-        if (GameManager.PlayerInput.Up != 0)
+        if (GameManager.PlayerInput.Up != 0 && onConveyorBeltCount == 0)
         {
             speed = SludgeUtil.Stabilize(speed + GameManager.TickSize * accelerateSpeed);
             if (speed > maxSpeed)

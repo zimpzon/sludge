@@ -6,7 +6,10 @@ public class Exit : SludgeObject
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (1 << collision.gameObject.layer == SludgeUtil.PlayerLayerMask)
-            GameManager.Instance.LevelCompleted(this);
+        bool isPlayer = 1 << collision.gameObject.layer == SludgeUtil.PlayerLayerMask;
+        if (!isPlayer)
+            return;
+
+        GameManager.Instance.LevelCompleted(this);
     }
 }
