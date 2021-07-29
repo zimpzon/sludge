@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 namespace Sludge.Tiles
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/TileListScriptableObject", order = 2)]
+    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/TileList", order = 2)]
     public class TileListScriptableObject : ScriptableObject
     {
         public Tile[] Tiles;

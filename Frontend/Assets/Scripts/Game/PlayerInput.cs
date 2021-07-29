@@ -16,6 +16,9 @@ namespace Sludge.PlayerInputs
         public bool SelectTap;
         public bool BackTap;
 
+        public bool ColorNextTap;
+        public bool ColorPrevTap;
+
         public void GetHumanInput()
         {
             Up = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0 ? 1 : 0;
@@ -29,6 +32,9 @@ namespace Sludge.PlayerInputs
             RightTap = Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow);
             SelectTap = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.E);
             BackTap = Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Backspace);
+
+            ColorNextTap = Input.GetKeyDown(KeyCode.X);
+            ColorPrevTap = Input.GetKeyDown(KeyCode.Z);
         }
 
         public void SetState(int state)

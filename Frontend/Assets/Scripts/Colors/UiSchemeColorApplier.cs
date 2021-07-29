@@ -10,12 +10,12 @@ public class UiSchemeColorApplier : MonoBehaviour
 
     void Start()
     {
-        ApplyColor(GameManager.Instance?.ColorScheme);
+        ApplyColor(GameManager.Instance?.CurrentColorScheme);
     }
 
     void OnValidate()
     {
-        ApplyColor(GameManager.Instance?.ColorScheme);
+        ApplyColor(GameManager.Instance?.CurrentColorScheme);
     }
 
     Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)

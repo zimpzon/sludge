@@ -83,7 +83,7 @@ namespace Sludge.UI
 
 			while (true)
 			{
-                playerInput.GetHumanInput();
+				CheckInput(playerInput);
 				DoUiNavigation(playerInput);
                 yield return null;
 			}
@@ -102,7 +102,7 @@ namespace Sludge.UI
 
 			while (true)
 			{
-				playerInput.GetHumanInput();
+				CheckInput(playerInput);
 				if (playerInput.BackTap)
                 {
 					// From game back to menus. For now go to level select.
@@ -128,6 +128,24 @@ namespace Sludge.UI
 			SetSelectionMarker(level.go);
 		}
 
+		void CheckChangeColorScheme(PlayerInput input)
+        {
+			if (input.ColorNextTap)
+			{
+				GameManager.Instance.SetColorScheme(GameManager.Instance.ColorSchemeList.GetNext());
+			}
+			else if (input.ColorPrevTap)
+			{
+				GameManager.Instance.SetColorScheme(GameManager.Instance.ColorSchemeList.GetPrev());
+			}
+		}
+
+		void CheckInput(PlayerInput input)
+        {
+			input.GetHumanInput();
+			CheckChangeColorScheme(input);
+        }
+
 		IEnumerator LevelSelectLoop()
 		{
 			UiNavigation.OnNavigationChanged = null;
@@ -152,7 +170,7 @@ namespace Sludge.UI
 
 			while (true)
             {
-                playerInput.GetHumanInput();
+				CheckInput(playerInput);
 				DoUiNavigation(playerInput);
 
 				if (playerInput.BackTap)

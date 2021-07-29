@@ -1,3 +1,4 @@
+using Sludge.Colors;
 using Sludge.Modifiers;
 using Sludge.Utility;
 using System.Collections;
@@ -10,7 +11,6 @@ public class ModKeyToggle : SludgeModifier
     public int EnableAtKeyCount = -1;
     public bool StartEnabled = true;
 
-    Color baseColor;
     Vector3 baseScale;
     Collider2D doorCollider;
     SpriteRenderer spriteRenderer;
@@ -22,7 +22,6 @@ public class ModKeyToggle : SludgeModifier
         spriteRenderer = GetComponent<SpriteRenderer>();
         trans = transform;
 
-        baseColor = spriteRenderer.color;
         baseScale = trans.localScale;
     }
 
@@ -32,7 +31,7 @@ public class ModKeyToggle : SludgeModifier
 
         doorCollider.enabled = StartEnabled;
         spriteRenderer.enabled = StartEnabled;
-        spriteRenderer.color = baseColor;
+        spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
         trans.localScale = baseScale;
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
     }
@@ -59,7 +58,7 @@ public class ModKeyToggle : SludgeModifier
     {
         const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
-        Color color = baseColor;
+        Color color = spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
         Vector3 scale = baseScale;
 
         doorCollider.enabled = false;
@@ -85,7 +84,7 @@ public class ModKeyToggle : SludgeModifier
     {
         const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
-        Color color = baseColor;
+        Color color = spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
         Vector3 scale = baseScale;
 
         spriteRenderer.enabled = true;

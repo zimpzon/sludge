@@ -1,14 +1,15 @@
 using Sludge.Utility;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     public static Vector3 Position;
+    public static double Angle;
+    public static Quaternion Rotation;
 
     public SpriteRenderer bodyRenderer;
     public TrailRenderer trail;
-    public Transform TentacleLeft;
-    public Transform TentacleRight;
     public bool Alive = false;
 
     public double angle = 90;
@@ -27,13 +28,59 @@ public class Player : MonoBehaviour
     double homeY;
     double homeAngle;
     ContactFilter2D wallScanFilter = new ContactFilter2D();
+    public int OnConveyorBelt;
+
+    // Impulses: summed up and added every frame. Then cleared.
+    double impulseX;
+    double impulseY;
+    double impulseRotation;
+
+    // Override: summed up and the average per frame is forcibly set, ignoring all other movement (player loses control). Then cleared.
+    List<double> overrideX = new List<double>();
+    List<double> overrideY = new List<double>();
+    List<double> overrideRotation = new List<double>();
+
+    // Forces: summed up and added every frame. Diminished over multiple frames.
+    double forceX;
+    double forceY;
+
+    public void AddOverridePosition(double x, double y)
+    {
+        overrideX.Clear();
+        overrideY.Clear();
+        overrideX.Add(SludgeUtil.Stabilize(x));
+        overrideY.Add(SludgeUtil.Stabilize(y));
+    }
+
+    public void AddOverrideRotation(double rotation)
+    {
+        overrideRotation.Clear();
+        overrideRotation.Add(SludgeUtil.Stabilize(rotation));
+    }
+
+    public void AddPositionImpulse(double x, double y)
+    {
+        impulseX += SludgeUtil.Stabilize(x);
+        impulseY += SludgeUtil.Stabilize(y);
+    }
+
+    public void AddRotationImpulse(double angle)
+    {
+        impulseRotation += SludgeUtil.Stabilize(angle);
+    }
+
+    public void AddPositionForce(double x, double y)
+    {
+        forceX += SludgeUtil.Stabilize(x);
+        forceY += SludgeUtil.Stabilize(y);
+    }
 
     public void SetHomePosition()
     {
-        Debug.Log($"Setting player home");
         homeX = SludgeUtil.Stabilize(trans.position.x);
         homeY = SludgeUtil.Stabilize(trans.position.y);
         homeAngle = SludgeUtil.Stabilize(trans.rotation.eulerAngles.z);
+        Debug.Log($"Setting player home: {homeX}, {homeY}");
     }
 
     void Awake()
@@ -47,8 +94,10 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (OnConveyorBelt > 0)
+            return;
+
         Kill();
-        Debug.Log($"frame: {GameManager.Instance.FrameCounter}");
     }
 
     public void Kill()
@@ -64,6 +113,18 @@ public class Player : MonoBehaviour
         trail.Clear();
         trail.enabled = false;
         Alive = true;
+        OnConveyorBelt = 0;
+
+        impulseX = 0;
+        impulseY = 0;
+        impulseRotation = 0;
+
+        overrideX.Clear();
+        overrideY.Clear();
+        overrideRotation.Clear();
+
+        forceX = 0;
+        forceY = 0;
 
         playerX = homeX;
         playerY = homeY;
@@ -74,13 +135,8 @@ public class Player : MonoBehaviour
         trail.enabled = true;
     }
 
-    public void EngineTick()
+    void PlayerControls()
     {
-        Debug.Log($"Player.Tick, alive: {Alive}");
-
-        if (!Alive)
-            return;
-
         bool isTurning = false;
 
         if (GameManager.PlayerInput.Left != 0)
@@ -114,13 +170,9 @@ public class Player : MonoBehaviour
             {
                 angle -= SludgeUtil.Stabilize(Mathf.Sign((float)diff) * GameManager.TickSize * turnSpeed * 0.1);
             }
+
+            angle = SludgeUtil.AngleNormalized0To360(angle);
         }
-
-        angle = SludgeUtil.Stabilize(angle);
-
-        speed = SludgeUtil.Stabilize(speed - GameManager.TickSize * friction);
-        if (speed < minSpeed)
-            speed = minSpeed;
 
         if (GameManager.PlayerInput.Up != 0)
         {
@@ -131,11 +183,75 @@ public class Player : MonoBehaviour
 
         double lookX = -SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * angle)));
         double lookY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * angle)));
-
         playerX += speed * GameManager.TickSize * lookX;
         playerY += speed * GameManager.TickSize * lookY;
+    }
+
+    public void EngineTick()
+    {
+        if (!Alive)
+            return;
+
+        PlayerControls();
+
+        speed = SludgeUtil.Stabilize(speed - GameManager.TickSize * friction);
+        if (speed < minSpeed)
+            speed = minSpeed;
+
+        // Impulse
+        playerX += impulseX * GameManager.TickSize;
+        playerY += impulseY * GameManager.TickSize;
+        impulseX = 0;
+        impulseY = 0;
+
+        angle += impulseRotation;
+        angle = SludgeUtil.AngleNormalized0To360(angle);
+        impulseRotation = 0;
+
+        // Force
+        playerX += forceX * GameManager.TickSize;
+        playerY += forceY * GameManager.TickSize;
+        forceX = SludgeUtil.Stabilize(forceX - GameManager.TickSize * friction);
+        if (forceX < 0)
+            forceX = 0;
+        forceY = SludgeUtil.Stabilize(forceY - GameManager.TickSize * friction);
+        if (forceY < 0)
+            forceY = 0;
+
+        // Override
+        if (overrideX.Count > 0)
+        {
+            double sumX = 0;
+            for (int i = 0; i < overrideX.Count; ++i)
+                sumX += overrideX[i];
+            double avgX = sumX / overrideX.Count;
+            playerX = SludgeUtil.Stabilize(avgX);
+            overrideX.Clear();
+        }
+
+        if (overrideY.Count > 0)
+        {
+            double sumY = 0;
+            for (int i = 0; i < overrideY.Count; ++i)
+                sumY += overrideY[i];
+            double avgY = sumY / overrideY.Count;
+            playerY = SludgeUtil.Stabilize(avgY);
+            overrideY.Clear();
+        }
+
+        if (overrideRotation.Count > 0)
+        {
+            double sumR = 0;
+            for (int i = 0; i < overrideRotation.Count; ++i)
+                sumR += overrideRotation[i];
+            double avgR = sumR / overrideRotation.Count;
+            angle = SludgeUtil.Stabilize(avgR);
+            overrideRotation.Clear();
+        }
+
         playerX = SludgeUtil.Stabilize(playerX);
         playerY = SludgeUtil.Stabilize(playerY);
+        angle = SludgeUtil.Stabilize(angle);
 
         UpdateTransform();
     }
@@ -146,5 +262,7 @@ public class Player : MonoBehaviour
         trans.position = new Vector3((float)playerX, (float)playerY, 0);
 
         Position = trans.position;
+        Angle = angle;
+        Rotation = trans.rotation;
     }
 }

@@ -36,7 +36,7 @@ Shader "Sludge/OutlineShader"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            fixed4 _Color;
+            uniform float4 _EdgeColor;
 
             v2f vert (appdata v)
             {
@@ -58,7 +58,7 @@ Shader "Sludge/OutlineShader"
                 fixed4 colD = tex2D(_MainTex, i.uv + float2(0, _MainTex_TexelSize.y));
                 fixed4 diff = abs(col0 - colL) + abs(col0 - colR) + abs(col0 - colU) + abs(col0 - colD);
                 fixed lum = step(0.01, (diff.r + diff.g + diff.b));
-                fixed4 result = _Color * lum + col0 * (1 - lum);
+                fixed4 result = _EdgeColor * lum + col0 * (1 - lum);
                 return result;
             }
             ENDCG

@@ -21,7 +21,7 @@ namespace Sludge.Modifiers
         double y;
         double rotation;
         double rotationSpeed;
-        double speed = 10.0;
+        double speed = 15.0;
         State state;
 
         void Awake()

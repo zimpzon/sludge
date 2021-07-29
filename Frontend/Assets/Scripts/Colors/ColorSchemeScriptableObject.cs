@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Sludge.Colors
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/ColorSchemeScriptableObject", order = 1)]
+    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/ColorScheme", order = 1)]
     public class ColorSchemeScriptableObject : ScriptableObject
     {
         public string schemeName;
@@ -32,13 +32,8 @@ namespace Sludge.Colors
 
         public void OnValidate()
         {
-            var allColorAppliers = FindObjectsOfType<SchemeColorApplier>(includeInactive: true);
-            foreach (var applier in allColorAppliers)
-                applier.ApplyColor(this);
-
-            var allUiColorAppliers = FindObjectsOfType<UiSchemeColorApplier>(includeInactive: true);
-            foreach (var applier in allUiColorAppliers)
-                applier.ApplyColor(this);
+            ColorScheme.ApplyColors(this);
+            ColorScheme.ApplyUiColors(this);
         }
     }
 
@@ -70,9 +65,25 @@ namespace Sludge.Colors
 
     public static class ColorScheme
     {
+        public static void ApplyColors(ColorSchemeScriptableObject scheme)
+        {
+            var allColorAppliers = GameObject.FindObjectsOfType<SchemeColorApplier>(includeInactive: true);
+            foreach (var applier in allColorAppliers)
+                applier.ApplyColor(scheme);
+
+            Shader.SetGlobalColor("_EdgeColor", scheme.Edges);
+        }
+
+        public static void ApplyUiColors(ColorSchemeScriptableObject scheme)
+        {
+            var allUiColorAppliers = GameObject.FindObjectsOfType<UiSchemeColorApplier>(includeInactive: true);
+            foreach (var applier in allUiColorAppliers)
+                applier.ApplyColor(scheme);
+        }
+
         public static Color GetColor(ColorSchemeScriptableObject scheme, SchemeColor name)
         {
-            return name switch
+            var color = name switch
             {
                 SchemeColor.Background => scheme.Background,
                 SchemeColor.Walls => scheme.Walls,
@@ -98,6 +109,9 @@ namespace Sludge.Colors
                 SchemeColor.GhostTrigger2 => scheme.GhostTrigger2,
                 _ => Color.black,
             };
+
+            color.a = 1;
+            return color;
         }
     }
 }

@@ -13,6 +13,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 // OnLevelCompleted: Compare with best. Show how close to elite. Make player want elite.
+// "DARK" LEVELS? Super meat Boy has the level layouts repeated with higher difficulty.
 
 // First script to run
 public class GameManager : MonoBehaviour
@@ -20,7 +21,8 @@ public class GameManager : MonoBehaviour
     public Image TimeBarLeft;
     public Image TimeBarRight;
     public Tilemap Tilemap;
-    public ColorSchemeScriptableObject ColorScheme;
+    public ColorSchemeScriptableObject CurrentColorScheme;
+    public ColorSchemeListScriptableObject ColorSchemeList;
     public TMP_Text TextStatus;
     public TMP_Text TextLevelTime;
     public TMP_Text TextLevelName;
@@ -48,9 +50,7 @@ public class GameManager : MonoBehaviour
 
     private void OnValidate()
     {
-        UpdateColors(ColorScheme);
-        UpdateUiColors(ColorScheme);
-        OutlineMaterial.color = Sludge.Colors.ColorScheme.GetColor(ColorScheme, SchemeColor.Edges);
+        SetColorScheme(CurrentColorScheme);
     }
 
     public static void SetStatusText(string text)
@@ -70,25 +70,11 @@ public class GameManager : MonoBehaviour
         OnValidate();
     }
 
-    public void SetScheme(ColorSchemeScriptableObject scheme)
+    public void SetColorScheme(ColorSchemeScriptableObject scheme)
     {
-        ColorScheme = scheme;
-        UpdateColors(ColorScheme);
-        UpdateUiColors(ColorScheme);
-    }
-
-    void UpdateColors(ColorSchemeScriptableObject scheme)
-    {
-        var allColorAppliers = FindObjectsOfType<SchemeColorApplier>(includeInactive: true);
-        foreach (var applier in allColorAppliers)
-            applier.ApplyColor(scheme);
-    }
-
-    void UpdateUiColors(ColorSchemeScriptableObject scheme)
-    {
-        var allUiColorAppliers = FindObjectsOfType<UiSchemeColorApplier>(includeInactive: true);
-        foreach (var applier in allUiColorAppliers)
-            applier.ApplyColor(scheme);
+        CurrentColorScheme = scheme;
+        ColorScheme.ApplyColors(scheme);
+        ColorScheme.ApplyUiColors(scheme);
     }
 
     public void StartLevel()
@@ -103,8 +89,7 @@ public class GameManager : MonoBehaviour
 
         if (levelData != null)
         {
-            // This will update tilemap and may cause collisions if Unity gets a chance to check (I'm not sure how it happens, but player kept dying).
-            Debug.Log($"Loading level");
+            Debug.Log($"Loading level: {levelData.Name}");
             LevelDeserializer.Run(levelData, levelElements, levelSettings);
             currentLevelData = levelData;
         }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Sludge.Tiles
 {
-    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/ObjectListScriptableObject", order = 3)]
+    [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/ObjectList", order = 3)]
     public class ObjectListScriptableObject : ScriptableObject
     {
         public GameObject[] ObjectPrefabs;
