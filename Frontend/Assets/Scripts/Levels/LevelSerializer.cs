@@ -12,6 +12,7 @@ public static class LevelSerializer
     {
         var data = new LevelData();
 
+#if UNITY_EDITOR
         data.Id = levelSettings.LevelId;
         data.Name = levelSettings.LevelName;
         data.StartTimeSeconds = levelSettings.StartTimeSeconds;
@@ -37,7 +38,7 @@ public static class LevelSerializer
             };
             data.Objects.Add(storedObject);
         }
-
+#endif
         return data;
     }
 
@@ -57,7 +58,14 @@ public static class LevelSerializer
             {
                 TileBase tile = allTiles[x + y * bounds.size.x];
                 int tileIdx = tileList.GetTileIndex(tile);
-                data.TileIndices.Add(tileIdx);
+
+                var tilePos = new Vector3Int();
+                tilePos.x = x + data.TilesX;
+                tilePos.y = y + data.TilesY;
+                int tileRotation = (int)map.GetTransformMatrix(tilePos).rotation.eulerAngles.z;
+
+                // Include rotation information in stored tileIdx
+                data.TileIndices.Add(tileIdx + tileRotation * 1000);
             }
         }
     }

@@ -8,6 +8,7 @@ public class UiNavigation : MonoBehaviour
     public GameObject Right;
     public GameObject Up;
     public GameObject Down;
+	public bool Enabled = true;
 
 	public static Action<GameObject> OnNavigationChanged;
 	public static Action<GameObject> OnNavigationSelected;

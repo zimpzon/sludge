@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 18
+  SchemeColor: 10
   BrightnessOffset: 0
 --- !u!114 &1484282617990719749
 MonoBehaviour:
@@ -126,11 +126,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -715668635
+  m_SortingLayerID: -1865286507
   m_SortingLayer: 2
-  m_SortingOrder: -5
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3ad7cd69cc2a9bd47bc8bac89826e7aa, type: 3}
-  m_Color: {r: 0.93725497, g: 0.8745099, b: 0.26666668, a: 0.20784314}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2

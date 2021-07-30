@@ -22,7 +22,6 @@ namespace Sludge.Modifiers
         {
             trans = transform;
             spriteRenderer = GetComponent<SpriteRenderer>();
-            SetSize();
         }
 
         private void OnValidate()
@@ -36,8 +35,14 @@ namespace Sludge.Modifiers
             spriteRenderer.size = new Vector2(Length, 1);
         }
 
+        public override void Reset()
+        {
+            SetSize();
+        }
+
         private void Start()
         {
+            SetSize();
             centerLineA = SludgeUtil.StabilizeVector(trans.TransformPoint(Vector2.left * 0.5f));
             centerLineB = SludgeUtil.StabilizeVector(trans.TransformPoint(Vector2.right * 0.5f));
             beltDirection = (centerLineB - centerLineA).normalized;

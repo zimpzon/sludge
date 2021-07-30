@@ -71,10 +71,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -715668635
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: ee46c5f5e4c84a249ad461498ba7cf20, type: 3}
-  m_Color: {r: 0.92549026, g: 0.054901965, b: 0.3019608, a: 1}
+  m_Color: {r: 0.93725497, g: 0.8745099, b: 0.26666668, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 16
+  SchemeColor: 6
   BrightnessOffset: 0
 --- !u!1 &3124446515300111177
 GameObject:
@@ -232,10 +232,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -715668635
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: ee46c5f5e4c84a249ad461498ba7cf20, type: 3}
-  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
+  m_Color: {r: 0.8941177, g: 0.6039216, b: 0.19215688, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -257,5 +257,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 17
+  SchemeColor: 7
   BrightnessOffset: 0

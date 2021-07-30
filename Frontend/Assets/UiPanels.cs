@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Sludge.UI
 {
-    public enum UiPanel { MainMenu, LevelSelect, Game }
+    public enum UiPanel { MainMenu, LevelSelect, Game, BetweenRoundsMenu, ShowScore }
 
     public class UiPanels : MonoBehaviour
     {
@@ -15,6 +15,8 @@ namespace Sludge.UI
         public GameObject PanelMainMenu;
         public GameObject PanelLevelSelect;
         public GameObject PanelGame;
+        public GameObject PanelBetweenRoundsMenu;
+        public GameObject PanelShowScore;
 
         Vector2 panelLevelSelectHidePos;
         Vector2 panelLevelSelectShowPos = new Vector3(110, -46);
@@ -22,6 +24,10 @@ namespace Sludge.UI
         Vector2 panelMainMenuShowPos;
         Vector2 panelGameHidePos = new Vector2(0, 40);
         Vector2 panelGameShowPos = new Vector2(0, 0);
+        Vector2 panelBetweenRoundsHidePos = new Vector2(-150, -76);
+        Vector2 panelBetweenRoundsShowPos = new Vector2(0, -76);
+        Vector2 panelShowScoreHidePos = new Vector2(0, 50);
+        Vector2 panelShowScoreShowPos = new Vector2(0, -35);
 
         private void Awake()
         {
@@ -63,6 +69,14 @@ namespace Sludge.UI
                 case UiPanel.Game:
                     return PanelGame.GetComponent<RectTransform>().
                         DOAnchorPos(show ? panelGameShowPos : panelGameHidePos, time).SetEase(Ease.OutCubic).WaitForCompletion();
+
+                case UiPanel.BetweenRoundsMenu:
+                    return PanelBetweenRoundsMenu.GetComponent<RectTransform>().
+                        DOAnchorPos(show ? panelBetweenRoundsShowPos : panelBetweenRoundsHidePos, time).SetEase(Ease.OutCubic).WaitForCompletion();
+
+                case UiPanel.ShowScore:
+                    return PanelShowScore.GetComponent<RectTransform>().
+                        DOAnchorPos(show ? panelShowScoreShowPos: panelShowScoreHidePos, time).SetEase(Ease.OutCubic).WaitForCompletion();
 
                 default:
                     Debug.LogError($"Unknown panel: {panel}");

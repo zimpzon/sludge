@@ -22,27 +22,29 @@ MonoBehaviour:
   - {r: 0.12941177, g: 0.12941177, b: 0.08235294, a: 0}
   - {r: 0.7372549, g: 0.7803922, b: 0.7137255, a: 0}
   - {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   Background: {r: 0.5294118, g: 0.57254905, b: 0.50980395, a: 0}
   Walls: {r: 0.24705884, g: 0.2784314, b: 0.23529413, a: 0}
-  Text: {r: 0.7372549, g: 0.7803922, b: 0.7137255, a: 0}
   Edges: {r: 0.12941177, g: 0.12941177, b: 0.08235294, a: 0}
   Player: {r: 0.24705884, g: 0.2784314, b: 0.23529413, a: 0}
-  Laser: {r: 0, g: 0, b: 0, a: 0}
   Exit1: {r: 0.93725497, g: 0.8745099, b: 0.26666668, a: 0}
   Exit2: {r: 0.8941177, g: 0.6039216, b: 0.19215688, a: 0}
-  EnemyA1: {r: 0, g: 0, b: 0, a: 0}
-  EnemyA2: {r: 0, g: 0, b: 0, a: 0}
-  EnemyB1: {r: 0, g: 0, b: 0, a: 0}
-  EnemyB2: {r: 0, g: 0, b: 0, a: 0}
-  Mine1: {r: 0, g: 0, b: 0, a: 0}
-  Mine2: {r: 0, g: 0, b: 0, a: 0}
-  Buff1: {r: 0, g: 0, b: 0, a: 0}
-  Buff2: {r: 0, g: 0, b: 0, a: 0}
   Key1: {r: 0.93725497, g: 0.8745099, b: 0.26666668, a: 0}
   Key2: {r: 0.8941177, g: 0.6039216, b: 0.19215688, a: 0}
-  Time1: {r: 0.93725497, g: 0.8745099, b: 0.26666668, a: 0}
-  Time2: {r: 0.5294118, g: 0.57254905, b: 0.50980395, a: 0}
-  GhostTrigger1: {r: 0, g: 0, b: 0, a: 0}
-  GhostTrigger2: {r: 0, g: 0, b: 0, a: 0}
+  TimePill1: {r: 0, g: 0, b: 0, a: 0}
+  TimePill2: {r: 0, g: 0, b: 0, a: 0}
+  Conveyor1: {r: 0, g: 0, b: 0, a: 0}
+  Conveyor2: {r: 0, g: 0, b: 0, a: 0}
+  UiTimerBarFront: {r: 0.8941177, g: 0.6039216, b: 0.19215688, a: 0}
+  UiTimerBarBack: {r: 0, g: 0, b: 0, a: 0}
+  UiTextDefault: {r: 1, g: 1, b: 1, a: 0}
+  UiTextHighlighted: {r: 0.93725497, g: 0.8745099, b: 0.26666668, a: 0}
+  UiTextDimmed: {r: 0.12941177, g: 0.12941177, b: 0.08235294, a: 0}
+  UiTextGoodScore: {r: 0, g: 0, b: 0, a: 0}
+  UiTextBadScore: {r: 0, g: 0, b: 0, a: 0}
+  UiTextNeutralScore: {r: 0, g: 0, b: 0, a: 0}
+  UiSelectionMarker: {r: 0.8941177, g: 0.6039216, b: 0.19215688, a: 0}
+  UiButtonFace: {r: 0, g: 0, b: 0, a: 0}
+  UiButtonOutline: {r: 0, g: 0, b: 0, a: 0}
+  UiBackground: {r: 0, g: 0, b: 0, a: 0}

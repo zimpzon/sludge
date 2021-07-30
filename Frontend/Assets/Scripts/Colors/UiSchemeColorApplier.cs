@@ -10,12 +10,19 @@ public class UiSchemeColorApplier : MonoBehaviour
 
     void Start()
     {
-        ApplyColor(GameManager.Instance?.CurrentColorScheme);
+        ApplyColor();
+    
+    }
+
+    public void SetColor(SchemeColor schemeColor)
+    {
+        SchemeColor = schemeColor;
+        ApplyColor();
     }
 
     void OnValidate()
     {
-        ApplyColor(GameManager.Instance?.CurrentColorScheme);
+        ApplyColor();
     }
 
     Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)
@@ -35,6 +42,11 @@ public class UiSchemeColorApplier : MonoBehaviour
             schemeColor = Color.HSVToRGB(h, s, v + offset);
         }
         return schemeColor;
+    }
+
+    public void ApplyColor()
+    {
+        ApplyColor(GameManager.Instance?.CurrentColorScheme);
     }
 
     public void ApplyColor(ColorSchemeScriptableObject scheme)

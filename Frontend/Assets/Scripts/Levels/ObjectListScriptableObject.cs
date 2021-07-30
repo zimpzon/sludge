@@ -8,8 +8,10 @@ namespace Sludge.Tiles
     {
         public GameObject[] ObjectPrefabs;
 
+#if UNITY_EDITOR
         public int GetObjectIndex(GameObject obj)
         {
+            // This can only build in Editor.
             var prefab = PrefabUtility.GetCorrespondingObjectFromSource(obj);
             for (int i = 0; i < ObjectPrefabs.Length; ++i)
             {
@@ -20,5 +22,6 @@ namespace Sludge.Tiles
             Debug.LogError($"Object not found in ObjectListScriptableObject.ObjectPrefabs: {obj.name}");
             return 0;
         }
+#endif
     }
 }

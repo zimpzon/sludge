@@ -1,8 +1,10 @@
+using Sludge;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
 using Sludge.Replays;
 using Sludge.Shared;
 using Sludge.SludgeObjects;
+using Sludge.UI;
 using Sludge.Utility;
 using System;
 using System.Collections;
@@ -23,7 +25,14 @@ public class GameManager : MonoBehaviour
     public Tilemap Tilemap;
     public ColorSchemeScriptableObject CurrentColorScheme;
     public ColorSchemeListScriptableObject ColorSchemeList;
-    public TMP_Text TextStatus;
+    public TMP_Text TextStartRound;
+
+    public TMP_Text TextWatchReplay;
+    public TMP_Text TextGoToNextLevel;
+
+    public TMP_Text TextStatsComments;
+    public TMP_Text TextLevelStatus;
+
     public TMP_Text TextLevelTime;
     public TMP_Text TextLevelName;
     public Material OutlineMaterial;
@@ -31,6 +40,7 @@ public class GameManager : MonoBehaviour
     public static PlayerInput PlayerInput = new PlayerInput();
     public static LevelReplay LevelReplay = new LevelReplay();
     public static GameManager Instance;
+    
     public Player Player;
     public SludgeObject[] SludgeObjects;
     public double UnityTime;
@@ -41,21 +51,16 @@ public class GameManager : MonoBehaviour
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000 / TickSizeMs;
     public int Keys;
-    LevelData currentLevelData = new LevelData { StartTimeSeconds = 30, EliteCompletionTimeSeconds = 20, Name = "(started from editor)" };
+    LevelData currentLevelData = new LevelData { StartTimeSeconds = 30, EliteCompletionTimeSeconds = 20, };
     double timeLeft;
-
     LevelElements levelElements;
     LevelSettings levelSettings;
     bool levelComplete;
+    RoundResult latestRoundResult;
 
     private void OnValidate()
     {
         SetColorScheme(CurrentColorScheme);
-    }
-
-    public static void SetStatusText(string text)
-    {
-        Instance.TextStatus.text = text;
     }
 
     void Awake()
@@ -79,7 +84,7 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
-        StartCoroutine(LevelLoop());
+        StartCoroutine(BetweenRoundsLoop());
     }
 
     public void LoadLevel(LevelData levelData)
@@ -95,6 +100,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            currentLevelData.Name = levelSettings.LevelName;
             currentLevelData.StartTimeSeconds = levelSettings.StartTimeSeconds;
             currentLevelData.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
         }
@@ -108,46 +114,90 @@ public class GameManager : MonoBehaviour
         Tilemap.gameObject.SetActive(true);
     }
 
-    IEnumerator LevelLoop()
+    void SetMenuTextActive(TMP_Text text, bool active)
     {
+        text.GetComponent<UiSchemeColorApplier>().SetColor(active ? SchemeColor.UiTextDefault : SchemeColor.UiTextDimmed);
+        text.GetComponent<UiNavigation>().Enabled = active;
+    }
+
+    void SetScoreText(RoundResult roundResult)
+    {
+        if (roundResult.Completed)
+        {
+            TextStatsComments.text = roundResult.IsEliteTime ? "Level Mastered!" : "Well Done";
+        }
+        else
+        {
+            TextStatsComments.text = roundResult.OutOfTime ? "Out Of Time" : "You Died";
+        }
+    }
+
+    IEnumerator BetweenRoundsLoop()
+    {
+        GameObject latestSelection = TextStartRound.gameObject;
+        TextLevelStatus.text = $"Elite Time: {levelSettings.EliteCompletionTimeSeconds.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)}";
+        UiPanels.Instance.HidePanel(UiPanel.ShowScore);
+        UpdateTime();
+
         while (true)
         {
             GC.Collect();
 
-            if (LevelReplay.HasReplay())
+            SetMenuTextActive(TextStartRound, true);
+            SetMenuTextActive(TextWatchReplay, LevelReplay.HasReplay());
+            SetMenuTextActive(TextGoToNextLevel, false);
+
+            UiLogic.Instance.SetSelectionMarker(latestSelection);
+
+            bool startReplay = false;
+            bool startRound = false;
+            bool forwardStartsNextRound = true;
+
+            UiNavigation.OnNavigationChanged = (go) =>
             {
-                SetStatusText("<Press W to start, R to replay or back to exit>");
-            }
-            else
+                latestSelection = go;
+                forwardStartsNextRound = false;
+            };
+
+            UiNavigation.OnNavigationSelected = (go) =>
             {
-                SetStatusText("<Press W to start>");
-            }
+                if (go == TextStartRound.gameObject) {
+                    startRound = true;
+                } else if (go == TextWatchReplay.gameObject && go.GetComponent<UiNavigation>().Enabled) {
+                    startReplay = true;
+                }
+            };
 
             ResetLevel();
 
-            bool? isReplay = null;
-            while (isReplay == null)
+            UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
+
+            while (startReplay == false && startRound == false)
             {
+                // Menu selection loop - start new round, start replay, etc.
                 PlayerInput.GetHumanInput();
-                if (PlayerInput.Up > 0)
+                UiLogic.Instance.DoUiNavigation(PlayerInput);
+
+                if (PlayerInput.Up > 0 && forwardStartsNextRound)
                 {
-                    SetStatusText("");
-                    isReplay = false;
+                    startRound = true;
                 }
-                else if (Input.GetKey(KeyCode.R))
-                {
-                    SetStatusText("<Replay>");
-                    isReplay = true;
-                }
-                else if (PlayerInput.BackTap)
+
+                if (PlayerInput.BackTap)
                 {
                     StopAllCoroutines();
+                    UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
+                    UiLogic.Instance.BackFromGame();
                 }
 
                 yield return null;
             }
 
-            yield return Playing(isReplay.Value);
+            UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
+            UiPanels.Instance.HidePanel(UiPanel.ShowScore);
+            UiLogic.Instance.SetSelectionMarker(null);
+
+            yield return Playing(isReplay: startReplay);
         }
     }
 
@@ -158,6 +208,8 @@ public class GameManager : MonoBehaviour
         EngineTimeMs = 0;
         FrameCounter = 0;
         UnityTime = 0;
+        timeLeft = currentLevelData.StartTimeSeconds;
+        latestRoundResult = new RoundResult();
 
         levelComplete = false;
         Keys = 0;
@@ -177,8 +229,6 @@ public class GameManager : MonoBehaviour
         else
             LevelReplay.BeginRecording();
 
-        timeLeft = currentLevelData.StartTimeSeconds;
-
         while (Player.Alive)
         {
             UnityTime += Time.deltaTime;
@@ -186,14 +236,19 @@ public class GameManager : MonoBehaviour
                 DoTick(isReplay);
 
             if (levelComplete)
-            {
-                SetStatusText("Level complete!");
-                yield return new WaitForSeconds(1);
                 break;
-            }
 
             yield return null;
         }
+
+        latestRoundResult.Completed = levelComplete;
+        latestRoundResult.EndTime = timeLeft;
+
+        latestRoundResult.OutOfTime = timeLeft <= 0;
+        latestRoundResult.IsEliteTime = EngineTime <= levelSettings.EliteCompletionTimeSeconds;
+
+        SetScoreText(latestRoundResult);
+        UiPanels.Instance.ShowPanel(UiPanel.ShowScore);
 
         yield return new WaitForSeconds(1.0f);
     }

@@ -3,6 +3,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class UiSelectionMarker : MonoBehaviour
 {
+    public static UiSelectionMarker Instance;
+
     public GameObject target { get; private set; }
 
     public RectTransform TL;
@@ -62,6 +64,7 @@ public class UiSelectionMarker : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         rectTrans = GetComponent<RectTransform>();
     }
 

@@ -40,8 +40,15 @@ public static class LevelDeserializer
                 tilePos.x = x + data.TilesX;
                 tilePos.y = y + data.TilesY;
                 int tileIdx = data.TileIndices[y * data.TilesW + x];
+                // Tile rotation is stored as rot * 1000
+                int tileRotation = tileIdx / 1000;
+                tileIdx = tileIdx % 1000;
                 var tile = elements.TileList.Tiles[tileIdx];
                 elements.Tilemap.SetTile(tilePos, tile);
+
+                var tileTransform = new Matrix4x4();
+                tileTransform.SetTRS(Vector3.zero, Quaternion.Euler(0, 0, tileRotation), Vector3.one);
+                elements.Tilemap.SetTransformMatrix(tilePos, tileTransform);
             }
         }
 
@@ -65,6 +72,7 @@ public static class LevelDeserializer
             for (int j = 0; j < modifiers.Count(); ++j)
             {
                 JsonUtility.FromJsonOverwrite(storedObj.Modifiers[j], modifiers[j]);
+                modifiers[j].Reset();
             }
 
             instance.transform.SetParent(elements.ObjectsRoot.transform);

@@ -7,6 +7,7 @@ namespace Sludge.UI
 	// Second script to run
 	public class UiLogic : MonoBehaviour
 	{
+		public static UiLogic Instance;
 		public bool StartCurrentScene = false;
 		public UiLevelsLayout LevelLayout;
 		public GameObject ButtonPlay;
@@ -19,6 +20,8 @@ namespace Sludge.UI
 
 		private void Awake()
         {
+			Instance = this;
+
 			if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
 				ButtonExit.SetActive(false);
@@ -42,7 +45,7 @@ namespace Sludge.UI
 			}
 		}
 
-		void SetSelectionMarker(GameObject uiObject)
+		public void SetSelectionMarker(GameObject uiObject)
         {
 			UiSelectionMarker.SetTarget(uiObject);
 			UiSelectionMarker.gameObject.SetActive(uiObject == null ? false : true);
@@ -54,7 +57,7 @@ namespace Sludge.UI
 			StartCoroutine(LevelSelectLoop());
 		}
 
-		void DoUiNavigation(PlayerInput playerInput)
+		public void DoUiNavigation(PlayerInput playerInput)
         {
 			UiNavigation.TryMove(UiSelectionMarker, playerInput);
 		}
@@ -102,21 +105,19 @@ namespace Sludge.UI
 
 			while (true)
 			{
-				CheckInput(playerInput);
-				if (playerInput.BackTap)
-                {
-					// From game back to menus. For now go to level select.
-					StopAllCoroutines();
-					UiPanels.Instance.HidePanel(UiPanel.Game);
-					UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
-					UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
-					UiPanels.Instance.ShowBackground();
-					StartCoroutine(LevelSelectLoop());
-					break;
-                }
-
+				// Wait for game sequence to end
 				yield return null;
 			}
+		}
+
+		public void BackFromGame()
+        {
+			StopAllCoroutines();
+			UiPanels.Instance.HidePanel(UiPanel.Game);
+			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
+			UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
+			UiPanels.Instance.ShowBackground();
+			StartCoroutine(LevelSelectLoop());
 		}
 
 		void ReselectLatestLevel()
