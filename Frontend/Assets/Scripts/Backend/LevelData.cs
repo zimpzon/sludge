@@ -4,11 +4,11 @@ namespace Sludge.Shared
 {
     public class LevelData
     {
-        public string Id;
-        public string Name;
-        public double StartTimeSeconds;
-        public double EliteCompletionTimeSeconds;
-        public LevelDataTransform PlayerTransform;
+        public string Id = "(id)";
+        public string Name = "(no name)";
+        public double StartTimeSeconds = 20;
+        public double EliteCompletionTimeSeconds = 10;
+        public LevelDataTransform PlayerTransform = new LevelDataTransform();
         public int TilesX;
         public int TilesY;
         public int TilesW;

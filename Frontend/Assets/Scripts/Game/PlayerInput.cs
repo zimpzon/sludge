@@ -37,6 +37,17 @@ namespace Sludge.PlayerInputs
             ColorPrevTap = Input.GetKeyDown(KeyCode.Z);
         }
 
+        public void Clearstate()
+        {
+            SetState(0);
+            UpTap = false;
+            DownTap = false;
+            LeftTap = false;
+            RightTap = false;
+            SelectTap = false;
+            BackTap = false;
+        }
+
         public void SetState(int state)
         {
             Up = state & 1;

@@ -73,6 +73,7 @@ namespace Sludge.UI
 
 			UiPanels.Instance.ShowBackground();
 			UiPanels.Instance.HidePanel(UiPanel.Game);
+			UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 
 			UiNavigation.OnNavigationChanged = null;
@@ -158,7 +159,8 @@ namespace Sludge.UI
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
 				UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
-				var uiLevel = go.GetComponent<UiLevel>(); 
+				var uiLevel = go.GetComponent<UiLevel>();
+				StopAllCoroutines();
 				StartCoroutine(PlayLoop(uiLevel));
 			};
 
@@ -177,6 +179,7 @@ namespace Sludge.UI
 				if (playerInput.BackTap)
                 {
 					UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
+					StopAllCoroutines();
 					StartCoroutine(MainMenuLoop());
 					break;
 				}

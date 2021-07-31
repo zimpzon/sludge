@@ -28,11 +28,6 @@ public class SchemeColorApplier : MonoBehaviour
         {
             float offset = BrightnessOffset;
             Color.RGBToHSV(schemeColor, out float h, out float s, out float v);
-
-            // Adjust brightness up or down according to existing value.
-            if (v < 0.5f)
-                offset *= -1;
-
             schemeColor = Color.HSVToRGB(h, s, v + offset);
         }
         return schemeColor;

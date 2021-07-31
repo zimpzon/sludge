@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b59a7e3ce81504cb41ef646da45b30, type: 3}
   m_Name: Scheme2
   m_EditorClassIdentifier: 
-  schemeName: 
+  schemeName: d
   Palette:
   - {r: 0.3529412, g: 0.7803922, b: 0.7568628, a: 0}
   - {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 0}
@@ -23,25 +23,30 @@ MonoBehaviour:
   - {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
   Background: {r: 0.3529412, g: 0.7803922, b: 0.7568628, a: 0}
   Walls: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 0}
-  Text: {r: 1, g: 1, b: 1, a: 0}
   Edges: {r: 0.29827774, g: 0.6420555, b: 0.819, a: 0}
   Player: {r: 0.9254902, g: 0.054901984, b: 0.30178156, a: 0}
-  Laser: {r: 0, g: 0, b: 0, a: 0}
   Exit1: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   Exit2: {r: 0.92549026, g: 0.054901965, b: 0.3019608, a: 1}
-  EnemyA1: {r: 0, g: 0, b: 0, a: 0}
-  EnemyA2: {r: 0, g: 0, b: 0, a: 0}
-  EnemyB1: {r: 0, g: 0, b: 0, a: 0}
-  EnemyB2: {r: 0, g: 0, b: 0, a: 0}
-  Mine1: {r: 0, g: 0, b: 0, a: 0}
-  Mine2: {r: 0, g: 0, b: 0, a: 0}
-  Buff1: {r: 0, g: 0, b: 0, a: 0}
-  Buff2: {r: 0, g: 0, b: 0, a: 0}
   Key1: {r: 0.92549026, g: 0.054901965, b: 0.3019608, a: 0}
   Key2: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 0}
-  Time1: {r: 0.92549026, g: 0.054901965, b: 0.3019608, a: 0}
-  Time2: {r: 0, g: 0, b: 0, a: 0}
-  GhostTrigger1: {r: 0, g: 0, b: 0, a: 0}
-  GhostTrigger2: {r: 0, g: 0, b: 0, a: 0}
+  TimePill1: {r: 0, g: 0, b: 0, a: 0}
+  TimePill2: {r: 0, g: 0, b: 0, a: 0}
+  Conveyor1: {r: 0, g: 0, b: 0, a: 0}
+  Conveyor2: {r: 0, g: 0, b: 0, a: 0}
+  UiTimerBarFront: {r: 0, g: 0, b: 0, a: 0}
+  UiTimerBarBack: {r: 0, g: 0, b: 0, a: 0}
+  UiTextDefault: {r: 0, g: 0, b: 0, a: 0}
+  UiTextHighlighted: {r: 0, g: 0, b: 0, a: 0}
+  UiTextDimmed: {r: 0, g: 0, b: 0, a: 0}
+  UiTextGoodScore: {r: 0, g: 0, b: 0, a: 0}
+  UiTextBadScore: {r: 0, g: 0, b: 0, a: 0}
+  UiTextNeutralScore: {r: 0, g: 0, b: 0, a: 0}
+  UiSelectionMarker: {r: 0, g: 0, b: 0, a: 0}
+  UiButtonFace: {r: 0, g: 0, b: 0, a: 0}
+  UiButtonOutline: {r: 0, g: 0, b: 0, a: 0}
+  UiBackground: {r: 0, g: 0, b: 0, a: 0}

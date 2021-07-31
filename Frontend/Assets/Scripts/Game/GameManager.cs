@@ -25,10 +25,10 @@ public class GameManager : MonoBehaviour
     public Tilemap Tilemap;
     public ColorSchemeScriptableObject CurrentColorScheme;
     public ColorSchemeListScriptableObject ColorSchemeList;
-    public TMP_Text TextStartRound;
 
-    public TMP_Text TextWatchReplay;
-    public TMP_Text TextGoToNextLevel;
+    public GameObject ButtonStartRound;
+    public GameObject ButtonWatchReplay;
+    public GameObject ButtonGoToNextLevel;
 
     public TMP_Text TextStatsComments;
     public TMP_Text TextLevelStatus;
@@ -114,56 +114,54 @@ public class GameManager : MonoBehaviour
         Tilemap.gameObject.SetActive(true);
     }
 
-    void SetMenuTextActive(TMP_Text text, bool active)
+    void SetMenuButtonActive(GameObject go, bool active)
     {
-        text.GetComponent<UiSchemeColorApplier>().SetColor(active ? SchemeColor.UiTextDefault : SchemeColor.UiTextDimmed);
-        text.GetComponent<UiNavigation>().Enabled = active;
+        // Button face
+        go.GetComponent<UiSchemeColorApplier>().SetBrightnessOffset(active ? 0 : -0.25f);
+        // Button text
+        go.GetComponentInChildren<TMP_Text>().gameObject.GetComponent<UiSchemeColorApplier>().SetBrightnessOffset(active ? 0 : -0.5f);
+
+        go.GetComponent<UiNavigation>().Enabled = active;
     }
 
     void SetScoreText(RoundResult roundResult)
     {
         if (roundResult.Completed)
         {
-            TextStatsComments.text = roundResult.IsEliteTime ? "Level Mastered!" : "Well Done";
+            TextStatsComments.text = roundResult.IsEliteTime ? "- Level Mastered! -" : "- Well Done -";
         }
         else
         {
-            TextStatsComments.text = roundResult.OutOfTime ? "Out Of Time" : "You Died";
+            TextStatsComments.text = roundResult.OutOfTime ? "- Out Of Time -" : "";
         }
     }
 
     IEnumerator BetweenRoundsLoop()
     {
-        GameObject latestSelection = TextStartRound.gameObject;
+        GameObject latestSelection = ButtonStartRound.gameObject;
         TextLevelStatus.text = $"Elite Time: {levelSettings.EliteCompletionTimeSeconds.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)}";
-        UiPanels.Instance.HidePanel(UiPanel.ShowScore);
+        TextStatsComments.text = "";
         UpdateTime();
 
         while (true)
         {
             GC.Collect();
 
-            SetMenuTextActive(TextStartRound, true);
-            SetMenuTextActive(TextWatchReplay, LevelReplay.HasReplay());
-            SetMenuTextActive(TextGoToNextLevel, false);
+            SetMenuButtonActive(ButtonStartRound, true);
+            SetMenuButtonActive(ButtonWatchReplay, LevelReplay.HasReplay());
+            SetMenuButtonActive(ButtonGoToNextLevel, false);
 
             UiLogic.Instance.SetSelectionMarker(latestSelection);
 
             bool startReplay = false;
             bool startRound = false;
-            bool forwardStartsNextRound = true;
 
-            UiNavigation.OnNavigationChanged = (go) =>
-            {
-                latestSelection = go;
-                forwardStartsNextRound = false;
-            };
-
+            UiNavigation.OnNavigationChanged = (go) => latestSelection = go;
             UiNavigation.OnNavigationSelected = (go) =>
             {
-                if (go == TextStartRound.gameObject) {
+                if (go == ButtonStartRound) {
                     startRound = true;
-                } else if (go == TextWatchReplay.gameObject && go.GetComponent<UiNavigation>().Enabled) {
+                } else if (go == ButtonWatchReplay && go.GetComponent<UiNavigation>().Enabled) {
                     startReplay = true;
                 }
             };
@@ -171,6 +169,8 @@ public class GameManager : MonoBehaviour
             ResetLevel();
 
             UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
+            PlayerInput.Clearstate();
+            yield return null; // Unity input state
 
             while (startReplay == false && startRound == false)
             {
@@ -178,7 +178,7 @@ public class GameManager : MonoBehaviour
                 PlayerInput.GetHumanInput();
                 UiLogic.Instance.DoUiNavigation(PlayerInput);
 
-                if (PlayerInput.Up > 0 && forwardStartsNextRound)
+                if (PlayerInput.Up > 0 && latestSelection == ButtonStartRound)
                 {
                     startRound = true;
                 }
@@ -194,7 +194,6 @@ public class GameManager : MonoBehaviour
             }
 
             UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
-            UiPanels.Instance.HidePanel(UiPanel.ShowScore);
             UiLogic.Instance.SetSelectionMarker(null);
 
             yield return Playing(isReplay: startReplay);
@@ -248,7 +247,6 @@ public class GameManager : MonoBehaviour
         latestRoundResult.IsEliteTime = EngineTime <= levelSettings.EliteCompletionTimeSeconds;
 
         SetScoreText(latestRoundResult);
-        UiPanels.Instance.ShowPanel(UiPanel.ShowScore);
 
         yield return new WaitForSeconds(1.0f);
     }

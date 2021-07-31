@@ -46,13 +46,11 @@ public class Player : MonoBehaviour
 
     public void ConveyourBeltEnter()
     {
-        Debug.Log($"Enter, frame = {GameManager.Instance.FrameCounter}");
         onConveyorBeltCount++;
     }
 
     public void ConveyourBeltExit()
     {
-        Debug.Log($"Exit, frame = {GameManager.Instance.FrameCounter}");
         onConveyorBeltCount--;
         // When resetting game colliderexits are fired after resetting player, so we get an exit event after setting onConveyorBeltCount to 0.
         if (onConveyorBeltCount < 0)

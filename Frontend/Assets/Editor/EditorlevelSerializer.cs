@@ -16,6 +16,9 @@ public class EditorLevelSerializer : MonoBehaviour
         string json = JsonConvert.SerializeObject(level);
 
         string filePath = EditorUtility.SaveFilePanel("Save level", "Assets/Resources/Levels", "mylevel", "json");
+        if (string.IsNullOrEmpty(filePath))
+            return;
+
         File.WriteAllText(filePath, json);
         File.Delete(filePath + ".meta"); // FU, Unity
         AssetDatabase.Refresh();
