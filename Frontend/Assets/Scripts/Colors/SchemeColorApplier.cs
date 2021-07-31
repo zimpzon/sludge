@@ -72,5 +72,14 @@ public class SchemeColorApplier : MonoBehaviour
             text.color = GetColor(text.color, scheme);
             return;
         }
+
+        var lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer != null)
+        {
+            var lineColor = GetColor(lineRenderer.startColor, scheme);
+            lineRenderer.startColor = lineColor;
+            lineRenderer.endColor = lineColor;
+            return;
+        }
     }
 }

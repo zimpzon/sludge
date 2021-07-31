@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Sludge.UI
 {
-    public enum UiPanel { MainMenu, LevelSelect, Game, BetweenRoundsMenu }
+    public enum UiPanel { MainMenu, LevelSelect, Game, BetweenRoundsMenu, Controls }
 
     public class UiPanels : MonoBehaviour
     {
@@ -16,6 +16,7 @@ namespace Sludge.UI
         public GameObject PanelLevelSelect;
         public GameObject PanelGame;
         public GameObject PanelBetweenRoundsMenu;
+        public GameObject PanelControls;
 
         Vector2 panelLevelSelectHidePos;
         Vector2 panelLevelSelectShowPos = new Vector3(110, -46);
@@ -25,6 +26,8 @@ namespace Sludge.UI
         Vector2 panelGameShowPos = new Vector2(0, 0);
         Vector2 panelBetweenRoundsHidePos = new Vector2(0, 30);
         Vector2 panelBetweenRoundsShowPos = new Vector2(0, -40);
+        Vector2 panelControlsHidePos;
+        Vector2 panelControlsShowPos = new Vector3(110, -46);
 
         private void Awake()
         {
@@ -41,6 +44,7 @@ namespace Sludge.UI
             panelLevelSelectHidePos = PanelLevelSelect.GetComponent<RectTransform>().anchoredPosition;
             panelMainMenuShowPos = PanelMainMenu.GetComponent<RectTransform>().anchoredPosition;
             panelMainMenuHidePos = panelMainMenuShowPos + Vector2.left * 760;
+            panelControlsHidePos = PanelControls.GetComponent<RectTransform>().anchoredPosition;
         }
 
         public void ShowBackground() => PanelBackground.SetActive(true);
@@ -49,32 +53,53 @@ namespace Sludge.UI
         public YieldInstruction ShowPanel(UiPanel panel, bool instant = false) => ShowPanel(panel, show: true, instant);
         public YieldInstruction HidePanel(UiPanel panel, bool instant = false) => ShowPanel(panel, show: false, instant);
 
-        YieldInstruction ShowPanel(UiPanel panel, bool show, bool instant = false)
+        GameObject GetPanelSettings(UiPanel panel, out Vector2 hidePos, out Vector2 showPos)
         {
-            float time = instant ? 0 : ChangeTime;
-
             switch (panel)
             {
                 case UiPanel.MainMenu:
-                    return PanelMainMenu.GetComponent<RectTransform>().
-                        DOAnchorPos(show ? panelMainMenuShowPos : panelMainMenuHidePos, time).SetEase(Ease.OutCubic).WaitForCompletion();
+                    hidePos = panelMainMenuHidePos;
+                    showPos = panelMainMenuShowPos;
+                    return PanelMainMenu;
 
                 case UiPanel.LevelSelect:
-                    return PanelLevelSelect.GetComponent<RectTransform>().
-                        DOAnchorPos(show ? panelLevelSelectShowPos : panelLevelSelectHidePos, time).SetEase(Ease.OutCubic).WaitForCompletion();
+                    hidePos = panelLevelSelectHidePos;
+                    showPos = panelLevelSelectShowPos;
+                    return PanelLevelSelect;
 
                 case UiPanel.Game:
-                    return PanelGame.GetComponent<RectTransform>().
-                        DOAnchorPos(show ? panelGameShowPos : panelGameHidePos, time).SetEase(Ease.OutCubic).WaitForCompletion();
+                    hidePos = panelGameHidePos;
+                    showPos = panelGameShowPos;
+                    return PanelGame;
 
                 case UiPanel.BetweenRoundsMenu:
-                    return PanelBetweenRoundsMenu.GetComponent<RectTransform>().
-                        DOAnchorPos(show ? panelBetweenRoundsShowPos : panelBetweenRoundsHidePos, time).SetEase(Ease.OutCubic).WaitForCompletion();
+                    hidePos = panelBetweenRoundsHidePos;
+                    showPos = panelBetweenRoundsShowPos;
+                    return PanelBetweenRoundsMenu;
+
+                case UiPanel.Controls:
+                    hidePos = panelControlsHidePos;
+                    showPos = panelControlsShowPos;
+                    return PanelControls;
 
                 default:
                     Debug.LogError($"Unknown panel: {panel}");
+                    hidePos = Vector2.zero;
+                    showPos = Vector2.zero;
                     return null;
             }
+        }
+
+        YieldInstruction ShowPanel(UiPanel panel, bool show, bool instant = false)
+        {
+            float time = instant ? 0 : ChangeTime;
+            var go = GetPanelSettings(panel, out var hidePos, out var showPos);
+            if (show)
+                go.SetActive(true);
+
+            return go.GetComponent<RectTransform>().DOAnchorPos(show ? showPos : hidePos, time).
+                SetEase(Ease.InOutCubic).OnComplete(() => go.SetActive(show)).
+                WaitForCompletion();
         }
     }
 }

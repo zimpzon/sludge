@@ -13,11 +13,13 @@ namespace Sludge.Modifiers
         public bool PingPong = true;
         public Easings Easing = Easings.Linear;
 
+        Transform trans;
         Vector3 startPos;
 
         void Awake()
         {
             startPos = transform.position;
+            trans = transform;
         }
 
         public override void EngineTick()
@@ -25,12 +27,15 @@ namespace Sludge.Modifiers
             if (!Active)
                 return;
 
-            double t = SludgeUtil.TimeMod(GameManager.Instance.EngineTime * TimeMultiplier + TimeOffset);
+            double t = SludgeUtil.TimeMod((GameManager.Instance.EngineTime + TimeOffset) * TimeMultiplier);
             t = Ease.Apply(Easing, t);
             if (PingPong)
                 t = Ease.PingPong(t);
 
-            transform.position = startPos + Vector3.down * ((float)t * Range);
+            double offsetX = SludgeUtil.Stabilize(t * Range);
+            var pos = trans.position;
+            pos.x = startPos.x + (float)offsetX;
+            transform.position = pos;
         }
     }
 }

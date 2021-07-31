@@ -26,7 +26,7 @@ namespace Sludge.Shared
         public void Set(Transform transform)
         {
             transform.localPosition = new Vector3((float)PosX, (float)PosY, 0);
-            transform.localScale = new Vector3((float)ScaleX, (float)ScaleY, 1);
+            transform.localScale = new Vector3((float)ScaleX, (float)ScaleY, 1); // THIS DOES NOT WORK! JUST IGNORED.
             transform.rotation = Quaternion.Euler(0, 0, (float)RotZ);
         }
     }

@@ -11,6 +11,7 @@ namespace Sludge.UI
 		public bool StartCurrentScene = false;
 		public UiLevelsLayout LevelLayout;
 		public GameObject ButtonPlay;
+		public GameObject ButtonControls;
 		public GameObject ButtonExit;
 		public GameObject GameRoot;
 		public UiSelectionMarker UiSelectionMarker;
@@ -21,6 +22,7 @@ namespace Sludge.UI
 		private void Awake()
         {
 			Instance = this;
+			UiSelectionMarker.gameObject.SetActive(true);
 
 			if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -57,6 +59,12 @@ namespace Sludge.UI
 			StartCoroutine(LevelSelectLoop());
 		}
 
+		public void ControlsClick()
+		{
+			StopAllCoroutines();
+			StartCoroutine(ControlsLoop());
+		}
+
 		public void DoUiNavigation(PlayerInput playerInput)
         {
 			UiNavigation.TryMove(UiSelectionMarker, playerInput);
@@ -73,7 +81,9 @@ namespace Sludge.UI
 
 			UiPanels.Instance.ShowBackground();
 			UiPanels.Instance.HidePanel(UiPanel.Game);
+			UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
 			UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
+			UiPanels.Instance.HidePanel(UiPanel.Controls);
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 
 			UiNavigation.OnNavigationChanged = null;
@@ -81,6 +91,8 @@ namespace Sludge.UI
 			{
 				if (go == ButtonPlay)
 					PlayClick();
+				else if (go == ButtonControls)
+					ControlsClick();
 				else if (go == ButtonExit)
 					ExitClick();
 			};
@@ -147,6 +159,27 @@ namespace Sludge.UI
 			input.GetHumanInput();
 			CheckChangeColorScheme(input);
         }
+
+		IEnumerator ControlsLoop()
+		{
+			UiNavigation.OnNavigationChanged = null;
+			UiNavigation.OnNavigationSelected = null;
+			yield return UiPanels.Instance.ShowPanel(UiPanel.Controls);
+
+			while (true)
+			{
+				CheckInput(playerInput);
+				if (playerInput.BackTap)
+				{
+					UiPanels.Instance.HidePanel(UiPanel.Controls);
+					StopAllCoroutines();
+					StartCoroutine(MainMenuLoop());
+					break;
+				}
+
+				yield return null;
+			}
+		}
 
 		IEnumerator LevelSelectLoop()
 		{

@@ -72,7 +72,7 @@ public static class LevelDeserializer
             for (int j = 0; j < modifiers.Count(); ++j)
             {
                 JsonUtility.FromJsonOverwrite(storedObj.Modifiers[j], modifiers[j]);
-                modifiers[j].Reset();
+                modifiers[j].OnEditorLoad();
             }
 
             instance.transform.SetParent(elements.ObjectsRoot.transform);

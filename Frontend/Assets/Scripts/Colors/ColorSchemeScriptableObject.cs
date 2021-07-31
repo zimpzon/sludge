@@ -19,6 +19,7 @@ namespace Sludge.Colors
         public Color TimePill2;
         public Color Conveyor1;
         public Color Conveyor2;
+        public Color LaserColor;
 
         public Color UiTimerBarFront;
         public Color UiTimerBarBack;
@@ -40,6 +41,7 @@ namespace Sludge.Colors
         }
     }
 
+    // NB: New members must be added at bottom since enum as serialized as strings. Adding in the middle will skew all values coming after.
     public enum SchemeColor
     {
         Background,
@@ -67,9 +69,11 @@ namespace Sludge.Colors
         UiButtonFace,
         UiButtonOutline,
         UiBackground,
-}
 
-public static class ColorScheme
+        LaserColor,
+    }
+
+    public static class ColorScheme
     {
         public static void ApplyColors(ColorSchemeScriptableObject scheme)
         {
@@ -102,6 +106,7 @@ public static class ColorScheme
                 SchemeColor.TimePill1 => scheme.TimePill1,
                 SchemeColor.TimePill2 => scheme.TimePill2,
                 SchemeColor.Conveyor1 => scheme.Conveyor2,
+                SchemeColor.LaserColor => scheme.LaserColor,
 
                 SchemeColor.UiTimerBarFront => scheme.UiTimerBarFront,
                 SchemeColor.UiTimerBarBack => scheme.UiTimerBarBack,

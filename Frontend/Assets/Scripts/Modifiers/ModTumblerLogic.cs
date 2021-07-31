@@ -32,10 +32,6 @@ namespace Sludge.Modifiers
             homePos = trans.position;
         }
 
-        private void Start()
-        {
-        }
-
         public override void Reset()
         {
             x = SludgeUtil.Stabilize(homePos.x);
@@ -72,8 +68,8 @@ namespace Sludge.Modifiers
         {
             spikeRenderer.enabled = true;
 
-            int iterations = 30;
-            double step = 50;
+            int iterations = 40;
+            double step = 15;
             while (state == State.WarmUp && iterations-- > 0)
             {
                 rotation += rotationSpeed * GameManager.TickSize;
