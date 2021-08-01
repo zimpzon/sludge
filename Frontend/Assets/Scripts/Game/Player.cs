@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
     public static double Angle;
     public static Quaternion Rotation;
 
-    public SpriteRenderer bodyRenderer;
     public TrailRenderer trail;
     public LineRenderer softBody;
     public bool Alive = false;
@@ -52,9 +51,9 @@ public class Player : MonoBehaviour
     {
         deathParticles = GetComponentInChildren<ParticleSystem>();
         softBody = GetComponentInChildren<LineRenderer>();
-        softBody.positionCount = 50; // Max number of line segments for body
+        softBody.positionCount = 80; // Max number of line segments for body
         var particleMain = deathParticles.main;
-        particleMain.startColor = bodyRenderer.color;
+        particleMain.startColor = softBody.startColor;
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
     }

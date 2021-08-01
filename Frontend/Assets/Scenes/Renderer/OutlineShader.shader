@@ -59,6 +59,7 @@ Shader "Sludge/OutlineShader"
                 fixed4 diff = abs(col0 - colL) + abs(col0 - colR) + abs(col0 - colU) + abs(col0 - colD);
                 fixed lum = step(0.01, (diff.r + diff.g + diff.b));
                 fixed4 result = _EdgeColor * lum + col0 * (1 - lum);
+                // Effects can be added here. Would be nice to know if foreground or background.
                 return result;
             }
             ENDCG
