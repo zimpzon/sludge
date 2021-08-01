@@ -5,7 +5,7 @@ namespace Sludge.Replays
 {
 	public class LevelReplay
 	{
-		public ReplayElement[] Elements = new ReplayElement[30000];
+		public ReplayElement[] Elements = new ReplayElement[10000];
 		public int Count = 0;
 		int lastInputState;
 		StringBuilder sb = new StringBuilder(5000);

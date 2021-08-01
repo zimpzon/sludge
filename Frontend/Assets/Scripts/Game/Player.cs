@@ -1,15 +1,19 @@
+using Sludge;
 using Sludge.Utility;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static PlayerSample[] PlayerSamples = new PlayerSample[30000];
+
     public static Vector3 Position;
     public static double Angle;
     public static Quaternion Rotation;
 
     public SpriteRenderer bodyRenderer;
     public TrailRenderer trail;
+    public LineRenderer softBody;
     public bool Alive = false;
 
     public double angle = 90;
@@ -43,6 +47,17 @@ public class Player : MonoBehaviour
     // Forces: summed up and added every frame. Diminished over multiple frames.
     double forceX;
     double forceY;
+
+    void Awake()
+    {
+        deathParticles = GetComponentInChildren<ParticleSystem>();
+        softBody = GetComponentInChildren<LineRenderer>();
+        softBody.positionCount = 50; // Max number of line segments for body
+        var particleMain = deathParticles.main;
+        particleMain.startColor = bodyRenderer.color;
+        trans = transform;
+        wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
+    }
 
     public void ConveyourBeltEnter()
     {
@@ -96,15 +111,6 @@ public class Player : MonoBehaviour
         Debug.Log($"Setting player home: {homeX}, {homeY}");
     }
 
-    void Awake()
-    {
-        deathParticles = GetComponentInChildren<ParticleSystem>();
-        var particleMain = deathParticles.main;
-        particleMain.startColor = bodyRenderer.color;
-        trans = transform;
-        wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (onConveyorBeltCount > 0)
@@ -144,6 +150,8 @@ public class Player : MonoBehaviour
         angle = homeAngle;
 
         UpdateTransform();
+        SetPositionSample(0);
+        UpdateSoftBody();
 
         trail.enabled = true;
     }
@@ -267,6 +275,53 @@ public class Player : MonoBehaviour
         angle = SludgeUtil.Stabilize(angle);
 
         UpdateTransform();
+        SetPositionSample(GameManager.Instance.FrameCounter);
+
+        UpdateSoftBody();
+    }
+
+    void SetPositionSample(int idx)
+    {
+        PlayerSamples[idx].Pos = trans.position;
+        PlayerSamples[idx].Angle = angle;
+    }
+
+    void UpdateSoftBody()
+    {
+        const double TargetDistance = 0.6;
+        double distanceCovered = 0;
+        Vector3 prevPoint = Vector3.zero;
+        Vector3 currentPoint = Vector3.zero;
+
+        int playerPosSampleIdx = GameManager.Instance.FrameCounter;
+        for (int softBodyIdx = 0; softBodyIdx < softBody.positionCount; ++softBodyIdx)
+        {
+            bool hasPlayerPosSamples = playerPosSampleIdx >= 0; // 0 is always there, set in reset
+            if (hasPlayerPosSamples)
+            {
+                if (distanceCovered < TargetDistance)
+                    currentPoint = PlayerSamples[playerPosSampleIdx].Pos;
+            }
+            else
+            {
+                // We are below 0 in the position array, player hasn't moved enough yet (or at all).
+                // Extrapolate points in the opposite direction the player is facing.
+                if (distanceCovered < TargetDistance)
+                {
+                    double lookBackX = -SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * (angle + 180))));
+                    double lookBackY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * (angle + 180))));
+                    const double DistanceBack = 0.1;
+                    currentPoint.x += (float)(lookBackX * DistanceBack);
+                    currentPoint.y += (float)(lookBackY * DistanceBack);
+                }
+            }
+
+            softBody.SetPosition(softBodyIdx, currentPoint);
+
+            distanceCovered += softBodyIdx == 0 ? 0 : (currentPoint - prevPoint).magnitude;
+            playerPosSampleIdx--;
+            prevPoint = currentPoint;
+        }
     }
 
     void UpdateTransform()

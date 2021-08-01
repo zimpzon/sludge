@@ -20,6 +20,11 @@ using UnityEngine.UI;
 // First script to run
 public class GameManager : MonoBehaviour
 {
+    const double TimePillBonusTime = 1.0;
+    public const double TickSize = 0.016;
+    public const int TickSizeMs = 16;
+    public const double TicksPerSecond = 1000.0 / TickSizeMs;
+
     public Image TimeBarLeft;
     public Image TimeBarRight;
     public Tilemap Tilemap;
@@ -47,9 +52,6 @@ public class GameManager : MonoBehaviour
     public double EngineTime;
     public int EngineTimeMs;
     public int FrameCounter;
-    public const double TickSize = 0.016;
-    public const int TickSizeMs = 16;
-    public const double TicksPerSecond = 1000 / TickSizeMs;
     public int Keys;
     LevelData currentLevelData = new LevelData { StartTimeSeconds = 30, EliteCompletionTimeSeconds = 20, };
     double timeLeft;
@@ -263,7 +265,7 @@ public class GameManager : MonoBehaviour
 
     public void TimePillPickup(TimePill key)
     {
-        timeLeft += 2;
+        timeLeft += TimePillBonusTime;
     }
 
     void UpdateAll()
