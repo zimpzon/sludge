@@ -20,6 +20,8 @@ namespace Sludge.Colors
         public Color Conveyor1;
         public Color Conveyor2;
         public Color LaserColor;
+        public Color BulletFlash1;
+        public Color BulletFlash2;
 
         public Color UiTimerBarFront;
         public Color UiTimerBarBack;
@@ -71,6 +73,8 @@ namespace Sludge.Colors
         UiBackground,
 
         LaserColor,
+        BulletFlash1,
+        BulletFlash2,
     }
 
     public static class ColorScheme
@@ -107,6 +111,8 @@ namespace Sludge.Colors
                 SchemeColor.TimePill2 => scheme.TimePill2,
                 SchemeColor.Conveyor1 => scheme.Conveyor2,
                 SchemeColor.LaserColor => scheme.LaserColor,
+                SchemeColor.BulletFlash1 => scheme.BulletFlash1,
+                SchemeColor.BulletFlash2 => scheme.BulletFlash2,
 
                 SchemeColor.UiTimerBarFront => scheme.UiTimerBarFront,
                 SchemeColor.UiTimerBarBack => scheme.UiTimerBarBack,

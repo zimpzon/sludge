@@ -32,9 +32,9 @@ namespace Sludge.Modifiers
             if (PingPong)
                 t = Ease.PingPong(t);
 
-            double offsetX = SludgeUtil.Stabilize(t * Range);
+            double offsetY = SludgeUtil.Stabilize(t * Range);
             var pos = trans.position;
-            pos.x = startPos.x + (float)offsetX;
+            pos.y = startPos.y + (float)offsetY;
             transform.position = pos;
         }
     }

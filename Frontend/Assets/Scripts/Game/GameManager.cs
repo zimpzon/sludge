@@ -14,9 +14,6 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
-// OnLevelCompleted: Compare with best. Show how close to elite. Make player want elite.
-// "DARK" LEVELS? Super meat Boy has the level layouts repeated with higher difficulty.
-
 // First script to run
 public class GameManager : MonoBehaviour
 {
@@ -24,7 +21,7 @@ public class GameManager : MonoBehaviour
     public const double TickSize = 0.016;
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000.0 / TickSizeMs;
-
+    
     public Image TimeBarLeft;
     public Image TimeBarRight;
     public Tilemap Tilemap;
@@ -45,7 +42,7 @@ public class GameManager : MonoBehaviour
     public static PlayerInput PlayerInput = new PlayerInput();
     public static LevelReplay LevelReplay = new LevelReplay();
     public static GameManager Instance;
-    
+
     public Player Player;
     public SludgeObject[] SludgeObjects;
     public double UnityTime;
@@ -215,6 +212,8 @@ public class GameManager : MonoBehaviour
         levelComplete = false;
         Keys = 0;
 
+        BulletManager.Instance.Reset();
+
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeObjects[i].Reset();
 
@@ -273,6 +272,7 @@ public class GameManager : MonoBehaviour
         UpdateTime();
         UpdatePlayer();
         UpdateSludgeObjects();
+        BulletManager.Instance.EngineTick();
     }
 
     void UpdateSludgeObjects()

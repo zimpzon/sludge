@@ -14,25 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   schemeName: 
   Palette: []
-  Background: {r: 0, g: 0, b: 0, a: 0}
-  Walls: {r: 0.01886791, g: 0.01886791, b: 0.01886791, a: 0}
-  Text: {r: 0, g: 0, b: 0, a: 0}
-  Edges: {r: 1, g: 0.5641353, b: 0, a: 1}
-  Player: {r: 0.9716981, g: 0.9716981, b: 0.9716981, a: 0}
-  Laser: {r: 0, g: 0, b: 0, a: 0}
+  Background: {r: 0.61, g: 0.35057473, b: 0.021034494, a: 0}
+  Walls: {r: 0, g: 0, b: 0, a: 0}
+  Edges: {r: 0.773, g: 0.44100642, b: 0.024775628, a: 1}
+  Player: {r: 0, g: 0, b: 0, a: 0}
   Exit1: {r: 1, g: 0.5647059, b: 0, a: 0}
-  Exit2: {r: 0.9725491, g: 0.9725491, b: 0.9725491, a: 0}
-  EnemyA1: {r: 0, g: 0, b: 0, a: 0}
-  EnemyA2: {r: 0, g: 0, b: 0, a: 0}
-  EnemyB1: {r: 0, g: 0, b: 0, a: 0}
-  EnemyB2: {r: 0, g: 0, b: 0, a: 0}
-  Mine1: {r: 0, g: 0, b: 0, a: 0}
-  Mine2: {r: 0, g: 0, b: 0, a: 0}
-  Buff1: {r: 0, g: 0, b: 0, a: 0}
-  Buff2: {r: 0, g: 0, b: 0, a: 0}
+  Exit2: {r: 0, g: 0, b: 0, a: 0}
   Key1: {r: 1, g: 0.5647059, b: 0, a: 0}
   Key2: {r: 0, g: 0, b: 0, a: 0}
-  Time1: {r: 0, g: 0, b: 0, a: 0}
-  Time2: {r: 0, g: 0, b: 0, a: 0}
-  GhostTrigger1: {r: 0, g: 0, b: 0, a: 0}
-  GhostTrigger2: {r: 0, g: 0, b: 0, a: 0}
+  TimePill1: {r: 0, g: 0, b: 0, a: 0}
+  TimePill2: {r: 0, g: 0, b: 0, a: 0}
+  Conveyor1: {r: 0, g: 0, b: 0, a: 0}
+  Conveyor2: {r: 0, g: 0, b: 0, a: 0}
+  LaserColor: {r: 0, g: 0, b: 0, a: 0}
+  UiTimerBarFront: {r: 0, g: 0, b: 0, a: 0}
+  UiTimerBarBack: {r: 0, g: 0, b: 0, a: 0}
+  UiTextDefault: {r: 0, g: 0, b: 0, a: 0}
+  UiTextHighlighted: {r: 0, g: 0, b: 0, a: 0}
+  UiTextDimmed: {r: 0, g: 0, b: 0, a: 0}
+  UiTextGoodScore: {r: 0, g: 0, b: 0, a: 0}
+  UiTextBadScore: {r: 0, g: 0, b: 0, a: 0}
+  UiTextNeutralScore: {r: 0, g: 0, b: 0, a: 0}
+  UiSelectionMarker: {r: 0, g: 0, b: 0, a: 0}
+  UiButtonFace: {r: 0, g: 0, b: 0, a: 0}
+  UiButtonOutline: {r: 0, g: 0, b: 0, a: 0}
+  UiBackground: {r: 0, g: 0, b: 0, a: 0}

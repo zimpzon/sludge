@@ -15,6 +15,8 @@ public static class LevelDeserializer
         levelSettings.EliteCompletionTimeSeconds = data.EliteCompletionTimeSeconds;
 
         // Clear existing objects
+        BulletManager.Instance.Reset();
+
         for (int i = elements.ObjectsRoot.transform.childCount - 1; i >= 0; --i)
         {
             GameObject.DestroyImmediate(elements.ObjectsRoot.transform.GetChild(i).gameObject);
