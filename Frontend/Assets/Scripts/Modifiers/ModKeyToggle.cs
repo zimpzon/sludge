@@ -11,7 +11,6 @@ public class ModKeyToggle : SludgeModifier
     public int EnableAtKeyCount = -1;
     public bool StartEnabled = true;
 
-    Vector3 baseScale;
     Collider2D doorCollider;
     SpriteRenderer spriteRenderer;
     Transform trans;
@@ -21,8 +20,6 @@ public class ModKeyToggle : SludgeModifier
         doorCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         trans = transform;
-
-        baseScale = trans.localScale;
     }
 
     public override void Reset()
@@ -32,7 +29,6 @@ public class ModKeyToggle : SludgeModifier
         doorCollider.enabled = StartEnabled;
         spriteRenderer.enabled = StartEnabled;
         spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
-        trans.localScale = baseScale;
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
     }
 
@@ -59,7 +55,6 @@ public class ModKeyToggle : SludgeModifier
         const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
         Color color = spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
-        Vector3 scale = baseScale;
 
         doorCollider.enabled = false;
         this.gameObject.layer = SludgeUtil.ObjectsLayerNumber;
@@ -69,7 +64,6 @@ public class ModKeyToggle : SludgeModifier
             float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
             color.a = 1.0f - t;
             spriteRenderer.color = color;
-            trans.localScale = scale;
 
             if (t >= 1.0f)
                 break;
@@ -85,7 +79,6 @@ public class ModKeyToggle : SludgeModifier
         const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
         Color color = spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
-        Vector3 scale = baseScale;
 
         spriteRenderer.enabled = true;
         doorCollider.enabled = true;
@@ -95,7 +88,6 @@ public class ModKeyToggle : SludgeModifier
             float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
             color.a = t;
             spriteRenderer.color = color;
-            trans.localScale = scale;
 
             if (t >= 1.0f)
                 break;

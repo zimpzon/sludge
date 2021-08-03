@@ -28,8 +28,6 @@ public class ModBulletMovement : SludgeModifier
     {
         color1 = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor1);
         color2 = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor2);
-        //color1.a = spriteRenderer.color.a;
-        //color2.a = spriteRenderer.color.a;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -41,8 +39,9 @@ public class ModBulletMovement : SludgeModifier
             return;
         }
 
-        // Hit something, die.
-        BulletManager.Instance.Release(this);
+        bool isWall = ((1 << collision.gameObject.layer) & SludgeUtil.ScanForWallsLayerMask) != 0;
+        if (isWall)
+            BulletManager.Instance.Release(this);
     }
 
     public override void EngineTick()
@@ -52,7 +51,7 @@ public class ModBulletMovement : SludgeModifier
         trans.position = new Vector3((float)X, (float)Y);
 
         // Offset flash by position so bullets don't flash in sync
-        int offset = (int)(X * 50) + (int)(Y * 50);
+        int offset = (int)(X * 30) + (int)(Y * 30);
         var color = ((GameManager.Instance.EngineTimeMs + offset) % 200) > 100 ? color1 : color2;
         spriteRenderer.color = color;
     }

@@ -16,10 +16,15 @@ namespace Sludge.Modifiers
         Transform trans;
         Vector3 startPos;
 
-        void Awake()
+        public override void Reset()
         {
-            startPos = transform.position;
+            trans.position = startPos;
+        }
+
+        public override void OnLoaded()
+        {
             trans = transform;
+            startPos = trans.position;
         }
 
         public override void EngineTick()

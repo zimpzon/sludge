@@ -35,7 +35,7 @@ namespace Sludge.Modifiers
             spriteRenderer.size = new Vector2(Length, 1);
         }
 
-        public override void OnEditorLoad()
+        public override void OnLoaded()
         {
             SetSize();
         }

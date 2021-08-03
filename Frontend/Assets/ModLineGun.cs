@@ -41,10 +41,12 @@ public class ModLineGun : SludgeModifier
             var look = SludgeUtil.LookAngle(trans.rotation.eulerAngles.z);
             bullet.DX = SludgeUtil.Stabilize(look.x * BulletSpeed);
             bullet.DY = SludgeUtil.Stabilize(look.y * BulletSpeed);
-            bullet.X = SludgeUtil.Stabilize(trans.position.x + look.x * 0.25);
-            bullet.Y = SludgeUtil.Stabilize(trans.position.y + look.y * 0.25);
+            bullet.X = SludgeUtil.Stabilize(trans.position.x + look.x * 0.5);
+            bullet.Y = SludgeUtil.Stabilize(trans.position.y + look.y * 0.5);
 
-            trans.DOPunchScale(Vector3.one * 0.25f, 0.3f);
+            var childTrans = trans.GetChild(0);
+            childTrans.DORewind();
+            childTrans.DOPunchScale(Vector3.one * 0.25f, 0.2f);
         }
     }
 }

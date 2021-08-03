@@ -14,8 +14,9 @@ public static class LevelDeserializer
         levelSettings.StartTimeSeconds = data.StartTimeSeconds;
         levelSettings.EliteCompletionTimeSeconds = data.EliteCompletionTimeSeconds;
 
-        // Clear existing objects
-        BulletManager.Instance.Reset();
+        // Clear existing bullets
+        if (BulletManager.Instance != null)
+            BulletManager.Instance.Reset();
 
         for (int i = elements.ObjectsRoot.transform.childCount - 1; i >= 0; --i)
         {
@@ -74,7 +75,7 @@ public static class LevelDeserializer
             for (int j = 0; j < modifiers.Count(); ++j)
             {
                 JsonUtility.FromJsonOverwrite(storedObj.Modifiers[j], modifiers[j]);
-                modifiers[j].OnEditorLoad();
+                modifiers[j].OnLoaded();
             }
 
             instance.transform.SetParent(elements.ObjectsRoot.transform);

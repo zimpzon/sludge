@@ -99,9 +99,19 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            // Starting game from current scene in editor
             currentLevelData.Name = levelSettings.LevelName;
             currentLevelData.StartTimeSeconds = levelSettings.StartTimeSeconds;
             currentLevelData.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
+
+            SludgeObjects = FindObjectsOfType<SludgeObject>();
+
+            // Simulate level load
+            foreach (var obj in SludgeObjects)
+            {
+                foreach (var modifier in obj.Modifiers)
+                    modifier.OnLoaded();
+            }
         }
 
         TextLevelName.text = currentLevelData.Name;
@@ -202,6 +212,7 @@ public class GameManager : MonoBehaviour
     void ResetLevel()
     {
         Debug.Log($"ResetLevel()");
+
         EngineTime = 0;
         EngineTimeMs = 0;
         FrameCounter = 0;
