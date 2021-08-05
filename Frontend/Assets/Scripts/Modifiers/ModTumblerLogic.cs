@@ -29,6 +29,11 @@ namespace Sludge.Modifiers
             trans = transform;
             scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
             spikeRenderer = transform.Find("Spikes").gameObject.GetComponent<SpriteRenderer>();
+        }
+
+        public override void OnLoaded()
+        {
+            trans = transform;
             homePos = trans.position;
         }
 

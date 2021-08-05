@@ -20,8 +20,8 @@ MonoBehaviour:
   - {r: 1, g: 0.8000001, b: 0.36078432, a: 0}
   - {r: 0.53333336, g: 0.8470589, b: 0.6901961, a: 0}
   - {r: 0.53333336, g: 0.8470589, b: 0.6901961, a: 0}
-  - {r: 0.53333336, g: 0.8470589, b: 0.6901961, a: 0}
-  - {r: 0.53333336, g: 0.8470589, b: 0.6901961, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 0}
   - {r: 0.53333336, g: 0.8470589, b: 0.6901961, a: 0}
   - {r: 0.53333336, g: 0.8470589, b: 0.6901961, a: 0}
   Background: {r: 0.53333336, g: 0.8470589, b: 0.6901961, a: 0}
@@ -37,15 +37,17 @@ MonoBehaviour:
   Conveyor1: {r: 1, g: 0.43529415, b: 0.41176474, a: 0}
   Conveyor2: {r: 1, g: 0.43529415, b: 0.41176474, a: 0}
   LaserColor: {r: 1, g: 0.8000001, b: 0.36078432, a: 0}
-  UiTimerBarFront: {r: 0, g: 0, b: 0, a: 0}
-  UiTimerBarBack: {r: 0, g: 0, b: 0, a: 0}
-  UiTextDefault: {r: 0, g: 0, b: 0, a: 0}
-  UiTextHighlighted: {r: 0, g: 0, b: 0, a: 0}
-  UiTextDimmed: {r: 0, g: 0, b: 0, a: 0}
+  BulletFlash1: {r: 0, g: 0, b: 0, a: 0}
+  BulletFlash2: {r: 0, g: 0, b: 0, a: 0}
+  UiTimerBarFront: {r: 1, g: 0.8000001, b: 0.36078432, a: 0}
+  UiTimerBarBack: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 0}
+  UiTextDefault: {r: 1, g: 1, b: 1, a: 0}
+  UiTextHighlighted: {r: 1, g: 1, b: 1, a: 0}
+  UiTextDimmed: {r: 1, g: 1, b: 1, a: 0}
   UiTextGoodScore: {r: 0, g: 0, b: 0, a: 0}
   UiTextBadScore: {r: 0, g: 0, b: 0, a: 0}
   UiTextNeutralScore: {r: 0, g: 0, b: 0, a: 0}
-  UiSelectionMarker: {r: 0, g: 0, b: 0, a: 0}
-  UiButtonFace: {r: 0, g: 0, b: 0, a: 0}
-  UiButtonOutline: {r: 0, g: 0, b: 0, a: 0}
+  UiSelectionMarker: {r: 1, g: 1, b: 1, a: 0}
+  UiButtonFace: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 0}
+  UiButtonOutline: {r: 1, g: 1, b: 1, a: 0}
   UiBackground: {r: 0, g: 0, b: 0, a: 0}

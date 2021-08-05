@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public ParticleSystem deathParticles;
     public bool Alive = false;
 
+    QuadDistort ripples;
     public double angle = 90;
     double speed;
     double minSpeed = 0.5f;
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
     {
         softBody = GetComponentInChildren<LineRenderer>();
         softBody.positionCount = 80; // Max number of line segments for body
+        ripples = GetComponentInChildren<QuadDistort>();
         var particleMain = deathParticles.main;
         particleMain.startColor = softBody.startColor;
         trans = transform;
@@ -120,6 +122,7 @@ public class Player : MonoBehaviour
 
     public void Kill()
     {
+        ripples.DoRipples();
         deathParticles.transform.position = trans.position;
         deathParticles.Emit(50);
         Alive = false;
@@ -133,7 +136,7 @@ public class Player : MonoBehaviour
         trail.enabled = false;
         Alive = true;
         onConveyorBeltCount = 0;
-
+        ripples.Reset();
         impulseX = 0;
         impulseY = 0;
         impulseRotation = 0;
