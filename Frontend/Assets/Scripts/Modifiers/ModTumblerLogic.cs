@@ -88,7 +88,7 @@ namespace Sludge.Modifiers
             eyeScale += (float)((eyeScaleTarget > eyeScale) ? GameManager.TickSize * 4.0f : -GameManager.TickSize * 4.0f);
             eyeScale = Mathf.Clamp(eyeScale, 0, MaxScale);
 
-            Pupil.localPosition = eyeScale < 0.1f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.2f, playerDir.y * 0.1f * MaxScale);
+            Pupil.localPosition = eyeScale < 0.2f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.1f, playerDir.y * 0.08f * MaxScale);
 
             Eye.transform.localScale = new Vector2(1, eyeScale);
         }
