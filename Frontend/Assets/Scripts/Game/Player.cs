@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public static Quaternion Rotation;
 
     public TrailRenderer trail;
-    public LineRenderer softBody;
+    public ParticleSystem deathParticles;
     public bool Alive = false;
 
     public double angle = 90;
@@ -24,7 +24,6 @@ public class Player : MonoBehaviour
     double accelerateSpeed = 100;
     double friction = 25;
     Transform trans;
-    ParticleSystem deathParticles;
     double playerX;
     double playerY;
     double homeX;
@@ -32,6 +31,8 @@ public class Player : MonoBehaviour
     double homeAngle;
     ContactFilter2D wallScanFilter = new ContactFilter2D();
     int onConveyorBeltCount;
+
+    LineRenderer softBody;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -49,7 +50,6 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        deathParticles = GetComponentInChildren<ParticleSystem>();
         softBody = GetComponentInChildren<LineRenderer>();
         softBody.positionCount = 80; // Max number of line segments for body
         var particleMain = deathParticles.main;
@@ -120,6 +120,7 @@ public class Player : MonoBehaviour
 
     public void Kill()
     {
+        deathParticles.transform.position = trans.position;
         deathParticles.Emit(50);
         Alive = false;
     }
