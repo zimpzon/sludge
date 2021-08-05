@@ -8,6 +8,10 @@ namespace Sludge.Modifiers
     {
         enum State { LookForPlayer, WarmUp, Move };
 
+        public Transform Eye;
+        public Transform Pupil;
+        public Transform BodyRoot;
+
         SpriteRenderer spikeRenderer;
         IEnumerator lookForPlayer;
         IEnumerator warmUp;
@@ -23,12 +27,14 @@ namespace Sludge.Modifiers
         double rotationSpeed;
         double speed = 15.0;
         State state;
+        float eyeScale;
+        float eyeScaleTarget;
 
         void Awake()
         {
             trans = transform;
             scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
-            spikeRenderer = transform.Find("Spikes").gameObject.GetComponent<SpriteRenderer>();
+            spikeRenderer = transform.Find("BodyRoot/Spikes").gameObject.GetComponent<SpriteRenderer>();
         }
 
         public override void OnLoaded()
@@ -51,10 +57,14 @@ namespace Sludge.Modifiers
             warmUp = Warmup();
             move = Move();
             UpdateTransform();
+            eyeScale = 0;
+            eyeScaleTarget = 0;
         }
 
         public override void EngineTick()
         {
+            UpdateEye();
+
             switch (state)
             {
                 case State.LookForPlayer: lookForPlayer.MoveNext(); break;
@@ -63,9 +73,29 @@ namespace Sludge.Modifiers
             }
         }
 
+        void UpdateEye()
+        {
+            var playerDir = Player.Position - trans.position;
+            float sqrPlayerDist = playerDir.sqrMagnitude;
+            playerDir.Normalize();
+
+            const float SqrLookRange = 8 * 8;
+            const float MaxScale = 0.9f;
+            eyeScaleTarget = sqrPlayerDist < SqrLookRange ? MaxScale : 0;
+            if (state == State.Move)
+                eyeScaleTarget = MaxScale;
+
+            eyeScale += (float)((eyeScaleTarget > eyeScale) ? GameManager.TickSize * 4.0f : -GameManager.TickSize * 4.0f);
+            eyeScale = Mathf.Clamp(eyeScale, 0, MaxScale);
+
+            Pupil.localPosition = eyeScale < 0.1f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.2f, playerDir.y * 0.1f * MaxScale);
+
+            Eye.transform.localScale = new Vector2(1, eyeScale);
+        }
+
         void UpdateTransform()
         {
-            trans.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
+            BodyRoot.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
             trans.position = new Vector3((float)x, (float)y, 0);
         }
 
