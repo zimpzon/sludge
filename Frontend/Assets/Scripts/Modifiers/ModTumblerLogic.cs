@@ -29,6 +29,7 @@ namespace Sludge.Modifiers
         State state;
         float eyeScale;
         float eyeScaleTarget;
+        System.Random rnd;
 
         void Awake()
         {
@@ -41,6 +42,7 @@ namespace Sludge.Modifiers
         {
             trans = transform;
             homePos = trans.position;
+            Reset();
         }
 
         public override void Reset()
@@ -56,14 +58,16 @@ namespace Sludge.Modifiers
             lookForPlayer = WaitForPlayerInSight();
             warmUp = Warmup();
             move = Move();
-            UpdateTransform();
             eyeScale = 0;
             eyeScaleTarget = 0;
+            UpdateTransform();
+            rnd = new System.Random((int)(homePos.x * 100 + homePos.y * 100));
         }
 
         public override void EngineTick()
         {
             UpdateEye();
+            UpdateTransform();
 
             switch (state)
             {
@@ -88,13 +92,16 @@ namespace Sludge.Modifiers
             eyeScale += (float)((eyeScaleTarget > eyeScale) ? GameManager.TickSize * 4.0f : -GameManager.TickSize * 4.0f);
             eyeScale = Mathf.Clamp(eyeScale, 0, MaxScale);
 
-            Pupil.localPosition = eyeScale < 0.2f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.1f, playerDir.y * 0.08f * MaxScale);
+            bool doBlink = rnd.NextDouble() < (1 / 200.0);
+            if (doBlink)
+                eyeScale = 0;
 
-            Eye.transform.localScale = new Vector2(1, eyeScale);
+            Pupil.localPosition = eyeScale < 0.2f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.1f, playerDir.y * 0.08f * MaxScale);
         }
 
         void UpdateTransform()
         {
+            Eye.transform.localScale = new Vector2(1, eyeScale);
             BodyRoot.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
             trans.position = new Vector3((float)x, (float)y, 0);
         }
@@ -108,7 +115,6 @@ namespace Sludge.Modifiers
             while (state == State.WarmUp && iterations-- > 0)
             {
                 rotation += rotationSpeed * GameManager.TickSize;
-                UpdateTransform();
                 rotationSpeed += step;
                 yield return null;
             }
@@ -130,7 +136,6 @@ namespace Sludge.Modifiers
                 x = SludgeUtil.Stabilize(x);
                 y = SludgeUtil.Stabilize(y);
                 rotation += rotationSpeed * GameManager.TickSize;
-                UpdateTransform();
 
                 yield return null;
             }

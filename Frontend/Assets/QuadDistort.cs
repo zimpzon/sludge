@@ -39,12 +39,13 @@ public class QuadDistort : MonoBehaviour
 
         while (Time.time < endTime)
         {
-            float t = 1.0f - ((endTime - Time.time) / RippleTime);
+            float tInv = ((endTime - Time.time) / RippleTime);
+            float t = 1.0f - tInv;
 
-            float size = t * MaxSize;
+            float size = (1 - (tInv * tInv)) * MaxSize;
             trans.localScale = Vector2.one * size;
 
-            float amount = (1.0f - t) * 0.03f;
+            float amount = tInv * tInv;
             mat.SetFloat("_amount", amount);
 
             yield return null;

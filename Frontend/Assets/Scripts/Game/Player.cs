@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sludge;
 using Sludge.Utility;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
     public static Vector3 Position;
     public static double Angle;
     public static Quaternion Rotation;
+    public Transform CameraRoot;
 
     public TrailRenderer trail;
     public ParticleSystem deathParticles;
@@ -55,7 +57,7 @@ public class Player : MonoBehaviour
         softBody.positionCount = 80; // Max number of line segments for body
         ripples = GetComponentInChildren<QuadDistort>();
         var particleMain = deathParticles.main;
-        particleMain.startColor = softBody.startColor;
+        //particleMain.startColor = softBody.startColor;
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
     }
@@ -125,6 +127,7 @@ public class Player : MonoBehaviour
         ripples.DoRipples();
         deathParticles.transform.position = trans.position;
         deathParticles.Emit(50);
+        CameraRoot.DOShakePosition(0.1f, 0.5f);
         Alive = false;
     }
 
