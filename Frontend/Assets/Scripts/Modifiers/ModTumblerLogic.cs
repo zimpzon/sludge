@@ -8,11 +8,10 @@ namespace Sludge.Modifiers
     {
         enum State { LookForPlayer, WarmUp, Move };
 
-        public Transform Eye;
-        public Transform Pupil;
-        public Transform BodyRoot;
-
         SpriteRenderer spikeRenderer;
+        Transform eye;
+        Transform pupil;
+        Transform bodyRoot;
         IEnumerator lookForPlayer;
         IEnumerator warmUp;
         IEnumerator move;
@@ -36,13 +35,15 @@ namespace Sludge.Modifiers
             trans = transform;
             scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
             spikeRenderer = transform.Find("BodyRoot/Spikes").gameObject.GetComponent<SpriteRenderer>();
+            eye = transform.Find("Eye").transform;
+            pupil = transform.Find("Pupil").transform;
+            bodyRoot = transform.Find("BodyRoot").transform;
         }
 
         public override void OnLoaded()
         {
             trans = transform;
             homePos = trans.position;
-            Reset();
         }
 
         public override void Reset()
@@ -60,7 +61,6 @@ namespace Sludge.Modifiers
             move = Move();
             eyeScale = 0;
             eyeScaleTarget = 0;
-            UpdateTransform();
             rnd = new System.Random((int)(homePos.x * 100 + homePos.y * 100));
         }
 
@@ -96,13 +96,13 @@ namespace Sludge.Modifiers
             if (doBlink)
                 eyeScale = 0;
 
-            Pupil.localPosition = eyeScale < 0.2f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.1f, playerDir.y * 0.08f * MaxScale);
+            pupil.localPosition = eyeScale < 0.2f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.1f, playerDir.y * 0.08f * MaxScale);
         }
 
         void UpdateTransform()
         {
-            Eye.transform.localScale = new Vector2(1, eyeScale);
-            BodyRoot.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
+            eye.transform.localScale = new Vector2(1, eyeScale);
+            bodyRoot.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
             trans.position = new Vector3((float)x, (float)y, 0);
         }
 

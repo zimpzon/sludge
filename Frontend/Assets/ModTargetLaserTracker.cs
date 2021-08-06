@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ModTargetLaserTracker : SludgeModifier
 {
-    const float WidthMin = 0.005f;
-    const float WidthMax = 0.02f;
+    const float WidthMin = 0.05f;
+    const float WidthMax = 0.08f;
     const float KillTime = 1f;
     const float BulletSpeed = 10f;
     const float BulletDelay = 0.5f;
