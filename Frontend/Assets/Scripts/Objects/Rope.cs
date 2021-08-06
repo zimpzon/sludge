@@ -13,9 +13,9 @@ public class Rope : MonoBehaviour
     Vector3[] LinePositions;
 
     private List<RopeNode> RopeNodes = new List<RopeNode>();
-    private float NodeDistance = 0.2f;
+    private float NodeDistance = 0.1f;
     private int TotalNodes = 20;
-    private float RopeWidth = 0.1f;
+    private float RopeWidth = 0.05f;
 
     public float Dampen = 0.1f;
     public Transform Node1Lock;
