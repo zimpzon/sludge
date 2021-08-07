@@ -84,9 +84,9 @@ namespace Sludge.Modifiers
             playerDir.Normalize();
 
             const float SqrLookRange = 8 * 8;
-            const float MaxScale = 0.9f;
+            const float MaxScale = 0.9f;    
             eyeScaleTarget = sqrPlayerDist < SqrLookRange ? MaxScale : 0;
-            if (state == State.Move)
+            if (state != State.LookForPlayer)
                 eyeScaleTarget = MaxScale;
 
             eyeScale += (float)((eyeScaleTarget > eyeScale) ? GameManager.TickSize * 4.0f : -GameManager.TickSize * 4.0f);

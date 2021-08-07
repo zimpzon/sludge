@@ -13,13 +13,13 @@ public class ModKeyToggle : SludgeModifier
 
     Collider2D doorCollider;
     SpriteRenderer spriteRenderer;
-    Transform trans;
+    Material mat;
 
     private void Awake()
     {
         doorCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        trans = transform;
+        mat = spriteRenderer.material;
     }
 
     public override void Reset()
@@ -28,6 +28,8 @@ public class ModKeyToggle : SludgeModifier
 
         doorCollider.enabled = StartEnabled;
         spriteRenderer.enabled = StartEnabled;
+        mat.SetFloat("_Visibility", StartEnabled ? 1 : 0);
+
         spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
     }
@@ -54,16 +56,12 @@ public class ModKeyToggle : SludgeModifier
     {
         const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
-        Color color = spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
-
         doorCollider.enabled = false;
-        this.gameObject.layer = SludgeUtil.ObjectsLayerNumber;
 
         while (true)
         {
             float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
-            color.a = 1.0f - t;
-            spriteRenderer.color = color;
+            mat.SetFloat("_Visibility", 1 - t);
 
             if (t >= 1.0f)
                 break;
@@ -78,16 +76,13 @@ public class ModKeyToggle : SludgeModifier
     {
         const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
-        Color color = spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
-
         spriteRenderer.enabled = true;
         doorCollider.enabled = true;
 
         while (true)
         {
             float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
-            color.a = t;
-            spriteRenderer.color = color;
+            mat.SetFloat("_Visibility", t);
 
             if (t >= 1.0f)
                 break;

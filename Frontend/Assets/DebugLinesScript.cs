@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class DebugLinesScript : MonoBehaviour
 {
+    public static DebugLinesScript Instance;
+
     public static void Show(string key, object value)
     {
-        //SceneGlobals.Instance.DebugLinesScript.SetLine(key, value);
+        Instance.SetLine(key, value);
     }
 
     Dictionary<string, string> lines_ = new Dictionary<string, string>();
@@ -26,6 +28,7 @@ public class DebugLinesScript : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         text_ = GetComponent<TextMeshProUGUI>();
         text_.enabled = false;
     }

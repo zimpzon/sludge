@@ -33,9 +33,10 @@ namespace Sludge.Modifiers
                 return;
 
             double t = SludgeUtil.TimeMod((GameManager.Instance.EngineTime + TimeOffset) * TimeMultiplier);
-            t = Ease.Apply(Easing, t);
             if (PingPong)
                 t = Ease.PingPong(t);
+
+            t = Ease.Apply(Easing, t);
 
             double offsetY = SludgeUtil.Stabilize(t * Range);
             var pos = trans.position;

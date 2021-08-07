@@ -6,7 +6,6 @@ namespace Sludge.Easing
     {
         Linear,
         Flip,
-        PingPong,
         BounceStart,
         BounceEnd,
         SmoothStart2,
@@ -21,7 +20,6 @@ namespace Sludge.Easing
         SmoothStep3,
         SmoothStep4,
         SmoothStep5,
-        Arch2,
     }
 
     public static class Ease
@@ -30,7 +28,7 @@ namespace Sludge.Easing
         public static double Flip(double t) => 1.0 - t;
         public static double Mix(double a, double b, double t) => (a * (1.0 - t)) + (b * t);
         public static double Scale(double a, double t) => a * t;
-        public static double PingPong(double t) => Mathf.PingPong((float)t * 2.0f, 1.0f);
+        public static double PingPong(double t) => t <= 0.5 ? t * 2 : 1 - ((t - 0.5) * 2);
         public static double BounceStart(double t) => Mathf.Abs(((float)t * 2.0f) - 1.0f);
         public static double BounceEnd(double t) => 1.0 - BounceStart(t);
 
@@ -68,22 +66,24 @@ namespace Sludge.Easing
             {
                 Easings.Linear => Linear(t),
                 Easings.Flip => Flip(t),
-                Easings.PingPong => PingPong(t),
                 Easings.BounceStart => BounceStart(t),
                 Easings.BounceEnd => BounceEnd(t),
+
                 Easings.SmoothStart2 => SmoothStart2(t),
                 Easings.SmoothStart3 => SmoothStart3(t),
                 Easings.SmoothStart4 => SmoothStart4(t),
                 Easings.SmoothStart5 => SmoothStart5(t),
+
                 Easings.SmoothStop2 => SmoothStop2(t),
                 Easings.SmoothStop3 => SmoothStop3(t),
                 Easings.SmoothStop4 => SmoothStop4(t),
                 Easings.SmoothStop5 => SmoothStop5(t),
+
                 Easings.SmoothStep2 => SmoothStep2(t),
                 Easings.SmoothStep3 => SmoothStep3(t),
                 Easings.SmoothStep4 => SmoothStep4(t),
                 Easings.SmoothStep5 => SmoothStep5(t),
-                Easings.Arch2 => Arch2(t),
+
                 _ => Linear(t),
             };
         }
