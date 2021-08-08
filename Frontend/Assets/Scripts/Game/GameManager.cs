@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviour
 
             UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
             PlayerInput.Clearstate();
-            yield return null; // Unity input state
+            yield return null; // Had some problems with keys still registered as tapped in this frame. Clear it.
 
             while (startReplay == false && startRound == false)
             {
@@ -236,9 +236,14 @@ public class GameManager : MonoBehaviour
     IEnumerator Playing(bool isReplay)
     {
         if (isReplay)
+        {
             LevelReplay.BeginReplay();
+            QuickText.Instance.ShowText("replay");
+        }
         else
+        {
             LevelReplay.BeginRecording();
+        }
 
         while (Player.Alive)
         {
@@ -249,14 +254,28 @@ public class GameManager : MonoBehaviour
             if (levelComplete)
                 break;
 
+            PlayerInput.GetHumanInput();
+            if (PlayerInput.BackTap)
+            {
+                latestRoundResult.Cancelled = true;
+                QuickText.Instance.ShowText(isReplay ? "replay cancelled" : "restart");
+                yield break;
+            }
+
             yield return null;
         }
+
+        if (!isReplay)
+            LevelReplay.CommitReplay();
 
         latestRoundResult.Completed = levelComplete;
         latestRoundResult.EndTime = timeLeft;
 
         latestRoundResult.OutOfTime = timeLeft <= 0;
         latestRoundResult.IsEliteTime = EngineTime <= levelSettings.EliteCompletionTimeSeconds;
+
+        if (latestRoundResult.OutOfTime)
+            QuickText.Instance.ShowText("time ran out");
 
         SetScoreText(latestRoundResult);
 

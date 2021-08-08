@@ -5,8 +5,10 @@ namespace Sludge.Replays
 {
 	public class LevelReplay
 	{
-		public ReplayElement[] Elements = new ReplayElement[10000];
+		public ReplayElement[] Elements = new ReplayElement[5000];
+		public ReplayElement[] ElementsRecording = new ReplayElement[5000];
 		public int Count = 0;
+		public int CountRecording = 0;
 		int lastInputState;
 		StringBuilder sb = new StringBuilder(5000);
 
@@ -14,7 +16,7 @@ namespace Sludge.Replays
 
 		public void BeginRecording()
 		{
-			Count = 0;
+			CountRecording = 0;
 			lastInputState = -1;
 		}
 
@@ -28,6 +30,12 @@ namespace Sludge.Replays
 
 		public bool ReplayIsDone()
 			=> replayIndex >= Count - 1;
+
+		public void CommitReplay()
+        {
+			Array.Copy(ElementsRecording, Elements, CountRecording);
+			Count = CountRecording;
+        }
 
 		public int GetReplayState(int frameCounter)
         {
@@ -55,15 +63,15 @@ namespace Sludge.Replays
 			if (inputState == lastInputState)
 				return;
 
-			Elements[Count].InputState = (byte)inputState;
-			Elements[Count].FrameCounter = frameCounter;
+			ElementsRecording[CountRecording].InputState = (byte)inputState;
+			ElementsRecording[CountRecording].FrameCounter = frameCounter;
 
 			//Elements[Count].Angle = (float)GameManager.Instance.Player.angle;
 			//Elements[Count].PlayerX = GameManager.Instance.Player.transform.position.x;
 			//Elements[Count].PlayerY = GameManager.Instance.Player.transform.position.y;
 
 			lastInputState = inputState;
-			Count++;
+			CountRecording++;
 		}
 
 		public string ToReplayString()

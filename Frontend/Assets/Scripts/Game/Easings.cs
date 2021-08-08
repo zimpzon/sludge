@@ -8,6 +8,8 @@ namespace Sludge.Easing
         Flip,
         BounceStart,
         BounceEnd,
+        Sin,
+        Cos,
         SmoothStart2,
         SmoothStart3,
         SmoothStart4,
@@ -31,6 +33,9 @@ namespace Sludge.Easing
         public static double PingPong(double t) => t <= 0.5 ? t * 2 : 1 - ((t - 0.5) * 2);
         public static double BounceStart(double t) => Mathf.Abs(((float)t * 2.0f) - 1.0f);
         public static double BounceEnd(double t) => 1.0 - BounceStart(t);
+
+        public static double Sin(double t) => Mathf.Sin((float)t);
+        public static double Cos(double t) => Mathf.Cos((float)t);
 
         public static double SmoothStart2(double t) => t * t;
         public static double SmoothStart3(double t) => t * t * t;
@@ -68,6 +73,9 @@ namespace Sludge.Easing
                 Easings.Flip => Flip(t),
                 Easings.BounceStart => BounceStart(t),
                 Easings.BounceEnd => BounceEnd(t),
+
+                Easings.Sin => Sin(t),
+                Easings.Cos => Cos(t),
 
                 Easings.SmoothStart2 => SmoothStart2(t),
                 Easings.SmoothStart3 => SmoothStart3(t),
