@@ -237,11 +237,13 @@ public class GameManager : MonoBehaviour
     {
         if (isReplay)
         {
+            Analytics.Instance.ReplayStarted(currentLevelData.Name);
             LevelReplay.BeginReplay();
             QuickText.Instance.ShowText("replay");
         }
         else
         {
+            Analytics.Instance.LevelStart();
             LevelReplay.BeginRecording();
         }
 
@@ -276,6 +278,11 @@ public class GameManager : MonoBehaviour
 
         if (latestRoundResult.OutOfTime)
             QuickText.Instance.ShowText("time ran out");
+
+        if (latestRoundResult.Completed)
+            Analytics.Instance.LevelComplete(currentLevelData.Name);
+        else
+            Analytics.Instance.LevelFail(currentLevelData.Name);
 
         SetScoreText(latestRoundResult);
 
