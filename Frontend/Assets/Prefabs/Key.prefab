@@ -109,6 +109,8 @@ GameObject:
   - component: {fileID: 3124446515300111179}
   - component: {fileID: 3124446515300111188}
   - component: {fileID: 3124446515300111189}
+  - component: {fileID: -7488368848633027931}
+  - component: {fileID: 5926309394402167993}
   m_Layer: 10
   m_Name: Key
   m_TagString: Untagged
@@ -161,6 +163,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Modifiers: []
+--- !u!114 &-7488368848633027931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3124446515300111177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd72679db0ecbe49b08122779222bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 0
+  Range: 5
+  TimeOffset: 0
+  TimeMultiplier: 1
+  PingPong: 1
+  Easing: 0
+--- !u!114 &5926309394402167993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3124446515300111177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42fe4142cc461e646a48116d84d1b3f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 0
+  Range: 5
+  TimeOffset: 0
+  TimeMultiplier: 1
+  PingPong: 1
+  Easing: 0
 --- !u!1 &6287896641223892274
 GameObject:
   m_ObjectHideFlags: 0

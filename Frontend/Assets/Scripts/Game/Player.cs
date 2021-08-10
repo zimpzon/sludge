@@ -2,7 +2,9 @@ using DG.Tweening;
 using Sludge;
 using Sludge.Utility;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Player : MonoBehaviour
 {
@@ -56,8 +58,6 @@ public class Player : MonoBehaviour
         softBody = GetComponentInChildren<LineRenderer>();
         softBody.positionCount = 80; // Max number of line segments for body
         ripples = GetComponentInChildren<QuadDistort>();
-        var particleMain = deathParticles.main;
-        //particleMain.startColor = softBody.startColor;
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
     }

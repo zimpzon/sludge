@@ -34,8 +34,8 @@ namespace Sludge.Easing
         public static double BounceStart(double t) => Mathf.Abs(((float)t * 2.0f) - 1.0f);
         public static double BounceEnd(double t) => 1.0 - BounceStart(t);
 
-        public static double Sin(double t) => Mathf.Sin((float)t);
-        public static double Cos(double t) => Mathf.Cos((float)t);
+        public static double Sin(double t) => Mathf.Sin((float)t * Mathf.PI * 2);
+        public static double Cos(double t) => Mathf.Cos((float)t * Mathf.PI * 2);
 
         public static double SmoothStart2(double t) => t * t;
         public static double SmoothStart3(double t) => t * t * t;

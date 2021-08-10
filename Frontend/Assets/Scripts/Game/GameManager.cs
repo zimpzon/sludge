@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public const double TickSize = 0.016;
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000.0 / TickSizeMs;
-    
+
     public Image TimeBarLeft;
     public Image TimeBarRight;
     public Tilemap Tilemap;
