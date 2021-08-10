@@ -16,8 +16,11 @@ public class Analytics : MonoBehaviour
 
     public void SaveStats(RoundResult roundResult)
     {
+#if UNITY_EDITOR
+#else
         string json = JsonConvert.SerializeObject(roundResult);
         StartCoroutine(StoreEvents(json));
+#endif
     }
 
     IEnumerator StoreEvents(string json)
