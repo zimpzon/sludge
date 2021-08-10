@@ -74,18 +74,22 @@ namespace Sludge.Replays
 			CountRecording++;
 		}
 
-		public string ToReplayString()
+		public string LatestCommittedToReplayString() => ToReplayString(Elements, Count);
+
+		public string LatestUncommittedToReplayString() => ToReplayString(ElementsRecording, CountRecording);
+
+		string ToReplayString(ReplayElement[] data, int count)
 		{
 			if (Count == 0)
 				return string.Empty;
 
 			sb.Clear();
 
-			for (int i = 0; i < Count; ++i)
+			for (int i = 0; i < count; ++i)
             {
-				sb.Append(Elements[i].InputState.ToString());
+				sb.Append(data[i].InputState.ToString());
 				sb.Append(',');
-				sb.Append(Elements[i].FrameCounter.ToString());
+				sb.Append(data[i].FrameCounter.ToString());
 				sb.Append(',');
 			}
 			return sb.ToString();
