@@ -1,4 +1,5 @@
 ﻿using Sludge.Modifiers;
+using Sludge.Utility;
 using UnityEngine;
 
 namespace Sludge.SludgeObjects
@@ -6,7 +7,8 @@ namespace Sludge.SludgeObjects
     public abstract class SludgeObject : MonoBehaviour
     {
         public SludgeModifier[] Modifiers;
-        
+        public abstract EntityType EntityType { get; }
+
         void Awake()
         {
             Modifiers = transform.GetComponentsInChildren<SludgeModifier>();

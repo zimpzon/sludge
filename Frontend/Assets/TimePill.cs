@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TimePill : SludgeObject
 {
+    public override EntityType EntityType => EntityType.TimePill;
+
     public override void Reset()
     {
         gameObject.SetActive(true);
@@ -12,7 +14,8 @@ public class TimePill : SludgeObject
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (1 << collision.gameObject.layer == SludgeUtil.PlayerLayerMask)
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+        if (entity == EntityType.Player)
         {
             GameManager.Instance.TimePillPickup(this);
             gameObject.SetActive(false);

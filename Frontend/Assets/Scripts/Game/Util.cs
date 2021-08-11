@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sludge.SludgeObjects;
+using UnityEngine;
 
 namespace Sludge.Utility
 {
@@ -48,10 +49,31 @@ namespace Sludge.Utility
             return line_start + Vector3.Project(point - line_start, line_end - line_start);
         }
 
+        public static EntityType GetEntityType(GameObject go)
+        {
+            int goLayer = go.layer;
+            if (goLayer == 0)
+                return EntityType.Nothing;
+
+            if (1 << goLayer == PlayerLayerMask)
+                return EntityType.Player;
+
+            if (1 << goLayer == StaticLevelLayerMask)
+                return EntityType.StaticLevel;
+
+            var sludgeObject = go.GetComponent<SludgeObject>();
+            if (sludgeObject != null)
+                return sludgeObject.EntityType;
+
+            Debug.LogWarning($"Unknown gameobject entity type, go name: {go.name}");
+            return EntityType.Unknown;
+        }
+
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
         public static int PlayerLayerMask = LayerMask.GetMask("Player");
         public static int StaticLevelLayerMask = LayerMask.GetMask("StaticLevel");
+
         public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");
         public static int ObjectsLayerNumber = LayerMask.NameToLayer("Objects");
     }

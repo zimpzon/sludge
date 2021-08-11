@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     double homeAngle;
     ContactFilter2D wallScanFilter = new ContactFilter2D();
     int onConveyorBeltCount;
-
+    public ModThrowable currentThrowable;
     LineRenderer softBody;
 
     // Impulses: summed up and added every frame. Then cleared.
@@ -60,6 +60,43 @@ public class Player : MonoBehaviour
         ripples = GetComponentInChildren<QuadDistort>();
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
+    }
+
+    public void Prepare()
+    {
+        Debug.Log($"Player.Prepare()");
+        speed = minSpeed;
+        trail.Clear();
+        trail.enabled = false;
+        Alive = true;
+        onConveyorBeltCount = 0;
+        ripples.Reset();
+        impulseX = 0;
+        impulseY = 0;
+        impulseRotation = 0;
+        currentThrowable = null;
+
+        overrideX.Clear();
+        overrideY.Clear();
+        overrideRotation.Clear();
+
+        forceX = 0;
+        forceY = 0;
+
+        playerX = homeX;
+        playerY = homeY;
+        angle = homeAngle;
+
+        UpdateTransform();
+        SetPositionSample(0);
+        UpdateSoftBody();
+
+        trail.enabled = true;
+    }
+
+    public void ThrowablePickedUp(ModThrowable throwable)
+    {
+        currentThrowable = throwable;
     }
 
     public void ConveyourBeltEnter()
@@ -131,37 +168,6 @@ public class Player : MonoBehaviour
         Alive = false;
     }
 
-    public void Prepare()
-    {
-        Debug.Log($"Player.Prepare()");
-        speed = minSpeed;
-        trail.Clear();
-        trail.enabled = false;
-        Alive = true;
-        onConveyorBeltCount = 0;
-        ripples.Reset();
-        impulseX = 0;
-        impulseY = 0;
-        impulseRotation = 0;
-
-        overrideX.Clear();
-        overrideY.Clear();
-        overrideRotation.Clear();
-
-        forceX = 0;
-        forceY = 0;
-
-        playerX = homeX;
-        playerY = homeY;
-        angle = homeAngle;
-
-        UpdateTransform();
-        SetPositionSample(0);
-        UpdateSoftBody();
-
-        trail.enabled = true;
-    }
-
     void PlayerControls()
     {
         bool isTurning = false;
@@ -206,6 +212,12 @@ public class Player : MonoBehaviour
             speed = SludgeUtil.Stabilize(speed + GameManager.TickSize * accelerateSpeed);
             if (speed > maxSpeed)
                 speed = maxSpeed;
+        }
+
+        if (GameManager.PlayerInput.UpDoubleTap && currentThrowable != null)
+        {
+            currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed);
+            currentThrowable = null;
         }
 
         double lookX = -SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * angle)));

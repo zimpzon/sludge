@@ -47,6 +47,7 @@ public class BulletManager : MonoBehaviour
 
     void OnGet(ModBulletMovement bullet)
     {
+        bullet.Reset();
         bullet.gameObject.SetActive(true);
         activeBullets.Add(bullet);
     }

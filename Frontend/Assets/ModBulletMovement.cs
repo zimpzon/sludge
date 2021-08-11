@@ -22,9 +22,10 @@ public class ModBulletMovement : SludgeModifier
     {
         trans = transform;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        Reset();
     }
 
-    private void Start()
+    public override void Reset()
     {
         color1 = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor1);
         color2 = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor2);
@@ -32,15 +33,14 @@ public class ModBulletMovement : SludgeModifier
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        bool isPlayer = 1 << collision.gameObject.layer == SludgeUtil.PlayerLayerMask;
-        if (isPlayer)
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+        if (entity == EntityType.Player)
         {
             GameManager.Instance.Player.Kill();
             return;
         }
 
-        bool isWall = ((1 << collision.gameObject.layer) & SludgeUtil.ScanForWallsLayerMask) != 0;
-        if (isWall)
+        if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
             BulletManager.Instance.Release(this);
     }
 
