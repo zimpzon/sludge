@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Key : SludgeObject
 {
+    public override EntityType EntityType => EntityType.Key;
+
     public override void Reset()
     {
         gameObject.SetActive(true);
@@ -12,7 +14,8 @@ public class Key : SludgeObject
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (1 << collision.gameObject.layer == SludgeUtil.PlayerLayerMask)
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+        if (entity == EntityType.Player)
         {
             GameManager.Instance.KeyPickup(this);
             gameObject.SetActive(false);

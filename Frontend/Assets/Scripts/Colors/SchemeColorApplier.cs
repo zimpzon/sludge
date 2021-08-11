@@ -66,6 +66,14 @@ public class SchemeColorApplier : MonoBehaviour
             return;
         }
 
+        var particles = GetComponent<ParticleSystem>();
+        if (particles != null)
+        {
+            var main = particles.main;
+            main.startColor = GetColor(main.startColor.color, scheme);
+            return;
+        }
+
         var text = GetComponent<TextMeshProUGUI>();
         if (text != null)
         {

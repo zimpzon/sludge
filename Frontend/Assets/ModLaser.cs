@@ -33,8 +33,8 @@ public class ModLaser : SludgeModifier
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        bool isPlayer = 1 << collision.gameObject.layer == SludgeUtil.PlayerLayerMask;
-        if (isPlayer)
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+        if (entity == EntityType.Player)
             GameManager.Instance.Player.Kill();
     }
 

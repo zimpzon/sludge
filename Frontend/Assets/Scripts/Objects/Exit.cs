@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Exit : SludgeObject
 {
+    public override EntityType EntityType => EntityType.Exit;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        bool isPlayer = 1 << collision.gameObject.layer == SludgeUtil.PlayerLayerMask;
-        if (!isPlayer)
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+        if (entity != EntityType.Player)
             return;
 
         GameManager.Instance.LevelCompleted(this);

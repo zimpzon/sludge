@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sludge.Utility;
+using UnityEngine;
 
 namespace Sludge.PlayerInputs
 {
@@ -10,6 +11,7 @@ namespace Sludge.PlayerInputs
         public int Right;
 
         public bool UpTap;
+        public bool UpDoubleTap;
         public bool DownTap;
         public bool LeftTap;
         public bool RightTap;
@@ -19,8 +21,14 @@ namespace Sludge.PlayerInputs
         public bool ColorNextTap;
         public bool ColorPrevTap;
 
+        public double TimeLastUpTap;
+        int frameNumber;
+
         public void GetHumanInput()
         {
+            bool isFirstCallThisFrame = frameNumber != GameManager.Instance.FrameCounter;
+            frameNumber = GameManager.Instance.FrameCounter;
+
             Up = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetButton("Jump") ? 1 : 0;
             //Up = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0.25f ? 1 : 0;
             Down = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.5f ? 2 : 0;
@@ -36,6 +44,21 @@ namespace Sludge.PlayerInputs
 
             ColorNextTap = Input.GetKeyDown(KeyCode.X);
             ColorPrevTap = Input.GetKeyDown(KeyCode.Z);
+
+            if (isFirstCallThisFrame)
+            {
+                UpDoubleTap = false;
+                if (UpTap)
+                {
+                    double timeSinceUpTap = GameManager.Instance.EngineTime - TimeLastUpTap;
+                    if (timeSinceUpTap < 0.2)
+                    {
+                        UpDoubleTap = true;
+                    }
+
+                    TimeLastUpTap = GameManager.Instance.EngineTime;
+                }
+            }
         }
 
         public void Clearstate()
@@ -47,6 +70,7 @@ namespace Sludge.PlayerInputs
             RightTap = false;
             SelectTap = false;
             BackTap = false;
+            TimeLastUpTap = -100;
         }
 
         public void SetState(int state)

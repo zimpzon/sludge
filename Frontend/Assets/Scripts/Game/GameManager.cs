@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
 
             SludgeObjects = FindObjectsOfType<SludgeObject>();
 
-            // Simulate level load
+            // Simulate level load when starting directly from editor
             foreach (var obj in SludgeObjects)
             {
                 foreach (var modifier in obj.Modifiers)
