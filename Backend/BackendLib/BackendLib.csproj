@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Frontend\Assets\Backend\LevelData.cs" Link="LevelData.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.9.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.1" />
   </ItemGroup>

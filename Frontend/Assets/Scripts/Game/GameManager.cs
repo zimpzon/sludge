@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text TextLevelName;
     public Material OutlineMaterial;
 
+    public static string ClientId;
     public static PlayerInput PlayerInput = new PlayerInput();
     public static LevelReplay LevelReplay = new LevelReplay();
     public static GameManager Instance;
@@ -237,13 +238,11 @@ public class GameManager : MonoBehaviour
     {
         if (isReplay)
         {
-            Analytics.Instance.ReplayStarted(currentLevelData.Name);
             LevelReplay.BeginReplay();
             QuickText.Instance.ShowText("replay");
         }
         else
         {
-            Analytics.Instance.LevelStart();
             LevelReplay.BeginRecording();
         }
 
@@ -251,7 +250,10 @@ public class GameManager : MonoBehaviour
         {
             UnityTime += Time.deltaTime;
             while (EngineTime <= UnityTime)
+            {
                 DoTick(isReplay);
+                latestRoundResult.RoundTotalTime += TickSize;
+            }
 
             if (levelComplete)
                 break;
@@ -267,22 +269,24 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        if (!isReplay)
+        bool playerCompletedRound = !isReplay && !latestRoundResult.Cancelled;
+        if (playerCompletedRound)
             LevelReplay.CommitReplay();
 
+        latestRoundResult.ClientId = ClientId;
+        latestRoundResult.LevelName = currentLevelData.Name;
+        latestRoundResult.IsReplay = isReplay;
         latestRoundResult.Completed = levelComplete;
-        latestRoundResult.EndTime = timeLeft;
-
+        latestRoundResult.EndTime = SludgeUtil.Stabilize(timeLeft);
+        latestRoundResult.RoundTotalTime = SludgeUtil.Stabilize(latestRoundResult.RoundTotalTime);
         latestRoundResult.OutOfTime = timeLeft <= 0;
-        latestRoundResult.IsEliteTime = EngineTime <= levelSettings.EliteCompletionTimeSeconds;
+        latestRoundResult.IsEliteTime = levelComplete && EngineTime <= levelSettings.EliteCompletionTimeSeconds;
+        latestRoundResult.ReplayData = latestRoundResult.Cancelled ? null : LevelReplay.LatestCommittedToReplayString();
 
         if (latestRoundResult.OutOfTime)
             QuickText.Instance.ShowText("time ran out");
 
-        if (latestRoundResult.Completed)
-            Analytics.Instance.LevelComplete(currentLevelData.Name);
-        else
-            Analytics.Instance.LevelFail(currentLevelData.Name);
+        Analytics.Instance.SaveStats(latestRoundResult);
 
         SetScoreText(latestRoundResult);
 
