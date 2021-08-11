@@ -27,6 +27,9 @@ public class ModBulletMovement : SludgeModifier
 
     public override void Reset()
     {
+        if (GameManager.Instance == null)
+            return;
+
         color1 = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor1);
         color2 = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor2);
     }

@@ -17,7 +17,6 @@ namespace Sludge.UI
 		public UiSelectionMarker UiSelectionMarker;
 
 		string latestSelectedLevelId;
-		PlayerInput playerInput = new PlayerInput();
 
 		private void Awake()
         {
@@ -99,8 +98,9 @@ namespace Sludge.UI
 
 			while (true)
 			{
-				CheckInput(playerInput);
-				DoUiNavigation(playerInput);
+				GameManager.PlayerInput.GetHumanInput();
+				CheckChangeColorScheme(GameManager.PlayerInput);
+				DoUiNavigation(GameManager.PlayerInput);
                 yield return null;
 			}
 		}
@@ -118,7 +118,7 @@ namespace Sludge.UI
 
 			while (true)
 			{
-				// Wait for game sequence to end
+				// Wait for game sequence to end. Important: Only game loop calls GetHumanInput since coroutine ticks and engine ticks are not synced.
 				yield return null;
 			}
 		}
@@ -144,21 +144,15 @@ namespace Sludge.UI
 
 		void CheckChangeColorScheme(PlayerInput input)
         {
-			if (input.ColorNextTap)
+			if (input.IsTapped(PlayerInput.InputType.ColorNext))
 			{
 				GameManager.Instance.SetColorScheme(GameManager.Instance.ColorSchemeList.GetNext());
 			}
-			else if (input.ColorPrevTap)
+			if (input.IsTapped(PlayerInput.InputType.ColorPrev))
 			{
 				GameManager.Instance.SetColorScheme(GameManager.Instance.ColorSchemeList.GetPrev());
 			}
 		}
-
-		void CheckInput(PlayerInput input)
-        {
-			input.GetHumanInput();
-			CheckChangeColorScheme(input);
-        }
 
 		IEnumerator ControlsLoop()
 		{
@@ -168,8 +162,10 @@ namespace Sludge.UI
 
 			while (true)
 			{
-				CheckInput(playerInput);
-				if (playerInput.BackTap)
+				GameManager.PlayerInput.GetHumanInput();
+				CheckChangeColorScheme(GameManager.PlayerInput);
+
+				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
 				{
 					UiPanels.Instance.HidePanel(UiPanel.Controls);
 					StopAllCoroutines();
@@ -206,10 +202,11 @@ namespace Sludge.UI
 
 			while (true)
             {
-				CheckInput(playerInput);
-				DoUiNavigation(playerInput);
+				GameManager.PlayerInput.GetHumanInput();
+				CheckChangeColorScheme(GameManager.PlayerInput);
+				DoUiNavigation(GameManager.PlayerInput);
 
-				if (playerInput.BackTap)
+				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
 					UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
 					StopAllCoroutines();

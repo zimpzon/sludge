@@ -2,9 +2,8 @@ using DG.Tweening;
 using Sludge;
 using Sludge.Utility;
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+using Sludge.PlayerInputs;
 
 public class Player : MonoBehaviour
 {
@@ -214,7 +213,7 @@ public class Player : MonoBehaviour
                 speed = maxSpeed;
         }
 
-        if (GameManager.PlayerInput.UpDoubleTap && currentThrowable != null)
+        if (GameManager.PlayerInput.IsDoubleTapped(PlayerInput.InputType.Up) && currentThrowable != null)
         {
             currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed);
             currentThrowable = null;

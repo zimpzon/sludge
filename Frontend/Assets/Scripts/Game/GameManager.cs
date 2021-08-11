@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     public Material OutlineMaterial;
 
     public static string ClientId;
-    public static PlayerInput PlayerInput = new PlayerInput();
+    public static PlayerInput PlayerInput;
     public static LevelReplay LevelReplay = new LevelReplay();
     public static GameManager Instance;
 
@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         Startup.StaticInit();
-
+        PlayerInput = new PlayerInput();
         levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
         Player = FindObjectOfType<Player>();
@@ -179,8 +179,7 @@ public class GameManager : MonoBehaviour
             ResetLevel();
 
             UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
-            PlayerInput.Clearstate();
-            yield return null; // Had some problems with keys still registered as tapped in this frame. Clear it.
+            PlayerInput.ClearState();
 
             while (startReplay == false && startRound == false)
             {
@@ -193,7 +192,7 @@ public class GameManager : MonoBehaviour
                     startRound = true;
                 }
 
-                if (PlayerInput.BackTap)
+                if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
                     StopAllCoroutines();
                     UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
@@ -251,6 +250,8 @@ public class GameManager : MonoBehaviour
             UnityTime += Time.deltaTime;
             while (EngineTime <= UnityTime)
             {
+                PlayerInput.GetHumanInput();
+
                 DoTick(isReplay);
                 latestRoundResult.RoundTotalTime += TickSize;
             }
@@ -258,8 +259,7 @@ public class GameManager : MonoBehaviour
             if (levelComplete)
                 break;
 
-            PlayerInput.GetHumanInput();
-            if (PlayerInput.BackTap)
+            if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
             {
                 latestRoundResult.Cancelled = true;
                 QuickText.Instance.ShowText(isReplay ? "replay cancelled" : "restart");
@@ -355,7 +355,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            PlayerInput.GetHumanInput();
             LevelReplay.RecordState(PlayerInput.GetState(), FrameCounter);
         }
 

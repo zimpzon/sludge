@@ -25,16 +25,16 @@ public class UiNavigation : MonoBehaviour
 			return;
 		}
 
-		if (playerInput.SelectTap && OnNavigationSelected != null)
+		if (playerInput.IsTapped(PlayerInput.InputType.Select) && OnNavigationSelected != null)
 			OnNavigationSelected(selectionMarker.target);
 
-		if (playerInput.DownTap)
+		if (playerInput.IsTapped(PlayerInput.InputType.Down))
 			TryMove(selectionMarker, navComponent.Down);
-		if (playerInput.UpTap)
+		if (playerInput.IsTapped(PlayerInput.InputType.Up))
 			TryMove(selectionMarker, navComponent.Up);
-		if (playerInput.LeftTap)
+		if (playerInput.IsTapped(PlayerInput.InputType.Left))
 			TryMove(selectionMarker, navComponent.Left);
-		if (playerInput.RightTap)
+		if (playerInput.IsTapped(PlayerInput.InputType.Right))
 			TryMove(selectionMarker, navComponent.Right);
 	}
 

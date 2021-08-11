@@ -1,76 +1,103 @@
-﻿using Sludge.Utility;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sludge.PlayerInputs
 {
     public class PlayerInput
     {
+        public enum InputType { Up, Down, Left, Right, Select, Back, ColorNext, ColorPrev };
+
+        Dictionary<InputType, InputState> inputs = new Dictionary<InputType, InputState>();
+
+        public PlayerInput()
+        {
+            inputs[InputType.Up] = new InputState { IsActivated = UpActive };
+            inputs[InputType.Down] = new InputState { IsActivated = DownActive };
+            inputs[InputType.Left] = new InputState { IsActivated = LeftActive };
+            inputs[InputType.Right] = new InputState { IsActivated = RightActive };
+            inputs[InputType.Back] = new InputState { IsActivated = BackActive };
+            inputs[InputType.Select] = new InputState { IsActivated = SelectActive };
+            inputs[InputType.ColorNext] = new InputState { IsActivated = ColorNextActive };
+            inputs[InputType.ColorPrev] = new InputState { IsActivated = ColorPrevActive };
+        }
+
+        private class InputState
+        {
+            public Func<bool> IsActivated;
+            public bool WasActive;
+            public double TimeLastTap;
+            public bool IsTapped;
+            public bool IsDoubleTapped;
+        }
+
         public int Up;
         public int Down;
         public int Left;
         public int Right;
 
-        public bool UpTap;
-        public bool UpDoubleTap;
-        public bool DownTap;
-        public bool LeftTap;
-        public bool RightTap;
-        public bool SelectTap;
-        public bool BackTap;
+        bool UpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetButton("Jump");
+        bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.5f;
+        bool LeftActive() => Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.5f;
+        bool RightActive() => Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.5f;
+        bool BackActive() => Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Backspace);
+        bool SelectActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter);
+        bool ColorNextActive() => Input.GetKey(KeyCode.X);
+        bool ColorPrevActive() => Input.GetKey(KeyCode.Z);
 
-        public bool ColorNextTap;
-        public bool ColorPrevTap;
+        public bool IsTapped(InputType inputType, bool claimEvent = true)
+        {
+            bool result = inputs[inputType].IsTapped;
+            if (claimEvent)
+                inputs[inputType].IsTapped = false;
+            return result;
+        }
 
-        public double TimeLastUpTap;
-        int frameNumber;
+        public bool IsDoubleTapped(InputType inputType, bool claimEvent = true)
+        {
+            bool result = inputs[inputType].IsDoubleTapped;
+            if (claimEvent)
+                inputs[inputType].IsDoubleTapped = false;
+            return result;
+        }
 
         public void GetHumanInput()
         {
-            bool isFirstCallThisFrame = frameNumber != GameManager.Instance.FrameCounter;
-            frameNumber = GameManager.Instance.FrameCounter;
+            // Flags
+            Up = UpActive() ? 1 : 0;
+            Down = DownActive() ? 2 : 0;
+            Left = LeftActive() ? 4 : 0;
+            Right = RightActive() ? 8 : 0;
 
-            Up = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetButton("Jump") ? 1 : 0;
-            //Up = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0.25f ? 1 : 0;
-            Down = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.5f ? 2 : 0;
-            Left = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.5f ? 4 : 0;
-            Right = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.5f ? 8 : 0;
-
-            UpTap = Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow);
-            DownTap = Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow);
-            LeftTap = Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow);
-            RightTap = Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow);
-            SelectTap = Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.E);
-            BackTap = Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Backspace);
-
-            ColorNextTap = Input.GetKeyDown(KeyCode.X);
-            ColorPrevTap = Input.GetKeyDown(KeyCode.Z);
-
-            if (isFirstCallThisFrame)
+            const double DoubleTapTime = 0.4;
+            foreach(var input in inputs.Values)
             {
-                UpDoubleTap = false;
-                if (UpTap)
-                {
-                    double timeSinceUpTap = GameManager.Instance.EngineTime - TimeLastUpTap;
-                    if (timeSinceUpTap < 0.2)
-                    {
-                        UpDoubleTap = true;
-                    }
+                input.IsTapped = false;
+                input.IsDoubleTapped = false;
 
-                    TimeLastUpTap = GameManager.Instance.EngineTime;
+                bool active = input.IsActivated();
+                if (active)
+                {
+                    input.IsTapped = !input.WasActive;
+                    if (input.IsTapped)
+                    {
+                        input.IsDoubleTapped = Time.time - input.TimeLastTap < DoubleTapTime;
+                        input.TimeLastTap = Time.time;
+                    }
                 }
+
+                input.WasActive = active;
             }
         }
 
-        public void Clearstate()
+        public void ClearState()
         {
             SetState(0);
-            UpTap = false;
-            DownTap = false;
-            LeftTap = false;
-            RightTap = false;
-            SelectTap = false;
-            BackTap = false;
-            TimeLastUpTap = -100;
+            foreach (var input in inputs.Values)
+            {
+                input.IsTapped = false;
+                input.IsDoubleTapped = false;
+            }
         }
 
         public void SetState(int state)
