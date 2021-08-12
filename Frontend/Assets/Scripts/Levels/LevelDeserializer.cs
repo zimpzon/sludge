@@ -74,6 +74,11 @@ public static class LevelDeserializer
             var modifiers = instance.GetComponentsInChildren<SludgeModifier>();
             for (int j = 0; j < modifiers.Count(); ++j)
             {
+                if (j >= storedObj.Modifiers.Count)
+                {
+                    Debug.Log($"Object ({instance.name}) stored in json has fewer modifiers than in the current code. Maybe new modifiers were added in the editor after level was saved?");
+                    continue;
+                }
                 JsonUtility.FromJsonOverwrite(storedObj.Modifiers[j], modifiers[j]);
                 modifiers[j].OnLoaded();
             }

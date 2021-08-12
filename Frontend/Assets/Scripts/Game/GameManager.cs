@@ -226,7 +226,10 @@ public class GameManager : MonoBehaviour
         BulletManager.Instance.Reset();
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
+        {
+            SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);
             SludgeObjects[i].Reset();
+        }
 
         Player.Prepare();
 
@@ -259,7 +262,7 @@ public class GameManager : MonoBehaviour
             if (levelComplete)
                 break;
 
-            if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
+            if (PlayerInput.BackActive())
             {
                 latestRoundResult.Cancelled = true;
                 QuickText.Instance.ShowText(isReplay ? "replay cancelled" : "restart");
@@ -319,7 +322,10 @@ public class GameManager : MonoBehaviour
     void UpdateSludgeObjects()
     {
         for (int i = 0; i < SludgeObjects.Length; ++i)
-            SludgeObjects[i].EngineTick();
+        {
+            if (SludgeObjects[i].gameObject.activeSelf)
+                SludgeObjects[i].EngineTick();
+        }
     }
 
     void UpdatePlayer()

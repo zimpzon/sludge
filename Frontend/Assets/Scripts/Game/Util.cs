@@ -49,6 +49,13 @@ namespace Sludge.Utility
             return line_start + Vector3.Project(point - line_start, line_end - line_start);
         }
 
+        public static void SetActiveRecursive(GameObject go, bool active)
+        {
+            go.SetActive(active);
+            for (int i = 0; i < go.transform.childCount; ++i)
+                go.transform.GetChild(i).gameObject.SetActive(active);
+        }
+
         public static EntityType GetEntityType(GameObject go)
         {
             int goLayer = go.layer;
@@ -69,6 +76,7 @@ namespace Sludge.Utility
             return EntityType.Unknown;
         }
 
+        public static int ThrowableExplosionLayerMask = LayerMask.GetMask("Objects");
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
         public static int PlayerLayerMask = LayerMask.GetMask("Player");

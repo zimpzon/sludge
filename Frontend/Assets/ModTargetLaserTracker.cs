@@ -24,6 +24,7 @@ public class ModTargetLaserTracker : SludgeModifier
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.positionCount = 2;
         trans = transform;
         scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
         scanForWallFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);

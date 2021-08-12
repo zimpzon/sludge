@@ -35,15 +35,16 @@ namespace Sludge.PlayerInputs
         public int Down;
         public int Left;
         public int Right;
+        public int UpDoubleTap;
 
-        bool UpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetButton("Jump");
-        bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.5f;
-        bool LeftActive() => Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.5f;
-        bool RightActive() => Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.5f;
-        bool BackActive() => Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Backspace);
-        bool SelectActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter);
-        bool ColorNextActive() => Input.GetKey(KeyCode.X);
-        bool ColorPrevActive() => Input.GetKey(KeyCode.Z);
+        public bool UpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetButton("Jump");
+        public bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.5f;
+        public bool LeftActive() => Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.5f;
+        public bool RightActive() => Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.5f;
+        public bool BackActive() => Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Backspace);
+        public bool SelectActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter);
+        public bool ColorNextActive() => Input.GetKey(KeyCode.X);
+        public bool ColorPrevActive() => Input.GetKey(KeyCode.Z);
 
         public bool IsTapped(InputType inputType, bool claimEvent = true)
         {
@@ -68,6 +69,7 @@ namespace Sludge.PlayerInputs
             Down = DownActive() ? 2 : 0;
             Left = LeftActive() ? 4 : 0;
             Right = RightActive() ? 8 : 0;
+            UpDoubleTap = inputs[InputType.Up].IsDoubleTapped ? 16 : 0;
 
             const double DoubleTapTime = 0.4;
             foreach(var input in inputs.Values)
@@ -106,9 +108,10 @@ namespace Sludge.PlayerInputs
             Down = state & 2;
             Left = state & 4;
             Right = state & 8;
+            UpDoubleTap = state & 16;
         }
 
         public int GetState()
-            => Up + Down + Left + Right;
+            => Up + Down + Left + Right + UpDoubleTap;
     }
 }

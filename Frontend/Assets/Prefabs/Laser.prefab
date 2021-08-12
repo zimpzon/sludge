@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 585074472}
   - component: {fileID: 585074474}
   - component: {fileID: 585074473}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ParticlesFixed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4817,7 +4817,7 @@ GameObject:
   - component: {fileID: 831384817}
   - component: {fileID: 831384818}
   - component: {fileID: 831384819}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4915,7 +4915,7 @@ GameObject:
   - component: {fileID: 924752785}
   - component: {fileID: 924752786}
   - component: {fileID: 924752787}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BodyInner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5017,7 +5017,7 @@ GameObject:
   - component: {fileID: 5287462854484810114}
   - component: {fileID: 2036143378}
   - component: {fileID: 2036143377}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5098,12 +5098,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42fe4142cc461e646a48116d84d1b3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Active: 0
-  Range: -8
+  Active: 1
+  Range: -10
   TimeOffset: 0
   TimeMultiplier: 0.2
   PingPong: 1
-  Easing: 0
+  Easing: 12
 --- !u!50 &2036143378
 Rigidbody2D:
   serializedVersion: 4
@@ -5153,7 +5153,7 @@ GameObject:
   - component: {fileID: 5287462855557816859}
   - component: {fileID: 963014284}
   - component: {fileID: 963014285}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5167,13 +5167,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5287462855557816857}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5287462854484810118}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!120 &5287462855557816859
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -5217,7 +5217,7 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 2.2131686, y: 0.39828062, z: -7.802127}
+  - {x: 2.2131686, y: 0.006322384, z: -7.802127}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.5
@@ -5238,8 +5238,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0.003921569, b: 0.7411765, a: 1}
-      key1: {r: 1, g: 0.003921569, b: 0.7411765, a: 1}
+      key0: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
+      key1: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -5313,7 +5313,7 @@ GameObject:
   - component: {fileID: 5287462855566625274}
   - component: {fileID: 5287462855566625276}
   - component: {fileID: 5287462855566625275}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}

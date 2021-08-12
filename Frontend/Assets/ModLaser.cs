@@ -1,4 +1,3 @@
-using Sludge.Easing;
 using Sludge.Modifiers;
 using Sludge.Utility;
 using UnityEngine;

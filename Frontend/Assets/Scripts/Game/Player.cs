@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     // Forces: summed up and added every frame. Diminished over multiple frames.
     double forceX;
     double forceY;
+    bool wasAcceleratingLastFrame;
 
     void Awake()
     {
@@ -213,9 +214,10 @@ public class Player : MonoBehaviour
                 speed = maxSpeed;
         }
 
-        if (GameManager.PlayerInput.IsDoubleTapped(PlayerInput.InputType.Up) && currentThrowable != null)
+        //if (GameManager.PlayerInput.UpDoubleTap != 0 && currentThrowable != null)
+        if (wasAcceleratingLastFrame && GameManager.PlayerInput.Up == 0 && currentThrowable != null)
         {
-            currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed);
+            currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed * 1.2);
             currentThrowable = null;
         }
 
@@ -223,6 +225,8 @@ public class Player : MonoBehaviour
         double lookY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * angle)));
         playerX += speed * GameManager.TickSize * lookX;
         playerY += speed * GameManager.TickSize * lookY;
+
+        wasAcceleratingLastFrame = GameManager.PlayerInput.Up != 0;
     }
 
     public void EngineTick()

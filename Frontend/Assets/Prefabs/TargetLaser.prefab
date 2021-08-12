@@ -142,6 +142,8 @@ GameObject:
   - component: {fileID: 9121944031299064273}
   - component: {fileID: 9121944031299064272}
   - component: {fileID: 9121944031299063855}
+  - component: {fileID: 4734473128102470297}
+  - component: {fileID: 3896768316370732178}
   m_Layer: 7
   m_Name: TargetLaser
   m_TagString: Untagged
@@ -214,6 +216,43 @@ MonoBehaviour:
   TimeMultiplier: 1
   PingPong: 1
   Easing: 0
+--- !u!50 &4734473128102470297
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121944031299064275}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7
+--- !u!58 &3896768316370732178
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121944031299064275}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.5
 --- !u!1 &9121944031736377775
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,7 +439,7 @@ Transform:
   m_GameObject: {fileID: 9121944032505998826}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.41, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 3150452546518141280}
   m_RootOrder: 1

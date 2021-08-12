@@ -18,6 +18,7 @@ namespace Sludge.Modifiers
 
         public override void Reset()
         {
+            trans = transform;
             trans.position = startPos;
         }
 
