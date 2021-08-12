@@ -8,6 +8,8 @@ namespace Sludge.Modifiers
     {
         enum State { LookForPlayer, WarmUp, Move };
 
+        public bool Static;
+
         SpriteRenderer spikeRenderer;
         Transform eye;
         Transform pupil;
@@ -68,6 +70,8 @@ namespace Sludge.Modifiers
         {
             UpdateEye();
             UpdateTransform();
+            if (Static)
+                return;
 
             switch (state)
             {

@@ -9,20 +9,14 @@ public static class LevelList
 
     public static void LoadLevels()
     {
-		int count = 1;
-		while (true)
-		{
-			var textAsset = Resources.Load<TextAsset>($"Levels/Easy/{count}");
-			if (textAsset == null)
-				break;
-
-			var levelData = JsonConvert.DeserializeObject<LevelData>(textAsset.text);
-			levelData.Id = $"E{count:00}";
+		var allLevels = Resources.LoadAll<TextAsset>("Levels");
+		for (int i = 0; i < allLevels.Length; ++i)
+        {
+			var levelData = JsonConvert.DeserializeObject<LevelData>(allLevels[i].text);
 			if (string.IsNullOrEmpty(levelData.Name))
-				levelData.Name = $"Level {count}";
+				levelData.Name = $"(no name)";
 
 			Levels.Add(levelData);
-			count++;
 		}
 
 		Debug.Log($"Loaded {Levels.Count} levels");
