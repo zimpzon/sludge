@@ -76,7 +76,7 @@ namespace Sludge.Utility
             return EntityType.Unknown;
         }
 
-        public static int ThrowableExplosionLayerMask = LayerMask.GetMask("Objects");
+        public static int ThrowableExplosionLayerMask = LayerMask.GetMask("Objects", "OutlinedObjects");
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
         public static int PlayerLayerMask = LayerMask.GetMask("Player");
