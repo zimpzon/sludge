@@ -81,8 +81,8 @@ public class ModThrowable : SludgeModifier
 
         // Naughty: reuse Player code for explosion effects
         var player = GameManager.Instance.Player;
-        player.deathParticles.transform.position = trans.position;
-        player.deathParticles.Emit(20);
+        GameManager.Instance.DeathParticles.transform.position = trans.position;
+        GameManager.Instance.DeathParticles.Emit(20);
         player.CameraRoot.DOShakePosition(0.1f, 0.2f);
 
         body.SetActive(false);

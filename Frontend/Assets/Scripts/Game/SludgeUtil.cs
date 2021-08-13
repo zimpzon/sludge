@@ -1,4 +1,5 @@
 ﻿using Sludge.SludgeObjects;
+using System;
 using UnityEngine;
 
 namespace Sludge.Utility
@@ -75,6 +76,9 @@ namespace Sludge.Utility
             Debug.LogWarning($"Unknown gameobject entity type, go name: {go.name}");
             return EntityType.Unknown;
         }
+
+        public static Transform FindByName(Transform trans, string name)
+            => trans.Find(name) ?? throw new ArgumentException($"Child with name '{name}' not found in transform '{trans.name}'");
 
         public static int ThrowableExplosionLayerMask = LayerMask.GetMask("Objects", "OutlinedObjects");
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");

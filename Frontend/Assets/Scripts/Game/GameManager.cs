@@ -32,6 +32,9 @@ public class GameManager : MonoBehaviour
     public GameObject ButtonWatchReplay;
     public GameObject ButtonGoToNextLevel;
 
+    public ParticleSystem DeathParticles;
+    public ParticleSystem DustParticles;
+
     public TMP_Text TextStatsComments;
     public TMP_Text TextLevelStatus;
 
@@ -194,6 +197,7 @@ public class GameManager : MonoBehaviour
 
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
+                    QuickText.Instance.Hide();
                     StopAllCoroutines();
                     UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
                     UiLogic.Instance.BackFromGame();

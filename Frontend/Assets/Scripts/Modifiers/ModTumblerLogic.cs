@@ -64,6 +64,7 @@ namespace Sludge.Modifiers
             eyeScale = 0;
             eyeScaleTarget = 0;
             rnd = new System.Random((int)(homePos.x * 100 + homePos.y * 100));
+            UpdateTransform();
         }
 
         public override void EngineTick()
@@ -88,8 +89,11 @@ namespace Sludge.Modifiers
             playerDir.Normalize();
 
             const float SqrLookRange = 8 * 8;
-            const float MaxScale = 0.9f;    
-            eyeScaleTarget = sqrPlayerDist < SqrLookRange ? MaxScale : 0;
+            const float MaxScale = 0.9f;
+
+            if (GameManager.Instance.FrameCounter != 0) // Hacky hacky: EngineTick gets called once before starting round. Don't begin to open eyes even if player is in range.
+                eyeScaleTarget = sqrPlayerDist < SqrLookRange ? MaxScale : 0;
+
             if (state != State.LookForPlayer)
                 eyeScaleTarget = MaxScale;
 

@@ -3,7 +3,6 @@ using Sludge;
 using Sludge.Utility;
 using System.Collections.Generic;
 using UnityEngine;
-using Sludge.PlayerInputs;
 
 public class Player : MonoBehaviour
 {
@@ -15,7 +14,6 @@ public class Player : MonoBehaviour
     public Transform CameraRoot;
 
     public TrailRenderer trail;
-    public ParticleSystem deathParticles;
     public bool Alive = false;
 
     QuadDistort ripples;
@@ -37,6 +35,10 @@ public class Player : MonoBehaviour
     int onConveyorBeltCount;
     public ModThrowable currentThrowable;
     LineRenderer softBody;
+    Transform eyesTransform;
+    GameObject eyes;
+    Vector2 eyesBasePos;
+    float nextDust;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -60,6 +62,9 @@ public class Player : MonoBehaviour
         ripples = GetComponentInChildren<QuadDistort>();
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
+        eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
+        eyes = eyesTransform.gameObject;
+        eyesBasePos = eyesTransform.localPosition;
     }
 
     public void Prepare()
@@ -162,8 +167,9 @@ public class Player : MonoBehaviour
     public void Kill()
     {
         ripples.DoRipples();
-        deathParticles.transform.position = trans.position;
-        deathParticles.Emit(50);
+        GameManager.Instance.DeathParticles.transform.position = trans.position;
+        GameManager.Instance.DeathParticles.Emit(50);
+        CameraRoot.DORewind();
         CameraRoot.DOShakePosition(0.1f, 0.5f);
         Alive = false;
     }
@@ -214,8 +220,12 @@ public class Player : MonoBehaviour
                 speed = maxSpeed;
         }
 
+        bool isAccelerating = GameManager.PlayerInput.Up != 0;
+        bool accelerationStart = !wasAcceleratingLastFrame && isAccelerating;
+        bool accelerationEnd = wasAcceleratingLastFrame && !isAccelerating;
+
         //if (GameManager.PlayerInput.UpDoubleTap != 0 && currentThrowable != null)
-        if (wasAcceleratingLastFrame && GameManager.PlayerInput.Up == 0 && currentThrowable != null)
+        if (accelerationEnd && currentThrowable != null)
         {
             currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed * 1.2);
             currentThrowable = null;
@@ -223,10 +233,17 @@ public class Player : MonoBehaviour
 
         double lookX = -SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * angle)));
         double lookY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * angle)));
+
         playerX += speed * GameManager.TickSize * lookX;
         playerY += speed * GameManager.TickSize * lookY;
 
-        wasAcceleratingLastFrame = GameManager.PlayerInput.Up != 0;
+        if (accelerationStart)
+        {
+            GameManager.Instance.DustParticles.transform.position = trans.position;
+            GameManager.Instance.DustParticles.Emit(3);
+        }
+
+        wasAcceleratingLastFrame = isAccelerating;
     }
 
     public void EngineTick()

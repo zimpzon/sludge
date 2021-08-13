@@ -25,6 +25,13 @@ public class QuickText : MonoBehaviour
         basePos = trans.position;
     }
 
+    public void Hide()
+    {
+        quickText.text = "";
+        quickText.transform.DORewind();
+        quickText.enabled = false;
+    }
+
     public void ShowText(string text)
     {
         StopAllCoroutines();
@@ -35,6 +42,7 @@ public class QuickText : MonoBehaviour
     {
         quickText.text = text;
         quickText.enabled = true;
+        quickText.transform.DORewind();
         quickText.transform.DOShakeScale(0.2f);
 
         float endTime = Time.time + ShowTime;
