@@ -2,6 +2,8 @@ using Sludge.Modifiers;
 using Sludge.Utility;
 using UnityEngine;
 
+// TODO: Maybe flicker faster and faster (with increasing alpha) until firing a very fast elongated projectile
+// (with elongated we won't miss edge colliders when moving fast).
 public class ModLaser : SludgeModifier
 {
     LineRenderer line;
