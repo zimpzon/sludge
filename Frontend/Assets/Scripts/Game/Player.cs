@@ -21,9 +21,9 @@ public class Player : MonoBehaviour
     double speed;
     double minSpeed = 0.5f;
     double maxSpeed = 10;
-    double turnSpeed = 180;
-    double turnMultiplier = 8;
-    double accelerateSpeed = 100;
+    double turnSpeed = 250;
+    double turnMultiplier = 20;
+    double accelerateSpeed = 80;
     double friction = 25;
     Transform trans;
     double playerX;
@@ -181,7 +181,7 @@ public class Player : MonoBehaviour
         if (GameManager.PlayerInput.Left != 0)
         {
             isTurning = true;
-            angle += GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
+            angle += GameManager.TickSize * (turnSpeed + (maxSpeed - speed) * turnMultiplier);
             if (angle > 360)
                 angle -= 360;
         }
@@ -189,7 +189,7 @@ public class Player : MonoBehaviour
         if (GameManager.PlayerInput.Right != 0)
         {
             isTurning = true;
-            angle -= GameManager.TickSize * (turnSpeed + speed * turnMultiplier);
+            angle -= GameManager.TickSize * (turnSpeed + (maxSpeed - speed) * turnMultiplier);
             if (angle < 0)
                 angle += 360;
         }
