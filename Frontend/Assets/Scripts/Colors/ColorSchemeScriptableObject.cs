@@ -86,6 +86,7 @@ namespace Sludge.Colors
                 applier.ApplyColor(scheme);
 
             Shader.SetGlobalColor("_EdgeColor", scheme.Edges);
+            Shader.SetGlobalColor("_WallColor", scheme.Walls);
         }
 
         public static void ApplyUiColors(ColorSchemeScriptableObject scheme)

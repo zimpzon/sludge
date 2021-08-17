@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ffce1c7912bb7341b8acd42c9b9edc8, type: 3}
-  m_Name: WallsRenderFeature
+  m_Name: FullscreenOutline
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    renderPassEvent: 1000
+    renderPassEvent: 500
     blitMaterial: {fileID: 2100000, guid: 54dcd712949eab84aaca959d08bb232a, type: 2}
     blitMaterialPassIndex: -1
     sourceType: 0

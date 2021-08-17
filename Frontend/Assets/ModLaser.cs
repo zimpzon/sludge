@@ -10,9 +10,6 @@ public class ModLaser : SludgeModifier
     ParticleSystem particles;
     ParticleSystem particlesFixed;
     Transform trans;
-    Transform bodyTrans;
-    const float RotationSpeed = 100;
-    float timeOffset;
 
     private void Awake()
     {
@@ -21,12 +18,10 @@ public class ModLaser : SludgeModifier
         line.positionCount = 2;
         particles = transform.Find("Particles").GetComponentInChildren<ParticleSystem>();
         particlesFixed = transform.Find("ParticlesFixed").GetComponentInChildren<ParticleSystem>();
-        bodyTrans = transform.Find("Body").transform;
     }
 
     public override void Reset()
     {
-        timeOffset = (int)trans.position.x * 10 + (int)trans.position.y * 10;
         line.enabled = false;
         particles.gameObject.SetActive(false);
         particlesFixed.gameObject.SetActive(false);
@@ -66,12 +61,5 @@ public class ModLaser : SludgeModifier
 
         particles.transform.position = hit.point;
         particlesFixed.transform.position = hit.point;
-
-        float rotZ = (float)(GameManager.Instance.EngineTime + timeOffset) * RotationSpeed;
-        bodyTrans.rotation = Quaternion.Euler(0, 0, rotZ);
-
-        //float scale = (float)Ease.SmoothStep2(Ease.PingPong(SludgeUtil.TimeMod(GameManager.Instance.EngineTime * 0.17f + timeOffset)));
-        //scale = 1 - scale * 0.2f;
-        //bodyTrans.localScale = Vector2.one * scale;
     }
 }

@@ -2,7 +2,6 @@ Shader "Sludge/OutlineShader"
 {
     Properties
     {
-        _Color ("EdgeColor", COLOR) = (1,1,1,1)
         _MainTex ("Texture", 2D) = "white" {}
     }
 
@@ -36,14 +35,14 @@ Shader "Sludge/OutlineShader"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            uniform float4 _EdgeColor;
+            uniform half4 _EdgeColor;
+            uniform half4 _WallColor;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
 
@@ -51,15 +50,18 @@ Shader "Sludge/OutlineShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col0 = tex2D(_MainTex, i.uv);
-                fixed4 colL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, 0));
-                fixed4 colR = tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, 0));
-                fixed4 colU = tex2D(_MainTex, i.uv + float2(0, -_MainTex_TexelSize.y));
-                fixed4 colD = tex2D(_MainTex, i.uv + float2(0, _MainTex_TexelSize.y));
-                fixed4 diff = abs(col0 - colL) + abs(col0 - colR) + abs(col0 - colU) + abs(col0 - colD);
-                fixed lum = step(0.01, (diff.r + diff.g + diff.b));
-                fixed4 result = _EdgeColor * lum + col0 * (1 - lum);
-                // Effects can be added here. Would be nice to know if foreground or background.
+                // Background is cleared with alpha set to 0! This is used to detect edges.
+                half4 col0 = tex2D(_MainTex, i.uv);
+                half4 colL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, 0));
+                half4 colD = tex2D(_MainTex, i.uv + float2(0, _MainTex_TexelSize.y));
+
+                half col0Sum = col0.r + col0.g + col0.b;
+                half isBackground = step(0.01, col0Sum);
+
+                half4 diff = abs(col0.g - colL.g) + abs(col0.g - colD.g);
+                half isEdge = step(0.01, diff);
+                half4 color = (col0 * isBackground) + (_WallColor * (1 - isBackground));
+                half4 result = (_EdgeColor * isEdge * 3) + (color * (1 - isEdge));
                 return result;
             }
             ENDCG

@@ -9,6 +9,8 @@ public class SchemeColorApplier : MonoBehaviour
     public SchemeColor SchemeColor;
     public float BrightnessOffset = 0.0f;
 
+    Material material; // If applicable
+
     void Start()
     {
         ApplyColor(GameManager.Instance?.CurrentColorScheme);
@@ -88,6 +90,15 @@ public class SchemeColorApplier : MonoBehaviour
             lineRenderer.startColor = lineColor;
             lineRenderer.endColor = lineColor;
             return;
+        }
+
+        var meshRenderer = GetComponent<MeshRenderer>();
+        if (meshRenderer != null)
+        {
+            if (material == null)
+                material = meshRenderer.material;
+
+            material.SetColor("_Color", GetColor(material.color, scheme));
         }
     }
 }
