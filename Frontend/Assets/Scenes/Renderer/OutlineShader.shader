@@ -50,7 +50,6 @@ Shader "Sludge/OutlineShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // Background is cleared with alpha set to 0! This is used to detect edges.
                 half4 col0 = tex2D(_MainTex, i.uv);
                 half4 colL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, 0));
                 half4 colD = tex2D(_MainTex, i.uv + float2(0, _MainTex_TexelSize.y));

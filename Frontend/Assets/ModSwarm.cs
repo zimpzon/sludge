@@ -64,8 +64,8 @@ public class ModSwarm : SludgeModifier
             double y = SludgeUtil.Stabilize(Ease.Apply(EasingPositionY, ty) * Height);
             var pos = new Vector2((float)x, (float)y);
 
-            double trot = SludgeUtil.TimeMod(t * TimeMultiplierRotation + TimeOffsetRotation * i);
-            double rotZ = SludgeUtil.Stabilize(Ease.Apply(EasingRotation, trot));
+            double tRot = SludgeUtil.TimeMod(t * TimeMultiplierRotation + TimeOffsetRotation * i);
+            double rotZ = SludgeUtil.Stabilize(Ease.Apply(EasingRotation, tRot));
             var rotation = Quaternion.Euler(0, 0, (float)rotZ * 360);
 
             pos += (Vector2)trans.position; // Add parent world position

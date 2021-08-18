@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: f41263688b5fdf94ea358105e3af264a
+guid: 4f2f28a12695be144bbac43d1d5724f8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6680741904804520135
-    second: WhiteTriangles_0
+      213: 1966746181900345335
+    second: Ant-Antenna
   - first:
-      213: -2545319731842764720
-    second: WhiteTriangles_1
+      213: 4603696124214289237
+    second: Ant-Head
   - first:
-      213: -3614266909715461008
-    second: WhiteTriangles_2
+      213: -7935197470342096146
+    second: Ant-Mandible
   - first:
-      213: -5114064267155317556
-    second: WhiteTriangles_3
+      213: 4424918367477825573
+    second: Ant-Pupil
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -44,7 +44,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -55,7 +55,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 128
@@ -115,85 +115,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: WhiteTriangles_0
+      name: Ant-Antenna
       rect:
         serializedVersion: 2
-        x: 0
-        y: 128
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 28
+        y: 189
+        width: 83
+        height: 43
+      alignment: 9
+      pivot: {x: 0.85529697, y: 0.10067004}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 93f5f0832ac3943a0800000000000000
-      internalID: -6680741904804520135
+      spriteID: 7ff968f6b394b4b10800000000000000
+      internalID: 1966746181900345335
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WhiteTriangles_1
+      name: Ant-Head
       rect:
         serializedVersion: 2
-        x: 128
-        y: 128
-        width: 128
-        height: 128
+        x: 53
+        y: 60
+        width: 180
+        height: 114
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 05038b780353dacd0800000000000000
-      internalID: -2545319731842764720
+      spriteID: 553a2a9cb3d93ef30800000000000000
+      internalID: 4603696124214289237
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WhiteTriangles_2
+      name: Ant-Mandible
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 128
-        height: 128
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 177
+        y: 189
+        width: 50
+        height: 46
+      alignment: 9
+      pivot: {x: 0.13417907, y: 0.8814014}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 07c06f2156b87ddc0800000000000000
-      internalID: -3614266909715461008
+      spriteID: eea5ea571f380e190800000000000000
+      internalID: -7935197470342096146
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: WhiteTriangles_3
+      name: Ant-Pupil
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 128
-        height: 128
+        x: 120
+        y: 23
+        width: 26
+        height: 26
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ccc50bdf4a13709b0800000000000000
-      internalID: -5114064267155317556
+      spriteID: 5200e9d9fc7786d30800000000000000
+      internalID: 4424918367477825573
       vertices: []
       indices: 
       edges: []
