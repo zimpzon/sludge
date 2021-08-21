@@ -44,7 +44,11 @@ public class ModBulletMovement : SludgeModifier
         }
 
         if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
+        {
+            GameManager.Instance.DustParticles.transform.position = trans.position;
+            GameManager.Instance.DustParticles.Emit(5);
             BulletManager.Instance.Release(this);
+        }
     }
 
     public override void EngineTick()

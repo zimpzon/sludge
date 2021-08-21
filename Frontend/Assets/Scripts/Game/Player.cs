@@ -239,8 +239,6 @@ public class Player : MonoBehaviour
 
         if (accelerationStart)
         {
-            GameManager.Instance.DustParticles.transform.position = trans.position;
-            GameManager.Instance.DustParticles.Emit(3);
         }
 
         wasAcceleratingLastFrame = isAccelerating;
