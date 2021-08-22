@@ -126,13 +126,19 @@ namespace Sludge.Modifiers
                 rotationSpeed += step;
                 yield return null;
             }
+            GameManager.Instance.DustParticles.transform.position = trans.position;
+            GameManager.Instance.DustParticles.Emit(3);
             state = State.Move;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
             if (1 << collision.gameObject.layer != SludgeUtil.PlayerLayerMask)
+            {
+                GameManager.Instance.DustParticles.transform.position = trans.position;
+                GameManager.Instance.DustParticles.Emit(8);
                 Reset();
+            }
         }
 
         IEnumerator Move()
