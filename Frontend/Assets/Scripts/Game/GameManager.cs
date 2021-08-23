@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000.0 / TickSizeMs;
 
+    public Transform CameraRoot;
     public Image TimeBarLeft;
     public Image TimeBarRight;
     public Tilemap Tilemap;
@@ -34,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     public ParticleSystem DeathParticles;
     public ParticleSystem DustParticles;
+    public ParticleSystem HighlightParticles;
 
     public TMP_Text TextStatsComments;
     public TMP_Text TextLevelStatus;
@@ -49,6 +51,9 @@ public class GameManager : MonoBehaviour
 
     public Player Player;
     public SludgeObject[] SludgeObjects;
+    public SlimeBomb[] SlimeBombs;
+    public Exit[] Exits;
+
     public double UnityTime;
     public double EngineTime;
     public int EngineTimeMs;
@@ -122,9 +127,28 @@ public class GameManager : MonoBehaviour
         Player.SetHomePosition();
 
         SludgeObjects = FindObjectsOfType<SludgeObject>();
+        Exits = SludgeObjects.Where(o => o is Exit).Cast<Exit>().ToArray();
+        SlimeBombs = SludgeObjects.Where(o => o is SlimeBomb).Cast<SlimeBomb>().ToArray();
+
         ResetLevel();
 
         Tilemap.gameObject.SetActive(true);
+    }
+
+    void SetHighlightedObjects(bool bombActivated)
+    {
+        bool highlightExits = bombActivated || SlimeBombs.Length == 0;
+        bool highlightBombs = !highlightExits;
+
+        foreach (var exit in Exits)
+        {
+            SludgeUtil.EnableEmission(exit.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), highlightExits);
+            if (bombActivated)
+                exit.Activate();
+        }
+
+        foreach (var bomb in SlimeBombs)
+            SludgeUtil.EnableEmission(bomb.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), highlightBombs);
     }
 
     void SetMenuButtonActive(GameObject go, bool active)
@@ -238,6 +262,12 @@ public class GameManager : MonoBehaviour
         Player.Prepare();
 
         UpdateSludgeObjects();
+        SetHighlightedObjects(bombActivated: false);
+    }
+
+    public void OnActivatingBomb()
+    {
+        SetHighlightedObjects(bombActivated: true);
     }
 
     IEnumerator Playing(bool isReplay)

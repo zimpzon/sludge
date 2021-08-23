@@ -73,12 +73,21 @@ namespace Sludge.Utility
             if (sludgeObject != null)
                 return sludgeObject.EntityType;
 
-            Debug.LogWarning($"Unknown gameobject entity type, go name: {go.name}");
+            //Debug.LogWarning($"Unknown gameobject entity type, go name: {go.name}");
             return EntityType.Unknown;
         }
 
         public static Transform FindByName(Transform trans, string name)
             => trans.Find(name) ?? throw new ArgumentException($"Child with name '{name}' not found in transform '{trans.name}'");
+
+        public static void EnableEmission(ParticleSystem particles, bool enabled, bool clearParticles = true)
+        {
+            var emission = particles.emission;
+            emission.enabled = enabled;
+
+            if (clearParticles)
+                particles.Clear();
+        }
 
         public static int ThrowableExplosionLayerMask = LayerMask.GetMask("Objects", "OutlinedObjects");
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");

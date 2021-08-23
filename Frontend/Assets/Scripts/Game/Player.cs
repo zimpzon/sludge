@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
     public static Vector3 Position;
     public static double Angle;
     public static Quaternion Rotation;
-    public Transform CameraRoot;
 
     public TrailRenderer trail;
     public bool Alive = false;
@@ -169,8 +168,8 @@ public class Player : MonoBehaviour
         ripples.DoRipples();
         GameManager.Instance.DeathParticles.transform.position = trans.position;
         GameManager.Instance.DeathParticles.Emit(50);
-        CameraRoot.DORewind();
-        CameraRoot.DOShakePosition(0.1f, 0.5f);
+        GameManager.Instance.CameraRoot.DORewind();
+        GameManager.Instance.CameraRoot.DOShakePosition(0.1f, 0.5f);
         Alive = false;
     }
 

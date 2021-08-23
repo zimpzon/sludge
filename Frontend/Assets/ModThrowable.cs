@@ -1,13 +1,13 @@
 using DG.Tweening;
 using Sludge.Modifiers;
 using Sludge.Utility;
-using System.Collections;
 using UnityEngine;
 
 public class ModThrowable : SludgeModifier
 {
     const float CarryDistance = 0.5f;
     const float ExplosionRadius = 2.0f;
+    const float ResetDelay = 1.0f;
     static Collider2D[] scanResults = new Collider2D[20];
 
     Transform trans;
@@ -22,6 +22,7 @@ public class ModThrowable : SludgeModifier
     double throwSpeed;
     QuadDistort ripples;
     GameObject body;
+    double resetTime;
 
     private void OnDrawGizmos()
     {
@@ -39,7 +40,6 @@ public class ModThrowable : SludgeModifier
 
     public override void Reset()
     {
-        StopAllCoroutines();
         ripples.Reset();
         ownedByPlayer = false;
         wasThrown = false;
@@ -71,19 +71,12 @@ public class ModThrowable : SludgeModifier
         if (isExploding)
             return;
 
-        StartCoroutine(DieCo());
-    }
-
-    IEnumerator DieCo()
-    {
         if (!wasThrown) // Exploding while held by player
             GameManager.Instance.Player.ThrowablePickedUp(null);
 
-        // Naughty: reuse Player code for explosion effects
-        var player = GameManager.Instance.Player;
         GameManager.Instance.DeathParticles.transform.position = trans.position;
         GameManager.Instance.DeathParticles.Emit(20);
-        player.CameraRoot.DOShakePosition(0.1f, 0.2f);
+        GameManager.Instance.CameraRoot.DOShakePosition(0.1f, 0.2f);
 
         body.SetActive(false);
         isExploding = true;
@@ -91,17 +84,7 @@ public class ModThrowable : SludgeModifier
 
         int hitCount = Physics2D.OverlapCircleNonAlloc(trans.position, ExplosionRadius, scanResults, SludgeUtil.ThrowableExplosionLayerMask);
 
-        // Immediate death
-        for (int i = 0; i < hitCount; ++i)
-        {
-            var entity = SludgeUtil.GetEntityType(scanResults[i].gameObject);
-            if (entity == EntityType.Enemy)
-                SludgeUtil.SetActiveRecursive(scanResults[i].gameObject, false);
-        }
-
-        // Delayed death
-        yield return new WaitForSeconds(0.2f);
-
+        // Some objects die immediately
         for (int i = 0; i < hitCount; ++i)
         {
             if (scanResults[i].gameObject == this.gameObject)
@@ -113,16 +96,13 @@ public class ModThrowable : SludgeModifier
                 var throwable = scanResults[i].gameObject.GetComponent<ModThrowable>();
                 throwable.Die();
             }
+            else if (entity == EntityType.Enemy)
+            {
+                SludgeUtil.SetActiveRecursive(scanResults[i].gameObject, false);
+            }
         }
 
-        double endTime = GameManager.Instance.EngineTime + 0.5f;
-        while (GameManager.Instance.EngineTime < endTime)
-        {
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(0.5f);
-        Reset();
+        resetTime = GameManager.Instance.EngineTime + ResetDelay;
     }
 
     public void Throw(Vector2 direction, double speed)
@@ -139,7 +119,14 @@ public class ModThrowable : SludgeModifier
     public override void EngineTick()
     {
         if (isExploding)
-            return;
+        {
+            if (GameManager.Instance.EngineTime > resetTime)
+            {
+                GameManager.Instance.DustParticles.transform.position = homePos;
+                GameManager.Instance.DustParticles.Emit(2);
+                Reset();
+            }
+        }
 
         const float ActivationPlayerDistance = 0.7f * 0.7f;
         const float SqrActivationPlayerDistance = ActivationPlayerDistance * ActivationPlayerDistance;

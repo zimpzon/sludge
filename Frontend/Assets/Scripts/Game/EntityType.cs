@@ -13,5 +13,6 @@
         Key,
         Exit,
         Conveyor,
+        SlimeBomb,
     };
 }
