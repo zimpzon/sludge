@@ -58,7 +58,7 @@ public class ModBulletMovement : SludgeModifier
         trans.position = new Vector3((float)X, (float)Y);
 
         // Offset flash by position so bullets don't flash in sync
-        int offset = (int)(X * 30) + (int)(Y * 30);
+        int offset = (int)(X * 20) + (int)(Y * 20);
         var color = ((GameManager.Instance.EngineTimeMs + offset) % 200) > 100 ? color1 : color2;
         spriteRenderer.color = color;
     }

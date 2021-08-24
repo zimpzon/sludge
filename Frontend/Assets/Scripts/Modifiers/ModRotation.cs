@@ -16,6 +16,11 @@ namespace Sludge.Modifiers
             trans = transform;
         }
 
+        public override void Reset()
+        {
+            trans.rotation = Quaternion.AngleAxis((float)StartDegrees, Vector3.back);
+        }
+
         public override void EngineTick()
         {
             if (!Active)

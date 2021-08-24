@@ -12,7 +12,7 @@ public class Exit : SludgeObject
 
     bool isActive;
 
-    public virtual void Reset()
+    public override void Reset()
     {
         base.Reset();
         SetActive(false);
@@ -20,7 +20,7 @@ public class Exit : SludgeObject
 
     void SetActive(bool active)
     {
-        InnerRotation.enabled = active;
+        InnerRotation.GetComponent<ModRotation>().Active = active;
         isActive = active;
     }
 

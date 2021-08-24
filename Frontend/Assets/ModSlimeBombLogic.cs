@@ -17,8 +17,10 @@ public class ModSlimeBombLogic : SludgeModifier
     bool exploding;
     double timeLeft;
     int currentSecond = -1;
-    const double slimeSpeed = 2;
-
+    const double slimeSpeedStart = 80;
+    const double slimeSpeedMin = 4;
+    const double slimeSpeedDampen = 0.93;
+    double slimeSpeed;
     double slimeScale = 1;
 
     private void Awake()
@@ -36,6 +38,13 @@ public class ModSlimeBombLogic : SludgeModifier
         currentSecond = -1;
         slimeRenderer.enabled = false;
         slimeScale = 1;
+        slimeSpeed = slimeSpeedStart;
+        SetColliderScale();
+    }
+
+    void SetColliderScale()
+    {
+        trans.localScale = Vector3.one * (float)slimeScale;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -95,15 +104,20 @@ public class ModSlimeBombLogic : SludgeModifier
                 GameManager.Instance.DeathParticles.transform.position = trans.position;
                 GameManager.Instance.DeathParticles.Emit(50);
                 GameManager.Instance.CameraRoot.DORewind();
-                GameManager.Instance.CameraRoot.DOShakePosition(0.2f, 1.0f);
+                GameManager.Instance.CameraRoot.DOShakePosition(0.2f, 2.0f);
                 InnerSprite.transform.localScale = Vector3.one * 0.5f;
-                trans.localScale = Vector3.one * (float)slimeScale;
+                SetColliderScale();
             }
         }
         else if (exploding)
         {
             slimeScale = SludgeUtil.Stabilize(slimeScale + GameManager.TickSize * slimeSpeed);
-            trans.localScale = Vector3.one * (float)slimeScale;
+            slimeSpeed = SludgeUtil.Stabilize(slimeSpeed * slimeSpeedDampen);
+            if (slimeSpeed < slimeSpeedMin)
+                slimeSpeed = slimeSpeedMin;
+
+            DebugLinesScript.Show("s", slimeSpeed);
+            SetColliderScale();
         }
     }
 }
