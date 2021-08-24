@@ -98,7 +98,7 @@ public class ModThrowable : SludgeModifier
             }
             else if (entity == EntityType.Enemy)
             {
-                SludgeUtil.SetActiveRecursive(scanResults[i].gameObject, false);
+                GameManager.Instance.KillEnemy(scanResults[i].gameObject);
             }
         }
 

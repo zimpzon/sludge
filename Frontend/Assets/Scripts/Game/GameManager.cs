@@ -83,6 +83,13 @@ public class GameManager : MonoBehaviour
         OnValidate();
     }
 
+    public void KillEnemy(GameObject goEnemy)
+    {
+        DustParticles.transform.position = goEnemy.transform.position;
+        DustParticles.Emit(4);
+        SludgeUtil.SetActiveRecursive(goEnemy, false);
+    }
+
     public void SetColorScheme(ColorSchemeScriptableObject scheme)
     {
         CurrentColorScheme = scheme;

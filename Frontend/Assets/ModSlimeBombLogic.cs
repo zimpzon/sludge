@@ -11,10 +11,12 @@ public class ModSlimeBombLogic : SludgeModifier
     public Transform InnerSprite;
     public TMP_Text CountdownText;
 
+    BoxCollider2D activationCollider;
+    CircleCollider2D cloudCollider;
     SpriteRenderer slimeRenderer;
     Transform trans;
-    bool activated;
-    bool exploding;
+    bool countingDown;
+    bool expanding;
     double timeLeft;
     int currentSecond = -1;
     const double slimeSpeedStart = 80;
@@ -26,19 +28,23 @@ public class ModSlimeBombLogic : SludgeModifier
     private void Awake()
     {
         slimeRenderer = GetComponent<SpriteRenderer>();
+        activationCollider = GetComponent<BoxCollider2D>();
+        cloudCollider = GetComponent<CircleCollider2D>();
     }
 
     public override void Reset()
     {
         trans = transform;
-        activated = false;
-        exploding = false;
+        countingDown = false;
+        expanding = false;
         CountdownText.enabled = false;
         CountdownText.text = "";
         currentSecond = -1;
         slimeRenderer.enabled = false;
         slimeScale = 1;
         slimeSpeed = slimeSpeedStart;
+        activationCollider.enabled = true;
+        cloudCollider.enabled = false;
         SetColliderScale();
     }
 
@@ -47,38 +53,61 @@ public class ModSlimeBombLogic : SludgeModifier
         trans.localScale = Vector3.one * (float)slimeScale;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (activated)
+        if (!expanding)
             return;
 
-        var entity = SludgeUtil.GetEntityType(collision.gameObject);
-        if (exploding)
-        {
-            // Kill stuff
-            Debug.Log($"{collision.gameObject.name} = {entity}");
-        }
-        else
-        {
-            if (entity == EntityType.Player)
-            {
-                GameManager.Instance.DustParticles.transform.position = trans.position;
-                GameManager.Instance.DustParticles.Emit(5);
+        var go = collision.gameObject;
+        var entity = SludgeUtil.GetEntityType(go);
+        if (entity == EntityType.Player)
+            GameManager.Instance.Player.ExitSlimeCloud();
+    }
 
-                activated = true;
-                GameManager.Instance.OnActivatingBomb();
-                timeLeft = Countdown;
-                CountdownText.enabled = true;
-            }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!expanding)
+            return;
+
+        var go = collision.gameObject;
+        var entity = SludgeUtil.GetEntityType(go);
+        // Kill stuff
+        if (entity == EntityType.Player)
+        {
+            GameManager.Instance.Player.InSlimeCloud();
+        }
+        else if (entity == EntityType.Enemy)
+        {
+            GameManager.Instance.KillEnemy(go);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (countingDown || expanding)
+            return;
+
+        var go = collision.gameObject;
+        var entity = SludgeUtil.GetEntityType(go);
+        if (entity == EntityType.Player)
+        {
+            // Player activated the bomb
+            activationCollider.enabled = false;
+            cloudCollider.enabled = true;
+
+            countingDown = true;
+            GameManager.Instance.OnActivatingBomb();
+            timeLeft = Countdown;
+            CountdownText.enabled = true;
         }
     }
 
     public override void EngineTick()
     {
-        if (!exploding)
+        if (!expanding)
             InnerSprite.transform.localScale = Vector3.one * ((Mathf.Sin((float)GameManager.Instance.EngineTime * 4) + 1) * 0.2f + 0.35f);
 
-        if (activated)
+        if (countingDown)
         {
             // Counting down
             int second = Mathf.CeilToInt((float)timeLeft);
@@ -97,8 +126,8 @@ public class ModSlimeBombLogic : SludgeModifier
             if (timeLeft <= 0)
             {
                 // Explode now
-                activated = false;
-                exploding = true;
+                countingDown = false;
+                expanding = true;
                 CountdownText.enabled = false;
                 slimeRenderer.enabled = true;
                 GameManager.Instance.DeathParticles.transform.position = trans.position;
@@ -109,14 +138,13 @@ public class ModSlimeBombLogic : SludgeModifier
                 SetColliderScale();
             }
         }
-        else if (exploding)
+        else if (expanding)
         {
             slimeScale = SludgeUtil.Stabilize(slimeScale + GameManager.TickSize * slimeSpeed);
             slimeSpeed = SludgeUtil.Stabilize(slimeSpeed * slimeSpeedDampen);
             if (slimeSpeed < slimeSpeedMin)
                 slimeSpeed = slimeSpeedMin;
 
-            DebugLinesScript.Show("s", slimeSpeed);
             SetColliderScale();
         }
     }

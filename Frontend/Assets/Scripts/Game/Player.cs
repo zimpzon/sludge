@@ -35,9 +35,8 @@ public class Player : MonoBehaviour
     public ModThrowable currentThrowable;
     LineRenderer softBody;
     Transform eyesTransform;
-    GameObject eyes;
-    Vector2 eyesBasePos;
-    float nextDust;
+    Vector2 eyesBaseScale;
+    double timeEnterSlimeCloud;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -62,8 +61,7 @@ public class Player : MonoBehaviour
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
-        eyes = eyesTransform.gameObject;
-        eyesBasePos = eyesTransform.localPosition;
+        eyesBaseScale = eyesTransform.localScale;
     }
 
     public void Prepare()
@@ -79,6 +77,7 @@ public class Player : MonoBehaviour
         impulseY = 0;
         impulseRotation = 0;
         currentThrowable = null;
+        timeEnterSlimeCloud = -1;
 
         overrideX.Clear();
         overrideY.Clear();
@@ -90,6 +89,7 @@ public class Player : MonoBehaviour
         playerX = homeX;
         playerY = homeY;
         angle = homeAngle;
+        eyesTransform.localScale = eyesBaseScale;
 
         UpdateTransform();
         SetPositionSample(0);
@@ -161,6 +161,21 @@ public class Player : MonoBehaviour
             return;
 
         Kill();
+    }
+
+    public void ExitSlimeCloud()
+    {
+        timeEnterSlimeCloud = -1;
+        eyesTransform.localScale = eyesBaseScale;
+    }
+
+    public void InSlimeCloud()
+    {
+        if (timeEnterSlimeCloud > 0)
+            return;
+
+        timeEnterSlimeCloud = GameManager.Instance.EngineTime;
+        eyesTransform.localScale = eyesBaseScale * 2.0f;
     }
 
     public void Kill()
@@ -243,11 +258,20 @@ public class Player : MonoBehaviour
         wasAcceleratingLastFrame = isAccelerating;
     }
 
+    void CheckSlimeCloud()
+    {
+        if (timeEnterSlimeCloud < 0)
+            return;
+
+        double timeInSlimeCloud = GameManager.Instance.EngineTime - timeEnterSlimeCloud;
+        if (timeInSlimeCloud >= 1)
+            Kill();
+    }
+
     public void EngineTick()
     {
         if (!Alive)
             return;
-
         PlayerControls();
 
         speed = SludgeUtil.Stabilize(speed - GameManager.TickSize * friction);
@@ -313,6 +337,8 @@ public class Player : MonoBehaviour
         SetPositionSample(GameManager.Instance.FrameCounter);
 
         UpdateSoftBody();
+
+        CheckSlimeCloud();
     }
 
     void SetPositionSample(int idx)
