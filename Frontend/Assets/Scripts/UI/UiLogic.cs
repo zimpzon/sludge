@@ -16,7 +16,7 @@ namespace Sludge.UI
 		public GameObject GameRoot;
 		public UiSelectionMarker UiSelectionMarker;
 
-		string latestSelectedLevelId;
+		string latestSelectedLevelQualifiedName;
 
 		private void Awake()
         {
@@ -107,7 +107,7 @@ namespace Sludge.UI
 
 		IEnumerator PlayLoop(UiLevel uiLevel)
 		{
-			GameManager.Instance.LoadLevel(uiLevel?.levelData);
+			GameManager.Instance.LoadLevel(uiLevel?.LevelData);
 			UiPanels.Instance.HideBackground();
 
 			UiPanels.Instance.ShowPanel(UiPanel.Game);
@@ -135,10 +135,10 @@ namespace Sludge.UI
 
 		void ReselectLatestLevel()
         {
-			if (latestSelectedLevelId == null)
-				latestSelectedLevelId = LevelList.Levels[0].Id;
+			if (latestSelectedLevelQualifiedName == null)
+				latestSelectedLevelQualifiedName = LevelLayout.LevelItems[0].levelScript.LevelData.GeneratedQualifiedName;
 
-			var level = LevelLayout.GetLevelFromId(latestSelectedLevelId);
+			var level = LevelLayout.GetLevelFromQualifiedId(latestSelectedLevelQualifiedName);
 			SetSelectionMarker(level.go);
 		}
 
@@ -196,8 +196,8 @@ namespace Sludge.UI
 			UiNavigation.OnNavigationChanged = (go) =>
 			{
 				var uiLevel = go.GetComponent<UiLevel>();
-				UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>().TextLevelName.text = uiLevel.levelData.Name;
-				latestSelectedLevelId = uiLevel.levelData.Id;
+				UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>().TextLevelName.text = uiLevel.LevelData.Name;
+				latestSelectedLevelQualifiedName = uiLevel.LevelData.GeneratedQualifiedName;
 			};
 
 			while (true)

@@ -28,9 +28,10 @@ namespace Sludge.Colors
         public Color UiTextDefault;
         public Color UiTextHighlighted;
         public Color UiTextDimmed;
-        public Color UiTextGoodScore;
-        public Color UiTextBadScore;
-        public Color UiTextNeutralScore;
+        public Color UiLevelLocked;
+        public Color UiLevelUnlocked;
+        public Color UiLevelCompleted;
+        public Color UiLevelMastered;
         public Color UiSelectionMarker;
         public Color UiButtonFace;
         public Color UiButtonOutline;
@@ -64,17 +65,17 @@ namespace Sludge.Colors
         UiTextDefault,
         UiTextHighlighted,
         UiTextDimmed,
-        UiTextGoodScore,
-        UiTextBadScore,
-        UiTextNeutralScore,
+        UiLevelLocked,
+        UiLevelCompleted,
+        UiLevelMastered,
         UiSelectionMarker,
         UiButtonFace,
         UiButtonOutline,
         UiBackground,
-
         LaserColor,
         BulletFlash1,
         BulletFlash2,
+        UiLevelUnlocked,
     }
 
     public static class ColorScheme
@@ -120,9 +121,10 @@ namespace Sludge.Colors
                 SchemeColor.UiTextDefault => scheme.UiTextDefault,
                 SchemeColor.UiTextHighlighted => scheme.UiTextHighlighted,
                 SchemeColor.UiTextDimmed => scheme.UiTextDimmed,
-                SchemeColor.UiTextGoodScore => scheme.UiTextGoodScore,
-                SchemeColor.UiTextBadScore => scheme.UiTextBadScore,
-                SchemeColor.UiTextNeutralScore => scheme.UiTextNeutralScore,
+                SchemeColor.UiLevelLocked => scheme.UiLevelLocked,
+                SchemeColor.UiLevelUnlocked => scheme.UiLevelUnlocked,
+                SchemeColor.UiLevelCompleted => scheme.UiLevelCompleted,
+                SchemeColor.UiLevelMastered => scheme.UiLevelMastered,
                 SchemeColor.UiSelectionMarker => scheme.UiSelectionMarker,
                 SchemeColor.UiButtonFace => scheme.UiButtonFace,
                 SchemeColor.UiButtonOutline => scheme.UiButtonOutline,

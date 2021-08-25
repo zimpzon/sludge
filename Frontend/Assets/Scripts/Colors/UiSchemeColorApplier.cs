@@ -47,7 +47,7 @@ public class UiSchemeColorApplier : MonoBehaviour
 
     public void ApplyColor()
     {
-        ApplyColor(GameManager.Instance?.CurrentColorScheme);
+        ApplyColor(GameManager.Instance?.CurrentUiColorScheme);
     }
 
     public void ApplyColor(ColorSchemeScriptableObject scheme)

@@ -9,13 +9,20 @@ public class UiLevelsLayout : MonoBehaviour
     public GameObject LevelPrefab;
     public List<LevelItem> LevelItems = new List<LevelItem>();
 
-    public LevelItem GetLevelFromId(string levelId)
-        => LevelItems.Where(li => li.levelScript.levelData.Id == levelId).First();
+    public LevelItem GetLevelFromQualifiedId(string qualifiedName)
+        => LevelItems.Where(li => li.levelScript.LevelData.GeneratedQualifiedName == qualifiedName).First();
 
     public void CreateLevelsSelection(List<LevelData> levels)
     {
+        levels = levels.OrderBy(l => l.Difficulty).ThenBy(l => l.Id).ToList();
+
+        LevelData.LevelDifficulty currentDifficulty = LevelData.LevelDifficulty.NotSet;
+        int levelCounter = 0;
+
         for (int i = 0; i < levels.Count; ++i)
         {
+            var level = levels[i];
+
             var go = Instantiate(LevelPrefab);
             var levelItem = new LevelItem
             {
@@ -24,8 +31,16 @@ public class UiLevelsLayout : MonoBehaviour
                 navigation = go.GetComponent<UiNavigation>(),
             };
 
-            levelItem.levelScript.levelData = levels[i];
-            levelItem.levelScript.TextLevelId.text = levels[i].Id;
+            if (level.Difficulty != currentDifficulty)
+            {
+                currentDifficulty = level.Difficulty;
+                levelCounter = 1;
+            }
+
+            level.GeneratedQualifiedName = $"{LevelData.DifficultyIds[(int)level.Difficulty]}-{levelCounter:00}";
+
+            levelItem.levelScript.LevelData = level;
+            levelItem.levelScript.TextLevelNumber.text = level.GeneratedQualifiedName.Replace("-", "\n");
 
             LevelItems.Add(levelItem);
             go.transform.SetParent(this.transform, worldPositionStays: false);

@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class UiLevel : MonoBehaviour
 {
-    public TextMeshProUGUI TextLevelId;
-    public LevelData levelData;
-
-    public void SetData(LevelData levelData)
-    {
-        TextLevelId.text = levelData.Id;
-    }
+    public TextMeshProUGUI TextLevelNumber;
+    public LevelData LevelData;
 }

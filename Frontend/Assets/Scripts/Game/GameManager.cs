@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public Image TimeBarRight;
     public Tilemap Tilemap;
     public ColorSchemeScriptableObject CurrentColorScheme;
+    public ColorSchemeScriptableObject CurrentUiColorScheme;
     public ColorSchemeListScriptableObject ColorSchemeList;
 
     public GameObject ButtonStartRound;
