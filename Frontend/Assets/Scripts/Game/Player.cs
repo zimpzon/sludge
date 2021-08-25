@@ -175,7 +175,7 @@ public class Player : MonoBehaviour
             return;
 
         timeEnterSlimeCloud = GameManager.Instance.EngineTime;
-        eyesTransform.localScale = eyesBaseScale * 2.0f;
+        eyesTransform.localScale = eyesBaseScale * 1.5f;
     }
 
     public void Kill()
