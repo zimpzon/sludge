@@ -7,8 +7,8 @@ namespace Sludge.Shared
         public enum LevelDifficulty { NotSet = 0, Easy = 1, Medium = 2, Hard = 3, Insane = 4 };
         public static readonly char[] DifficultyIds = { '?', 'E', 'M', 'H', 'I' };
 
-        public string GeneratedQualifiedName;
-        public string Id = "(id)";
+        public string UniqueId;
+        public int SortKey = 999999;
         public string Name = "(no name)";
         public LevelDifficulty Difficulty;
         public double StartTimeSeconds = 20;

@@ -8,9 +8,8 @@ public class ModSlimeBombLogic : SludgeModifier
 {
     public double Countdown = 3;
 
-    public Transform InnerSprite;
-    public TMP_Text CountdownText;
-
+    Transform innerSprite;
+    TMP_Text countdownText;
     BoxCollider2D activationCollider;
     CircleCollider2D cloudCollider;
     SpriteRenderer slimeRenderer;
@@ -27,18 +26,26 @@ public class ModSlimeBombLogic : SludgeModifier
 
     private void Awake()
     {
-        slimeRenderer = GetComponent<SpriteRenderer>();
-        activationCollider = GetComponent<BoxCollider2D>();
-        cloudCollider = GetComponent<CircleCollider2D>();
+        GetComponents();
+    }
+
+    void GetComponents()
+    {
+        innerSprite ??= transform.parent.Find("InnerSprite");
+        countdownText ??= transform.parent.Find("TextCountdown").GetComponent<TMP_Text>();
+        slimeRenderer ??= GetComponent<SpriteRenderer>();
+        activationCollider ??= GetComponent<BoxCollider2D>();
+        cloudCollider ??= GetComponent<CircleCollider2D>();
     }
 
     public override void Reset()
     {
+        GetComponents();
         trans = transform;
         countingDown = false;
         expanding = false;
-        CountdownText.enabled = false;
-        CountdownText.text = "";
+        countdownText.enabled = false;
+        countdownText.text = "";
         currentSecond = -1;
         slimeRenderer.enabled = false;
         slimeScale = 1;
@@ -98,14 +105,14 @@ public class ModSlimeBombLogic : SludgeModifier
             countingDown = true;
             GameManager.Instance.OnActivatingBomb();
             timeLeft = Countdown;
-            CountdownText.enabled = true;
+            countdownText.enabled = true;
         }
     }
 
     public override void EngineTick()
     {
         if (!expanding)
-            InnerSprite.transform.localScale = Vector3.one * ((Mathf.Sin((float)GameManager.Instance.EngineTime * 4) + 1) * 0.2f + 0.35f);
+            innerSprite.transform.localScale = Vector3.one * ((Mathf.Sin((float)GameManager.Instance.EngineTime * 4) + 1) * 0.2f + 0.35f);
 
         if (countingDown)
         {
@@ -113,10 +120,10 @@ public class ModSlimeBombLogic : SludgeModifier
             int second = Mathf.CeilToInt((float)timeLeft);
             if (second != currentSecond)
             {
-                CountdownText.text = second.ToString();
-                CountdownText.transform.DORewind();
-                CountdownText.transform.localScale = Vector3.one * 3.0f;
-                CountdownText.transform.DOScale(0.0f, 1.0f);
+                countdownText.text = second.ToString();
+                countdownText.transform.DORewind();
+                countdownText.transform.localScale = Vector3.one * 3.0f;
+                countdownText.transform.DOScale(0.0f, 1.0f);
 
                 currentSecond = second;
             }
@@ -128,13 +135,13 @@ public class ModSlimeBombLogic : SludgeModifier
                 // Explode now
                 countingDown = false;
                 expanding = true;
-                CountdownText.enabled = false;
+                countdownText.enabled = false;
                 slimeRenderer.enabled = true;
                 GameManager.Instance.DeathParticles.transform.position = trans.position;
                 GameManager.Instance.DeathParticles.Emit(50);
                 GameManager.Instance.CameraRoot.DORewind();
                 GameManager.Instance.CameraRoot.DOShakePosition(0.2f, 2.0f);
-                InnerSprite.transform.localScale = Vector3.one * 0.5f;
+                innerSprite.transform.localScale = Vector3.one * 0.5f;
                 SetColliderScale();
             }
         }

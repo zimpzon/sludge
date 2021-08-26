@@ -9,10 +9,12 @@ public static class LevelDeserializer
     public static void Run(LevelData data, LevelElements elements, LevelSettings levelSettings)
     {
         // Level settings
-        levelSettings.LevelId = data.Id;
         levelSettings.LevelName = data.Name;
+        levelSettings.Difficulty = data.Difficulty;
         levelSettings.StartTimeSeconds = data.StartTimeSeconds;
         levelSettings.EliteCompletionTimeSeconds = data.EliteCompletionTimeSeconds;
+        levelSettings.UniqueId = data.UniqueId;
+        levelSettings.SortKey = data.SortKey;
 
         // Clear existing bullets
         if (BulletManager.Instance != null)

@@ -1,5 +1,8 @@
 using Sludge.PlayerInputs;
+using Sludge.Shared;
+using Sludge.Utility;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace Sludge.UI
@@ -15,8 +18,14 @@ namespace Sludge.UI
 		public GameObject ButtonExit;
 		public GameObject GameRoot;
 		public UiSelectionMarker UiSelectionMarker;
+		public TMP_Text TextProgression;
 
-		string latestSelectedLevelQualifiedName;
+		public int LevelCount;
+		public int LevelsCompletedCount;
+		public int LevelsEliteCount;
+		public double GameProgressPct;
+
+		string latestSelectedLevelUniqueId;
 
 		private void Awake()
         {
@@ -28,7 +37,28 @@ namespace Sludge.UI
 				ButtonExit.SetActive(false);
             }
 
+			CalcProgression();
 			LevelLayout.CreateLevelsSelection(LevelList.Levels);
+		}
+
+		void CalcProgression()
+        {
+			LevelsCompletedCount = 0;
+			LevelsEliteCount = 0;
+
+			for (int i = 0; i < LevelList.Levels.Count; ++i)
+			{
+				var level = LevelList.Levels[i];
+				var levelStatus = PlayerProgress.GetLevelStatus(level.UniqueId);
+
+				LevelsCompletedCount += levelStatus >= PlayerProgress.LevelStatus.Completed ? 1 : 0;
+				LevelsEliteCount += levelStatus >= PlayerProgress.LevelStatus.Elite ? 1 : 0;
+			}
+
+			LevelCount = LevelList.Levels.Count;
+			double pctPerLevel = (1.0 / LevelCount * 100);
+			GameProgressPct = (LevelsCompletedCount * pctPerLevel * 0.5) + (LevelsEliteCount * pctPerLevel * 0.5);
+			TextProgression.text = $"Progression: {GameProgressPct:0}%";
 		}
 
 		private void Start()
@@ -126,20 +156,14 @@ namespace Sludge.UI
 		public void BackFromGame()
         {
 			StopAllCoroutines();
+			CalcProgression();
+			LevelLayout.UpdateVisualHints();
+
 			UiPanels.Instance.HidePanel(UiPanel.Game);
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 			UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
 			UiPanels.Instance.ShowBackground();
 			StartCoroutine(LevelSelectLoop());
-		}
-
-		void ReselectLatestLevel()
-        {
-			if (latestSelectedLevelQualifiedName == null)
-				latestSelectedLevelQualifiedName = LevelLayout.LevelItems[0].levelScript.LevelData.GeneratedQualifiedName;
-
-			var level = LevelLayout.GetLevelFromQualifiedId(latestSelectedLevelQualifiedName);
-			SetSelectionMarker(level.go);
 		}
 
 		void CheckChangeColorScheme(PlayerInput input)
@@ -183,7 +207,6 @@ namespace Sludge.UI
 			UiNavigation.OnNavigationSelected = null;
 
 			yield return UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
-			ReselectLatestLevel();
 
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
@@ -193,12 +216,25 @@ namespace Sludge.UI
 				StartCoroutine(PlayLoop(uiLevel));
 			};
 
-			UiNavigation.OnNavigationChanged = (go) =>
-			{
+			UiNavigation.OnNavigationChanged = OnNavigationChanged;
+
+			void OnNavigationChanged(GameObject go)
+            {
 				var uiLevel = go.GetComponent<UiLevel>();
-				UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>().TextLevelName.text = uiLevel.LevelData.Name;
-				latestSelectedLevelQualifiedName = uiLevel.LevelData.GeneratedQualifiedName;
-			};
+				var levelStatus = PlayerProgress.GetLevelStatus(uiLevel.LevelData.UniqueId);
+				var difficulty = uiLevel.LevelData.Difficulty;
+				string levelText = uiLevel.IsUnlocked ? $"{LevelData.DifficultyIds[(int)difficulty]} {(uiLevel.LevelIndex + 1):00} - {uiLevel.LevelData.Name}" : "<Locked>";
+				UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>().TextLevelName.text = levelText;
+				latestSelectedLevelUniqueId = uiLevel.LevelData.UniqueId;
+			}
+
+			// Reselect latest selected
+			if (latestSelectedLevelUniqueId == null)
+				latestSelectedLevelUniqueId = LevelLayout.LevelItems[0].levelScript.LevelData.UniqueId;
+
+			var level = LevelLayout.GetLevelFromUniqueId(latestSelectedLevelUniqueId);
+			SetSelectionMarker(level.go);
+			OnNavigationChanged(level.go);
 
 			while (true)
             {

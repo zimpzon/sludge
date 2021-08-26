@@ -3,6 +3,7 @@
     public class RoundResult
     {
         public string ClientId;
+        public string LevelId;
         public string LevelName;
         public bool IsReplay;
         public bool Cancelled;

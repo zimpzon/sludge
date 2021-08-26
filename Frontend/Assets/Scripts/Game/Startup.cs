@@ -12,6 +12,7 @@ namespace Sludge.Utility
         {
             Strings.Init();
             LevelList.LoadLevels();
+            PlayerProgress.Load();
             DOTween.Init();
             Physics2D.simulationMode = SimulationMode2D.Script;
             GameManager.ClientId = PlayerPrefs.GetString("ClientId", Guid.NewGuid().ToString());

@@ -39,11 +39,12 @@ MonoBehaviour:
   UiTimerBarBack: {r: 0, g: 0, b: 0, a: 0}
   UiTextDefault: {r: 1, g: 1, b: 1, a: 0}
   UiTextHighlighted: {r: 1, g: 1, b: 1, a: 0}
-  UiTextDimmed: {r: 1, g: 1, b: 1, a: 0}
-  UiTextGoodScore: {r: 0, g: 0, b: 0, a: 0}
-  UiTextBadScore: {r: 0, g: 0, b: 0, a: 0}
-  UiTextNeutralScore: {r: 0, g: 0, b: 0, a: 0}
-  UiSelectionMarker: {r: 0.7411765, g: 0.882353, b: 0.33333334, a: 0}
-  UiButtonFace: {r: 0.87843144, g: 0.39607847, b: 0.3254902, a: 0}
-  UiButtonOutline: {r: 0.2392157, g: 0.4901961, b: 0.87843144, a: 0}
-  UiBackground: {r: 0.30588236, g: 0.33333334, b: 0.29803923, a: 0}
+  UiTextDimmed: {r: 0.756, g: 0.756, b: 0.756, a: 0}
+  UiLevelLocked: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 0}
+  UiLevelUnlocked: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 0}
+  UiLevelCompleted: {r: 0.91372555, g: 0.27058825, b: 0.2392157, a: 0}
+  UiLevelMastered: {r: 0.79215693, g: 0.8470589, b: 0.15294118, a: 0}
+  UiSelectionMarker: {r: 0.815, g: 0.815, b: 0.815, a: 0}
+  UiButtonFace: {r: 0.52900004, g: 0.52900004, b: 0.52900004, a: 0}
+  UiButtonOutline: {r: 0.9803922, g: 0.69803923, b: 0.29411766, a: 0}
+  UiBackground: {r: 0.305, g: 0.305, b: 0.305, a: 0}

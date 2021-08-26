@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
         foreach (var exit in Exits)
         {
             SludgeUtil.EnableEmission(exit.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), highlightExits);
-            if (bombActivated)
+            if (highlightExits)
                 exit.Activate();
         }
 
@@ -319,6 +319,7 @@ public class GameManager : MonoBehaviour
             LevelReplay.CommitReplay();
 
         latestRoundResult.ClientId = ClientId;
+        latestRoundResult.LevelId = currentLevelData.UniqueId;
         latestRoundResult.LevelName = currentLevelData.Name;
         latestRoundResult.IsReplay = isReplay;
         latestRoundResult.Completed = levelComplete;
@@ -334,6 +335,8 @@ public class GameManager : MonoBehaviour
         Analytics.Instance.SaveStats(latestRoundResult);
 
         SetScoreText(latestRoundResult);
+
+        PlayerProgress.UpdateLevelStatus(latestRoundResult);
 
         yield return new WaitForSeconds(1.0f);
     }

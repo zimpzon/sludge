@@ -2,6 +2,7 @@ using Sludge.Modifiers;
 using Sludge.Shared;
 using Sludge.SludgeObjects;
 using Sludge.Tiles;
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,11 +14,16 @@ public static class LevelSerializer
         var data = new LevelData();
 
 #if UNITY_EDITOR
-        data.Id = levelSettings.LevelId;
         data.Name = levelSettings.LevelName;
+        data.Difficulty = levelSettings.Difficulty;
         data.StartTimeSeconds = levelSettings.StartTimeSeconds;
         data.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
+        data.SortKey = levelSettings.SortKey;
 
+        if (string.IsNullOrWhiteSpace(levelSettings.UniqueId))
+            levelSettings.UniqueId = Guid.NewGuid().ToString();
+
+        data.UniqueId = levelSettings.UniqueId;
         // Player
         data.PlayerTransform = LevelDataTransform.Get(elements.Player.transform);
             
