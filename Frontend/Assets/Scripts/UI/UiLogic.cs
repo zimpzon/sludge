@@ -1,3 +1,4 @@
+using Sludge.Colors;
 using Sludge.PlayerInputs;
 using Sludge.Shared;
 using Sludge.Utility;
@@ -221,11 +222,42 @@ namespace Sludge.UI
 			void OnNavigationChanged(GameObject go)
             {
 				var uiLevel = go.GetComponent<UiLevel>();
-				var levelStatus = PlayerProgress.GetLevelStatus(uiLevel.LevelData.UniqueId);
+				var levelData = uiLevel.LevelData;
+				var levelStatus = PlayerProgress.GetLevelStatus(levelData.UniqueId);
 				var difficulty = uiLevel.LevelData.Difficulty;
-				string levelText = uiLevel.IsUnlocked ? $"{LevelData.DifficultyIds[(int)difficulty]} {(uiLevel.LevelIndex + 1):00} - {uiLevel.LevelData.Name}" : "<Locked>";
-				UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>().TextLevelName.text = levelText;
-				latestSelectedLevelUniqueId = uiLevel.LevelData.UniqueId;
+				string levelText;
+				string statsText;
+				string timingsText = "";
+				string otherText = "";
+				if (uiLevel.IsUnlocked)
+                {
+					timingsText = $"Time limit\t<mspace=0.5em>{levelData.TimeSeconds,6:0.000}s</mspace>\nMaster\t<mspace=0.5em>{levelData.EliteCompletionTimeSeconds,6:0.000}s</mspace>\nYour best\t<mspace=0.5em>-.---s</mspace>";
+					otherText = $"Attempts\t0";
+
+					levelText = $"{LevelData.DifficultyIds[(int)difficulty]} {(uiLevel.LevelIndex + 1):00} - {levelData.Name}";
+					if (uiLevel.Status == PlayerProgress.LevelStatus.NotCompleted || uiLevel.Status == PlayerProgress.LevelStatus.Completed)
+					{
+						Color masteredColor = ColorScheme.GetColor(GameManager.Instance.CurrentUiColorScheme, SchemeColor.UiLevelMastered);
+						statsText = $"Complete in <color=#{ColorUtility.ToHtmlStringRGBA(masteredColor)}>{levelData.EliteCompletionTimeSeconds:0.000}</color>s to master chamber";
+					}
+					else
+                    {
+						statsText = "You have mastered this chamber";
+                    }
+                }
+				else
+                {
+					levelText = "<Locked>";
+					statsText = "Complete more chambers to unlock";
+				}
+
+				var uilevelSelection = UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>();
+				uilevelSelection.TextLevelName.text = levelText;
+				uilevelSelection.TextLevelInfo.text = statsText;
+				uilevelSelection.TextLevelTimings.text = timingsText;
+				uilevelSelection.TextLevelOtherInfo.text = otherText;
+
+				latestSelectedLevelUniqueId = levelData.UniqueId;
 			}
 
 			// Reselect latest selected

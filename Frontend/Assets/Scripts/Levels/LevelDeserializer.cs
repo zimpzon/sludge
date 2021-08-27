@@ -11,7 +11,7 @@ public static class LevelDeserializer
         // Level settings
         levelSettings.LevelName = data.Name;
         levelSettings.Difficulty = data.Difficulty;
-        levelSettings.StartTimeSeconds = data.StartTimeSeconds;
+        levelSettings.StartTimeSeconds = data.TimeSeconds;
         levelSettings.EliteCompletionTimeSeconds = data.EliteCompletionTimeSeconds;
         levelSettings.UniqueId = data.UniqueId;
         levelSettings.SortKey = data.SortKey;

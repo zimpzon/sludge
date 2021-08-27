@@ -54,8 +54,11 @@ public class UiLevelsLayout : MonoBehaviour
 
             var difficulty = levelItem.levelScript.LevelData.Difficulty;
             var levelStatus = PlayerProgress.GetLevelStatus(levelItem.levelScript.LevelData.UniqueId);
-            string levelText = isUnlocked ? $"{LevelData.DifficultyIds[(int)difficulty]}\n{(i + 1):00}" : "?";
+            string levelText = isUnlocked ?
+                $"{LevelData.DifficultyIds[(int)difficulty]}\n{(i + 1):00}" :
+                "?";
 
+            levelItem.levelScript.Status = levelStatus;
             levelItem.levelScript.TextLevelNumber.text = levelText;
             levelItem.levelScript.IsUnlocked = isUnlocked;
             levelItem.levelScript.LevelIndex = i;
@@ -76,7 +79,7 @@ public class UiLevelsLayout : MonoBehaviour
             else
             {
                 backgroundColor = isUnlocked ? SchemeColor.UiLevelUnlocked : SchemeColor.UiLevelLocked;
-                textColor = SchemeColor.UiTextDimmed;
+                textColor = isUnlocked ? SchemeColor.UiTextDefault : SchemeColor.UiTextDimmed;
             }
 
             levelItem.colorApplier.SetColor(backgroundColor);

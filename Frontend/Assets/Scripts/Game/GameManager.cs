@@ -17,7 +17,7 @@ using UnityEngine.UI;
 // First script to run
 public class GameManager : MonoBehaviour
 {
-    const double TimePillBonusTime = 1.0;
+    const double TimePillBonusTime = -1.0;
     public const double TickSize = 0.016;
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000.0 / TickSizeMs;
@@ -60,8 +60,8 @@ public class GameManager : MonoBehaviour
     public int EngineTimeMs;
     public int FrameCounter;
     public int Keys;
-    LevelData currentLevelData = new LevelData { StartTimeSeconds = 30, EliteCompletionTimeSeconds = 20, };
-    double timeLeft;
+    LevelData currentLevelData = new LevelData { TimeSeconds = 30, EliteCompletionTimeSeconds = 20, };
+    double roundTime;
     LevelElements levelElements;
     LevelSettings levelSettings;
     bool levelComplete;
@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
         {
             // Starting game from current scene in editor
             currentLevelData.Name = levelSettings.LevelName;
-            currentLevelData.StartTimeSeconds = levelSettings.StartTimeSeconds;
+            currentLevelData.TimeSeconds = levelSettings.StartTimeSeconds;
             currentLevelData.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
 
             SludgeObjects = FindObjectsOfType<SludgeObject>();
@@ -253,7 +253,7 @@ public class GameManager : MonoBehaviour
         EngineTimeMs = 0;
         FrameCounter = 0;
         UnityTime = 0;
-        timeLeft = currentLevelData.StartTimeSeconds;
+        roundTime = 0;
         latestRoundResult = new RoundResult();
 
         levelComplete = false;
@@ -314,6 +314,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        roundTime = SludgeUtil.Stabilize(roundTime);
         bool playerCompletedRound = !isReplay && !latestRoundResult.Cancelled;
         if (playerCompletedRound)
             LevelReplay.CommitReplay();
@@ -323,9 +324,9 @@ public class GameManager : MonoBehaviour
         latestRoundResult.LevelName = currentLevelData.Name;
         latestRoundResult.IsReplay = isReplay;
         latestRoundResult.Completed = levelComplete;
-        latestRoundResult.EndTime = SludgeUtil.Stabilize(timeLeft);
+        latestRoundResult.EndTime = roundTime;
         latestRoundResult.RoundTotalTime = SludgeUtil.Stabilize(latestRoundResult.RoundTotalTime);
-        latestRoundResult.OutOfTime = timeLeft <= 0;
+        latestRoundResult.OutOfTime = roundTime >= currentLevelData.TimeSeconds;
         latestRoundResult.IsEliteTime = levelComplete && EngineTime <= levelSettings.EliteCompletionTimeSeconds;
         latestRoundResult.ReplayData = latestRoundResult.Cancelled ? null : LevelReplay.LatestCommittedToReplayString();
 
@@ -353,7 +354,9 @@ public class GameManager : MonoBehaviour
 
     public void TimePillPickup(TimePill key)
     {
-        timeLeft += TimePillBonusTime;
+        roundTime += TimePillBonusTime;
+        if (roundTime < 0)
+            roundTime = 0;
     }
 
     void UpdateAll()
@@ -378,23 +381,23 @@ public class GameManager : MonoBehaviour
         Player.EngineTick();
     }
 
-    const float MaxTime = 30;
-
     void UpdateTime()
     {
-        if (timeLeft <= 0)
+        if (roundTime >= currentLevelData.TimeSeconds)
         {
-            timeLeft = 0;
+            roundTime = currentLevelData.TimeSeconds;
             Player.Kill();
         }
 
-        int timeIdx = (int)(timeLeft * 1000.0);
+        int timeIdx = (int)(roundTime * 1000.0);
         timeIdx = Mathf.Clamp(timeIdx, 0, Strings.TimeStrings.Length - 1);
 
         TextLevelTime.text = Strings.TimeStrings[timeIdx];
-        float fillAmount = (float)(timeLeft / MaxTime);
-        TimeBarLeft.fillAmount = fillAmount;
-        TimeBarRight.fillAmount = fillAmount;
+        double maxTime = currentLevelData.TimeSeconds;
+        double fillAmount = roundTime / maxTime;
+        float fillBar = 1 - (float)fillAmount;
+        TimeBarLeft.fillAmount = fillBar;
+        TimeBarRight.fillAmount = fillBar;
     }
 
     void DoTick(bool isReplay)
@@ -411,7 +414,7 @@ public class GameManager : MonoBehaviour
 
         EngineTimeMs = FrameCounter * TickSizeMs;
         EngineTime = EngineTimeMs * 0.001;
-        timeLeft -= TickSize;
+        roundTime += TickSize;
 
         UpdateAll();
         Physics2D.Simulate((float)TickSize);

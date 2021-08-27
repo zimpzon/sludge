@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.Analytics;
 
@@ -10,6 +11,7 @@ namespace Sludge.Utility
     {
         public static void StaticInit()
         {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
             Strings.Init();
             LevelList.LoadLevels();
             PlayerProgress.Load();

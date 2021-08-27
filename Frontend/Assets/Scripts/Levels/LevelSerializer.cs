@@ -16,12 +16,12 @@ public static class LevelSerializer
 #if UNITY_EDITOR
         data.Name = levelSettings.LevelName;
         data.Difficulty = levelSettings.Difficulty;
-        data.StartTimeSeconds = levelSettings.StartTimeSeconds;
+        data.TimeSeconds = levelSettings.StartTimeSeconds;
         data.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
         data.SortKey = levelSettings.SortKey;
 
         if (string.IsNullOrWhiteSpace(levelSettings.UniqueId))
-            levelSettings.UniqueId = Guid.NewGuid().ToString();
+            levelSettings.UniqueId = Guid.NewGuid().ToString().Substring(0, 8);
 
         data.UniqueId = levelSettings.UniqueId;
         // Player
