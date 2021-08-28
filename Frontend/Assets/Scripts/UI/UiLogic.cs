@@ -209,6 +209,10 @@ namespace Sludge.UI
 
 			yield return UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
 
+			int charsShown = 0;
+			int charRevealMod = 12;
+			var uilevelSelection = UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>();
+
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
 				UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
@@ -251,12 +255,12 @@ namespace Sludge.UI
 					statsText = "Complete more chambers to unlock";
 				}
 
-				var uilevelSelection = UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>();
 				uilevelSelection.TextLevelName.text = levelText;
 				uilevelSelection.TextLevelInfo.text = statsText;
 				uilevelSelection.TextLevelTimings.text = timingsText;
 				uilevelSelection.TextLevelOtherInfo.text = otherText;
 
+				charsShown = 0;
 				latestSelectedLevelUniqueId = levelData.UniqueId;
 			}
 
@@ -273,6 +277,14 @@ namespace Sludge.UI
 				GameManager.PlayerInput.GetHumanInput();
 				CheckChangeColorScheme(GameManager.PlayerInput);
 				DoUiNavigation(GameManager.PlayerInput);
+
+				uilevelSelection.TextLevelName.maxVisibleCharacters = charsShown >> 1;
+				uilevelSelection.TextLevelInfo.maxVisibleCharacters = charsShown;
+				uilevelSelection.TextLevelTimings.maxVisibleCharacters = charsShown;
+				uilevelSelection.TextLevelOtherInfo.maxVisibleCharacters = charsShown;
+
+				if (GameManager.Instance.FrameCounter % charRevealMod++ == 0)
+					charsShown++;
 
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {

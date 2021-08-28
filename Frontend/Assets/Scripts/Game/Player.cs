@@ -37,6 +37,9 @@ public class Player : MonoBehaviour
     Transform eyesTransform;
     Vector2 eyesBaseScale;
     double timeEnterSlimeCloud;
+    int sampleIdxAtTimeOfTeleport;
+    int resetTrailTime; // Trail hack when teleporting to not draw between teleporters
+    float trailTime;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -55,6 +58,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        trailTime = trail.time;
         softBody = GetComponentInChildren<LineRenderer>();
         softBody.positionCount = 80; // Max number of line segments for body
         ripples = GetComponentInChildren<QuadDistort>();
@@ -78,6 +82,7 @@ public class Player : MonoBehaviour
         impulseRotation = 0;
         currentThrowable = null;
         timeEnterSlimeCloud = -1;
+        sampleIdxAtTimeOfTeleport = 0;
 
         overrideX.Clear();
         overrideY.Clear();
@@ -114,6 +119,21 @@ public class Player : MonoBehaviour
         // When resetting game colliderexits are fired after resetting player, so we get an exit event after setting onConveyorBeltCount to 0.
         if (onConveyorBeltCount < 0)
             onConveyorBeltCount = 0;
+    }
+
+    public void Teleport(Vector3 newPos)
+    {
+        GameManager.Instance.DustParticles.transform.position = trans.position;
+        GameManager.Instance.DustParticles.Emit(10);
+        GameManager.Instance.DustParticles.transform.position = newPos;
+        GameManager.Instance.DustParticles.Emit(10);
+
+        playerX = SludgeUtil.Stabilize(newPos.x);
+        playerY = SludgeUtil.Stabilize(newPos.y);
+        sampleIdxAtTimeOfTeleport = GameManager.Instance.FrameCounter + 1;
+        trail.Clear();
+        trail.time = 0;
+        resetTrailTime = 2;
     }
 
     public void AddOverridePosition(double x, double y)
@@ -251,10 +271,6 @@ public class Player : MonoBehaviour
         playerX += speed * GameManager.TickSize * lookX;
         playerY += speed * GameManager.TickSize * lookY;
 
-        if (accelerationStart)
-        {
-        }
-
         wasAcceleratingLastFrame = isAccelerating;
     }
 
@@ -339,6 +355,12 @@ public class Player : MonoBehaviour
         UpdateSoftBody();
 
         CheckSlimeCloud();
+
+        if (--resetTrailTime == 0)
+        {
+            trail.Clear();
+            trail.time = trailTime;
+        }
     }
 
     void SetPositionSample(int idx)
@@ -357,7 +379,7 @@ public class Player : MonoBehaviour
         int playerPosSampleIdx = GameManager.Instance.FrameCounter;
         for (int softBodyIdx = 0; softBodyIdx < softBody.positionCount; ++softBodyIdx)
         {
-            bool hasPlayerPosSamples = playerPosSampleIdx >= 0; // 0 is always there, set in reset
+            bool hasPlayerPosSamples = playerPosSampleIdx >= sampleIdxAtTimeOfTeleport; // 0 is always there, set in reset
             if (hasPlayerPosSamples)
             {
                 if (distanceCovered < TargetDistance)
@@ -365,7 +387,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                // We are below 0 in the position array, player hasn't moved enough yet (or at all).
+                // We are below 0 (or latest teleport point) in the position array, player hasn't moved enough yet (or at all).
                 // Extrapolate points in the opposite direction the player is facing.
                 if (distanceCovered < TargetDistance)
                 {
@@ -379,7 +401,8 @@ public class Player : MonoBehaviour
 
             softBody.SetPosition(softBodyIdx, currentPoint);
 
-            distanceCovered += softBodyIdx == 0 ? 0 : (currentPoint - prevPoint).magnitude;
+            float currentDistance = (currentPoint - prevPoint).magnitude;
+            distanceCovered += softBodyIdx == 0 ? 0 : currentDistance;
             playerPosSampleIdx--;
             prevPoint = currentPoint;
         }

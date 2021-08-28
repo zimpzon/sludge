@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Sludge.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace Sludge.Utility
 
         public static void UpdateLevelStatus(RoundResult roundResult)
         {
-            if (!roundResult.Completed)
+            if (!roundResult.Completed || UiLogic.Instance.StartCurrentScene)
                 return;
 
             var currentStatus = GetLevelStatus(roundResult.LevelId);

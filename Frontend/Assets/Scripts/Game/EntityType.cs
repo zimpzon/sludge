@@ -14,5 +14,6 @@
         Exit,
         Conveyor,
         SlimeBomb,
+        Portal,
     };
 }

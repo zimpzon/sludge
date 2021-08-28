@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text TextLevelTime;
     public TMP_Text TextLevelName;
+    public TMP_Text TextLevelMasterTime;
     public Material OutlineMaterial;
 
     public static string ClientId;
@@ -132,6 +133,7 @@ public class GameManager : MonoBehaviour
         }
 
         TextLevelName.text = currentLevelData.Name;
+        TextLevelMasterTime.text = $"Master {currentLevelData.EliteCompletionTimeSeconds:0.000}s";
         Player.SetHomePosition();
 
         SludgeObjects = FindObjectsOfType<SludgeObject>();
