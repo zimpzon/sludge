@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     public SlimeBomb[] SlimeBombs;
     public Exit[] Exits;
 
+    public bool IsReplay;
     public double UnityTime;
     public double EngineTime;
     public int EngineTimeMs;
@@ -282,6 +283,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator Playing(bool isReplay)
     {
+        IsReplay = isReplay;
         if (isReplay)
         {
             LevelReplay.BeginReplay();
@@ -413,6 +415,8 @@ public class GameManager : MonoBehaviour
         {
             LevelReplay.RecordState(PlayerInput.GetState(), FrameCounter);
         }
+
+        Player.Position = Player.transform.position;
 
         EngineTimeMs = FrameCounter * TickSizeMs;
         EngineTime = EngineTimeMs * 0.001;

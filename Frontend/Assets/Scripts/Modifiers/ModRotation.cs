@@ -18,7 +18,8 @@ namespace Sludge.Modifiers
 
         public override void Reset()
         {
-            trans.rotation = Quaternion.AngleAxis((float)StartDegrees, Vector3.back);
+            if (Active)
+                trans.rotation = Quaternion.AngleAxis((float)StartDegrees, Vector3.back);
         }
 
         public override void EngineTick()

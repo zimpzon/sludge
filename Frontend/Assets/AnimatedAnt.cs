@@ -1,17 +1,20 @@
 using DG.Tweening;
 using Sludge.Easing;
 using Sludge.Utility;
+using System;
 using System.Collections;
 using UnityEngine;
 using Ease = Sludge.Easing.Ease;
 
 public class AnimatedAnt : MonoBehaviour
 {
-    public enum AntType { Static, Laser, PlainGun, Chaser };
+    public enum AntType { Static, Laser, PlainGun, Stalker };
 
     public AntType Type = AntType.Static;
     bool GnawingMandibles;
     double GnawingMandiblesRange = 40;
+    [NonSerialized] public double animationSpeedScale = 1;
+    [NonSerialized] public double animationOffset = 0;
 
     public Transform headTrans;
     public Transform mandibleLeftTrans;
@@ -65,33 +68,33 @@ public class AnimatedAnt : MonoBehaviour
     private void Update()
     {
         GnawingMandibles = false;
-        double animateAntenna = 0;
+        double animateAntennaRange = 0;
         double animateAntennaSpeed = 0;
 
         if (Type == AntType.Laser)
         {
-            animateAntenna = 25;
+            animateAntennaRange = 25;
             animateAntennaSpeed = 2;
         }
-        else if (Type == AntType.Chaser)
+        else if (Type == AntType.Stalker)
         {
             GnawingMandibles = true;
-            animateAntenna = 35;
-            animateAntennaSpeed = 1;
+            animateAntennaRange = 35;
+            animateAntennaSpeed = 1 * animationSpeedScale;
         }
 
-        if (animateAntenna != 0)
+        if (animateAntennaRange != 0)
         {
-            double t = SludgeUtil.TimeMod(Time.time * (float)animateAntennaSpeed);
+            double t = SludgeUtil.TimeMod((Time.time * (float)animateAntennaSpeed * animationSpeedScale) + animationOffset);
             double t01 = Ease.PingPong(Ease.Apply(Easings.Linear, t));
-            double range = animateAntenna;
+            double range = animateAntennaRange;
             double rotZ = t01 * range - range * 0.5;
             antennaLeftTrans.localRotation = Quaternion.Euler(0, 0, (float)rotZ);
         }
 
         if (GnawingMandibles)
         {
-            double t = SludgeUtil.TimeMod(Time.time);
+            double t = SludgeUtil.TimeMod((Time.time * animationSpeedScale) + animationOffset);
             double rotZ = Ease.PingPong(Ease.Apply(Easings.Linear, t)) * GnawingMandiblesRange - GnawingMandiblesRange * 0.5;
             mandibleLeftTrans.localRotation = Quaternion.Euler(0, 0, (float)rotZ);
         }

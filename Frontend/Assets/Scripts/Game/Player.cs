@@ -413,7 +413,6 @@ public class Player : MonoBehaviour
         trans.rotation = Quaternion.Euler(0, 0, (float)angle);
         trans.position = new Vector3((float)playerX, (float)playerY, 0);
 
-        Position = trans.position;
         Angle = angle;
         Rotation = trans.rotation;
     }
