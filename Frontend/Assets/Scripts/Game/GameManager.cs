@@ -36,7 +36,8 @@ public class GameManager : MonoBehaviour
 
     public ParticleSystem DeathParticles;
     public ParticleSystem DustParticles;
-    public ParticleSystem HighlightParticles;
+    public ParticleSystem CompletedParticles;
+    public ParticleSystem MarkerParticles;
 
     public TMP_Text TextStatsComments;
     public TMP_Text TextLevelStatus;
@@ -54,7 +55,9 @@ public class GameManager : MonoBehaviour
     public Player Player;
     public SludgeObject[] SludgeObjects;
     public SlimeBomb[] SlimeBombs;
+    public ParticleSystem[] SlimeBombsHighlight;
     public Exit[] Exits;
+    public ParticleSystem[] ExitsHighlight;
 
     public bool IsReplay;
     public double UnityTime;
@@ -139,7 +142,9 @@ public class GameManager : MonoBehaviour
 
         SludgeObjects = FindObjectsOfType<SludgeObject>();
         Exits = SludgeObjects.Where(o => o is Exit).Cast<Exit>().ToArray();
+        ExitsHighlight = Exits.Select(e => e.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
         SlimeBombs = SludgeObjects.Where(o => o is SlimeBomb).Cast<SlimeBomb>().ToArray();
+        SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 
         ResetLevel();
 
@@ -151,15 +156,17 @@ public class GameManager : MonoBehaviour
         bool highlightExits = bombActivated || SlimeBombs.Length == 0;
         bool highlightBombs = !highlightExits;
 
-        foreach (var exit in Exits)
+        for (int i = 0; i < Exits.Length; ++i)
         {
-            SludgeUtil.EnableEmission(exit.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), highlightExits);
+            SludgeUtil.EnableEmission(ExitsHighlight[i], highlightExits);
             if (highlightExits)
-                exit.Activate();
+                Exits[i].Activate();
         }
 
-        foreach (var bomb in SlimeBombs)
-            SludgeUtil.EnableEmission(bomb.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), highlightBombs);
+        for (int i = 0; i < SlimeBombs.Length; ++i)
+        {
+            SludgeUtil.EnableEmission(SlimeBombsHighlight[i], highlightBombs);
+        }
     }
 
     void SetMenuButtonActive(GameObject go, bool active)
@@ -348,6 +355,13 @@ public class GameManager : MonoBehaviour
 
     public void LevelCompleted(Exit exit)
     {
+        CompletedParticles.transform.position = exit.transform.position;
+        CompletedParticles.Emit(11);
+
+        MarkerParticles.transform.position = exit.transform.position;
+        MarkerParticles.Emit(1);
+
+        SludgeUtil.EnableEmission(exit.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), enabled: false, clearParticles: true);
         levelComplete = true;
     }
 
