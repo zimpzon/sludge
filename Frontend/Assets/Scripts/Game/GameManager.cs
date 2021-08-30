@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sludge;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
@@ -39,7 +40,6 @@ public class GameManager : MonoBehaviour
     public ParticleSystem CompletedParticles;
     public ParticleSystem MarkerParticles;
 
-    public TMP_Text TextStatsComments;
     public TMP_Text TextLevelStatus;
 
     public TMP_Text TextLevelTime;
@@ -137,7 +137,7 @@ public class GameManager : MonoBehaviour
         }
 
         TextLevelName.text = currentLevelData.Name;
-        TextLevelMasterTime.text = $"Master {currentLevelData.EliteCompletionTimeSeconds:0.000}s";
+        TextLevelMasterTime.text = $"Complete: {currentLevelData.EliteCompletionTimeSeconds:0.000}";
         Player.SetHomePosition();
 
         SludgeObjects = FindObjectsOfType<SludgeObject>();
@@ -147,6 +147,7 @@ public class GameManager : MonoBehaviour
         SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 
         ResetLevel();
+        SetScoreText();
 
         Tilemap.gameObject.SetActive(true);
     }
@@ -179,23 +180,69 @@ public class GameManager : MonoBehaviour
         go.GetComponent<UiNavigation>().Enabled = active;
     }
 
-    void SetScoreText(RoundResult roundResult)
+    void SetScoreText(RoundResult roundResult = null)
     {
-        if (roundResult.Completed)
+        var highlightColor = ColorScheme.GetColor(CurrentColorScheme, SchemeColor.UiTextHighlighted);
+        var dimmedColor = ColorScheme.GetColor(CurrentColorScheme, SchemeColor.UiTextDimmed);
+
+        TextLevelStatus.text = "";
+        var prevLevelProgress = PlayerProgress.GetLevelProgress(currentLevelData.UniqueId);
+        if (roundResult?.Completed == true)
         {
-            TextStatsComments.text = roundResult.IsEliteTime ? "- Level Mastered! -" : "- Well Done -";
+            // Reached exit
+            TextLevelStatus.text += "You escaped!\n";
+
+            double timeDiffElite = roundResult.EndTime - currentLevelData.EliteCompletionTimeSeconds;
+            string strDiffElite = $"{timeDiffElite:0.000}";
+            if (timeDiffElite >= 0)
+                strDiffElite = '+' + strDiffElite;
+
+            var colorMasterTime = roundResult.IsEliteTime ? highlightColor : dimmedColor;
+
+            string eliteText = $"\nChamber completed ({SludgeUtil.ColorWrap(strDiffElite, colorMasterTime)})";
+            if (!roundResult.IsEliteTime)
+                eliteText = $"<s>{SludgeUtil.ColorWrap($"{eliteText}", dimmedColor)}</s>";
+
+            TextLevelStatus.text += eliteText;
         }
         else
         {
-            TextStatsComments.text = roundResult.OutOfTime ? "- Out Of Time -" : "";
+            if (roundResult != null)
+            {
+                // Did not reach exit
+                if (roundResult.OutOfTime)
+                    TextLevelStatus.text += "Time ran out";
+            }
+
+            // Dead or just arrived on level
+            bool levelCompleted = prevLevelProgress.LevelStatus == PlayerProgress.LevelStatus.Completed;
+            TextLevelStatus.text += !levelCompleted ?
+                $"\nEscape within {SludgeUtil.ColorWrap($"{levelSettings.EliteCompletionTimeSeconds:0.000}", highlightColor)} to complete chamber!" :
+                "- You have completed this chamber -";
+
+        }
+
+        if (roundResult != null && roundResult.Completed)
+        {
+            bool isNewBest = prevLevelProgress.BestTime > 0 && roundResult.EndTime < prevLevelProgress.BestTime;
+            double updatedBestTime = prevLevelProgress.BestTime <= 0 || isNewBest ? roundResult.EndTime : prevLevelProgress.BestTime;
+            double timeDiffBest = roundResult.EndTime - updatedBestTime;
+            string strDiffBest = $"{timeDiffBest:0.000}";
+            if (timeDiffBest >= 0)
+                strDiffBest = '+' + strDiffBest;
+
+            TextLevelStatus.text += $"\nYour best: {SludgeUtil.ColorWrap($"{updatedBestTime:0.000}", highlightColor)} ({SludgeUtil.ColorWrap(strDiffBest, highlightColor)})";
+        }
+        else if (prevLevelProgress != null)
+        {
+            if (prevLevelProgress.BestTime > 0)
+                TextLevelStatus.text += $"\nYour best: {SludgeUtil.ColorWrap($"{prevLevelProgress.BestTime:0.000}", highlightColor)}";
         }
     }
 
     IEnumerator BetweenRoundsLoop()
     {
         GameObject latestSelection = ButtonStartRound.gameObject;
-        TextLevelStatus.text = $"Elite Time: {levelSettings.EliteCompletionTimeSeconds.ToString("0.000", System.Globalization.CultureInfo.InvariantCulture)}";
-        TextStatsComments.text = "";
         UpdateTime();
 
         while (true)
@@ -347,7 +394,6 @@ public class GameManager : MonoBehaviour
         Analytics.Instance.SaveStats(latestRoundResult);
 
         SetScoreText(latestRoundResult);
-
         PlayerProgress.UpdateLevelStatus(latestRoundResult);
 
         yield return new WaitForSeconds(1.0f);
@@ -360,6 +406,9 @@ public class GameManager : MonoBehaviour
 
         MarkerParticles.transform.position = exit.transform.position;
         MarkerParticles.Emit(1);
+
+        CameraRoot.DORewind();
+        CameraRoot.DOShakePosition(0.1f, 0.5f);
 
         SludgeUtil.EnableEmission(exit.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), enabled: false, clearParticles: true);
         levelComplete = true;

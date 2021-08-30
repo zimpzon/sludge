@@ -89,6 +89,9 @@ namespace Sludge.Utility
                 particles.Clear();
         }
 
+        public static string ColorWrap(string s, Color col)
+            => $"<color=#{ColorUtility.ToHtmlStringRGBA(col)}>{s}</color>";
+
         public static int ThrowableExplosionLayerMask = LayerMask.GetMask("Objects", "OutlinedObjects");
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");

@@ -7,23 +7,30 @@ namespace Sludge.Utility
 {
     public class PlayerProgress
     {
+        public class LevelProgress
+        {
+            public LevelStatus LevelStatus;
+            public double BestTime = -1;
+        }
+
         public static PlayerProgress Progress = new PlayerProgress();
 
-        public enum LevelStatus { NotCompleted = 0, Completed = 1, Elite = 2 };
-        static Dictionary<string, LevelStatus> LevelStates = new Dictionary<string, LevelStatus>();
+        public enum LevelStatus { NotCompleted = 0, Escaped = 1, Completed = 2 };
+        static Dictionary<string, LevelProgress> LevelStates = new Dictionary<string, LevelProgress>();
 
         private const string PrefsName = "player_progress";
 
-        public static LevelStatus GetLevelStatus(string levelUniqueId)
+        public static LevelProgress GetLevelProgress(string levelUniqueId)
         {
             if (string.IsNullOrWhiteSpace(levelUniqueId))
             {
                 Debug.LogError("GetLevelStatus called with empty levelUniqueId");
-                return LevelStatus.NotCompleted;
+                return new LevelProgress();
             }
 
-            LevelStatus result;
-            LevelStates.TryGetValue(levelUniqueId, out result);
+            if (!LevelStates.TryGetValue(levelUniqueId, out var result))
+                return new LevelProgress();
+
             return result;
         }
 
@@ -32,14 +39,28 @@ namespace Sludge.Utility
             if (!roundResult.Completed || UiLogic.Instance.StartCurrentScene)
                 return;
 
-            var currentStatus = GetLevelStatus(roundResult.LevelId);
-            LevelStatus resultStatus = roundResult.IsEliteTime ? LevelStatus.Elite : LevelStatus.Completed;
-            if (resultStatus <= currentStatus) // Not an improvement
+            var currentProgress = GetLevelProgress(roundResult.LevelId);
+
+            bool hasChanged = false;
+            if (roundResult.EndTime < currentProgress.BestTime)
+            {
+                currentProgress.BestTime = roundResult.EndTime;
+                hasChanged = true;
+            }
+
+            var resultStatus = roundResult.IsEliteTime ? LevelStatus.Completed : LevelStatus.Escaped;
+            if (resultStatus > currentProgress.LevelStatus)
+            {
+                currentProgress.LevelStatus = resultStatus;
+                hasChanged = true;
+            }
+
+            if (!hasChanged)
                 return;
 
-            LevelStates[roundResult.LevelId] = resultStatus;
+            LevelStates[roundResult.LevelId] = currentProgress;
             Save();
-            Debug.Log($"Progress saved, new status for {roundResult.LevelName} = {resultStatus}");
+            Debug.Log($"Progress saved, new status for {roundResult.LevelName}: {JsonConvert.SerializeObject(currentProgress)}");
         }
 
         public static void Save()
@@ -55,9 +76,9 @@ namespace Sludge.Utility
             if (json == null)
                 return;
 
-            LevelStates = JsonConvert.DeserializeObject<Dictionary<string, LevelStatus>>(json);
+            LevelStates = JsonConvert.DeserializeObject<Dictionary<string, LevelProgress>>(json);
             if (LevelStates == null)
-                LevelStates = new Dictionary<string, LevelStatus>();
+                LevelStates = new Dictionary<string, LevelProgress>();
 
             Debug.Log("Progress loaded: " + json);
         }

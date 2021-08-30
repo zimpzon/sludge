@@ -53,12 +53,12 @@ public class UiLevelsLayout : MonoBehaviour
             bool isUnlocked = Mathf.CeilToInt(UiLogic.Instance.LevelsCompletedCount * RequiredUnlockPct) >= i;
 
             var difficulty = levelItem.levelScript.LevelData.Difficulty;
-            var levelStatus = PlayerProgress.GetLevelStatus(levelItem.levelScript.LevelData.UniqueId);
+            var levelProgress = PlayerProgress.GetLevelProgress(levelItem.levelScript.LevelData.UniqueId);
             string levelText = isUnlocked ?
                 $"{LevelData.DifficultyIds[(int)difficulty]}\n{(i + 1):00}" :
                 "?";
 
-            levelItem.levelScript.Status = levelStatus;
+            levelItem.levelScript.Status = levelProgress.LevelStatus;
             levelItem.levelScript.TextLevelNumber.text = levelText;
             levelItem.levelScript.IsUnlocked = isUnlocked;
             levelItem.levelScript.LevelIndex = i;
@@ -66,12 +66,12 @@ public class UiLevelsLayout : MonoBehaviour
             SchemeColor backgroundColor;
             SchemeColor textColor;
 
-            if (levelStatus == PlayerProgress.LevelStatus.Completed)
+            if (levelProgress.LevelStatus == PlayerProgress.LevelStatus.Escaped)
             {
                 backgroundColor = SchemeColor.UiLevelCompleted;
                 textColor = SchemeColor.UiTextDefault;
             }
-            else if (levelStatus == PlayerProgress.LevelStatus.Elite)
+            else if (levelProgress.LevelStatus == PlayerProgress.LevelStatus.Completed)
             {
                 backgroundColor = SchemeColor.UiLevelMastered;
                 textColor = SchemeColor.UiTextDefault;
