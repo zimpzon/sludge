@@ -8,7 +8,7 @@ using Ease = Sludge.Easing.Ease;
 
 public class AnimatedAnt : MonoBehaviour
 {
-    public enum AntType { Static, Laser, PlainGun, Stalker };
+    public enum AntType { Static, Laser, PlainGun, Stalker, Sniffer };
 
     public AntType Type = AntType.Static;
     bool GnawingMandibles;
@@ -24,8 +24,11 @@ public class AnimatedAnt : MonoBehaviour
     public Transform pupilLeftTrans;
     public Transform pupilRightTrans;
 
+    Collider2D myCollider;
+
     private void Awake()
     {
+        myCollider = GetComponent<Collider2D>();
         StartCoroutine(Loop());
     }
 
@@ -43,14 +46,12 @@ public class AnimatedAnt : MonoBehaviour
                 pupilRightTrans.DOPunchPosition(new Vector3(0.02f, 0.01f, 0), 0.1f);
                 yield return new WaitForSeconds(0.2f);
             }
-
-            //if (AntennaShake != 0)
-            //    antennaLeftTrans.DOPunchRotation(new Vector3(0, 0, (float)AntennaShake), 1.0f);
-            //pupilLeftTrans.DOPunchPosition(new Vector3(0.1f, 0.1f, 0), 0.7f);
-            //pupilRightTrans.DOPunchPosition(new Vector3(0.1f, 0.1f, 0), 0.7f);
             yield return null;
         }
     }
+
+    public void EnableCollider(bool enable)
+        => myCollider.enabled = enable;
 
     public void ShotFired()
     {

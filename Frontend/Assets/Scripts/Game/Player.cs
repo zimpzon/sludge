@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public static Vector3 Position;
     public static double Angle;
     public static Quaternion Rotation;
+    public static int PositionSampleIdx;
 
     public TrailRenderer trail;
     public bool Alive = false;
@@ -60,7 +61,7 @@ public class Player : MonoBehaviour
     {
         trailTime = trail.time;
         softBody = GetComponentInChildren<LineRenderer>();
-        softBody.positionCount = 80; // Max number of line segments for body
+        softBody.positionCount = 50; // Max number of line segments for body
         ripples = GetComponentInChildren<QuadDistort>();
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
@@ -83,6 +84,7 @@ public class Player : MonoBehaviour
         currentThrowable = null;
         timeEnterSlimeCloud = -1;
         sampleIdxAtTimeOfTeleport = 0;
+        PositionSampleIdx = 0;
 
         overrideX.Clear();
         overrideY.Clear();
@@ -97,7 +99,7 @@ public class Player : MonoBehaviour
         eyesTransform.localScale = eyesBaseScale;
 
         UpdateTransform();
-        SetPositionSample(0);
+        SetPositionSample(init: true);
         UpdateSoftBody();
 
         trail.enabled = true;
@@ -130,7 +132,7 @@ public class Player : MonoBehaviour
 
         playerX = SludgeUtil.Stabilize(newPos.x);
         playerY = SludgeUtil.Stabilize(newPos.y);
-        sampleIdxAtTimeOfTeleport = GameManager.Instance.FrameCounter + 1;
+        sampleIdxAtTimeOfTeleport = PositionSampleIdx + 1;
         trail.Clear();
         trail.time = 0;
         resetTrailTime = 2;
@@ -350,7 +352,7 @@ public class Player : MonoBehaviour
         angle = SludgeUtil.Stabilize(angle);
 
         UpdateTransform();
-        SetPositionSample(GameManager.Instance.FrameCounter);
+        SetPositionSample();
 
         UpdateSoftBody();
 
@@ -363,10 +365,21 @@ public class Player : MonoBehaviour
         }
     }
 
-    void SetPositionSample(int idx)
+    void SetPositionSample(bool init = false)
     {
-        PlayerSamples[idx].Pos = trans.position;
-        PlayerSamples[idx].Angle = angle;
+        if (!init && PositionSampleIdx > 0)
+        {
+            var prevPos = PlayerSamples[PositionSampleIdx - 1].Pos;
+            var dist = (trans.position - prevPos).magnitude;
+            if (dist < 0.08f)
+                return;
+        }
+
+        if (!init)
+            PositionSampleIdx++;
+
+        PlayerSamples[PositionSampleIdx].Pos = trans.position;
+        PlayerSamples[PositionSampleIdx].Angle = angle;
     }
 
     void UpdateSoftBody()
@@ -376,7 +389,7 @@ public class Player : MonoBehaviour
         Vector3 prevPoint = Vector3.zero;
         Vector3 currentPoint = Vector3.zero;
 
-        int playerPosSampleIdx = GameManager.Instance.FrameCounter;
+        int playerPosSampleIdx = PositionSampleIdx;
         for (int softBodyIdx = 0; softBodyIdx < softBody.positionCount; ++softBodyIdx)
         {
             bool hasPlayerPosSamples = playerPosSampleIdx >= sampleIdxAtTimeOfTeleport; // 0 is always there, set in reset

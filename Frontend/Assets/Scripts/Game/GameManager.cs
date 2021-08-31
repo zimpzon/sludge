@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
             // Dead or just arrived on level
             bool levelCompleted = prevLevelProgress.LevelStatus == PlayerProgress.LevelStatus.Completed;
             TextLevelStatus.text += !levelCompleted ?
-                $"\nEscape within {SludgeUtil.ColorWrap($"{levelSettings.EliteCompletionTimeSeconds:0.000}", highlightColor)} to complete chamber!" :
+                $"\nEscape in {SludgeUtil.ColorWrap($"{levelSettings.EliteCompletionTimeSeconds:0.000}", highlightColor)} to complete chamber!" :
                 "- You have completed this chamber -";
 
         }

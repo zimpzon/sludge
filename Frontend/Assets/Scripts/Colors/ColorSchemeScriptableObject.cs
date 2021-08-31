@@ -22,6 +22,7 @@ namespace Sludge.Colors
         public Color LaserColor;
         public Color BulletFlash1;
         public Color BulletFlash2;
+        public Color Enemy1;
 
         public Color UiTimerBarFront;
         public Color UiTimerBarBack;
@@ -44,9 +45,9 @@ namespace Sludge.Colors
         }
     }
 
-    // NB: New members must be added at bottom since enum as serialized as strings. Adding in the middle will skew all values coming after.
     public enum SchemeColor
     {
+        // ---> NB: New members must be added at bottom since enum as serialized as strings. Adding in the middle will skew all values coming after
         Background,
         Walls,
         Edges,
@@ -59,7 +60,6 @@ namespace Sludge.Colors
         TimePill2,
         Conveyor1,
         Conveyor2,
-
         UiTimerBarFront,
         UiTimerBarBack,
         UiTextDefault,
@@ -76,6 +76,8 @@ namespace Sludge.Colors
         BulletFlash1,
         BulletFlash2,
         UiLevelUnlocked,
+        Enemy1,
+        // <--- NB: New members must be added at bottom since enum as serialized as strings. Adding in the middle will skew all values coming after.
     }
 
     public static class ColorScheme
@@ -115,6 +117,7 @@ namespace Sludge.Colors
                 SchemeColor.LaserColor => scheme.LaserColor,
                 SchemeColor.BulletFlash1 => scheme.BulletFlash1,
                 SchemeColor.BulletFlash2 => scheme.BulletFlash2,
+                SchemeColor.Enemy1 => scheme.Enemy1,
 
                 SchemeColor.UiTimerBarFront => scheme.UiTimerBarFront,
                 SchemeColor.UiTimerBarBack => scheme.UiTimerBarBack,
