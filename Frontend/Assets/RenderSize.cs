@@ -1,8 +1,10 @@
+using System.Linq;
 using UnityEngine;
 
 public class RenderSize : MonoBehaviour
 {
     public Camera[] Cameras;
+    bool resolutionChangeAttempted = false;
 
     // 16:9  = 1.77 / 0.5625
     // 16:10 = 1.60 / 0.6250
@@ -27,6 +29,22 @@ public class RenderSize : MonoBehaviour
         float chosenWidth = distanceTo16_9 < distanceTo16_10 ?
             Screen.height * Ratio16_9 : // Closest to 16:9
             Screen.height * Ratio16_10; // Closest to 16:10
+
+        // Lower resolution for 4K screens
+        if (chosenWidth > 3000 && !resolutionChangeAttempted)
+        {
+            resolutionChangeAttempted = true;
+
+            chosenWidth /= 2;
+            var lowerRes = Screen.resolutions.Where(res => res.width == chosenWidth).FirstOrDefault();
+            if (lowerRes.width != 0)
+            {
+                Debug.Log($"Lowering resolution since it is > 3000: {lowerRes}");
+                Screen.SetResolution(lowerRes.width, lowerRes.height, fullscreen: true);
+                // Resolution change only takes effect in next frame
+                return;
+            }
+        }
 
         foreach (var cam in Cameras)
         {

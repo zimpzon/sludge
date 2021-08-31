@@ -27,10 +27,14 @@ public class ModStalkerLogic : SludgeModifier
         ant = GetComponentInChildren<AnimatedAnt>();
         ant.GetComponent<CircleCollider2D>().enabled = false;
         scanFilter.SetLayerMask(SludgeUtil.WallsAndObjectsLayerMask);
-        basePosX = SludgeUtil.Stabilize(trans.position.x);
-        basePosY = SludgeUtil.Stabilize(trans.position.y);
         ant.animationOffset = Mathf.Clamp01((float)(basePosX * 0.117 + basePosY * 0.3311));
         ant.animationSpeedScale = 1;
+    }
+
+    public override void OnLoaded()
+    {
+        basePosX = SludgeUtil.Stabilize(trans.position.x);
+        basePosY = SludgeUtil.Stabilize(trans.position.y);
     }
 
     public override void Reset()

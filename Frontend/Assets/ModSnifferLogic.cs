@@ -8,7 +8,7 @@ public class ModSnifferLogic : SludgeModifier
     const double followDelayIncrease = 0.25;
     double myFollowDelay;
     double speed = 1.0;
-    public SpriteRenderer deadAntRenderer;
+    SpriteRenderer deadAntRenderer;
     double activationTime = -1;
     AnimatedAnt ant;
     Collider2D triggerCollider;
@@ -28,20 +28,27 @@ public class ModSnifferLogic : SludgeModifier
     private void Awake()
     {
         ant = GetComponentInChildren<AnimatedAnt>();
+        deadAntRenderer = transform.Find("DeadAnt").GetComponent<SpriteRenderer>();
         triggerCollider = GetComponent<Collider2D>();
         trans = transform;
+    }
+
+    public override void OnLoaded()
+    {
         baseX = SludgeUtil.Stabilize(trans.position.x);
         baseY = SludgeUtil.Stabilize(trans.position.y);
     }
 
     public override void Reset()
     {
-        FollowDelay = 2; // Global static
+        FollowDelay = 2; // Global static to separate ants (fixed delay will make them all move x seconds after player = exactly on top of each other)
         trans = transform;
         isFollowing = false;
         activationTime = -1;
         triggerCollider.enabled = true;
         ant.EnableCollider(false);
+        ant.animationOffset = Mathf.Clamp01((float)(baseX * 0.117 + baseY * 0.3311));
+        ant.animationSpeedScale = 2;
 
         var col = deadAntRenderer.color;
         col.a = 1;
@@ -118,7 +125,10 @@ public class ModSnifferLogic : SludgeModifier
             UpdateTransform();
 
             if (t >= 1)
+            {
+                ant.EnableCollider(true);
                 isFollowing = true;
+            }
 
             return;
         }

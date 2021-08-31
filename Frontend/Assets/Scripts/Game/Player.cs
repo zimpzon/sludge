@@ -406,7 +406,7 @@ public class Player : MonoBehaviour
                 {
                     double lookBackX = -SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * (angle + 180))));
                     double lookBackY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * (angle + 180))));
-                    const double DistanceBack = 0.1;
+                    const double DistanceBack = 0.05;
                     currentPoint.x += (float)(lookBackX * DistanceBack);
                     currentPoint.y += (float)(lookBackY * DistanceBack);
                 }

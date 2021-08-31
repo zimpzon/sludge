@@ -83,6 +83,12 @@ public class AnimatedAnt : MonoBehaviour
             animateAntennaRange = 35;
             animateAntennaSpeed = 1 * animationSpeedScale;
         }
+        else if (Type == AntType.Sniffer)
+        {
+            GnawingMandibles = true;
+            animateAntennaRange = 35;
+            animateAntennaSpeed = 1 * animationSpeedScale;
+        }
 
         if (animateAntennaRange != 0)
         {

@@ -11,7 +11,7 @@ public class Portal : SludgeObject
 
     Portal sibling;
 
-    private void Awake()
+    public override void Reset()
     {
         FindSibling();
     }

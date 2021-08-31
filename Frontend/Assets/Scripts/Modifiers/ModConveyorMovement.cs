@@ -5,10 +5,10 @@ namespace Sludge.Modifiers
 {
     public class ModConveyorMovement : SludgeModifier
     {
-        const float SuctionPower = 20;
-        const float ConveyorSpeed = 20;
+        const float SuctionPower = 10;
+        const float ConveyorSpeed = 10;
 
-        public int Length = 4;
+        public int Length = 1;
 
         SpriteRenderer spriteRenderer;
         Vector2 beltDirection;
