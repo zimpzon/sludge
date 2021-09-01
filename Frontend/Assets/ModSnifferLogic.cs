@@ -35,6 +35,7 @@ public class ModSnifferLogic : SludgeModifier
 
     public override void OnLoaded()
     {
+        trans = transform;
         baseX = SludgeUtil.Stabilize(trans.position.x);
         baseY = SludgeUtil.Stabilize(trans.position.y);
     }

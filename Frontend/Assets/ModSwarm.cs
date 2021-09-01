@@ -36,6 +36,7 @@ public class ModSwarm : SludgeModifier
 
     public override void OnLoaded()
     {
+        trans = transform;
         CreateMembers();
     }
 

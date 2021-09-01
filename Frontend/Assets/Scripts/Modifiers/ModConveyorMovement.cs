@@ -37,6 +37,7 @@ namespace Sludge.Modifiers
 
         public override void OnLoaded()
         {
+            spriteRenderer = GetComponent<SpriteRenderer>();
             SetSize();
         }
 

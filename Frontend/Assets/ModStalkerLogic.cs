@@ -33,6 +33,7 @@ public class ModStalkerLogic : SludgeModifier
 
     public override void OnLoaded()
     {
+        trans = transform;
         basePosX = SludgeUtil.Stabilize(trans.position.x);
         basePosY = SludgeUtil.Stabilize(trans.position.y);
     }
