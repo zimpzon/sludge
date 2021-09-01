@@ -12,7 +12,7 @@ public class QuickText : MonoBehaviour
 
     TextMeshProUGUI quickText;
     Vector2 basePos;
-    Transform trans;
+    RectTransform trans;
 
     private void Awake()
     {
@@ -21,8 +21,8 @@ public class QuickText : MonoBehaviour
         quickText = GetComponentInChildren<TextMeshProUGUI>();
         quickText.enabled = false;
 
-        trans = transform;
-        basePos = trans.position;
+        trans = transform.GetComponent<RectTransform>();
+        basePos = trans.anchoredPosition;
     }
 
     public void Hide()
@@ -51,12 +51,12 @@ public class QuickText : MonoBehaviour
         {
             float t = (endTime - Time.time) / ShowTime;
             var pos = basePos + Vector2.down * (t * MoveAmount);
-            trans.position = pos;
+            trans.anchoredPosition = pos;
             yield return null;
         }
 
         quickText.text = "(disabled)";
         quickText.enabled = false;
-        trans.position = basePos;
+        trans.anchoredPosition = basePos;
     }
 }

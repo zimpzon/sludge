@@ -1,10 +1,13 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class RenderSize : MonoBehaviour
 {
     public Camera[] Cameras;
     bool resolutionChangeAttempted = false;
+    UniversalRenderPipelineAsset urp;
 
     // 16:9  = 1.77 / 0.5625
     // 16:10 = 1.60 / 0.6250
@@ -12,6 +15,8 @@ public class RenderSize : MonoBehaviour
     {
         Cameras = FindObjectsOfType<Camera>();
         SetCameraViewports();
+        urp = (UniversalRenderPipelineAsset)GraphicsSettings.currentRenderPipeline;
+        timeAllowRenderScaleChange = Time.time + 3;
     }
 
     void SetCameraViewports()
@@ -31,7 +36,7 @@ public class RenderSize : MonoBehaviour
             Screen.height * Ratio16_10; // Closest to 16:10
 
         // Lower resolution for 4K screens
-        if (chosenWidth > 3000 && !resolutionChangeAttempted)
+        if (chosenWidth > 3000 && !resolutionChangeAttempted && Screen.fullScreen)
         {
             resolutionChangeAttempted = true;
 
@@ -61,8 +66,59 @@ public class RenderSize : MonoBehaviour
         }
     }
 
+    bool showStats;
+    float timeWithBadFps;
+    double exponentialAvg;
+    float timeAllowRenderScaleChange;
+
     private void Update()
     {
         SetCameraViewports();
+        AutoPerf();
+        StatsDisplay();
+    }
+
+    void AutoPerf()
+    {
+        // Will periodically check and lower renderscale if avg fps < 60
+        double fps = 1 / Time.unscaledDeltaTime;
+        if (exponentialAvg == 0)
+            exponentialAvg = fps;
+        else
+            exponentialAvg = (exponentialAvg * 0.99 + fps) * 0.5;
+
+        if (exponentialAvg < 60 && Time.time > timeAllowRenderScaleChange)
+        {
+            timeWithBadFps += Time.deltaTime;
+            if (timeWithBadFps > 5)
+            {
+                // Low fps - Lower render scale
+                urp.renderScale = urp.renderScale * 0.5f;
+                exponentialAvg = 0;
+                timeAllowRenderScaleChange = Time.time + 2;
+            }
+        }
+        else
+            timeWithBadFps = 0;
+    }
+
+    void StatsDisplay()
+    {
+        if (Input.GetKeyDown(KeyCode.I) && Input.GetKey(KeyCode.LeftControl))
+        {
+            showStats = !showStats;
+            if (!showStats)
+                DebugLinesScript.Instance.Clear();
+        }
+
+        if (showStats)
+        {
+            DebugLinesScript.Show("fps", (int)(1 / Time.unscaledDeltaTime));
+            DebugLinesScript.Show("avg", exponentialAvg);
+            DebugLinesScript.Show("screen.currentResolution", Screen.currentResolution);
+            DebugLinesScript.Show("screen.w/h", new Vector2(Screen.width, Screen.height));
+            DebugLinesScript.Show("viewport", Cameras[0].pixelRect);
+            DebugLinesScript.Show("renderScale", urp.renderScale);
+        }
     }
 }

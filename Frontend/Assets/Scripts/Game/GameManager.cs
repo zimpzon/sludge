@@ -351,10 +351,6 @@ public class GameManager : MonoBehaviour
         while (Player.Alive)
         {
             UnityTime += Time.deltaTime;
-            if (FrameCounter % 30 == 0)
-            {
-                DebugLinesScript.Show("fps", 1 / Time.unscaledDeltaTime);
-            }
 
             while (EngineTime <= UnityTime)
             {
@@ -376,8 +372,6 @@ public class GameManager : MonoBehaviour
 
             yield return null;
         }
-
-        DebugLinesScript.Instance.RemoveLine("fps");
 
         roundTime = SludgeUtil.Stabilize(roundTime);
         bool playerCompletedRound = !isReplay && !latestRoundResult.Cancelled;

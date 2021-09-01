@@ -15,10 +15,20 @@ public class DebugLinesScript : MonoBehaviour
     Dictionary<string, string> lines_ = new Dictionary<string, string>();
     TextMeshProUGUI text_;
 
+    public void Clear()
+    {
+        lines_.Clear();
+        text_.text = "";
+        text_.enabled = false;
+    }
+
     public void RemoveLine(string key)
     {
         if (lines_.ContainsKey(key))
             lines_.Remove(key);
+
+        if (lines_.Count == 0)
+            text_.text = "";
     }
 
     public void SetLine(string key, object value)
