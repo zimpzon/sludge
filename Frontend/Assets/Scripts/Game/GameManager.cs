@@ -103,7 +103,6 @@ public class GameManager : MonoBehaviour
     {
         CurrentColorScheme = scheme;
         ColorScheme.ApplyColors(scheme);
-        ColorScheme.ApplyUiColors(scheme);
     }
 
     // Level switching:
@@ -436,9 +435,6 @@ public class GameManager : MonoBehaviour
 
         MarkerParticles.transform.position = exit.transform.position;
         MarkerParticles.Emit(1);
-
-        CameraRoot.DORewind();
-        CameraRoot.DOShakePosition(0.1f, 0.5f);
 
         SludgeUtil.EnableEmission(exit.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), enabled: false, clearParticles: true);
         levelComplete = true;

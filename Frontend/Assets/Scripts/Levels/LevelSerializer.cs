@@ -19,6 +19,7 @@ public static class LevelSerializer
         data.TimeSeconds = levelSettings.StartTimeSeconds;
         data.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
         data.SortKey = levelSettings.SortKey;
+        data.ColorSchemeName = GameManager.Instance.CurrentColorScheme.name;
 
         if (string.IsNullOrWhiteSpace(levelSettings.UniqueId))
             levelSettings.UniqueId = Guid.NewGuid().ToString().Substring(0, 8);

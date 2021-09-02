@@ -8,6 +8,7 @@ namespace Sludge.Shared
         public static readonly char[] DifficultyIds = { '?', 'E', 'M', 'H', 'I' };
 
         public string UniqueId;
+        public string ColorSchemeName;
         public int SortKey = 999999;
         public string Name = "(no name)";
         public LevelDifficulty Difficulty;
