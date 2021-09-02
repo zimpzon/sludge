@@ -8,8 +8,8 @@ public class ModStalkerLogic : SludgeModifier
     //double[] xx = new double[60 * 60];
     //double[] yy = new double[60 * 60];
 
-    float speedNear = 3;
-    float speedFar = 2;
+    float speedNear = 4;
+    float speedFar = 3;
     Transform trans;
     Collider2D myCollider;
     AnimatedAnt ant;

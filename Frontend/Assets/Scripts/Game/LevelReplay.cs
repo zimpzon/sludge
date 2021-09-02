@@ -11,13 +11,16 @@ namespace Sludge.Replays
 		public int CountRecording = 0;
 		int lastInputState;
 		StringBuilder sb = new StringBuilder(5000);
+		string recordingUniqueId;
+		string committedUniqueId;
 
 		int replayIndex;
 
-		public void BeginRecording()
+		public void BeginRecording(string uniqueId)
 		{
 			CountRecording = 0;
 			lastInputState = -1;
+			recordingUniqueId = uniqueId;
 		}
 
 		public void BeginReplay()
@@ -25,8 +28,8 @@ namespace Sludge.Replays
 			replayIndex = -1;
         }
 
-		public bool HasReplay()
-			=> Count > 0;
+		public bool HasReplay(string uniqueId)
+			=> Count > 0 && committedUniqueId == uniqueId;
 
 		public bool ReplayIsDone()
 			=> replayIndex >= Count - 1;
@@ -35,6 +38,7 @@ namespace Sludge.Replays
         {
 			Array.Copy(ElementsRecording, Elements, CountRecording);
 			Count = CountRecording;
+			committedUniqueId = recordingUniqueId;
         }
 
 		public int GetReplayState(int frameCounter)

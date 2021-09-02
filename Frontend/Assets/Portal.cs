@@ -28,7 +28,7 @@ public class Portal : SludgeObject
                 break;
             }
         }
-        Debug.LogError($"No sibling found for portal {this.gameObject.name}");
+        Debug.LogWarning($"No sibling found for portal {this.gameObject.name} (probably due to not having another frame started after SetActive)");
     }
 
     public void ReceivePlayer()

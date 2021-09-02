@@ -62,8 +62,19 @@ namespace Sludge.PlayerInputs
             return result;
         }
 
+        private float noInputBefore;
+
+        public void PauseInput(float delay)
+        {
+            noInputBefore = Time.time + delay;
+            ClearState();
+        }
+
         public void GetHumanInput()
         {
+            if (Time.time < noInputBefore)
+                return;
+
             // Flags
             Up = UpActive() ? 1 : 0;
             Down = DownActive() ? 2 : 0;

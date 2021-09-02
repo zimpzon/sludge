@@ -1,4 +1,5 @@
 ﻿using Sludge.SludgeObjects;
+using Sludge.UI;
 using System;
 using UnityEngine;
 
@@ -50,11 +51,39 @@ namespace Sludge.Utility
             return line_start + Vector3.Project(point - line_start, line_end - line_start);
         }
 
+        public static bool LevelIsUnlocked(int levelIdx)
+        {
+            const float RequiredUnlockPct = 0.8f; // Pct of previous levels that must be completed.
+            bool isUnlocked = Mathf.CeilToInt(UiLogic.Instance.LevelsCompletedCount * RequiredUnlockPct) >= levelIdx;
+            return isUnlocked;
+        }
+
+        public static double CalcProgression(out int levelsCompletedCount, out int levelsEliteCount, out int levelCount)
+        {
+            levelsCompletedCount = 0;
+            levelsEliteCount = 0;
+
+            for (int i = 0; i < LevelList.Levels.Count; ++i)
+            {
+                var level = LevelList.Levels[i];
+                var levelProgress = PlayerProgress.GetLevelProgress(level.UniqueId);
+
+                levelsCompletedCount += levelProgress.LevelStatus >= PlayerProgress.LevelStatus.Escaped ? 1 : 0;
+                levelsEliteCount += levelProgress.LevelStatus >= PlayerProgress.LevelStatus.Completed ? 1 : 0;
+            }
+
+            levelCount = LevelList.Levels.Count;
+            double pctPerLevel = (1.0 / levelCount * 100);
+            double progression = (levelsCompletedCount * pctPerLevel * 0.5) + (levelsEliteCount * pctPerLevel * 0.5);
+            return progression;
+        }
+
         public static void SetActiveRecursive(GameObject go, bool active)
         {
             go.SetActive(active);
-            for (int i = 0; i < go.transform.childCount; ++i)
-                go.transform.GetChild(i).gameObject.SetActive(active);
+            // Obsolete: should already be recursive
+            //for (int i = 0; i < go.transform.childCount; ++i)
+            //    go.transform.GetChild(i).gameObject.SetActive(active);
         }
 
         public static EntityType GetEntityType(GameObject go)

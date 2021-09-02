@@ -42,23 +42,9 @@ namespace Sludge.UI
 			LevelLayout.CreateLevelsSelection(LevelList.Levels);
 		}
 
-		void CalcProgression()
+		public void CalcProgression()
         {
-			LevelsCompletedCount = 0;
-			LevelsEliteCount = 0;
-
-			for (int i = 0; i < LevelList.Levels.Count; ++i)
-			{
-				var level = LevelList.Levels[i];
-				var levelProgress = PlayerProgress.GetLevelProgress(level.UniqueId);
-
-				LevelsCompletedCount += levelProgress.LevelStatus >= PlayerProgress.LevelStatus.Escaped ? 1 : 0;
-				LevelsEliteCount += levelProgress.LevelStatus >= PlayerProgress.LevelStatus.Completed ? 1 : 0;
-			}
-
-			LevelCount = LevelList.Levels.Count;
-			double pctPerLevel = (1.0 / LevelCount * 100);
-			GameProgressPct = (LevelsCompletedCount * pctPerLevel * 0.5) + (LevelsEliteCount * pctPerLevel * 0.5);
+			GameProgressPct = SludgeUtil.CalcProgression(out LevelsCompletedCount, out LevelsEliteCount, out LevelCount);
 			TextProgression.text = $"Progression: {GameProgressPct:0}%";
 		}
 
@@ -138,7 +124,7 @@ namespace Sludge.UI
 
 		IEnumerator PlayLoop(UiLevel uiLevel)
 		{
-			GameManager.Instance.LoadLevel(uiLevel?.LevelData);
+			GameManager.Instance.LoadLevel(uiLevel);
 			UiPanels.Instance.HideBackground();
 
 			UiPanels.Instance.ShowPanel(UiPanel.Game);
@@ -209,14 +195,20 @@ namespace Sludge.UI
 
 			yield return UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
 
-			int charsShown = 0;
-			int charRevealMod = 12;
+			double charsShown = 0;
+			double charRevealSpeed = 150;
 			var uilevelSelection = UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>();
 
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
-				UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
 				var uiLevel = go.GetComponent<UiLevel>();
+				if (!uiLevel.IsUnlocked)
+                {
+					// TODO: Nope-sound
+					return;
+                }
+
+				UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
 				StopAllCoroutines();
 				StartCoroutine(PlayLoop(uiLevel));
 			};
@@ -278,13 +270,13 @@ namespace Sludge.UI
 				CheckChangeColorScheme(GameManager.PlayerInput);
 				DoUiNavigation(GameManager.PlayerInput);
 
-				uilevelSelection.TextLevelName.maxVisibleCharacters = charsShown >> 1;
-				uilevelSelection.TextLevelInfo.maxVisibleCharacters = charsShown;
-				uilevelSelection.TextLevelTimings.maxVisibleCharacters = charsShown;
-				uilevelSelection.TextLevelOtherInfo.maxVisibleCharacters = charsShown;
+				int intCharsShown = (int)charsShown;
+				uilevelSelection.TextLevelName.maxVisibleCharacters = intCharsShown >> 1;
+				uilevelSelection.TextLevelInfo.maxVisibleCharacters = intCharsShown;
+				uilevelSelection.TextLevelTimings.maxVisibleCharacters = intCharsShown;
+				uilevelSelection.TextLevelOtherInfo.maxVisibleCharacters = intCharsShown;
 
-				if (GameManager.Instance.FrameCounter % charRevealMod++ == 0)
-					charsShown++;
+				charsShown += charRevealSpeed * Time.deltaTime;
 
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {

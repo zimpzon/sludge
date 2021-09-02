@@ -18,7 +18,7 @@ namespace Sludge.Utility
         public enum LevelStatus { NotCompleted = 0, Escaped = 1, Completed = 2 };
         static Dictionary<string, LevelProgress> LevelStates = new Dictionary<string, LevelProgress>();
 
-        private const string PrefsName = "player_progress";
+        private const string PrefsName = "player_progress_alpha1";
 
         public static LevelProgress GetLevelProgress(string levelUniqueId)
         {

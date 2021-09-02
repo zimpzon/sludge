@@ -66,6 +66,9 @@ public class GameManager : MonoBehaviour
     public int FrameCounter;
     public int Keys;
     LevelData currentLevelData = new LevelData { TimeSeconds = 30, EliteCompletionTimeSeconds = 20, };
+    PlayerProgress.LevelProgress currentLevelProgress = new PlayerProgress.LevelProgress();
+    UiLevel currentUiLevel;
+    bool levelJustMastered;
     double roundTime;
     LevelElements levelElements;
     LevelSettings levelSettings;
@@ -103,13 +106,19 @@ public class GameManager : MonoBehaviour
         ColorScheme.ApplyUiColors(scheme);
     }
 
+    // Level switching:
+    // LoadLevel() is the only way in
+    // StartLevel() resets and starts what was loaded.
+
     public void StartLevel()
     {
         StartCoroutine(BetweenRoundsLoop());
     }
 
-    public void LoadLevel(LevelData levelData)
+    public void LoadLevel(UiLevel uiLevel)
     {
+        var levelData = uiLevel.LevelData;
+
         // Total hack: The player dies if the new level has a collider at his OLD start position. The same thing could happen to other objects sensitive to collision!
         Tilemap.gameObject.SetActive(false);
 
@@ -118,6 +127,7 @@ public class GameManager : MonoBehaviour
             Debug.Log($"Loading level: {levelData.Name}");
             LevelDeserializer.Run(levelData, levelElements, levelSettings);
             currentLevelData = levelData;
+            currentUiLevel = uiLevel;
         }
         else
         {
@@ -249,11 +259,16 @@ public class GameManager : MonoBehaviour
         {
             GC.Collect();
 
-            SetMenuButtonActive(ButtonStartRound, true);
-            SetMenuButtonActive(ButtonWatchReplay, LevelReplay.HasReplay());
-            SetMenuButtonActive(ButtonGoToNextLevel, false);
+            currentLevelProgress = PlayerProgress.GetLevelProgress(currentLevelData.UniqueId);
+            bool canGoToNextLevel = currentLevelProgress.LevelStatus >= PlayerProgress.LevelStatus.Escaped && currentUiLevel.Next != null;
 
-            UiLogic.Instance.SetSelectionMarker(latestSelection);
+            SetMenuButtonActive(ButtonStartRound, true);
+            SetMenuButtonActive(ButtonWatchReplay, LevelReplay.HasReplay(currentLevelData.UniqueId));
+            SetMenuButtonActive(ButtonGoToNextLevel, canGoToNextLevel);
+
+            // Select 'next level' if player got access just now. Else keep last selection.
+            var selectedButton = levelJustMastered && canGoToNextLevel ? ButtonGoToNextLevel : latestSelection;
+            UiLogic.Instance.SetSelectionMarker(selectedButton);
 
             bool startReplay = false;
             bool startRound = false;
@@ -261,17 +276,27 @@ public class GameManager : MonoBehaviour
             UiNavigation.OnNavigationChanged = (go) => latestSelection = go;
             UiNavigation.OnNavigationSelected = (go) =>
             {
-                if (go == ButtonStartRound) {
+                if (go == ButtonStartRound)
+                {
                     startRound = true;
-                } else if (go == ButtonWatchReplay && go.GetComponent<UiNavigation>().Enabled) {
+                }
+                else if (go == ButtonWatchReplay && go.GetComponent<UiNavigation>().Enabled)
+                {
                     startReplay = true;
                 }
+                else if (go == ButtonGoToNextLevel && go.GetComponent<UiNavigation>().Enabled)
+                {
+                    // TODO: Some transition to next level?
+                    LoadLevel(currentUiLevel.Next);
+                    StartLevel();
+                };
             };
 
             ResetLevel();
 
             UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
-            PlayerInput.ClearState();
+
+            PlayerInput.PauseInput(0.3f);
 
             while (startReplay == false && startRound == false)
             {
@@ -319,10 +344,10 @@ public class GameManager : MonoBehaviour
         BulletManager.Instance.Reset();
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
-        {
             SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);
+
+        for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeObjects[i].Reset();
-        }
 
         Player.Prepare();
 
@@ -345,7 +370,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            LevelReplay.BeginRecording();
+            LevelReplay.BeginRecording(currentLevelData.UniqueId);
         }
 
         while (Player.Alive)
@@ -389,6 +414,8 @@ public class GameManager : MonoBehaviour
         latestRoundResult.IsEliteTime = levelComplete && EngineTime <= levelSettings.EliteCompletionTimeSeconds;
         latestRoundResult.ReplayData = latestRoundResult.Cancelled ? null : LevelReplay.LatestCommittedToReplayString();
 
+        levelJustMastered = currentLevelProgress.LevelStatus < PlayerProgress.LevelStatus.Escaped && latestRoundResult.Completed;
+
         if (latestRoundResult.OutOfTime)
             QuickText.Instance.ShowText("time ran out");
 
@@ -396,6 +423,8 @@ public class GameManager : MonoBehaviour
 
         SetScoreText(latestRoundResult);
         PlayerProgress.UpdateLevelStatus(latestRoundResult);
+
+        UiLogic.Instance.CalcProgression();
 
         yield return new WaitForSeconds(1.0f);
     }

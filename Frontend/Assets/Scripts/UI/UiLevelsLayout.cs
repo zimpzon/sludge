@@ -46,11 +46,10 @@ public class UiLevelsLayout : MonoBehaviour
 
     public void UpdateVisualHints()
     {
-        const float RequiredUnlockPct = 0.8f; // Pct of previous levels that must be completed.
         for (int i = 0; i < LevelItems.Count; ++i)
         {
             var levelItem = LevelItems[i];
-            bool isUnlocked = Mathf.CeilToInt(UiLogic.Instance.LevelsCompletedCount * RequiredUnlockPct) >= i;
+            bool isUnlocked = SludgeUtil.LevelIsUnlocked(i);
 
             var difficulty = levelItem.levelScript.LevelData.Difficulty;
             var levelProgress = PlayerProgress.GetLevelProgress(levelItem.levelScript.LevelData.UniqueId);
@@ -62,6 +61,8 @@ public class UiLevelsLayout : MonoBehaviour
             levelItem.levelScript.TextLevelNumber.text = levelText;
             levelItem.levelScript.IsUnlocked = isUnlocked;
             levelItem.levelScript.LevelIndex = i;
+            if (i < LevelItems.Count - 1)
+                levelItem.levelScript.Next = LevelItems[i + 1].levelScript;
 
             SchemeColor backgroundColor;
             SchemeColor textColor;
