@@ -5,6 +5,8 @@ using UnityEngine.Rendering.Universal;
 
 public class RenderSize : MonoBehaviour
 {
+    public static bool AllowDownsizingRenderScale = false;
+
     public Camera[] Cameras;
     bool resolutionChangeAttempted = false;
     UniversalRenderPipelineAsset urp;
@@ -80,6 +82,9 @@ public class RenderSize : MonoBehaviour
 
     void AutoPerf()
     {
+        if (!AllowDownsizingRenderScale)
+            return;
+
         // Will periodically check and lower renderscale if avg fps < 60
         const float RequiredFps = 58; // NB: When vsync is on FPS hovers just below 60 (~59.9) so requiring 60fps will lower renderscale!
 

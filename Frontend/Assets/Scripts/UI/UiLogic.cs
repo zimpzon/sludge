@@ -115,6 +115,9 @@ namespace Sludge.UI
 					ExitClick();
 			};
 
+			// Allow dynamic renderscale now that we are up and running
+			RenderSize.AllowDownsizingRenderScale = true;
+
 			while (true)
 			{
 				GameManager.PlayerInput.GetHumanInput();

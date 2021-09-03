@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevel(UiLevel uiLevel)
     {
-        var levelData = uiLevel.LevelData;
+        var levelData = uiLevel?.LevelData;
 
         // Total hack: The player dies if the new level has a collider at his OLD start position. The same thing could happen to other objects sensitive to collision!
         Tilemap.gameObject.SetActive(false);

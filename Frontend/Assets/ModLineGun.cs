@@ -50,6 +50,8 @@ public class ModLineGun : SludgeModifier
             childTrans.DORewind();
             childTrans.DOPunchScale(Vector3.one * 0.25f, 0.2f);
             ant.ShotFired();
+
+            SoundManager.Play(FxList.Instance.EnemyShoot);
         }
     }
 }

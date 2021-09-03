@@ -26,7 +26,9 @@ public class UiNavigation : MonoBehaviour
 		}
 
 		if (playerInput.IsTapped(PlayerInput.InputType.Select) && OnNavigationSelected != null)
+		{
 			OnNavigationSelected(selectionMarker.target);
+		}
 
 		if (playerInput.IsTapped(PlayerInput.InputType.Down))
 			TryMove(selectionMarker, navComponent.Down);
@@ -45,7 +47,9 @@ public class UiNavigation : MonoBehaviour
 			selectionMarker.SetTarget(moveTarget);
 
 			if (OnNavigationChanged != null)
+			{
 				OnNavigationChanged(moveTarget);
+			}
 		}
 	}
 }
