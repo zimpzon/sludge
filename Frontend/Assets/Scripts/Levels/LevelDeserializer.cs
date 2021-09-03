@@ -15,12 +15,7 @@ public static class LevelDeserializer
         levelSettings.EliteCompletionTimeSeconds = data.EliteCompletionTimeSeconds;
         levelSettings.UniqueId = data.UniqueId;
         levelSettings.SortKey = data.SortKey;
-
-        var levelColorScheme = GameManager.Instance.ColorSchemeList.ColorSchemes.Where(s => s.name == data.ColorSchemeName).FirstOrDefault();
-        if (levelColorScheme != null)
-            GameManager.Instance.SetColorScheme(levelColorScheme);
-        else
-            Debug.LogError($"Color scheme {data.ColorSchemeName} not found");
+        levelSettings.ColorSchemeName = data.ColorSchemeName;
 
         // Clear existing bullets
         if (BulletManager.Instance != null)

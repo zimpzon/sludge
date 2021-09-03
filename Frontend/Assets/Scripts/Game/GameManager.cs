@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
     {
         CurrentColorScheme = scheme;
         ColorScheme.ApplyColors(scheme);
+        ColorScheme.ApplyUiColors(scheme);
     }
 
     // Level switching:
@@ -143,6 +144,27 @@ public class GameManager : MonoBehaviour
                 foreach (var modifier in obj.Modifiers)
                     modifier.OnLoaded();
             }
+        }
+
+        if (!string.IsNullOrWhiteSpace(levelSettings.ColorSchemeName))
+        {
+            var colorScheme = ColorSchemeList.ColorSchemes.Where(s => s.name == levelSettings.ColorSchemeName).FirstOrDefault();
+            if (colorScheme != null)
+            {
+                SetColorScheme(colorScheme);
+                levelSettings.ColorScheme = colorScheme;
+            }
+            else
+            {
+                Debug.LogError($"Colorscheme saved in level not found: {levelSettings.ColorSchemeName}");
+            }
+        }
+        else
+        {
+            // No color scheme selected, use default
+            var defaultColorScheme = ColorSchemeList.ColorSchemes.Where(s => s?.name == "Default").FirstOrDefault();
+            if (defaultColorScheme != null)
+                SetColorScheme(defaultColorScheme);
         }
 
         TextLevelName.text = currentLevelData.Name;

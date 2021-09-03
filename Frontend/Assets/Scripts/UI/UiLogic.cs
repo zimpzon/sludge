@@ -40,6 +40,8 @@ namespace Sludge.UI
 
 			CalcProgression();
 			LevelLayout.CreateLevelsSelection(LevelList.Levels);
+
+			ColorScheme.ApplyUiColors(GameManager.Instance.CurrentUiColorScheme);
 		}
 
 		public void CalcProgression()
@@ -145,6 +147,7 @@ namespace Sludge.UI
 			StopAllCoroutines();
 			CalcProgression();
 			LevelLayout.UpdateVisualHints();
+			ColorScheme.ApplyUiColors(GameManager.Instance.CurrentUiColorScheme);
 
 			UiPanels.Instance.HidePanel(UiPanel.Game);
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);

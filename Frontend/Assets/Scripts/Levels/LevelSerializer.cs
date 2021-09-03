@@ -19,7 +19,18 @@ public static class LevelSerializer
         data.TimeSeconds = levelSettings.StartTimeSeconds;
         data.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
         data.SortKey = levelSettings.SortKey;
-        data.ColorSchemeName = GameManager.Instance.CurrentColorScheme.name;
+
+        if (levelSettings.ColorScheme != null)
+        {
+            // Just save name of colorscheme.
+            data.ColorSchemeName = levelSettings.ColorScheme.name;
+        }
+        else
+        {
+            // No colorscheme object set in LevelSettings. Maybe level was loaded in editor and saved again - without running it (scheme is located and set in GameManager LoadLevel()).
+            // Just save the name that was loaded.
+            data.ColorSchemeName = levelSettings.ColorSchemeName;
+        }
 
         if (string.IsNullOrWhiteSpace(levelSettings.UniqueId))
             levelSettings.UniqueId = Guid.NewGuid().ToString().Substring(0, 8);
