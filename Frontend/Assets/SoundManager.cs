@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
-
-    AudioSource audioSource;
 
     public static void Play(SoundItem item)
     {
@@ -22,12 +18,14 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        Instance.audioSource.PlayOneShot(item.clips[0]);
+        var clip = item.clips[Random.Range(0, item.clips.Length)];
+        float pitch = item.pitch + (Random.value * item.pitchVariation * 2) - item.pitchVariation * 0.5f;
+        item.audioSource.clip = clip;
+        item.audioSource.Play();
     }
 
     private void Awake()
     {
         Instance = this;
-        audioSource = GetComponent<AudioSource>();
     }
 }

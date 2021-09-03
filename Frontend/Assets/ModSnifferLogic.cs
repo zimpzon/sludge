@@ -75,6 +75,7 @@ public class ModSnifferLogic : SludgeModifier
 
         if (activationTime < 0)
         {
+            SoundManager.Play(FxList.Instance.SnifferActivate);
             activationTime = GameManager.Instance.EngineTime;
             triggerCollider.enabled = false;
             frameAtTriggerTime = Player.PositionSampleIdx;

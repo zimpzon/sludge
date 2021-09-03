@@ -11,8 +11,8 @@ public class SoundItem
     [Range(0.1f, 3f)]
     public float pitch = 1;
     public float pitchVariation;
-    public int maxInstances = 2;
-    public float cooldown = 0.1f;
     public bool loop = false;
     public string comment;
+
+    [NonSerialized] public AudioSource audioSource;
 }
