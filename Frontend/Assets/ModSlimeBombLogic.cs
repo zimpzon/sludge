@@ -120,6 +120,18 @@ public class ModSlimeBombLogic : SludgeModifier
             int second = Mathf.CeilToInt((float)timeLeft);
             if (second != currentSecond)
             {
+                var audioClip = second switch
+                {
+                    5 => FxList.Instance.Countdown5,
+                    4 => FxList.Instance.Countdown4,
+                    3 => FxList.Instance.Countdown3,
+                    2 => FxList.Instance.Countdown2,
+                    1 => FxList.Instance.Countdown1,
+                    _ => null,
+                };
+                if (audioClip != null)
+                    SoundManager.Play(audioClip);
+
                 countdownText.text = second.ToString();
                 countdownText.transform.DORewind();
                 countdownText.transform.localScale = Vector3.one * 3.0f;
@@ -133,6 +145,7 @@ public class ModSlimeBombLogic : SludgeModifier
             if (timeLeft <= 0)
             {
                 // Explode now
+                SoundManager.Play(FxList.Instance.SlimeBombExplode);
                 countingDown = false;
                 expanding = true;
                 countdownText.enabled = false;

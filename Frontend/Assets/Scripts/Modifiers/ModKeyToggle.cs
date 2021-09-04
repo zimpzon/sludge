@@ -57,6 +57,7 @@ public class ModKeyToggle : SludgeModifier
         const float AnimTime = 0.5f;
         double startTime = GameManager.Instance.EngineTime;
         doorCollider.enabled = false;
+        SoundManager.Play(FxList.Instance.FakeWallDisappear);
 
         while (true)
         {
@@ -78,6 +79,7 @@ public class ModKeyToggle : SludgeModifier
         double startTime = GameManager.Instance.EngineTime;
         spriteRenderer.enabled = true;
         doorCollider.enabled = true;
+        SoundManager.Play(FxList.Instance.FakeWallShowUp);
 
         while (true)
         {

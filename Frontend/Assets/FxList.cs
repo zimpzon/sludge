@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class FxList : MonoBehaviour
@@ -14,12 +15,13 @@ public class FxList : MonoBehaviour
     public SoundItem SlimeBombExplode;
     public SoundItem EnemyShoot;
     public SoundItem EnemyDie;
+    public SoundItem SnifferActivate;
     public SoundItem KeyPickup;
     public SoundItem PortalEnter;
     public SoundItem TimePillPickup;
     public SoundItem FakeWallDisappear;
     public SoundItem FakeWallShowUp;
-    public SoundItem ThrownBombThrown;
+    public SoundItem ThrownBombPickedUp;
     public SoundItem ThrownBombExplode;
     public SoundItem LaserHumming;
     public SoundItem Countdown5;
@@ -31,5 +33,12 @@ public class FxList : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        var sounds = typeof(FxList).GetFields().Where(p => p.FieldType == typeof(SoundItem)).ToList();
+        foreach (var soundField in sounds)
+        {
+            var stuff = (SoundItem)soundField.GetValue(this);
+            stuff.audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 }

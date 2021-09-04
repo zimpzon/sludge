@@ -202,6 +202,7 @@ public class Player : MonoBehaviour
 
     public void Kill()
     {
+        SoundManager.Play(FxList.Instance.PlayerDie);
         ripples.DoRipples();
         GameManager.Instance.DeathParticles.transform.position = trans.position;
         GameManager.Instance.DeathParticles.Emit(50);

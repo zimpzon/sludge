@@ -74,6 +74,7 @@ public class ModThrowable : SludgeModifier
         if (!wasThrown) // Exploding while held by player
             GameManager.Instance.Player.ThrowablePickedUp(null);
 
+        SoundManager.Play(FxList.Instance.ThrownBombExplode);
         GameManager.Instance.DeathParticles.transform.position = trans.position;
         GameManager.Instance.DeathParticles.Emit(20);
         GameManager.Instance.CameraRoot.DOShakePosition(0.1f, 0.2f);
@@ -136,6 +137,7 @@ public class ModThrowable : SludgeModifier
         {
             if (playerDir.sqrMagnitude <= SqrActivationPlayerDistance)
             {
+                SoundManager.Play(FxList.Instance.ThrownBombPickedUp);
                 ownedByPlayer = true;
                 GameManager.Instance.Player.ThrowablePickedUp(this);
             }

@@ -94,6 +94,7 @@ public class GameManager : MonoBehaviour
 
     public void KillEnemy(GameObject goEnemy)
     {
+        SoundManager.Play(FxList.Instance.EnemyDie);
         DustParticles.transform.position = goEnemy.transform.position;
         DustParticles.Emit(4);
         SludgeUtil.SetActiveRecursive(goEnemy, false);
@@ -464,11 +465,13 @@ public class GameManager : MonoBehaviour
 
     public void KeyPickup(Key key)
     {
+        SoundManager.Play(FxList.Instance.KeyPickup);
         Keys++;
     }
 
     public void TimePillPickup(TimePill key)
     {
+        SoundManager.Play(FxList.Instance.TimePillPickup);
         roundTime += TimePillBonusTime;
         if (roundTime < 0)
             roundTime = 0;

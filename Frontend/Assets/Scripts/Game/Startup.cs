@@ -18,6 +18,7 @@ namespace Sludge.Utility
             DOTween.Init();
             Physics2D.simulationMode = SimulationMode2D.Script;
             GameManager.ClientId = PlayerPrefs.GetString("ClientId", Guid.NewGuid().ToString());
+            QualitySettings.vSyncCount = 1;
 
             AnalyticsEvent.Custom("client_start",
                 new Dictionary<string, object> {
