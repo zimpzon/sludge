@@ -12,7 +12,9 @@ public class SoundItem
     public float pitch = 1;
     public float pitchVariation;
     public bool loop = false;
+    public float cooldown;
     public string comment;
 
     [NonSerialized] public AudioSource audioSource;
+    [NonSerialized] public float timeLastPlayed;
 }

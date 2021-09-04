@@ -18,10 +18,15 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
+        bool isOnCooldown = Time.time < item.timeLastPlayed + item.cooldown;
+        if (isOnCooldown)
+            return;
+
         var clip = item.clips[Random.Range(0, item.clips.Length)];
         float pitch = item.pitch + (Random.value * item.pitchVariation * 2) - item.pitchVariation * 0.5f;
         item.audioSource.clip = clip;
         item.audioSource.Play();
+        item.timeLastPlayed = Time.time;
     }
 
     private void Awake()
