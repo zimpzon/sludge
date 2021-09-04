@@ -13,6 +13,7 @@ public class ModLineGun : SludgeModifier
     Transform trans;
     double countdown;
     double firstBulletCountdown;
+    Tween childTransTween;
 
     private void Awake()
     {
@@ -47,8 +48,11 @@ public class ModLineGun : SludgeModifier
             bullet.Y = SludgeUtil.Stabilize(trans.position.y + look.y * 0.5);
 
             var childTrans = trans.GetChild(0);
-            childTrans.DORewind();
-            childTrans.DOPunchScale(Vector3.one * 0.25f, 0.2f);
+            if (childTransTween == null)
+                childTransTween = childTrans.DOPunchScale(Vector3.one * 0.25f, 0.2f);
+            else
+                childTransTween.Restart();
+
             ant.ShotFired();
 
             SoundManager.Play(FxList.Instance.EnemyShoot);

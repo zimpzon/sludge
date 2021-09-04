@@ -13,6 +13,7 @@ public class QuickText : MonoBehaviour
     TextMeshProUGUI quickText;
     Vector2 basePos;
     RectTransform trans;
+    Tweener shakeTween;
 
     private void Awake()
     {
@@ -28,7 +29,9 @@ public class QuickText : MonoBehaviour
     public void Hide()
     {
         quickText.text = "";
-        quickText.transform.DORewind();
+        if (shakeTween != null)
+            shakeTween.Rewind();
+
         quickText.enabled = false;
     }
 
@@ -42,8 +45,10 @@ public class QuickText : MonoBehaviour
     {
         quickText.text = text;
         quickText.enabled = true;
-        quickText.transform.DORewind();
-        quickText.transform.DOShakeScale(0.2f);
+        if (shakeTween == null)
+            shakeTween = quickText.transform.DOShakeScale(0.2f);
+        else
+            shakeTween.Restart();
 
         float endTime = Time.time + ShowTime;
 

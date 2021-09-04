@@ -53,8 +53,9 @@ public class RenderSize : MonoBehaviour
             }
         }
 
-        foreach (var cam in Cameras)
+        for (int i = 0; i < Cameras.Length; ++i)
         {
+            var cam = Cameras[i];
             bool isAlreadyChosenWidth = Mathf.Abs(cam.pixelRect.width - chosenWidth) < 1f;
             if (!isAlreadyChosenWidth)
             {

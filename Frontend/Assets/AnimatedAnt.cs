@@ -3,6 +3,7 @@ using Sludge.Easing;
 using Sludge.Utility;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Ease = Sludge.Easing.Ease;
 
@@ -24,6 +25,7 @@ public class AnimatedAnt : MonoBehaviour
     public Transform pupilLeftTrans;
     public Transform pupilRightTrans;
 
+    List<Tweener> tweeners = new List<Tweener>();
     Collider2D myCollider;
 
     private void Awake()
@@ -38,12 +40,18 @@ public class AnimatedAnt : MonoBehaviour
         {
             if (Type == AntType.Laser)
             {
-                headTrans.DORewind();
-                headTrans.DOPunchPosition(new Vector3(0.03f, 0.03f, 0), 0.2f);
-                pupilLeftTrans.DORewind();
-                pupilLeftTrans.DOPunchPosition(new Vector3(0.02f, 0.01f, 0), 0.1f);
-                pupilRightTrans.DORewind();
-                pupilRightTrans.DOPunchPosition(new Vector3(0.02f, 0.01f, 0), 0.1f);
+                if (tweeners.Count == 0)
+                {
+                    tweeners.Add(headTrans.DOPunchPosition(new Vector3(0.03f, 0.03f, 0), 0.2f));
+                    tweeners.Add(pupilLeftTrans.DOPunchPosition(new Vector3(0.02f, 0.01f, 0), 0.1f));
+                    tweeners.Add(pupilRightTrans.DOPunchPosition(new Vector3(0.02f, 0.01f, 0), 0.1f));
+                }
+                else
+                {
+                    for (int i = 0; i < tweeners.Count; ++i)
+                        tweeners[i].Restart();
+                }
+
                 yield return new WaitForSeconds(0.2f);
             }
             yield return null;
@@ -55,15 +63,18 @@ public class AnimatedAnt : MonoBehaviour
 
     public void ShotFired()
     {
-        mandibleLeftTrans.DORewind();
-        mandibleLeftTrans.DOPunchRotation(new Vector3(0, 0, -45), 0.5f);
-        antennaLeftTrans.DORewind();
-        antennaLeftTrans.DOPunchRotation(new Vector3(0, 0, 30), 0.6f);
-
-        pupilLeftTrans.DORewind();
-        pupilLeftTrans.DOPunchPosition(new Vector3(0.05f, 0.02f, 0), 0.1f);
-        pupilRightTrans.DORewind();
-        pupilRightTrans.DOPunchPosition(new Vector3(0.05f, 0.02f, 0), 0.1f);
+        if (tweeners.Count == 0)
+        {
+            tweeners.Add(mandibleLeftTrans.DOPunchRotation(new Vector3(0, 0, -45), 0.5f));
+            tweeners.Add(antennaLeftTrans.DOPunchRotation(new Vector3(0, 0, 30), 0.6f));
+            tweeners.Add(pupilLeftTrans.DOPunchPosition(new Vector3(0.05f, 0.02f, 0), 0.1f));
+            tweeners.Add(pupilRightTrans.DOPunchPosition(new Vector3(0.05f, 0.02f, 0), 0.1f));
+        }
+        else
+        {
+            for (int i = 0; i < tweeners.Count; ++i)
+                tweeners[i].Restart();
+        }
     }
 
     private void Update()

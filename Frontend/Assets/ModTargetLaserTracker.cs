@@ -20,6 +20,7 @@ public class ModTargetLaserTracker : SludgeModifier
     Transform trans;
     double timeInSight;
     double bulletCountdown;
+    Tweener bodyTween;
 
     private void Awake()
     {
@@ -81,8 +82,10 @@ public class ModTargetLaserTracker : SludgeModifier
                 bullet.X = SludgeUtil.Stabilize(trans.position.x + playerDir.x * 0.5);
                 bullet.Y = SludgeUtil.Stabilize(trans.position.y + playerDir.y * 0.5);
 
-                Body.DORewind();
-                Body.DOPunchScale(Vector3.one * 0.25f, 0.2f);
+                if (bodyTween == null)
+                    bodyTween = Body.DOPunchScale(Vector3.one * 0.25f, 0.2f);
+                else
+                    bodyTween.Restart();
             }
         }
 
