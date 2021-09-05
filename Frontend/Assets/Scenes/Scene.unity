@@ -35189,6 +35189,16 @@ MonoBehaviour:
     loop: 0
     cooldown: 0
     comment: 
+  ClockTick:
+    clips:
+    - {fileID: 8300000, guid: 0a1b21969b1da5a469675eb5a6b946b2, type: 3}
+    volume: 0.4
+    volumeVariation: 0
+    pitch: 0.5
+    pitchVariation: 0
+    loop: 0
+    cooldown: 0.1
+    comment: 
   Countdown5:
     clips:
     - {fileID: 8300000, guid: 70f3745bdbc80c74e97104ef29bff537, type: 3}
@@ -36062,7 +36072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381e1a9f1ab4188458fbad610fac8769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartCurrentScene: 1
+  StartCurrentScene: 0
   LevelLayout: {fileID: 74663400}
   ButtonPlay: {fileID: 169547720}
   ButtonControls: {fileID: 1428689432}

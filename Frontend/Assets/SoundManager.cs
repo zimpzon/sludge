@@ -24,6 +24,10 @@ public class SoundManager : MonoBehaviour
 
         var clip = item.clips[Random.Range(0, item.clips.Length)];
         float pitch = item.pitch + (Random.value * item.pitchVariation * 2) - item.pitchVariation * 0.5f;
+        float volume = item.volume + (Random.value * item.volumeVariation * 2) - item.volumeVariation * 0.5f;
+
+        item.audioSource.pitch = pitch;
+        item.audioSource.volume = volume;
         item.audioSource.clip = clip;
         item.audioSource.Play();
         item.timeLastPlayed = Time.time;

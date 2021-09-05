@@ -132,6 +132,8 @@ public class ModSlimeBombLogic : SludgeModifier
                 if (audioClip != null)
                     SoundManager.Play(audioClip);
 
+                SoundManager.Play(FxList.Instance.ClockTick);
+
                 countdownText.text = second.ToString();
                 countdownText.transform.DORewind();
                 countdownText.transform.localScale = Vector3.one * 3.0f;

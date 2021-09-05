@@ -24,6 +24,7 @@ public class FxList : MonoBehaviour
     public SoundItem ThrownBombPickedUp;
     public SoundItem ThrownBombExplode;
     public SoundItem LaserHumming;
+    public SoundItem ClockTick;
     public SoundItem Countdown5;
     public SoundItem Countdown4;
     public SoundItem Countdown3;
