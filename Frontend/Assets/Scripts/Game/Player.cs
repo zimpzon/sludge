@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
     public bool Alive = false;
 
     QuadDistort ripples;
-    CircleCollider2D[] circleColliders;
     public double angle = 90;
     double speed;
     double minSpeed = 0.5f;
@@ -35,7 +34,6 @@ public class Player : MonoBehaviour
     ContactFilter2D wallScanFilter = new ContactFilter2D();
     int onConveyorBeltCount;
     public ModThrowable currentThrowable;
-    LineRenderer softBody;
     Transform eyesTransform;
     Vector2 eyesBaseScale;
     double timeEnterSlimeCloud;
@@ -61,14 +59,11 @@ public class Player : MonoBehaviour
     void Awake()
     {
         trailTime = trail.time;
-        softBody = GetComponentInChildren<LineRenderer>();
-        softBody.positionCount = 50; // Max number of line segments for body
         ripples = GetComponentInChildren<QuadDistort>();
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
         eyesBaseScale = eyesTransform.localScale;
-        circleColliders = GetComponents<CircleCollider2D>();
     }
 
     public void Prepare()
@@ -101,7 +96,6 @@ public class Player : MonoBehaviour
         eyesTransform.localScale = eyesBaseScale;
         UpdateTransform();
         SetPositionSample(init: true);
-        UpdateSoftBody();
 
         trail.enabled = true;
     }
@@ -210,40 +204,6 @@ public class Player : MonoBehaviour
         GameManager.Instance.CameraRoot.DORewind();
         GameManager.Instance.CameraRoot.DOShakePosition(0.1f, 0.5f);
         Alive = false;
-    }
-
-    void PlayerControls2()
-    {
-        var moveDir = Vector2.zero;
-        if (GameManager.PlayerInput.Left != 0)
-        {
-            moveDir += Vector2.left;
-        }
-
-        if (GameManager.PlayerInput.Right != 0)
-        {
-            moveDir += Vector2.right;
-        }
-
-        if (GameManager.PlayerInput.Up != 0)
-        {
-            moveDir += Vector2.up;
-        }
-
-        if (GameManager.PlayerInput.Down != 0)
-        {
-            moveDir += Vector2.down;
-        }
-
-        //if (GameManager.PlayerInput.Up != 0 && onConveyorBeltCount == 0)
-        //{
-        //    speed = SludgeUtil.Stabilize(speed + GameManager.TickSize * accelerateSpeed);
-        //    if (speed > maxSpeed)
-        //        speed = maxSpeed;
-        //}
-
-        playerX += speed * GameManager.TickSize * moveDir.x * 30;
-        playerY += speed * GameManager.TickSize * moveDir.y * 30;
     }
 
     void PlayerControls()
@@ -390,8 +350,6 @@ public class Player : MonoBehaviour
         UpdateTransform();
         SetPositionSample();
 
-        UpdateSoftBody();
-
         CheckSlimeCloud();
 
         if (--resetTrailTime == 0)
@@ -416,60 +374,6 @@ public class Player : MonoBehaviour
 
         PlayerSamples[PositionSampleIdx].Pos = trans.position;
         PlayerSamples[PositionSampleIdx].Angle = angle;
-    }
-
-    void UpdateSoftBody()
-    {
-        return;
-        const double TargetDistance = 0.6;
-        double distanceCovered = 0;
-        double nextColliderDistance = 0.2;
-        Vector3 prevPoint = Vector3.zero;
-        Vector3 currentPoint = Vector3.zero;
-        int circleColliderIdx = 0;
-
-        // Place all circle collider at 0, we may not need them all. They are only placed when a certain distance is reached.
-        for (int i = 0; i < circleColliders.Length; ++i)
-            circleColliders[i].offset = Vector2.zero;
-
-        int playerPosSampleIdx = PositionSampleIdx;
-        for (int softBodyIdx = 0; softBodyIdx < softBody.positionCount; ++softBodyIdx)
-        {
-            bool hasPlayerPosSamples = playerPosSampleIdx >= sampleIdxAtTimeOfTeleport; // 0 is always there, set in reset
-            if (hasPlayerPosSamples)
-            {
-                if (distanceCovered < TargetDistance)
-                    currentPoint = PlayerSamples[playerPosSampleIdx].Pos;
-            }
-            else
-            {
-                // We are below 0 (or latest teleport point) in the position array, player hasn't moved enough yet (or at all).
-                // Extrapolate points in the opposite direction the player is facing.
-                if (distanceCovered < TargetDistance)
-                {
-                    double lookBackX = -SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * (angle + 180))));
-                    double lookBackY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * (angle + 180))));
-                    const double DistanceBack = 0.05;
-                    currentPoint.x += (float)(lookBackX * DistanceBack);
-                    currentPoint.y += (float)(lookBackY * DistanceBack);
-                }
-            }
-
-            softBody.SetPosition(softBodyIdx, currentPoint);
-
-            float currentDistance = (currentPoint - prevPoint).magnitude;
-            distanceCovered += softBodyIdx == 0 ? 0 : currentDistance;
-            playerPosSampleIdx--;
-            prevPoint = currentPoint;
-
-            if (distanceCovered > nextColliderDistance && circleColliderIdx < circleColliders.Length)
-            {
-                circleColliders[circleColliderIdx++].offset = currentPoint - trans.position;
-                nextColliderDistance += 0.15;
-            }
-        }
-        DebugLinesScript.Show("placed", circleColliderIdx);
-        DebugLinesScript.Show("totalDist", distanceCovered);
     }
 
     void UpdateTransform()
