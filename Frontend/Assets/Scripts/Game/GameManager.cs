@@ -309,6 +309,7 @@ public class GameManager : MonoBehaviour
                 else if (go == ButtonGoToNextLevel && go.GetComponent<UiNavigation>().Enabled)
                 {
                     // TODO: Some transition to next level?
+                    StopAllCoroutines();
                     LoadLevel(currentUiLevel.Next);
                     StartLevel();
                 };

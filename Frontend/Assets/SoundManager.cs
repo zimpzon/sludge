@@ -3,6 +3,8 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
+    public static float FxVolume;
+    public static float MusicVolume;
 
     public static void Play(SoundItem item)
     {
@@ -25,6 +27,7 @@ public class SoundManager : MonoBehaviour
         var clip = item.clips[Random.Range(0, item.clips.Length)];
         float pitch = item.pitch + (Random.value * item.pitchVariation * 2) - item.pitchVariation * 0.5f;
         float volume = item.volume + (Random.value * item.volumeVariation * 2) - item.volumeVariation * 0.5f;
+        volume *= FxVolume;
 
         item.audioSource.pitch = pitch;
         item.audioSource.volume = volume;
@@ -33,8 +36,21 @@ public class SoundManager : MonoBehaviour
         item.timeLastPlayed = Time.time;
     }
 
+    public static void SetFxVolume(float volume) => FxVolume = volume;
+    public static void SetMusicVolume(float volume) => MusicVolume = volume;
+
+    public static void SaveSettings()
+    {
+        PlayerPrefs.SetFloat("music_volume", MusicVolume);
+        PlayerPrefs.SetFloat("fx_volume", FxVolume);
+        PlayerPrefs.Save();
+    }
+
     private void Awake()
     {
         Instance = this;
-    }
+
+        MusicVolume = PlayerPrefs.GetFloat("music_volume", 0.5f);
+        FxVolume = PlayerPrefs.GetFloat("fx_volume", 0.8f);
+}
 }

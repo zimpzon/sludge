@@ -41,7 +41,9 @@ namespace Sludge.UI
 			CalcProgression();
 			LevelLayout.CreateLevelsSelection(LevelList.Levels);
 
+			UiPanels.Instance.Init();
 			ColorScheme.ApplyUiColors(GameManager.Instance.CurrentUiColorScheme);
+			UiPanels.Instance.SetAllActive(false);
 		}
 
 		public void CalcProgression()
@@ -101,7 +103,9 @@ namespace Sludge.UI
 			UiPanels.Instance.HidePanel(UiPanel.Game);
 			UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
 			UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
-			UiPanels.Instance.HidePanel(UiPanel.Controls);
+			UiPanels.Instance.HidePanel(UiPanel.Settings);
+			UiPanels.Instance.HidePanel(UiPanel.Settings2);
+
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 
 			UiNavigation.OnNavigationChanged = null;
@@ -175,7 +179,7 @@ namespace Sludge.UI
 		{
 			UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = null;
-			yield return UiPanels.Instance.ShowPanel(UiPanel.Controls);
+			yield return UiPanels.Instance.ShowPanel(UiPanel.Settings);
 
 			while (true)
 			{
@@ -184,7 +188,7 @@ namespace Sludge.UI
 
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
 				{
-					UiPanels.Instance.HidePanel(UiPanel.Controls);
+					UiPanels.Instance.HidePanel(UiPanel.Settings);
 					StopAllCoroutines();
 					StartCoroutine(MainMenuLoop());
 					break;
