@@ -11,7 +11,8 @@ public class ModSnifferLogic : SludgeModifier
     SpriteRenderer deadAntRenderer;
     double activationTime = -1;
     AnimatedAnt ant;
-    Collider2D triggerCollider;
+    CircleCollider2D triggerCollider;
+    CircleCollider2D antCollider;
     bool isFollowing;
     Transform trans;
     double baseX;
@@ -24,12 +25,15 @@ public class ModSnifferLogic : SludgeModifier
     double triggerAngle;
     int frameAtTriggerTime;
     double currentFrame;
+    float baseTriggerRadius;
 
     private void Awake()
     {
         ant = GetComponentInChildren<AnimatedAnt>();
+        antCollider = ant.GetComponent<CircleCollider2D>();
         deadAntRenderer = transform.Find("DeadAnt").GetComponent<SpriteRenderer>();
-        triggerCollider = GetComponent<Collider2D>();
+        triggerCollider = GetComponent<CircleCollider2D>();
+        baseTriggerRadius = triggerCollider.radius;
         trans = transform;
     }
 
@@ -46,10 +50,10 @@ public class ModSnifferLogic : SludgeModifier
         trans = transform;
         isFollowing = false;
         activationTime = -1;
-        triggerCollider.enabled = true;
-        ant.EnableCollider(false);
+        triggerCollider.radius = baseTriggerRadius;
         ant.animationOffset = Mathf.Clamp01((float)(baseX * 0.117 + baseY * 0.3311));
         ant.animationSpeedScale = 2;
+        antCollider.offset = Vector2.one * 10000; // Hacky: move ant collider so player won't die. If I disabled the collider I couldn't get slimecloud to detect it after reanabling.
 
         var col = deadAntRenderer.color;
         col.a = 1;
@@ -77,7 +81,7 @@ public class ModSnifferLogic : SludgeModifier
         {
             SoundManager.Play(FxList.Instance.SnifferActivate);
             activationTime = GameManager.Instance.EngineTime;
-            triggerCollider.enabled = false;
+            triggerCollider.radius = 0.25f;
             frameAtTriggerTime = Player.PositionSampleIdx;
             currentFrame = frameAtTriggerTime;
             myFollowDelay = FollowDelay;
@@ -128,7 +132,7 @@ public class ModSnifferLogic : SludgeModifier
 
             if (t >= 1)
             {
-                ant.EnableCollider(true);
+                antCollider.offset = Vector2.zero;
                 isFollowing = true;
             }
 
