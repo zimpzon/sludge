@@ -136,6 +136,8 @@ public class GameManager : MonoBehaviour
             currentLevelData.Name = levelSettings.LevelName;
             currentLevelData.TimeSeconds = levelSettings.StartTimeSeconds;
             currentLevelData.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
+            levelSettings.ColorSchemeName = levelSettings.ColorScheme.name;
+            currentLevelData.ColorSchemeName = levelSettings.ColorSchemeName;
 
             SludgeObjects = FindObjectsOfType<SludgeObject>();
 
@@ -466,12 +468,16 @@ public class GameManager : MonoBehaviour
 
     public void KeyPickup(Key key)
     {
+        DustParticles.transform.position = key.transform.position;
+        DustParticles.Emit(1);
         SoundManager.Play(FxList.Instance.KeyPickup);
         Keys++;
     }
 
-    public void TimePillPickup(TimePill key)
+    public void TimePillPickup(TimePill pill)
     {
+        DustParticles.transform.position = pill.transform.position;
+        DustParticles.Emit(1);
         SoundManager.Play(FxList.Instance.TimePillPickup);
         roundTime += TimePillBonusTime;
         if (roundTime < 0)
