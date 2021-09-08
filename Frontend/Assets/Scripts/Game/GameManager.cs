@@ -224,20 +224,10 @@ public class GameManager : MonoBehaviour
         if (roundResult?.Completed == true)
         {
             // Reached exit
-            TextLevelStatus.text += "You escaped!\n";
-
-            double timeDiffElite = roundResult.EndTime - currentLevelData.EliteCompletionTimeSeconds;
-            string strDiffElite = $"{timeDiffElite:0.000}";
-            if (timeDiffElite >= 0)
-                strDiffElite = '+' + strDiffElite;
-
-            var colorMasterTime = roundResult.IsEliteTime ? highlightColor : dimmedColor;
-
-            string eliteText = $"\nChamber completed ({SludgeUtil.ColorWrap(strDiffElite, colorMasterTime)})";
-            if (!roundResult.IsEliteTime)
-                eliteText = $"<s>{SludgeUtil.ColorWrap($"{eliteText}", dimmedColor)}</s>";
-
-            TextLevelStatus.text += eliteText;
+            TextLevelStatus.text += roundResult.IsEliteTime ? "- You swiftly escaped -\n" : "- You barely escaped -\n";
+            bool completedJustNow = roundResult.IsEliteTime && prevLevelProgress.LevelStatus < PlayerProgress.LevelStatus.Completed;
+            if (completedJustNow)
+                QuickText.Instance.ShowText("Chamber completed!");
         }
         else
         {
@@ -251,9 +241,8 @@ public class GameManager : MonoBehaviour
             // Dead or just arrived on level
             bool levelCompleted = prevLevelProgress.LevelStatus == PlayerProgress.LevelStatus.Completed;
             TextLevelStatus.text += !levelCompleted ?
-                $"\nEscape in {SludgeUtil.ColorWrap($"{levelSettings.EliteCompletionTimeSeconds:0.000}", highlightColor)} to complete chamber!" :
+                $"Escape in {SludgeUtil.ColorWrap($"{levelSettings.EliteCompletionTimeSeconds:0.000}", highlightColor)} seconds to complete chamber" :
                 "- You have completed this chamber -";
-
         }
 
         if (roundResult != null && roundResult.Completed)
@@ -264,18 +253,22 @@ public class GameManager : MonoBehaviour
             string strDiffBest = $"{timeDiffBest:0.000}";
             if (timeDiffBest >= 0)
                 strDiffBest = '+' + strDiffBest;
+        }
+    }
 
-            TextLevelStatus.text += $"\nYour best: {SludgeUtil.ColorWrap($"{updatedBestTime:0.000}", highlightColor)} ({SludgeUtil.ColorWrap(strDiffBest, highlightColor)})";
-        }
-        else if (prevLevelProgress != null)
-        {
-            if (prevLevelProgress.BestTime > 0)
-                TextLevelStatus.text += $"\nYour best: {SludgeUtil.ColorWrap($"{prevLevelProgress.BestTime:0.000}", highlightColor)}";
-        }
+    void GoToNextLevel()
+    {
+        // TODO: Some transition to next level?
+        StopAllCoroutines();
+        UiLogic.Instance.latestSelectedLevelUniqueId = currentUiLevel.Next.LevelData.UniqueId;
+        LoadLevel(currentUiLevel.Next);
+        StartLevel();
     }
 
     IEnumerator BetweenRoundsLoop()
     {
+        levelJustMastered = false;
+
         GameObject latestSelection = ButtonStartRound.gameObject;
         UpdateTime();
 
@@ -293,6 +286,7 @@ public class GameManager : MonoBehaviour
             // Select 'next level' if player got access just now. Else keep last selection.
             var selectedButton = levelJustMastered && canGoToNextLevel ? ButtonGoToNextLevel : latestSelection;
             UiLogic.Instance.SetSelectionMarker(selectedButton);
+            latestSelection = selectedButton;
 
             bool startReplay = false;
             bool startRound = false;
@@ -310,10 +304,7 @@ public class GameManager : MonoBehaviour
                 }
                 else if (go == ButtonGoToNextLevel && go.GetComponent<UiNavigation>().Enabled)
                 {
-                    // TODO: Some transition to next level?
-                    StopAllCoroutines();
-                    LoadLevel(currentUiLevel.Next);
-                    StartLevel();
+                    GoToNextLevel();
                 };
             };
 
@@ -332,6 +323,12 @@ public class GameManager : MonoBehaviour
                 if (PlayerInput.Up > 0 && latestSelection == ButtonStartRound)
                 {
                     startRound = true;
+                }
+
+                if (PlayerInput.Up > 0 && latestSelection == ButtonGoToNextLevel)
+                {
+                    GoToNextLevel();
+                    yield break;
                 }
 
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
@@ -413,7 +410,7 @@ public class GameManager : MonoBehaviour
             if (levelComplete)
                 break;
 
-            if (PlayerInput.BackActive())
+            if (PlayerInput.BackActive() || Input.GetKeyDown(KeyCode.R))
             {
                 latestRoundResult.Cancelled = true;
                 QuickText.Instance.ShowText(isReplay ? "replay cancelled" : "restart");

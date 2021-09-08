@@ -26,7 +26,7 @@ namespace Sludge.UI
 		public int LevelsEliteCount;
 		public double GameProgressPct;
 
-		string latestSelectedLevelUniqueId;
+		public string latestSelectedLevelUniqueId;
 
 		private void Awake()
         {
@@ -266,8 +266,8 @@ namespace Sludge.UI
 				latestSelectedLevelUniqueId = levelData.UniqueId;
 			}
 
-			// Reselect latest selected
-			if (latestSelectedLevelUniqueId == null)
+			// Reselect latest selected - or first level
+			if (string.IsNullOrWhiteSpace(latestSelectedLevelUniqueId))
 				latestSelectedLevelUniqueId = LevelLayout.LevelItems[0].levelScript.LevelData.UniqueId;
 
 			var level = LevelLayout.GetLevelFromUniqueId(latestSelectedLevelUniqueId);
