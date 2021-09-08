@@ -15,5 +15,6 @@
         Conveyor,
         SlimeBomb,
         Portal,
+        Text,
     };
 }

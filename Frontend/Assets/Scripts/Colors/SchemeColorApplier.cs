@@ -83,6 +83,13 @@ public class SchemeColorApplier : MonoBehaviour
             return;
         }
 
+        var text2 = GetComponent<TextMeshPro>();
+        if (text2 != null)
+        {
+            text2.color = GetColor(text2.color, scheme);
+            return;
+        }
+
         var lineRenderer = GetComponent<LineRenderer>();
         if (lineRenderer != null)
         {

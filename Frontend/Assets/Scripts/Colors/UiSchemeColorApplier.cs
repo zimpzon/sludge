@@ -11,7 +11,6 @@ public class UiSchemeColorApplier : MonoBehaviour
     void Start()
     {
         ApplyColor();
-    
     }
 
     public void SetColor(SchemeColor schemeColor)
