@@ -1,4 +1,3 @@
-using DG.Tweening;
 using Sludge;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
@@ -435,6 +434,8 @@ public class GameManager : MonoBehaviour
         latestRoundResult.OutOfTime = roundTime >= currentLevelData.TimeSeconds;
         latestRoundResult.IsEliteTime = levelComplete && EngineTime <= levelSettings.EliteCompletionTimeSeconds;
         latestRoundResult.ReplayData = latestRoundResult.Cancelled ? null : LevelReplay.LatestCommittedToReplayString();
+        latestRoundResult.UnixTimestamp = SludgeUtil.UnixTimeNow();
+        latestRoundResult.UniqueId = UnityEngine.Random.Range(100000000, 999999999).ToString();
 
         levelJustMastered = currentLevelProgress.LevelStatus < PlayerProgress.LevelStatus.Escaped && latestRoundResult.Completed;
 

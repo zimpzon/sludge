@@ -20,7 +20,9 @@ namespace Sludge.UI
 		public GameObject GameRoot;
 		public UiSelectionMarker UiSelectionMarker;
 		public TMP_Text TextProgression;
+		public TMP_Text TextWorldWideAttempts;
 
+		public static long WorldWideAttempts;
 		public int LevelCount;
 		public int LevelsCompletedCount;
 		public int LevelsEliteCount;
@@ -32,6 +34,8 @@ namespace Sludge.UI
         {
 			Instance = this;
 			UiSelectionMarker.gameObject.SetActive(true);
+
+			ShowWorldWideAttempts();
 
 			if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -72,6 +76,12 @@ namespace Sludge.UI
 			UiSelectionMarker.SetTarget(uiObject);
 			UiSelectionMarker.gameObject.SetActive(uiObject == null ? false : true);
 		}
+
+		void ShowWorldWideAttempts()
+        {
+			WorldWideAttempts = Analytics.GetWorldWideAttempts();
+			TextWorldWideAttempts.text = $"World wide attempts: {WorldWideAttempts}";
+        }
 
         public void PlayClick()
 		{
@@ -153,6 +163,7 @@ namespace Sludge.UI
         {
 			StopAllCoroutines();
 			CalcProgression();
+			ShowWorldWideAttempts();
 			LevelLayout.UpdateVisualHints();
 			ColorScheme.ApplyUiColors(GameManager.Instance.CurrentUiColorScheme);
 

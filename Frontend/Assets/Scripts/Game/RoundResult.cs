@@ -13,5 +13,7 @@
         public double EndTime;
         public bool IsEliteTime;
         public string ReplayData;
+        public long UnixTimestamp;
+        public string UniqueId;
     }
 }

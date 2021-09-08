@@ -1,4 +1,6 @@
+#if !UNITY_EDITOR
 using Newtonsoft.Json;
+#endif
 using Sludge;
 using System.Collections;
 using System.Text;
@@ -21,6 +23,17 @@ public class Analytics : MonoBehaviour
         string json = JsonConvert.SerializeObject(roundResult);
         StartCoroutine(StoreEvents(json));
 #endif
+    }
+
+    public static long GetWorldWideAttempts()
+    {
+        using var request = UnityWebRequest.Get("https://sludgefunctions.azurewebsites.net/api/world-wide-attempts");
+        string response = request.downloadHandler.text;
+        if (long.TryParse(response, out long totalAttempts))
+            return totalAttempts;
+
+        Debug.LogWarning($"Getting world wide attempts returned invalid data: '{response}'");
+        return 0;
     }
 
     IEnumerator StoreEvents(string json)
