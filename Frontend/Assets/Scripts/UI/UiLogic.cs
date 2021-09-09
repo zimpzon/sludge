@@ -107,7 +107,34 @@ namespace Sludge.UI
 		public void ControlsClick()
 		{
 			StopAllCoroutines();
+
+			//StartCoroutine(StartReplay("1748FFB0")); // LEVEL REPLAY HACK
+
 			StartCoroutine(ControlsLoop());
+		}
+
+		public IEnumerator StartReplay(string replayId)
+		{
+			using var request = UnityWebRequest.Get($"https://sludgefunctions.azurewebsites.net/api/get-round-result/{replayId}");
+			yield return request.SendWebRequest();
+			if (string.IsNullOrWhiteSpace(request.downloadHandler.text))
+			{
+				Debug.LogError($"No data found for replayId: {replayId}");
+				yield break;
+			}
+
+			var roundResult = JsonUtility.FromJson<RoundResult>(request.downloadHandler.text);
+			var levelItem = UiLogic.Instance.LevelLayout.GetLevelFromUniqueId(roundResult.LevelId);
+			if (levelItem == null)
+			{
+				Debug.LogError($"Level not found: {roundResult.LevelId}");
+				yield break;
+			}
+
+			GameManager.Instance.LoadLevel(levelItem.levelScript);
+			GameManager.LevelReplay.FromString(roundResult.ReplayData, roundResult.LevelId);
+
+			yield return PlayLoop(levelItem.levelScript);
 		}
 
 		public void DoUiNavigation(PlayerInput playerInput)

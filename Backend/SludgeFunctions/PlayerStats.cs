@@ -26,6 +26,16 @@ namespace Sludge
             return new OkObjectResult("");
         }
 
+        [FunctionName("get-round-result")]
+        public static async Task<IActionResult> GetRoundResult(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "get-round-result/{uniqueId}")] HttpRequest req,
+            string uniqueId)
+        {
+            string path = $"{Statics.VersionName}/RoundResults/{uniqueId}.json";
+            string json = await Statics.BlobStorage.GetTextBlobAsync(path);
+            return new OkObjectResult(json);
+        }
+
         [FunctionName("world-wide-attempts")]
         public static IActionResult GetCount([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {

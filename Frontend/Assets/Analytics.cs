@@ -1,6 +1,4 @@
-//#if !UNITY_EDITOR
 using Newtonsoft.Json;
-//#endif
 using Sludge;
 using System.Collections;
 using System.Text;
@@ -18,11 +16,11 @@ public class Analytics : MonoBehaviour
 
     public void SaveStats(RoundResult roundResult)
     {
-//#if UNITY_EDITOR
-//#else
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+            return;
+
         string json = JsonConvert.SerializeObject(roundResult);
         StartCoroutine(StoreEvents(json));
-//#endif
     }
 
     IEnumerator StoreEvents(string json)

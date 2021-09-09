@@ -11,6 +11,7 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
@@ -218,7 +219,6 @@ public class GameManager : MonoBehaviour
     void SetScoreText(RoundResult roundResult = null)
     {
         var highlightColor = ColorScheme.GetColor(CurrentColorScheme, SchemeColor.UiTextHighlighted);
-        var dimmedColor = ColorScheme.GetColor(CurrentColorScheme, SchemeColor.UiTextDimmed);
 
         TextLevelStatus.text = "";
         var prevLevelProgress = PlayerProgress.GetLevelProgress(currentLevelData.UniqueId);
@@ -245,16 +245,6 @@ public class GameManager : MonoBehaviour
                 $"Escape in {SludgeUtil.ColorWrap($"{levelSettings.EliteCompletionTimeSeconds:0.000}", highlightColor)} seconds to complete chamber" :
                 "- You have completed this chamber -";
         }
-
-        if (roundResult != null && roundResult.Completed)
-        {
-            bool isNewBest = prevLevelProgress.BestTime > 0 && roundResult.EndTime < prevLevelProgress.BestTime;
-            double updatedBestTime = prevLevelProgress.BestTime <= 0 || isNewBest ? roundResult.EndTime : prevLevelProgress.BestTime;
-            double timeDiffBest = roundResult.EndTime - updatedBestTime;
-            string strDiffBest = $"{timeDiffBest:0.000}";
-            if (timeDiffBest >= 0)
-                strDiffBest = '+' + strDiffBest;
-        }
     }
 
     void GoToNextLevel()
@@ -266,7 +256,7 @@ public class GameManager : MonoBehaviour
         StartLevel();
     }
 
-    IEnumerator BetweenRoundsLoop()
+    IEnumerator BetweenRoundsLoop(string replayId = null)
     {
         levelJustMastered = false;
 
@@ -311,7 +301,7 @@ public class GameManager : MonoBehaviour
 
             ResetLevel();
 
-            UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
+            yield return UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
 
             PlayerInput.PauseInput(0.3f);
 
@@ -430,7 +420,7 @@ public class GameManager : MonoBehaviour
         latestRoundResult.Version = Version;
         latestRoundResult.Platform = Application.platform.ToString();
         latestRoundResult.UnixTimestamp = SludgeUtil.UnixTimeNow();
-        latestRoundResult.UniqueId = UnityEngine.Random.Range(100000000, 999999999).ToString();
+        latestRoundResult.UniqueId = UnityEngine.Random.Range(1 << 28, 1 << 29).ToString("X").ToUpper();
 
         latestRoundResult.LevelId = currentLevelData.UniqueId;
         latestRoundResult.LevelName = currentLevelData.Name;

@@ -86,7 +86,7 @@ namespace Sludge.Replays
 			return sb.ToString();
 		}
 
-		public void FromString(string replayString)
+		public void FromString(string replayString, string levelUniqueId)
 		{
 			Count = 0;
 			var list = replayString.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -98,6 +98,7 @@ namespace Sludge.Replays
 				Elements[i / 2].FrameCounter = frameDelta;
 				Count++;
 			}
+			committedUniqueId = levelUniqueId;
 		}
 	}
 
