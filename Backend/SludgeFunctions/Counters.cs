@@ -5,39 +5,40 @@ namespace SludgeFunctions
 {
     public static class Counters
     {
-        public static long totalAttempts;
-
+        static long totalAttempts = -1;
         static object _lock = new object();
         static Timer _timer;
         static bool hasChanges;
 
         static string CounterBlobPath = $"{Statics.VersionName}/total-attempts.txt";
 
-        static Counters()
+        public static long GetAttempts()
         {
-            AsyncHelper.RunSync(() => Statics.BlobStorage.StoreTextBlobAsync(CounterBlobPath + ".started", "", overwriteExisting: true));
-            _timer = new Timer(TimerCallback, null, 1000, Timeout.Infinite);
-
-            totalAttempts = 0;
-            string strCount = AsyncHelper.RunSync(() => Statics.BlobStorage.GetTextBlobAsync(CounterBlobPath, throwIfNotFound: false));
-            if (!string.IsNullOrWhiteSpace(strCount))
+            if (totalAttempts == -1)
             {
-                totalAttempts = long.Parse(strCount);
+                if (_timer == null)
+                    _timer = new Timer(TimerCallback, null, 1000, Timeout.Infinite);
+
+                // Initialize from blob
+                totalAttempts = 0;
+                string strCount = AsyncHelper.RunSync(() => Statics.BlobStorage.GetTextBlobAsync(CounterBlobPath, throwIfNotFound: false));
+                if (!string.IsNullOrWhiteSpace(strCount))
+                {
+                    totalAttempts = long.Parse(strCount);
+                }
             }
+            return totalAttempts;
         }
 
-        public static void AddAttemptForLevel(string levelUniqueId)
+        public static void AddAttemptForLevel()
         {
-            lock (_lock)
-            {
-                totalAttempts++;
-                hasChanges = true;
-            }
+            totalAttempts++;
+            hasChanges = true;
         }
 
         static private void TimerCallback(object state)
         {
-            AsyncHelper.RunSync(() => Statics.BlobStorage.StoreTextBlobAsync(CounterBlobPath + ".timer-callback", "", overwriteExisting: true));
+            //AsyncHelper.RunSync(() => Statics.BlobStorage.StoreTextBlobAsync(CounterBlobPath + ".timer-callback", "", overwriteExisting: true));
             PersistChanges();
             _timer.Change(1000 * 30, Timeout.Infinite);
         }
@@ -47,7 +48,7 @@ namespace SludgeFunctions
             if (!hasChanges)
                 return;
 
-            AsyncHelper.RunSync(() => Statics.BlobStorage.StoreTextBlobAsync(CounterBlobPath + ".hasChanges", "", overwriteExisting: true));
+            //AsyncHelper.RunSync(() => Statics.BlobStorage.StoreTextBlobAsync(CounterBlobPath + ".hasChanges", "", overwriteExisting: true));
 
             lock (_lock)
             {

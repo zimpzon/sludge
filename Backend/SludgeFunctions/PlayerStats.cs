@@ -16,10 +16,12 @@ namespace Sludge
         {
             string content = await new StreamReader(req.Body).ReadToEndAsync();
             var data = JsonConvert.DeserializeObject<RoundResult>(content);
+            data.Ip = Statics.GetIpFromRequestHeaders(req);
+
             string path = $"{Statics.VersionName}/RoundResults/{data.UniqueId}.json";
 
             await Statics.BlobStorage.StoreTextBlobAsync(path, content);
-            Counters.AddAttemptForLevel(data.LevelId);
+            Counters.AddAttemptForLevel();
 
             return new OkObjectResult("");
         }
@@ -27,7 +29,7 @@ namespace Sludge
         [FunctionName("world-wide-attempts")]
         public static IActionResult GetCount([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
         {
-            long attempts = Counters.totalAttempts;
+            long attempts = Counters.GetAttempts();
             return new OkObjectResult(attempts.ToString());
         }
     }

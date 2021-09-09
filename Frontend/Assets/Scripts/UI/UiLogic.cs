@@ -5,6 +5,7 @@ using Sludge.Utility;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Sludge.UI
 {
@@ -34,8 +35,6 @@ namespace Sludge.UI
         {
 			Instance = this;
 			UiSelectionMarker.gameObject.SetActive(true);
-
-			ShowWorldWideAttempts();
 
 			if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
@@ -67,6 +66,7 @@ namespace Sludge.UI
 			}
 			else
 			{
+				UpdateWorldWideAttempts();
 				StartCoroutine(MainMenuLoop());
 			}
 		}
@@ -77,13 +77,28 @@ namespace Sludge.UI
 			UiSelectionMarker.gameObject.SetActive(uiObject == null ? false : true);
 		}
 
-		void ShowWorldWideAttempts()
+		void UpdateWorldWideAttempts()
         {
-			WorldWideAttempts = Analytics.GetWorldWideAttempts();
-			TextWorldWideAttempts.text = $"World wide attempts: {WorldWideAttempts}";
+			StartCoroutine(GetWorldWideAttempts());
         }
 
-        public void PlayClick()
+		IEnumerator GetWorldWideAttempts()
+		{
+			using var request = UnityWebRequest.Get("https://sludgefunctions.azurewebsites.net/api/world-wide-attempts");
+			yield return request.SendWebRequest();
+
+			string response = request.downloadHandler.text;
+			if (!long.TryParse(response, out long totalAttempts))
+            {
+				Debug.LogWarning($"Getting world wide attempts returned invalid data: '{response}'");
+				TextWorldWideAttempts.text = $"World wide attempts: ?";
+				yield break;
+			}
+
+			TextWorldWideAttempts.text = $"World wide attempts: {totalAttempts}";
+		}
+
+		public void PlayClick()
 		{
 			StopAllCoroutines();
 			StartCoroutine(LevelSelectLoop());
@@ -163,7 +178,7 @@ namespace Sludge.UI
         {
 			StopAllCoroutines();
 			CalcProgression();
-			ShowWorldWideAttempts();
+			UpdateWorldWideAttempts();
 			LevelLayout.UpdateVisualHints();
 			ColorScheme.ApplyUiColors(GameManager.Instance.CurrentUiColorScheme);
 

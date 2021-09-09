@@ -17,6 +17,8 @@ using UnityEngine.UI;
 // First script to run
 public class GameManager : MonoBehaviour
 {
+    public static readonly string Version = "0.1b";
+
     const double TimePillBonusTime = -1.0;
     public const double TickSize = 0.016;
     public const int TickSizeMs = 16;
@@ -425,6 +427,11 @@ public class GameManager : MonoBehaviour
             LevelReplay.CommitReplay();
 
         latestRoundResult.ClientId = ClientId;
+        latestRoundResult.Version = Version;
+        latestRoundResult.Platform = Application.platform.ToString();
+        latestRoundResult.UnixTimestamp = SludgeUtil.UnixTimeNow();
+        latestRoundResult.UniqueId = UnityEngine.Random.Range(100000000, 999999999).ToString();
+
         latestRoundResult.LevelId = currentLevelData.UniqueId;
         latestRoundResult.LevelName = currentLevelData.Name;
         latestRoundResult.IsReplay = isReplay;
@@ -434,8 +441,6 @@ public class GameManager : MonoBehaviour
         latestRoundResult.OutOfTime = roundTime >= currentLevelData.TimeSeconds;
         latestRoundResult.IsEliteTime = levelComplete && EngineTime <= levelSettings.EliteCompletionTimeSeconds;
         latestRoundResult.ReplayData = latestRoundResult.Cancelled ? null : LevelReplay.LatestCommittedToReplayString();
-        latestRoundResult.UnixTimestamp = SludgeUtil.UnixTimeNow();
-        latestRoundResult.UniqueId = UnityEngine.Random.Range(100000000, 999999999).ToString();
 
         levelJustMastered = currentLevelProgress.LevelStatus < PlayerProgress.LevelStatus.Escaped && latestRoundResult.Completed;
 

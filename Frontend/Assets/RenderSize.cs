@@ -18,6 +18,7 @@ public class RenderSize : MonoBehaviour
         Cameras = FindObjectsOfType<Camera>();
         SetCameraViewports();
         urp = (UniversalRenderPipelineAsset)GraphicsSettings.currentRenderPipeline;
+        urp.renderScale = 1;
         timeAllowRenderScaleChange = Time.time + 3;
     }
 

@@ -13,7 +13,44 @@ public class UiNavigation : MonoBehaviour
 	public static Action<GameObject> OnNavigationChanged;
 	public static Action<GameObject> OnNavigationSelected;
 
-	public static void TryMove(UiSelectionMarker selectionMarker, PlayerInput playerInput)
+	RectTransform myRect;
+
+    private void Awake()
+    {
+		myRect = GetComponent<RectTransform>();
+	}
+
+    private void OnDrawGizmos()
+    {
+		myRect = GetComponent<RectTransform>();
+		Gizmos.DrawWireCube(myRect.position, myRect.sizeDelta);
+	}
+
+	private void Update()
+    {
+		if (Input.GetMouseButtonDown(0))
+        {
+			bool isClicked = RectTransformUtility.RectangleContainsScreenPoint(myRect, Input.mousePosition);
+			if (isClicked)
+            {
+				if (UiSelectionMarker.Instance.target == gameObject)
+				{
+					// Activate
+					if (OnNavigationSelected != null)
+						OnNavigationSelected(gameObject);
+				}
+				else
+				{
+					// Select
+					UiSelectionMarker.Instance.SetTarget(gameObject);
+					if (OnNavigationChanged != null)
+						OnNavigationChanged(gameObject);
+				}
+			}
+		}
+	}
+
+    public static void TryMove(UiSelectionMarker selectionMarker, PlayerInput playerInput)
     {
 		if (selectionMarker.target == null)
 			return;

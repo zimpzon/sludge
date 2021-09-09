@@ -3,6 +3,12 @@
     public class RoundResult
     {
         public string ClientId;
+        public string Version;
+        public string Platform;
+        public long UnixTimestamp;
+        public string UniqueId;
+        public string Ip; // Set by backend server
+
         public string LevelId;
         public string LevelName;
         public bool IsReplay;
@@ -13,7 +19,5 @@
         public double EndTime;
         public bool IsEliteTime;
         public string ReplayData;
-        public long UnixTimestamp;
-        public string UniqueId;
     }
 }
