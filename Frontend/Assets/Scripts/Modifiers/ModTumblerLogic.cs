@@ -171,20 +171,23 @@ namespace Sludge.Modifiers
 
                 if (closeToXAxis || closeToYAxis)
                 {
-                    Physics2D.CircleCast(trans.position, 0.1f, playerDir, scanForPlayerFilter, scanHits);
-                    int hitMask = 1 << scanHits[0].transform.gameObject.layer;
-                    bool hasLoS = hitMask == SludgeUtil.PlayerLayerMask;
-                    Debug.DrawLine(trans.position, scanHits[0].point, hasLoS ? Color.green : Color.red);
-                    if (hasLoS)
+                    int hitCount = Physics2D.CircleCast(trans.position, 0.1f, playerDir, scanForPlayerFilter, scanHits);
+                    if (hitCount > 0)
                     {
-                        moveDir = playerDir;
-                        if (closeToXAxis)
-                            moveDir.y = 0;
-                        else
-                            moveDir.x = 0;
+                        int hitMask = 1 << scanHits[0].transform.gameObject.layer;
+                        bool hasLoS = hitMask == SludgeUtil.PlayerLayerMask;
+                        Debug.DrawLine(trans.position, scanHits[0].point, hasLoS ? Color.green : Color.red);
+                        if (hasLoS)
+                        {
+                            moveDir = playerDir;
+                            if (closeToXAxis)
+                                moveDir.y = 0;
+                            else
+                                moveDir.x = 0;
 
-                        moveDir.Normalize();
-                        state = State.WarmUp;
+                            moveDir.Normalize();
+                            state = State.WarmUp;
+                        }
                     }
                 }
                 yield return null;
