@@ -232,13 +232,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (roundResult != null)
-            {
-                // Did not reach exit
-                if (roundResult.OutOfTime)
-                    TextLevelStatus.text += "Time ran out";
-            }
-
             // Dead or just arrived on level
             bool levelCompleted = prevLevelProgress.LevelStatus == PlayerProgress.LevelStatus.Completed;
             TextLevelStatus.text += !levelCompleted ?
