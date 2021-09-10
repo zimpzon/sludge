@@ -50,6 +50,7 @@ public class Portal : SludgeObject
         if (entity != EntityType.Player)
             return;
 
+        SoundManager.Play(FxList.Instance.PortalEnter);
         GameManager.Instance.Player.Teleport(sibling.transform.position);
         sibling.ReceivePlayer();
     }

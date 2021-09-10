@@ -368,6 +368,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator Playing(bool isReplay)
     {
+        SoundManager.Play(FxList.Instance.StartRound);
+
         IsReplay = isReplay;
         if (isReplay)
         {
@@ -426,6 +428,15 @@ public class GameManager : MonoBehaviour
         latestRoundResult.ReplayData = latestRoundResult.Cancelled ? null : LevelReplay.LatestCommittedToReplayString();
 
         levelJustMastered = currentLevelProgress.LevelStatus < PlayerProgress.LevelStatus.Escaped && latestRoundResult.Completed;
+        if (latestRoundResult.Completed && latestRoundResult.IsEliteTime)
+        {
+            SoundManager.Play(FxList.Instance.LevelCompleteGood);
+            QuickText.Instance.ShowText("Completed!");
+        }
+        else if (latestRoundResult.Completed && !latestRoundResult.IsEliteTime)
+        {
+            SoundManager.Play(FxList.Instance.LevelCompleteBad);
+        }
 
         if (latestRoundResult.OutOfTime)
             QuickText.Instance.ShowText("time ran out");
