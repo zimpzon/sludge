@@ -27,7 +27,7 @@ namespace Sludge.UI
 		public int LevelCount;
 		public int LevelsCompletedCount;
 		public int LevelsEliteCount;
-		public double GameProgressPct;
+		public double GameProgressPct = -1;
 
 		public string latestSelectedLevelUniqueId;
 
@@ -51,8 +51,13 @@ namespace Sludge.UI
 
 		public void CalcProgression()
         {
+			double oldValue = GameProgressPct;
 			GameProgressPct = SludgeUtil.CalcProgression(out LevelsCompletedCount, out LevelsEliteCount, out LevelCount);
 			TextProgression.text = $"Progression: {GameProgressPct:0}%";
+			if (oldValue != -1 && GameProgressPct != oldValue)
+            {
+				StartCoroutine(PlayFabStats.Instance.StorePlayerProgression(GameProgressPct));
+            }
 		}
 
 		private void Start()
@@ -179,6 +184,10 @@ namespace Sludge.UI
 				GameManager.PlayerInput.GetHumanInput();
 				CheckChangeColorScheme(GameManager.PlayerInput);
 				DoUiNavigation(GameManager.PlayerInput);
+
+				if (Input.GetKeyDown(KeyCode.P) && Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl))
+					PlayerPrefs.DeleteAll();
+
                 yield return null;
 			}
 		}

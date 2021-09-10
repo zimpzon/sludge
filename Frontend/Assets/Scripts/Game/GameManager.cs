@@ -11,7 +11,6 @@ using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
@@ -79,6 +78,9 @@ public class GameManager : MonoBehaviour
 
     private void OnValidate()
     {
+        if (Application.isPlaying)
+            return;
+
         SetColorScheme(CurrentColorScheme);
     }
 
@@ -441,12 +443,13 @@ public class GameManager : MonoBehaviour
         if (latestRoundResult.OutOfTime)
             QuickText.Instance.ShowText("time ran out");
 
-        Analytics.Instance.SaveStats(latestRoundResult);
-
         SetScoreText(latestRoundResult);
         PlayerProgress.UpdateLevelStatus(latestRoundResult);
 
         UiLogic.Instance.CalcProgression();
+        latestRoundResult.ProgressionAfter = UiLogic.Instance.GameProgressPct;
+
+        Analytics.Instance.SaveStats(latestRoundResult);
 
         yield return new WaitForSeconds(1.0f);
     }

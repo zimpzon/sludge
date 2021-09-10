@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8130303245948125753}
   - component: {fileID: 8130303245948125750}
   - component: {fileID: -4847948485209194720}
+  - component: {fileID: 3760819984929585000}
   m_Layer: 9
   m_Name: PassiveTriangle
   m_TagString: Untagged
@@ -127,3 +128,16 @@ PolygonCollider2D:
     - - {x: 0, y: 0.9921875}
       - {x: -0.9921875, y: -0.984375}
       - {x: 0.9921875, y: -0.984375}
+--- !u!114 &3760819984929585000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8130303245948125748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8e4e0bc7e225e445b13a7217b4d5772, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Modifiers: []

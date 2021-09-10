@@ -53,9 +53,9 @@ namespace Sludge.Utility
 
         public static bool LevelIsUnlocked(int levelIdx)
         {
-            return true;
             const float RequiredUnlockPct = 0.8f; // Pct of previous levels that must be completed.
-            bool isUnlocked = Mathf.CeilToInt(UiLogic.Instance.LevelsCompletedCount * RequiredUnlockPct) >= levelIdx;
+            const float MinimumScore = 1 + (1 - RequiredUnlockPct);
+            bool isUnlocked = Mathf.CeilToInt(UiLogic.Instance.LevelsCompletedCount * MinimumScore) >= levelIdx;
             return isUnlocked;
         }
 

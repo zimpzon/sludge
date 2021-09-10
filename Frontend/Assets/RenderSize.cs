@@ -84,8 +84,11 @@ public class RenderSize : MonoBehaviour
 
     void AutoPerf()
     {
-        if (!AllowDownsizingRenderScale)
+        if (!AllowDownsizingRenderScale || !Application.isFocused)
+        {
+            exponentialAvg = 0;
             return;
+        }
 
         // Will periodically check and lower renderscale if avg fps < 60
         const float RequiredFps = 58; // NB: When vsync is on FPS hovers just below 60 (~59.9) so requiring 60fps will lower renderscale!

@@ -19,5 +19,6 @@
         public double EndTime;
         public bool IsEliteTime;
         public string ReplayData;
+        public double ProgressionAfter;
     }
 }
