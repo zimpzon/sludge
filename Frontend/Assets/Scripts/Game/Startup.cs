@@ -17,7 +17,10 @@ namespace Sludge.Utility
             PlayerProgress.Load();
             DOTween.Init();
             Physics2D.simulationMode = SimulationMode2D.Script;
+
             GameManager.ClientId = PlayerPrefs.GetString("ClientId", Guid.NewGuid().ToString());
+            PlayerPrefs.SetString("ClientId", GameManager.ClientId);
+            Debug.Log($"clientId: {GameManager.ClientId}");
             PlayerPrefs.Save();
 
             QualitySettings.vSyncCount = 1;

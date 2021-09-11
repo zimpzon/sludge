@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class ModSwarm : SludgeModifier
 {
-    public GameObject Prototype;
     public int Count = 10;
 
     public double Width = 5;
@@ -25,19 +24,18 @@ public class ModSwarm : SludgeModifier
     public double TimeOffsetRotation;
     public Easings EasingRotation = Easings.Linear;
 
+    GameObject Prototype;
     List<Transform> members = new List<Transform>();
     Transform trans;
 
     public override void Reset()
     {
         trans = transform;
-        UpdateMembers(t: 0);
-    }
+        if (Prototype == null)
+            Prototype = trans.Find("SwarmElement").gameObject;
 
-    public override void OnLoaded()
-    {
-        trans = transform;
         CreateMembers();
+        UpdateMembers(t: 0);
     }
 
     void CreateMembers()
@@ -48,8 +46,10 @@ public class ModSwarm : SludgeModifier
         for (int i = 0; i < Count; ++i)
         {
             var member = GameObject.Instantiate(Prototype, Vector3.zero, Quaternion.identity, transform);
+            member.SetActive(true);
             members.Add(member.transform);
         }
+        Prototype.SetActive(false);
     }
 
     void UpdateMembers(double t)

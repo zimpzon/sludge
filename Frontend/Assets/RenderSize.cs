@@ -9,6 +9,8 @@ public class RenderSize : MonoBehaviour
 
     public Camera[] Cameras;
     bool resolutionChangeAttempted = false;
+    float viewPortChosenWidthAttempt;
+
     UniversalRenderPipelineAsset urp;
 
     // 16:9  = 1.77 / 0.5625
@@ -60,12 +62,20 @@ public class RenderSize : MonoBehaviour
             bool isAlreadyChosenWidth = Mathf.Abs(cam.pixelRect.width - chosenWidth) < 1f;
             if (!isAlreadyChosenWidth)
             {
-                var newPixelRect = new Rect(0, 0, chosenWidth, Screen.height);
-                Debug.Log($"Camera {cam.name}:");
-                Debug.Log($"- current screen resolution: {Screen.currentResolution}, current window resolution: w={Screen.width}, h={Screen.height}");
-                Debug.Log($"- fullScreen: {Screen.fullScreen}, fullScreenMode: {Screen.fullScreenMode}");
-                Debug.Log($"- changing viewport from {cam.pixelRect} to {newPixelRect}");
-                cam.pixelRect = newPixelRect;
+                // WebGL was going crazy trying to resize every frame.
+                // In case resize fails don't keep trying.
+                bool widthWasAlreadyAttempted = chosenWidth == viewPortChosenWidthAttempt;
+                if (!widthWasAlreadyAttempted)
+                {
+                    var newPixelRect = new Rect(0, 0, chosenWidth, Screen.height);
+                    Debug.Log($"Camera {cam.name}:");
+                    Debug.Log($"- current screen resolution: {Screen.currentResolution}, current window resolution: w={Screen.width}, h={Screen.height}");
+                    Debug.Log($"- fullScreen: {Screen.fullScreen}, fullScreenMode: {Screen.fullScreenMode}");
+                    Debug.Log($"- changing viewport from {cam.pixelRect} to {newPixelRect}");
+                    cam.pixelRect = newPixelRect;
+
+                    viewPortChosenWidthAttempt = chosenWidth;
+                }
             }
         }
     }
