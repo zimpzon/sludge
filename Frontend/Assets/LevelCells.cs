@@ -7,6 +7,8 @@ public class LevelCells : MonoBehaviour
 
     public Tile FloorTile;
 
+    readonly Vector2Int OutOfBounds = new Vector2Int(int.MaxValue, int.MaxValue);
+
     const byte Free = 0;
     const byte StaticWall = 1;
     const byte DynamicWall = 2;
@@ -45,11 +47,72 @@ public class LevelCells : MonoBehaviour
         }
     }
 
-    public byte GetCellValue(Vector2 pos)
+    public Vector2 CellToWorld(Vector2Int cellPos)
+        => new Vector2(cellPos.x + leftOffset + 0.5f, cellPos.y + bottomOffset + 0.5f);
+
+    public Vector2Int WorldToCell(Vector2 worldPos)
     {
-        int x = (int)(pos.x - leftOffset);
-        int y = (int)(pos.y - bottomOffset);
-        return cells[y * w + x];
+        int x = (int)(worldPos.x - leftOffset);
+        int y = (int)(worldPos.y - bottomOffset);
+
+        if (x < 0 || x >= w || y < 0 || y >= h)
+            return OutOfBounds;
+
+        return new Vector2Int(x, y);
+    }
+
+    public Vector2Int ClaimCell(Vector2 worldPos)
+    {
+        var cellPos = WorldToCell(worldPos);
+        SetCellValue(cellPos, Taken);
+        return cellPos;
+    }
+
+    public void ReleaseCell(Vector2Int cellPos)
+    {
+        if (GetCellValue(cellPos) == Taken)
+            SetCellValue(cellPos, Free);
+    }
+
+    public bool TryClaimMovement(Vector2Int currentCellPos, Vector2Int dir, out Vector2Int newPos)
+    {
+        var backup = dir;
+        newPos = currentCellPos + dir;
+
+        // Try both x and y
+        bool canMove = GetCellValue(newPos) == Free;
+        bool isDiagonal = dir.x != 0 && dir.y != 0;
+        if (canMove && isDiagonal)
+        {
+            // When moving in a diagonal make sure left and right cells are not blocked.
+            var justY = new Vector2Int(0, dir.y);
+            var justX = new Vector2Int(dir.x, 0);
+            canMove = GetCellValue(currentCellPos + justY) == Free && GetCellValue(currentCellPos + justX) == Free;
+        }
+
+        if (!canMove)
+        {
+            // Try just y
+            dir.x = 0;
+            newPos = currentCellPos + dir;
+            canMove = GetCellValue(newPos) == Free;
+        }
+
+        if (!canMove)
+        {
+            // Try just x
+            dir = backup;
+            dir.y = 0;
+            newPos = currentCellPos + dir;
+            canMove = GetCellValue(newPos) == Free;
+        }
+
+        if (canMove)
+        {
+            SetCellValue(currentCellPos, Free);
+            SetCellValue(newPos, Taken);
+        }
+        return canMove;
     }
 
     public void SetDynamicWallRectangle(Vector2 center, float rectW, float rectH, bool blocked)
@@ -70,6 +133,14 @@ public class LevelCells : MonoBehaviour
                 cells[cellIdx] = value;
             }
         }
+    }
+
+    void SetCellValue(Vector2Int cellPos, byte value)
+        => cells[cellPos.y * w + cellPos.x] = value;
+
+    byte GetCellValue(Vector2Int cellPos)
+    {
+        return cells[cellPos.y * w + cellPos.x];
     }
 
     public void ResetToTilemap(Tilemap tilemap)

@@ -153,8 +153,6 @@ public class GameManager : MonoBehaviour
             }
         }
         
-        LevelCells.Instance.ResetToTilemap(Tilemap);
-
         if (!string.IsNullOrWhiteSpace(levelSettings.ColorSchemeName))
         {
             var colorScheme = ColorSchemeList.ColorSchemes.Where(s => s.name == levelSettings.ColorSchemeName).FirstOrDefault();
@@ -352,6 +350,8 @@ public class GameManager : MonoBehaviour
         Keys = 0;
 
         BulletManager.Instance.Reset();
+
+        LevelCells.Instance.ResetToTilemap(Tilemap);
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);
