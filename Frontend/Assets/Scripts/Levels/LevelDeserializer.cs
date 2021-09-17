@@ -48,7 +48,7 @@ public static class LevelDeserializer
                 int tileIdx = data.TileIndices[y * data.TilesW + x];
                 // Tile rotation is stored as rot * 1000
                 int tileRotation = tileIdx / 1000;
-                tileIdx = tileIdx % 1000;
+                tileIdx %= 1000;
                 var tile = elements.TileList.Tiles[tileIdx];
                 elements.Tilemap.SetTile(tilePos, tile);
 

@@ -152,6 +152,8 @@ public class GameManager : MonoBehaviour
                     modifier.OnLoaded();
             }
         }
+        
+        LevelCells.Instance.ResetToTilemap(Tilemap);
 
         if (!string.IsNullOrWhiteSpace(levelSettings.ColorSchemeName))
         {

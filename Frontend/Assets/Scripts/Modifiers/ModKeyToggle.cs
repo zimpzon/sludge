@@ -32,6 +32,11 @@ public class ModKeyToggle : SludgeModifier
 
         spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
+
+        if (StartEnabled)
+        {
+            LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
+        }
     }
 
     public override void EngineTick()
@@ -59,6 +64,8 @@ public class ModKeyToggle : SludgeModifier
         doorCollider.enabled = false;
         SoundManager.Play(FxList.Instance.FakeWallDisappear);
 
+        LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: false);
+
         while (true)
         {
             float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
@@ -80,6 +87,8 @@ public class ModKeyToggle : SludgeModifier
         spriteRenderer.enabled = true;
         doorCollider.enabled = true;
         SoundManager.Play(FxList.Instance.FakeWallShowUp);
+
+        LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 
         while (true)
         {

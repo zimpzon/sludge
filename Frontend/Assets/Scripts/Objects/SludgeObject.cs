@@ -11,7 +11,7 @@ namespace Sludge.SludgeObjects
 
         void Awake()
         {
-            Modifiers = transform.GetComponentsInChildren<SludgeModifier>();
+            Modifiers = gameObject.transform.GetComponentsInChildren<SludgeModifier>();
         }
 
         public virtual void Reset()
