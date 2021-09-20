@@ -61,6 +61,15 @@ public class LevelCells : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
+    public bool TryClaimCell(Vector2Int cell)
+    {
+        if (GetCellValue(cell) != Free)
+            return false;
+
+        SetCellValue(cell, Taken);
+        return true;
+    }
+
     public Vector2Int ClaimCell(Vector2 worldPos)
     {
         var cellPos = WorldToCell(worldPos);

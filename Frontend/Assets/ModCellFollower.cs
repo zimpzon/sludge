@@ -1,11 +1,18 @@
 using Sludge.Modifiers;
+using Sludge.Tiles;
 using UnityEngine;
 
 public class ModCellFollower : SludgeModifier
 {
+    public AntAnimScriptableObject Anim;
+
+    static float AnimOffset = 0;
+
+    SpriteRenderer spriteRenderer;
     Vector2Int myCell;
     Transform trans;
     double timeMoveOneCell = 0.25;
+    double timeMoveThisCell = 0.25;
     double startX;
     double startY;
     double targetX;
@@ -13,17 +20,32 @@ public class ModCellFollower : SludgeModifier
     double moveTimeLeft;
     double homeX;
     double homeY;
+    float targetRotZ;
+    float currentRotZ;
+    float animOffset;
 
-    public override void OnLoaded()
+    private void Awake()
     {
         homeX = transform.position.x;
         homeY = transform.position.y;
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        animOffset = AnimOffset;
+        AnimOffset += 0.1f;
+    }
+
+    public override void OnLoaded()
+    {
+        Awake();
     }
 
     public override void Reset()
     {
+        currentRotZ = 0;
+        targetRotZ = 0;
         trans = transform;
         trans.position = new Vector2((float)homeX, (float)homeY);
+        trans.rotation = Quaternion.identity;
+
         myCell = LevelCells.Instance.ClaimCell(trans.position);
         SetTarget(myCell);
         moveTimeLeft = 0;
@@ -40,18 +62,43 @@ public class ModCellFollower : SludgeModifier
         targetY = targetWorld.y;
     }
 
+    void Die()
+    {
+        GameManager.Instance.DustParticles.transform.position = trans.position;
+        GameManager.Instance.DustParticles.Emit(5);
+        CellAntManager.Instance.Release(this);
+    }
+
     public override void EngineTick()
     {
         if (GameManager.Instance.FrameCounter == 0) // Oopsie, GameManager calls Reset, EngineTick, then Reset again. Avoid nasty cell claiming.
             return;
 
-        double t = Mathf.Clamp01((float)((timeMoveOneCell - moveTimeLeft) / timeMoveOneCell));
+        double animSpeed = 1;
+        float fAnimIdx = (float)(GameManager.Instance.EngineTime * animSpeed * Anim.Sprites.Length);
+        fAnimIdx += animOffset;
+        int animIdx = ((int) Mathf.Abs(fAnimIdx)) % Anim.Sprites.Length;
+        spriteRenderer.sprite = Anim.Sprites[animIdx];
+
+        double t = Mathf.Clamp01((float)((timeMoveThisCell - moveTimeLeft) / timeMoveThisCell));
         moveTimeLeft -= GameManager.TickSize;
         double x = startX + (targetX - startX) * t;
         double y = startY + (targetY - startY) * t;
 
         if (moveTimeLeft > 0)
         {
+            targetRotZ = Mathf.Atan2((float)(targetX - startX), (float)(startY - targetY)) * Mathf.Rad2Deg;
+            if (Mathf.Abs(targetRotZ - currentRotZ) > 90)
+            {
+                currentRotZ = targetRotZ;
+            }
+            else
+            {
+                currentRotZ += Mathf.DeltaAngle(currentRotZ, targetRotZ) > 0 ? Time.deltaTime * 1000 : Time.deltaTime * -1000;
+            }
+
+            trans.rotation = Quaternion.Euler(0, 0, currentRotZ);
+
             // Move from one cell to another. We only occupy the target cell.
             trans.position = new Vector2((float)x, (float)y);
         }
@@ -75,11 +122,9 @@ public class ModCellFollower : SludgeModifier
             {
                 SetTarget(newCell);
                 myCell = newCell;
-                moveTimeLeft = timeMoveOneCell;
+                timeMoveThisCell = timeMoveOneCell * desiredDir.magnitude;
+                moveTimeLeft = timeMoveThisCell;
             }
         }
-
-        DebugLinesScript.Show("myCell", myCell);
-        DebugLinesScript.Show("timeLeft", moveTimeLeft);
     }
 }

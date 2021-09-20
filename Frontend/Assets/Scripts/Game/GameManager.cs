@@ -350,6 +350,7 @@ public class GameManager : MonoBehaviour
         Keys = 0;
 
         BulletManager.Instance.Reset();
+        CellAntManager.Instance.Reset();
 
         LevelCells.Instance.ResetToTilemap(Tilemap);
 
@@ -492,6 +493,7 @@ public class GameManager : MonoBehaviour
         UpdatePlayer();
         UpdateSludgeObjects();
         BulletManager.Instance.EngineTick();
+        CellAntManager.Instance.EngineTick();
     }
 
     void UpdateSludgeObjects()

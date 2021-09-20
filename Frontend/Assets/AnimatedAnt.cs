@@ -101,6 +101,13 @@ public class AnimatedAnt : MonoBehaviour
             animateAntennaSpeed = 1 * animationSpeedScale;
         }
 
+        int posX = Mathf.RoundToInt((transform.position.x - 0.5f) / 1.5f);
+        int posY = -Mathf.RoundToInt((transform.position.y + 6.0f) / 1.5f);
+        int idx = posY * 6 + posX;
+        float offset = idx / 30.0f;
+
+        animationOffset = offset;
+
         if (animateAntennaRange != 0)
         {
             double t = SludgeUtil.TimeMod((Time.time * (float)animateAntennaSpeed * animationSpeedScale) + animationOffset);
