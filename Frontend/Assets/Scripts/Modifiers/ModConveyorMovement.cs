@@ -95,9 +95,6 @@ namespace Sludge.Modifiers
             var directionToCenter = closestPointOnCenterLine - Player.Position;
             GameManager.Instance.Player.AddPositionImpulse(directionToCenter.x * SuctionPower, directionToCenter.y * SuctionPower);
 
-            // Force rotation alignment with the belt
-            GameManager.Instance.Player.AddOverrideRotation(beltAngle);
-
             // Move along the belt
             GameManager.Instance.Player.AddPositionImpulse(beltDirection.x * ConveyorSpeed, beltDirection.y * ConveyorSpeed);
         }

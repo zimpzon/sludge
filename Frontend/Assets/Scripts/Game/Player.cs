@@ -1,7 +1,6 @@
 using DG.Tweening;
 using Sludge;
 using Sludge.Utility;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -13,18 +12,35 @@ public class Player : MonoBehaviour
     public static Quaternion Rotation;
     public static int PositionSampleIdx;
 
-    public TrailRenderer trail;
+    public Transform LegL0;
+    public Transform LegR0;
+    public Transform LegL1;
+    public Transform LegR1;
+    public Transform LegL2;
+    public Transform LegR2;
+    public PlayerBullet PlayerBullet;
+
+    Vector2 LegL0Base;
+    Vector2 LegR0Base;
+    Vector2 LegL1Base;
+    Vector2 LegR1Base;
+    Vector2 LegL2Base;
+    Vector2 LegR2Base;
+    bool lockLegMovement = true;
+
     public bool Alive = false;
 
     QuadDistort ripples;
     public double angle = 90;
     double speed;
-    double minSpeed = 0.5f;
+    double speedX;
+    double speedY;
+    double minSpeed = 0.0f;
     double maxSpeed = 10;
     double turnSpeed = 250;
     double turnMultiplier = 20;
-    double accelerateSpeed = 80;
-    double friction = 25;
+    double accelerateSpeed = 200;
+    double friction = 40.0f;
     Transform trans;
     double playerX;
     double playerY;
@@ -37,19 +53,11 @@ public class Player : MonoBehaviour
     Transform eyesTransform;
     Vector2 eyesBaseScale;
     double timeEnterSlimeCloud;
-    int sampleIdxAtTimeOfTeleport;
-    int resetTrailTime; // Trail hack when teleporting to not draw between teleporters
-    float trailTime;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
     double impulseY;
     double impulseRotation;
-
-    // Override: summed up and the average per frame is forcibly set, ignoring all other movement (player loses control). Then cleared.
-    List<double> overrideX = new List<double>();
-    List<double> overrideY = new List<double>();
-    List<double> overrideRotation = new List<double>();
 
     // Forces: summed up and added every frame. Diminished over multiple frames.
     double forceX;
@@ -58,7 +66,13 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        trailTime = trail.time;
+        LegL0Base = LegL0.localPosition;
+        LegR0Base = LegR0.localPosition;
+        LegL1Base = LegL1.localPosition;
+        LegR1Base = LegR1.localPosition;
+        LegL2Base = LegL2.localPosition;
+        LegR2Base = LegR2.localPosition;
+
         ripples = GetComponentInChildren<QuadDistort>();
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
@@ -70,8 +84,6 @@ public class Player : MonoBehaviour
     {
         Debug.Log($"Player.Prepare()");
         speed = minSpeed;
-        trail.Clear();
-        trail.enabled = false;
         Alive = true;
         onConveyorBeltCount = 0;
         ripples.Reset();
@@ -80,15 +92,12 @@ public class Player : MonoBehaviour
         impulseRotation = 0;
         currentThrowable = null;
         timeEnterSlimeCloud = -1;
-        sampleIdxAtTimeOfTeleport = 0;
         PositionSampleIdx = 0;
-
-        overrideX.Clear();
-        overrideY.Clear();
-        overrideRotation.Clear();
 
         forceX = 0;
         forceY = 0;
+        speedX = 0;
+        speedY = 0;
 
         playerX = homeX;
         playerY = homeY;
@@ -96,8 +105,7 @@ public class Player : MonoBehaviour
         eyesTransform.localScale = eyesBaseScale;
         UpdateTransform();
         SetPositionSample(init: true);
-
-        trail.enabled = true;
+        PlayerBullet.Reset();
     }
 
     public void ThrowablePickedUp(ModThrowable throwable)
@@ -127,24 +135,6 @@ public class Player : MonoBehaviour
 
         playerX = SludgeUtil.Stabilize(newPos.x);
         playerY = SludgeUtil.Stabilize(newPos.y);
-        sampleIdxAtTimeOfTeleport = PositionSampleIdx + 1;
-        trail.Clear();
-        trail.time = 0;
-        resetTrailTime = 2;
-    }
-
-    public void AddOverridePosition(double x, double y)
-    {
-        overrideX.Clear();
-        overrideY.Clear();
-        overrideX.Add(SludgeUtil.Stabilize(x));
-        overrideY.Add(SludgeUtil.Stabilize(y));
-    }
-
-    public void AddOverrideRotation(double rotation)
-    {
-        overrideRotation.Clear();
-        overrideRotation.Add(SludgeUtil.Stabilize(rotation));
     }
 
     public void AddPositionImpulse(double x, double y)
@@ -174,7 +164,8 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (onConveyorBeltCount > 0)
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+        if (entity == EntityType.PlayerBullet)
             return;
 
         Kill();
@@ -272,6 +263,91 @@ public class Player : MonoBehaviour
         wasAcceleratingLastFrame = isAccelerating;
     }
 
+    float legOffset = 0;
+
+    void CheckShoot()
+    {
+        if (GameManager.PlayerInput.Shoot != 0 && !PlayerBullet.Alive)
+        {
+            var look = SludgeUtil.LookAngle(trans.rotation.eulerAngles.z);
+            const float BulletSpeed = 20;
+            PlayerBullet.DX = SludgeUtil.Stabilize(look.x * BulletSpeed);
+            PlayerBullet.DY = SludgeUtil.Stabilize(look.y * BulletSpeed);
+            PlayerBullet.X = SludgeUtil.Stabilize(trans.position.x + look.x * 0.5);
+            PlayerBullet.Y = SludgeUtil.Stabilize(trans.position.y + look.y * 0.5);
+
+            PlayerBullet.Fire();
+        }
+    }
+
+    void PlayerControls4Dir()
+    {
+        if (GameManager.PlayerInput.Left != 0)
+        {
+            speedX -= accelerateSpeed * GameManager.TickSize;
+        }
+
+        if (GameManager.PlayerInput.Right != 0)
+        {
+            speedX += accelerateSpeed * GameManager.TickSize;
+        }
+
+        if (GameManager.PlayerInput.Up != 0)
+        {
+            speedY += accelerateSpeed * GameManager.TickSize;
+        }
+
+        if (GameManager.PlayerInput.Down != 0)
+        {
+            speedY -= accelerateSpeed * GameManager.TickSize;
+        }
+
+        speedX = Mathf.Clamp((float)speedX, (float)-maxSpeed, (float)maxSpeed);
+        speedY = Mathf.Clamp((float)speedY, (float)-maxSpeed, (float)maxSpeed);
+
+        // Speed curves
+        //  _________
+        // /         \
+        Friction(ref speedX);
+        Friction(ref speedY);
+
+        var moveVec = new Vector2((float)speedX, (float)speedY);
+        bool isMoving = moveVec.sqrMagnitude > 0;
+
+        lockLegMovement = !isMoving;
+
+        const float legSpeed = 20;
+        if (isMoving)
+        {
+            legOffset += (float)(GameManager.TickSize * legSpeed);
+            angle = Mathf.Atan2((float)speedY, (float)speedX) * Mathf.Rad2Deg - 90;
+        }
+
+        //if (accelerationEnd && currentThrowable != null)
+        //{
+        //    currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed * 1.2);
+        //    currentThrowable = null;
+        //}
+        playerX += speedX * GameManager.TickSize;
+        playerY += speedY * GameManager.TickSize;
+    }
+
+    void Friction(ref double a)
+    {
+        if (a > 0)
+        {
+            a -= friction * GameManager.TickSize;
+            if (a < 0)
+                a = 0;
+        }
+        else if (a < 0)
+        {
+            a += friction * GameManager.TickSize;
+            if (a > 0)
+                a = 0;
+        }
+    }
+
     void CheckSlimeCloud()
     {
         if (timeEnterSlimeCloud < 0)
@@ -284,9 +360,14 @@ public class Player : MonoBehaviour
 
     public void EngineTick()
     {
+        CheckShoot();
+        PlayerBullet.Tick();
+
         if (!Alive)
             return;
-        PlayerControls();
+
+        //PlayerControls();
+        PlayerControls4Dir();
 
         speed = SludgeUtil.Stabilize(speed - GameManager.TickSize * friction);
         if (speed < minSpeed)
@@ -312,37 +393,6 @@ public class Player : MonoBehaviour
         if (forceY < 0)
             forceY = 0;
 
-        // Override
-        if (overrideX.Count > 0)
-        {
-            double sumX = 0;
-            for (int i = 0; i < overrideX.Count; ++i)
-                sumX += overrideX[i];
-            double avgX = sumX / overrideX.Count;
-            playerX = SludgeUtil.Stabilize(avgX);
-            overrideX.Clear();
-        }
-
-        if (overrideY.Count > 0)
-        {
-            double sumY = 0;
-            for (int i = 0; i < overrideY.Count; ++i)
-                sumY += overrideY[i];
-            double avgY = sumY / overrideY.Count;
-            playerY = SludgeUtil.Stabilize(avgY);
-            overrideY.Clear();
-        }
-
-        if (overrideRotation.Count > 0)
-        {
-            double sumR = 0;
-            for (int i = 0; i < overrideRotation.Count; ++i)
-                sumR += overrideRotation[i];
-            double avgR = sumR / overrideRotation.Count;
-            angle = SludgeUtil.Stabilize(avgR);
-            overrideRotation.Clear();
-        }
-
         playerX = SludgeUtil.Stabilize(playerX);
         playerY = SludgeUtil.Stabilize(playerY);
         angle = SludgeUtil.Stabilize(angle);
@@ -351,12 +401,32 @@ public class Player : MonoBehaviour
         SetPositionSample();
 
         CheckSlimeCloud();
+    }
 
-        if (--resetTrailTime == 0)
-        {
-            trail.Clear();
-            trail.time = trailTime;
-        }
+    void UpdateLegs()
+    {
+        SetLegOffset(LegL2, LegL2Base, legOffset, 0.0f);
+        SetLegOffset(LegL0, LegL0Base, legOffset, 0.8f);
+        SetLegOffset(LegL1, LegL1Base, legOffset, 1.6f);
+
+        SetLegOffset(LegR2, LegR2Base, legOffset, 2.0f);
+        SetLegOffset(LegR0, LegR0Base, legOffset, 2.8f);
+        SetLegOffset(LegR1, LegR1Base, legOffset, 3.6f);
+    }
+
+    void SetLegOffset(Transform leg, Vector2 legBase, float baseOffset, float legOffset)
+    {
+        float legRange = 0.3f;
+        float offset = (Mathf.PingPong(baseOffset + legOffset, 2) - 1) * legRange;
+        if (lockLegMovement)
+            offset = 0;
+
+        leg.localPosition = legBase + Vector2.up * offset;
+    }
+
+    private void Update()
+    {
+        UpdateLegs();
     }
 
     void SetPositionSample(bool init = false)

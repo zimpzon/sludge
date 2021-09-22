@@ -139,6 +139,9 @@ public class LevelCells : MonoBehaviour
             for (int x = rectLeft; x < rectLeft + intRectW; ++x)
             {
                 int cellIdx = (y * w) + x;
+                if (cellIdx < 0 || cellIdx > cells.Length)
+                    continue;
+
                 cells[cellIdx] = value;
             }
         }
@@ -149,7 +152,11 @@ public class LevelCells : MonoBehaviour
 
     byte GetCellValue(Vector2Int cellPos)
     {
-        return cells[cellPos.y * w + cellPos.x];
+        int idx = cellPos.y * w + cellPos.x;
+        if (idx < 0 || idx >= cells.Length)
+            return StaticWall;
+
+        return cells[idx];
     }
 
     public void ResetToTilemap(Tilemap tilemap)

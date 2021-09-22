@@ -30,7 +30,7 @@ public class ModCellFollower : SludgeModifier
         homeY = transform.position.y;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animOffset = AnimOffset;
-        AnimOffset += 0.1f;
+        AnimOffset += 0.371f;
     }
 
     public override void OnLoaded()
@@ -74,7 +74,7 @@ public class ModCellFollower : SludgeModifier
         if (GameManager.Instance.FrameCounter == 0) // Oopsie, GameManager calls Reset, EngineTick, then Reset again. Avoid nasty cell claiming.
             return;
 
-        double animSpeed = 1;
+        double animSpeed = 2;
         float fAnimIdx = (float)(GameManager.Instance.EngineTime * animSpeed * Anim.Sprites.Length);
         fAnimIdx += animOffset;
         int animIdx = ((int) Mathf.Abs(fAnimIdx)) % Anim.Sprites.Length;

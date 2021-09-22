@@ -16,5 +16,6 @@
         SlimeBomb,
         Portal,
         Text,
+        PlayerBullet,
     };
 }

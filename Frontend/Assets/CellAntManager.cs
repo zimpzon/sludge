@@ -8,10 +8,10 @@ public class CellAntManager : MonoBehaviour
 
     public GameObject CellAntProto;
     ObjectPool<ModCellFollower> pool;
-    List<ModCellFollower> active = new List<ModCellFollower>(100);
+    List<ModCellFollower> active = new List<ModCellFollower>(500);
 
-    const int DefaultItems = 200;
-    const int MaxItems = 200;
+    const int DefaultItems = 500;
+    const int MaxItems = 1000;
 
     private void Awake()
     {
