@@ -25,6 +25,7 @@ public class PlayerBullet : SludgeObject
     public override void Reset()
     {
         trans = transform;
+        trans.position = Vector2.one * -2132;
         distance = 0;
         Alive = false;
     }
@@ -41,22 +42,27 @@ public class PlayerBullet : SludgeObject
         trans.rotation = Quaternion.Euler(0, 0, (float)angle);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player)
             return;
 
-        if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
+        if (entity == EntityType.Enemy)
         {
-            GameManager.Instance.DustParticles.transform.position = trans.position;
-            GameManager.Instance.DustParticles.Emit(5);
+            GameManager.Instance.KillEnemy(collision.gameObject);
+            Die();
+        }
+        else if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
+        {
             Die();
         }
     }
 
     void Die()
     {
+        GameManager.Instance.DustParticles.transform.position = trans.position;
+        GameManager.Instance.DustParticles.Emit(2);
         Alive = false;
         distance = 0;
     }

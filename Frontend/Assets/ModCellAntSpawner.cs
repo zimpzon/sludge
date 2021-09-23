@@ -4,7 +4,8 @@ using UnityEngine;
 public class ModCellAntSpawner : SludgeModifier
 {
     double Cooldown = 0.1f;
-    int Spawns;
+    const int MaxSpawns = 1000;
+    int spawnsLeft;
     double timeNextSpawn;
 
     Transform trans;
@@ -16,7 +17,7 @@ public class ModCellAntSpawner : SludgeModifier
 
     public override void Reset()
     {
-        Spawns = 5000;
+        spawnsLeft = MaxSpawns;
         trans = transform;
         myCell = LevelCells.Instance.ClaimCell(trans.position);
         myCellRight = myCell + Vector2Int.right;
@@ -30,19 +31,23 @@ public class ModCellAntSpawner : SludgeModifier
     void SpawnAt(Vector2Int cell)
     {
         var ant = CellAntManager.Instance.Get();
+        if (ant == null)
+            return;
+
         ant.transform.position = LevelCells.Instance.CellToWorld(cell);
+        ant.gameObject.SetActive(true);
         ant.OnLoaded();
         ant.Reset();
         GameManager.Instance.DustParticles.transform.position = ant.transform.position;
         GameManager.Instance.DustParticles.Emit(3);
 
         timeNextSpawn = GameManager.Instance.EngineTime + Cooldown;
-        Spawns--;
+        spawnsLeft--;
     }
 
     public override void EngineTick()
     {
-        if (Spawns > 0 && GameManager.Instance.EngineTime >= timeNextSpawn)
+        if (spawnsLeft > 0 && GameManager.Instance.EngineTime >= timeNextSpawn)
         {
             if (LevelCells.Instance.TryClaimCell(myCellRight))
             {

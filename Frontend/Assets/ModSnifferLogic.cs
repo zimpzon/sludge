@@ -87,9 +87,9 @@ public class ModSnifferLogic : SludgeModifier
             myFollowDelay = FollowDelay;
             FollowDelay += followDelayIncrease;
 
-            triggerX = SludgeUtil.Stabilize(Player.PlayerSamples[frameAtTriggerTime].Pos.x);
-            triggerY = SludgeUtil.Stabilize(Player.PlayerSamples[frameAtTriggerTime].Pos.y);
-            triggerAngle = SludgeUtil.Stabilize(Player.PlayerSamples[frameAtTriggerTime].Angle);
+            triggerX = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.x);
+            triggerY = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.y);
+            triggerAngle = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Angle);
         }
     }
 
@@ -98,8 +98,8 @@ public class ModSnifferLogic : SludgeModifier
         if (frame < 0)
             frame = 0;
 
-        double newX = SludgeUtil.Stabilize(Player.PlayerSamples[frame].Pos.x);
-        double newY = SludgeUtil.Stabilize(Player.PlayerSamples[frame].Pos.y);
+        double newX = SludgeUtil.Stabilize(GameManager.PlayerSamples[frame].Pos.x);
+        double newY = SludgeUtil.Stabilize(GameManager.PlayerSamples[frame].Pos.y);
         bool largeJump = Mathf.Abs((float)(newX - posX)) + Mathf.Abs((float)(newX - posX)) > 1;
         if (largeJump)
         {
@@ -111,7 +111,7 @@ public class ModSnifferLogic : SludgeModifier
 
         posX = newX;
         posY = newY;
-        angle = SludgeUtil.Stabilize(Player.PlayerSamples[frame].Angle);
+        angle = SludgeUtil.Stabilize(GameManager.PlayerSamples[frame].Angle);
     }
 
     public override void EngineTick()

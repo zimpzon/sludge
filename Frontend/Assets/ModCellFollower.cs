@@ -12,7 +12,7 @@ public class ModCellFollower : SludgeModifier
     Vector2Int myCell;
     Transform trans;
     double timeMoveOneCell = 0.25;
-    double timeMoveThisCell = 0.25;
+    double timeMoveThisCell;
     double startX;
     double startY;
     double targetX;
@@ -62,10 +62,9 @@ public class ModCellFollower : SludgeModifier
         targetY = targetWorld.y;
     }
 
-    void Die()
+    public void Die()
     {
-        GameManager.Instance.DustParticles.transform.position = trans.position;
-        GameManager.Instance.DustParticles.Emit(5);
+        LevelCells.Instance.ReleaseCell(myCell);
         CellAntManager.Instance.Release(this);
     }
 

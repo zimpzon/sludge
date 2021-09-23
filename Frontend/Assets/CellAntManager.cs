@@ -8,9 +8,9 @@ public class CellAntManager : MonoBehaviour
 
     public GameObject CellAntProto;
     ObjectPool<ModCellFollower> pool;
-    List<ModCellFollower> active = new List<ModCellFollower>(500);
+    List<ModCellFollower> active = new List<ModCellFollower>(200);
 
-    const int DefaultItems = 500;
+    const int DefaultItems = 200;
     const int MaxItems = 1000;
 
     private void Awake()
@@ -25,7 +25,10 @@ public class CellAntManager : MonoBehaviour
             collectionCheck: false,
             defaultCapacity: MaxItems,
             maxSize: MaxItems);
+    }
 
+    private void Start()
+    {
         WarmupPool();
     }
 
@@ -42,13 +45,14 @@ public class CellAntManager : MonoBehaviour
 
     ModCellFollower Create()
     {
-        return Instantiate(CellAntProto, Vector3.zero, Quaternion.identity, this.gameObject.transform).GetComponent<ModCellFollower>();
+        var ant = Instantiate(CellAntProto, Vector3.one * 128851, Quaternion.identity, this.gameObject.transform);
+        var mod = ant.GetComponent<ModCellFollower>();
+        return mod;
     }
 
     void OnGet(ModCellFollower ant)
     {
         ant.Reset();
-        ant.gameObject.SetActive(true);
         active.Add(ant);
     }
 

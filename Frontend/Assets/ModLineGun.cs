@@ -40,22 +40,25 @@ public class ModLineGun : SludgeModifier
         {
             countdown = Delay;
             var bullet = BulletManager.Instance.Get();
+            if (bullet != null)
+            {
 
-            var look = SludgeUtil.LookAngle(trans.rotation.eulerAngles.z);
-            bullet.DX = SludgeUtil.Stabilize(look.x * BulletSpeed);
-            bullet.DY = SludgeUtil.Stabilize(look.y * BulletSpeed);
-            bullet.X = SludgeUtil.Stabilize(trans.position.x + look.x * 0.5);
-            bullet.Y = SludgeUtil.Stabilize(trans.position.y + look.y * 0.5);
+                var look = SludgeUtil.LookAngle(trans.rotation.eulerAngles.z);
+                bullet.DX = SludgeUtil.Stabilize(look.x * BulletSpeed);
+                bullet.DY = SludgeUtil.Stabilize(look.y * BulletSpeed);
+                bullet.X = SludgeUtil.Stabilize(trans.position.x + look.x * 0.5);
+                bullet.Y = SludgeUtil.Stabilize(trans.position.y + look.y * 0.5);
 
-            var childTrans = trans.GetChild(0);
-            if (childTransTween == null)
-                childTransTween = childTrans.DOPunchScale(Vector3.one * 0.25f, 0.2f);
-            else
-                childTransTween.Restart();
+                var childTrans = trans.GetChild(0);
+                if (childTransTween == null)
+                    childTransTween = childTrans.DOPunchScale(Vector3.one * 0.25f, 0.2f);
+                else
+                    childTransTween.Restart();
 
-            ant.ShotFired();
+                ant.ShotFired();
 
-            SoundManager.Play(FxList.Instance.EnemyShoot);
+                SoundManager.Play(FxList.Instance.EnemyShoot);
+            }
         }
     }
 }

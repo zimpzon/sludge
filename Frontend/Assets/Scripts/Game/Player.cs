@@ -1,12 +1,9 @@
 using DG.Tweening;
-using Sludge;
 using Sludge.Utility;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static PlayerSample[] PlayerSamples = new PlayerSample[30000];
-
     public static Vector3 Position;
     public static double Angle;
     public static Quaternion Rotation;
@@ -39,8 +36,8 @@ public class Player : MonoBehaviour
     double maxSpeed = 10;
     double turnSpeed = 250;
     double turnMultiplier = 20;
-    double accelerateSpeed = 200;
-    double friction = 40.0f;
+    double accelerateSpeed = 180;
+    double friction = 50.0f;
     Transform trans;
     double playerX;
     double playerY;
@@ -277,6 +274,7 @@ public class Player : MonoBehaviour
             PlayerBullet.Y = SludgeUtil.Stabilize(trans.position.y + look.y * 0.5);
 
             PlayerBullet.Fire();
+            //SoundManager.Play(FxList.Instance.PlayerShoot);
         }
     }
 
@@ -433,7 +431,7 @@ public class Player : MonoBehaviour
     {
         if (!init && PositionSampleIdx > 0)
         {
-            var prevPos = PlayerSamples[PositionSampleIdx - 1].Pos;
+            var prevPos = GameManager.PlayerSamples[PositionSampleIdx - 1].Pos;
             var dist = (trans.position - prevPos).magnitude;
             if (dist < 0.08f)
                 return;
@@ -442,8 +440,8 @@ public class Player : MonoBehaviour
         if (!init)
             PositionSampleIdx++;
 
-        PlayerSamples[PositionSampleIdx].Pos = trans.position;
-        PlayerSamples[PositionSampleIdx].Angle = angle;
+        GameManager.PlayerSamples[PositionSampleIdx].Pos = trans.position;
+        GameManager.PlayerSamples[PositionSampleIdx].Angle = angle;
     }
 
     void UpdateTransform()

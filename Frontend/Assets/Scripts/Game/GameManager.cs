@@ -17,6 +17,8 @@ using UnityEngine.UI;
 // First script to run
 public class GameManager : MonoBehaviour
 {
+    public static PlayerSample[] PlayerSamples = new PlayerSample[30000];
+
     public static readonly string Version = "0.1b";
 
     const double TimePillBonusTime = -1.0;
@@ -101,6 +103,15 @@ public class GameManager : MonoBehaviour
         SoundManager.Play(FxList.Instance.EnemyDie);
         DustParticles.transform.position = goEnemy.transform.position;
         DustParticles.Emit(4);
+
+        // If enemy implements IEnemy kill it using that (can customize death). Else just disable the whole go.
+        var iEnemy = goEnemy.GetComponent<IEnemy>();
+        if (iEnemy != null)
+        {
+            iEnemy.Kill();
+            return;
+        }
+
         SludgeUtil.SetActiveRecursive(goEnemy, false);
     }
 

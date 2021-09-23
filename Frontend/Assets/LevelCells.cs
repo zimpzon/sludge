@@ -148,7 +148,13 @@ public class LevelCells : MonoBehaviour
     }
 
     void SetCellValue(Vector2Int cellPos, byte value)
-        => cells[cellPos.y * w + cellPos.x] = value;
+    {
+        int idx = cellPos.y * w + cellPos.x;
+        if (idx < 0 || idx >= cells.Length)
+            return;
+
+        cells[cellPos.y * w + cellPos.x] = value;
+    }
 
     byte GetCellValue(Vector2Int cellPos)
     {

@@ -13,7 +13,7 @@ public class BulletManager : MonoBehaviour
     const int DefaultItems = 50;
     const int MaxItems = 200;
 
-    private void Awake()
+    public void Awake()
     {
         Instance = this;
 
@@ -25,7 +25,10 @@ public class BulletManager : MonoBehaviour
             collectionCheck: false,
             defaultCapacity: MaxItems,
             maxSize: MaxItems);
+    }
 
+    private void Start()
+    {
         WarmupPool();
     }
 
