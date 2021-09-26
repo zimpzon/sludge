@@ -83,7 +83,7 @@ public class LevelCells : MonoBehaviour
             SetCellValue(cellPos, Free);
     }
 
-    public bool TryClaimMovement(Vector2Int currentCellPos, Vector2Int dir, out Vector2Int newPos)
+    public bool TryClaimMovement(Vector2Int currentCellPos, Vector2Int dir, bool prioritizeX, out Vector2Int newPos)
     {
         var backup = dir;
         newPos = currentCellPos + dir;
@@ -99,21 +99,43 @@ public class LevelCells : MonoBehaviour
             canMove = GetCellValue(currentCellPos + justY) == Free && GetCellValue(currentCellPos + justX) == Free;
         }
 
-        if (!canMove)
+        if (prioritizeX)
         {
-            // Try just y
-            dir.x = 0;
-            newPos = currentCellPos + dir;
-            canMove = GetCellValue(newPos) == Free;
-        }
+            if (!canMove)
+            {
+                // Try just x
+                dir = backup;
+                dir.y = 0;
+                newPos = currentCellPos + dir;
+                canMove = GetCellValue(newPos) == Free;
+            }
 
-        if (!canMove)
+            if (!canMove)
+            {
+                // Try just y
+                dir.x = 0;
+                newPos = currentCellPos + dir;
+                canMove = GetCellValue(newPos) == Free;
+            }
+        }
+        else
         {
-            // Try just x
-            dir = backup;
-            dir.y = 0;
-            newPos = currentCellPos + dir;
-            canMove = GetCellValue(newPos) == Free;
+            if (!canMove)
+            {
+                // Try just y
+                dir.x = 0;
+                newPos = currentCellPos + dir;
+                canMove = GetCellValue(newPos) == Free;
+            }
+
+            if (!canMove)
+            {
+                // Try just x
+                dir = backup;
+                dir.y = 0;
+                newPos = currentCellPos + dir;
+                canMove = GetCellValue(newPos) == Free;
+            }
         }
 
         if (canMove)

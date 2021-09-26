@@ -1,6 +1,6 @@
+using Sludge;
 using Sludge.SludgeObjects;
 using Sludge.Utility;
-using UnityEngine;
 
 public class CellAnt : SludgeObject, IEnemy
 {

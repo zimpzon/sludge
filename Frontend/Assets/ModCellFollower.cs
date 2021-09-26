@@ -117,7 +117,7 @@ public class ModCellFollower : SludgeModifier
             else if (diffY < -0.5)
                 desiredDir.y = -1;
 
-            if (LevelCells.Instance.TryClaimMovement(myCell, desiredDir, out var newCell))
+            if (LevelCells.Instance.TryClaimMovement(myCell, desiredDir, prioritizeX: true, out var newCell))
             {
                 SetTarget(newCell);
                 myCell = newCell;

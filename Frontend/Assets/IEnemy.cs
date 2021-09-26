@@ -1,4 +1,7 @@
-public interface IEnemy
+namespace Sludge
 {
-    void Kill();
+    public interface IEnemy
+    {
+        void Kill();
+    }
 }
