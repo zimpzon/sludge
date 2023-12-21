@@ -12,6 +12,9 @@ namespace MoreMountains.Tools
 		[Tooltip("if this is true, this singleton will auto detach if it finds itself parented on awake")]
 		public bool AutomaticallyUnparentOnAwake = true;
 		
+		public static bool HasInstance => _instance != null;
+		public static T Current => _instance;
+		
 		protected static T _instance;
 		protected bool _enabled;
 
@@ -29,6 +32,7 @@ namespace MoreMountains.Tools
 					if (_instance == null)
 					{
 						GameObject obj = new GameObject ();
+						obj.name = typeof(T).Name + "_AutoCreated";
 						_instance = obj.AddComponent<T> ();
 					}
 				}
@@ -36,22 +40,30 @@ namespace MoreMountains.Tools
 			}
 		}
 
-	    /// <summary>
-	    /// On awake, we check if there's already a copy of the object in the scene. If there's one, we destroy it.
-	    /// </summary>
-	    protected virtual void Awake ()
+		/// <summary>
+		/// On awake, we check if there's already a copy of the object in the scene. If there's one, we destroy it.
+		/// </summary>
+		protected virtual void Awake ()
+		{
+			InitializeSingleton();
+		}
+
+		/// <summary>
+		/// Initializes the singleton.
+		/// </summary>
+		protected virtual void InitializeSingleton()
 		{
 			if (!Application.isPlaying)
 			{
 				return;
-            }
+			}
 
 			if (AutomaticallyUnparentOnAwake)
 			{
 				this.transform.SetParent(null);
 			}
 
-            if (_instance == null)
+			if (_instance == null)
 			{
 				//If I am the first instance, make me the Singleton
 				_instance = this as T;

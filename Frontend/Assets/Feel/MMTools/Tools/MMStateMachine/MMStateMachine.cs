@@ -25,7 +25,6 @@ namespace MoreMountains.Tools
 
 	/// <summary>
 	/// Public interface for the state machine.
-	/// This is used by the StateMachineProcessor.
 	/// </summary>
 	public interface MMIStateMachine
 	{
@@ -39,17 +38,37 @@ namespace MoreMountains.Tools
 	/// Initialize it like that : ConditionStateMachine = new StateMachine<CharacterConditions>();
 	/// Then from anywhere, all you need to do is update its state when needed, like that for example : ConditionStateMachine.ChangeState(CharacterConditions.Dead);
 	/// The state machine will store for you its current and previous state, accessible at all times, and will also optionnally trigger events on enter/exit of these states.
-	/// You can go further by using a StateMachineProcessor class, to trigger more events (see the list below).
 	/// </summary>
 	public class MMStateMachine<T> : MMIStateMachine where T : struct, IComparable, IConvertible, IFormattable
 	{
 		/// If you set TriggerEvents to true, the state machine will trigger events when entering and exiting a state. 
-		/// Additionnally, if you also use a StateMachineProcessor, it'll trigger events for the current state on FixedUpdate, LateUpdate, but also
-		/// on Update (separated in EarlyUpdate, Update and EndOfUpdate, triggered in this order at Update()
-		/// To listen to these events, from any class, in its Start() method (or wherever you prefer), use MMEventManager.StartListening(gameObject.GetInstanceID().ToString()+"XXXEnter",OnXXXEnter);
-		/// where XXX is the name of the state you're listening to, and OnXXXEnter is the method you want to call when that event is triggered.
-		/// MMEventManager.StartListening(gameObject.GetInstanceID().ToString()+"CrouchingEarlyUpdate",OnCrouchingEarlyUpdate); for example will listen to the Early Update event of the Crouching state, and 
-		/// will trigger the OnCrouchingEarlyUpdate() method. 
+		/// Additionnally, it has options to trigger events on state change that can be listened to from any listener, without a delegate's hard binding, like so :
+		/// let's assume in some class we have a public MMStateMachine<CharacterStates.MovementStates> MovementState, and we use that to track the state of a moving character (idle, walking, running etc)
+		/// in any other class, we could do :
+		/// public class TestListener : MonoBehaviour, MMEventListener<MMStateChangeEvent<CharacterStates.MovementStates>>
+		/// {
+		/// 	// triggered every time a state change event occurs
+		/// 	public void OnMMEvent(MMStateChangeEvent<CharacterStates.MovementStates> stateChangeEvent)
+		/// 	{
+		/// 		if (stateChangeEvent.NewState == CharacterStates.MovementStates.Crawling)
+		/// 		{
+		/// 			//do something - in a real life scenario you'd probably make sure you have the right target, etc.
+		/// 		}
+		/// 	}
+		/// 
+		/// 	private void OnEnable() // on enable we start listening for these events
+		/// 	{
+		/// 		MMEventManager.AddListener<MMStateChangeEvent<CharacterStates.MovementStates>>(this);
+		/// 	}
+		/// 
+		/// 	private void OnDisable() // on disable we stop listening for these events
+		/// 	{
+		/// 		MMEventManager.RemoveListener<MMStateChangeEvent<CharacterStates.MovementStates>>(this);
+		/// 	}
+		/// }
+		/// Now every time this character's movement state changes, the OnMMEvent method will be called, and you can do whatever you want with it.
+		/// 
+		/// whether or not this state machine broadcasts events 
 		public bool TriggerEvents { get; set; }
 		/// the name of the target gameobject
 		public GameObject Target;
@@ -58,29 +77,29 @@ namespace MoreMountains.Tools
 		/// the character's movement state before entering the current one
 		public T PreviousState { get; protected set; }
 
-        public delegate void OnStateChangeDelegate();
-        /// an event you can listen to to listen locally to changes on that state machine
-        /// to listen to them, from any class : 
-        /// void OnEnable()
-        /// {
-        ///    yourReferenceToTheStateMachine.OnStateChange += OnStateChange;
-        /// }
-        /// void OnDisable()
-        /// {
-        ///    yourReferenceToTheStateMachine.OnStateChange -= OnStateChange;
-        /// }
-        /// void OnStateChange()
-        /// {
-        ///    // Do something
-        /// }
-        public OnStateChangeDelegate OnStateChange;
+		public delegate void OnStateChangeDelegate();
+		/// an event you can listen to to listen locally to changes on that state machine
+		/// to listen to them, from any class : 
+		/// void OnEnable()
+		/// {
+		///    yourReferenceToTheStateMachine.OnStateChange += OnStateChange;
+		/// }
+		/// void OnDisable()
+		/// {
+		///    yourReferenceToTheStateMachine.OnStateChange -= OnStateChange;
+		/// }
+		/// void OnStateChange()
+		/// {
+		///    // Do something
+		/// }
+		public OnStateChangeDelegate OnStateChange;
 
-        /// <summary>
-        /// Creates a new StateMachine, with a targetName (used for events, usually use GetInstanceID()), and whether you want to use events with it or not
-        /// </summary>
-        /// <param name="targetName">Target name.</param>
-        /// <param name="triggerEvents">If set to <c>true</c> trigger events.</param>
-        public MMStateMachine(GameObject target, bool triggerEvents)
+		/// <summary>
+		/// Creates a new StateMachine, with a targetName (used for events, usually use GetInstanceID()), and whether you want to use events with it or not
+		/// </summary>
+		/// <param name="targetName">Target name.</param>
+		/// <param name="triggerEvents">If set to <c>true</c> trigger events.</param>
+		public MMStateMachine(GameObject target, bool triggerEvents)
 		{
 			this.Target = target;
 			this.TriggerEvents = triggerEvents;
@@ -93,7 +112,7 @@ namespace MoreMountains.Tools
 		public virtual void ChangeState(T newState)
 		{
 			// if the "new state" is the current one, we do nothing and exit
-			if (newState.Equals(CurrentState))
+			if (EqualityComparer<T>.Default.Equals(newState, CurrentState))
 			{
 				return;
 			}
@@ -102,9 +121,9 @@ namespace MoreMountains.Tools
 			PreviousState = CurrentState;
 			CurrentState = newState;
 
-            OnStateChange?.Invoke();
+			OnStateChange?.Invoke();
 
-            if (TriggerEvents)
+			if (TriggerEvents)
 			{
 				MMEventManager.TriggerEvent (new MMStateChangeEvent<T> (this));
 			}
@@ -118,9 +137,9 @@ namespace MoreMountains.Tools
 			// we restore our previous state
 			CurrentState = PreviousState;
 
-            OnStateChange?.Invoke();
+			OnStateChange?.Invoke();
 
-            if (TriggerEvents)
+			if (TriggerEvents)
 			{
 				MMEventManager.TriggerEvent (new MMStateChangeEvent<T> (this));
 			}

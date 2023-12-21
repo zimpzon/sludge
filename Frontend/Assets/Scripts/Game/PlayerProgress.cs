@@ -24,7 +24,7 @@ namespace Sludge.Utility
         {
             if (string.IsNullOrWhiteSpace(levelUniqueId))
             {
-                Debug.LogError("GetLevelStatus called with empty levelUniqueId");
+                Debug.LogWarning("GetLevelStatus called with empty levelUniqueId");
                 return new LevelProgress();
             }
 

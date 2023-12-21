@@ -18,22 +18,19 @@ namespace MoreMountains.Tools
 		private static List<MMAchievement> _achievements;
 		private static MMAchievement _achievement = null;
 
-		private const string _defaultFileName = "Achievements";
-		private const string _saveFolderName = "MMAchievements/";
-		private const string _saveFileExtension = ".achievements";
+		public static string _defaultFileName = "Achievements";
+		public static string _saveFolderName = "MMAchievements/";
+		public static string _saveFileExtension = ".achievements";
 
-		private static string _saveFileName;
-		private static string _listID;
+		public static string SaveFileName;
+		public static string ListID;
 
 		/// <summary>
 		/// You'll need to call this method to initialize the manager
 		/// </summary>
-		public static void LoadAchievementList()
+		public static void LoadAchievementList(MMAchievementList achievementList)
 		{
 			_achievements = new List<MMAchievement> ();
-
-			// the Achievement List scriptable object must be in a Resources folder inside your project, like so : Resources/Achievements/PUT_SCRIPTABLE_OBJECT_HERE
-			MMAchievementList achievementList = (MMAchievementList) Resources.Load("Achievements/AchievementList");
 
 			if (achievementList == null)
 			{
@@ -41,7 +38,7 @@ namespace MoreMountains.Tools
 			}
 
 			// we store the ID for save purposes
-			_listID = achievementList.AchievementsListID;
+			ListID = achievementList.AchievementsListID;
 
 			foreach (MMAchievement achievement in achievementList.Achievements)
 			{
@@ -142,14 +139,13 @@ namespace MoreMountains.Tools
 			}
 
 			DeterminePath (listID);
-			MMSaveLoadManager.DeleteSave(_saveFileName + _saveFileExtension, _saveFolderName);
+			MMSaveLoadManager.DeleteSave(SaveFileName + _saveFileExtension, _saveFolderName);
 			Debug.LogFormat ("Achievements Reset");
 		}
 
 		public static void ResetAllAchievements()
 		{
-			LoadAchievementList ();
-			ResetAchievements (_listID);
+			ResetAchievements (ListID);
 		}
 
 		/// <summary>
@@ -158,7 +154,7 @@ namespace MoreMountains.Tools
 		public static void LoadSavedAchievements()
 		{
 			DeterminePath ();
-			SerializedMMAchievementManager serializedMMAchievementManager = (SerializedMMAchievementManager)MMSaveLoadManager.Load(typeof(SerializedMMAchievementManager), _saveFileName+ _saveFileExtension, _saveFolderName);
+			SerializedMMAchievementManager serializedMMAchievementManager = (SerializedMMAchievementManager)MMSaveLoadManager.Load(typeof(SerializedMMAchievementManager), SaveFileName+ _saveFileExtension, _saveFolderName);
 			ExtractSerializedMMAchievementManager(serializedMMAchievementManager);
 		}
 
@@ -170,7 +166,7 @@ namespace MoreMountains.Tools
 			DeterminePath ();
 			SerializedMMAchievementManager serializedMMAchievementManager = new SerializedMMAchievementManager();
 			FillSerializedMMAchievementManager(serializedMMAchievementManager);
-			MMSaveLoadManager.Save(serializedMMAchievementManager, _saveFileName+_saveFileExtension, _saveFolderName);
+			MMSaveLoadManager.Save(serializedMMAchievementManager, SaveFileName+_saveFileExtension, _saveFolderName);
 		}
 
 		/// <summary>
@@ -178,13 +174,13 @@ namespace MoreMountains.Tools
 		/// </summary>
 		private static void DeterminePath(string specifiedFileName = "")
 		{
-			string tempFileName = (!string.IsNullOrEmpty(_listID)) ? _listID : _defaultFileName;
+			string tempFileName = (!string.IsNullOrEmpty(ListID)) ? ListID : _defaultFileName;
 			if (!string.IsNullOrEmpty(specifiedFileName))
 			{
 				tempFileName = specifiedFileName;
 			}
 
-			_saveFileName = tempFileName;
+			SaveFileName = tempFileName;
 		}
 
 		/// <summary>

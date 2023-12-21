@@ -11,90 +11,84 @@ namespace MoreMountains.Tools
 	public class MMTime : MonoBehaviour 
 	{
 		/// <summary>
-        /// Turns a float (expressed in seconds) into a string displaying hours, minutes, seconds and hundredths optionnally
-        /// </summary>
-        /// <param name="t"></param>
-        /// <param name="displayHours"></param>
-        /// <param name="displayMinutes"></param>
-        /// <param name="displaySeconds"></param>
-        /// <param name="displayHundredths"></param>
-        /// <returns></returns>
-        public static string FloatToTimeString(float t, bool displayHours = false, bool displayMinutes = true, bool displaySeconds = true, bool displayMilliseconds = false, 
-	        string HMSmFormat = "{0:D2}:{1:D2}:{2:D2}.{3:D3}", 
-	        string SmFormat = "{0:D2}.{1:D3}",
-	        string MSmFormat = "{0:D2}:{1:D2}.{2:D3}",
-	        string SFormat = "{0:D2}",
-	        string HMSFormat = "{0:D2}:{1:D2}:{2:D2}",
-	        string MSFormat = "{0:D2}:{1:D2}")
-        {
-            int intTime = (int)t;
-            int hours = intTime / 3600;
-            int minutes = intTime / 60;
-            int seconds = intTime % 60;
-            int milliseconds = Mathf.FloorToInt((t * 1000)%1000);
+		/// Turns a float (expressed in seconds) into a string displaying hours, minutes, seconds and hundredths optionnally
+		/// </summary>
+		/// <param name="t"></param>
+		/// <param name="displayHours"></param>
+		/// <param name="displayMinutes"></param>
+		/// <param name="displaySeconds"></param>
+		/// <param name="displayHundredths"></param>
+		/// <returns></returns>
+		public static string FloatToTimeString(float t, bool displayHours = false, bool displayMinutes = true, bool displaySeconds = true, bool displayMilliseconds = false)
+		{
+			int intTime = (int)t;
+			int hours = intTime / 3600;
+			int minutes = intTime / 60;
+			int seconds = intTime % 60;
+			int milliseconds = Mathf.FloorToInt((t * 1000)%1000);
             
-            if (displayHours && displayMinutes && displaySeconds && displayMilliseconds)
-            {
-                return string.Format(HMSmFormat, hours, minutes, seconds, milliseconds);
-            }
-            if (!displayHours && displayMinutes && displaySeconds && displayMilliseconds)
-            {
-                return string.Format(MSmFormat, minutes, seconds, milliseconds);
-            }
-            if (!displayHours && !displayMinutes && displaySeconds && displayMilliseconds)
-            {
-                return string.Format(SmFormat, seconds, milliseconds);
-            }
-            if (!displayHours && !displayMinutes && displaySeconds && !displayMilliseconds)
-            {
-                return string.Format(SFormat, seconds);
-            }
-            if (displayHours && displayMinutes && displaySeconds && !displayMilliseconds)
-            {
-                return string.Format(HMSFormat, hours, minutes, seconds);
-            }
-            if (!displayHours && displayMinutes && displaySeconds && !displayMilliseconds)
-            {
-                return string.Format(MSFormat, minutes, seconds);
-            }
-            return null;
+			if (displayHours && displayMinutes && displaySeconds && displayMilliseconds)
+			{
+				return string.Format("{0:00}:{1:00}:{2:00}.{3:D3}", hours, minutes, seconds, milliseconds);
+			}
+			if (!displayHours && displayMinutes && displaySeconds && displayMilliseconds)
+			{
+				return string.Format("{0:00}:{1:00}.{2:D3}", minutes, seconds, milliseconds);
+			}
+			if (!displayHours && !displayMinutes && displaySeconds && displayMilliseconds)
+			{
+				return string.Format("{0:D2}.{1:D3}", seconds, milliseconds);
+			}
+			if (!displayHours && !displayMinutes && displaySeconds && !displayMilliseconds)
+			{
+				return string.Format("{0:00}", seconds);
+			}
+			if (displayHours && displayMinutes && displaySeconds && !displayMilliseconds)
+			{
+				return string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+			}
+			if (!displayHours && displayMinutes && displaySeconds && !displayMilliseconds)
+			{
+				return string.Format("{0:00}:{1:00}", minutes, seconds);
+			}
+			return null;
 
-        }
+		}
 
-        /// <summary>
-        /// Takes a hh:mm:ss:SSS string and turns it into a float value expressed in seconds
-        /// </summary>
-        /// <returns>a number of seconds.</returns>
-        /// <param name="timeInStringNotation">Time in string notation to decode.</param>
-        public static float TimeStringToFloat(string timeInStringNotation)
-	    {
+		/// <summary>
+		/// Takes a hh:mm:ss:SSS string and turns it into a float value expressed in seconds
+		/// </summary>
+		/// <returns>a number of seconds.</returns>
+		/// <param name="timeInStringNotation">Time in string notation to decode.</param>
+		public static float TimeStringToFloat(string timeInStringNotation)
+		{
 			if (timeInStringNotation.Length!=12)
 			{
 				throw new Exception("The time in the TimeStringToFloat method must be specified using a hh:mm:ss:SSS syntax");
 			}
 
-			string[] timeStringArray = timeInStringNotation.Split(new string[] {":"},StringSplitOptions.None);
+			string[] timeStringArray = timeInStringNotation.Split(new string[] {":","."},StringSplitOptions.None);
 
 			float startTime=0f;
 			float result;
 			if (float.TryParse(timeStringArray[0], out result))
 			{
-				startTime+=result*3600f;
+				startTime += result*3600f;
 			}
 			if (float.TryParse(timeStringArray[1], out result))
 			{
-				startTime+=result*60f;
+				startTime += result*60f;
 			}
 			if (float.TryParse(timeStringArray[2], out result))
 			{
-				startTime+=result;
+				startTime += result;
 			}
 			if (float.TryParse(timeStringArray[3], out result))
 			{
-				startTime+=result/1000f;
+				startTime += result/1000f;
 			}
 
 			return startTime;
-	    }
+		}
 	}
 }

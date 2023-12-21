@@ -8,7 +8,14 @@ namespace MoreMountains.Tools
 	/// </summary>
 	public class MMPersistentHumbleSingleton<T> : MonoBehaviour	where T : Component
 	{
+		/// whether or not this singleton already has an instance 
+		public static bool HasInstance => _instance != null;
+		public static T Current => _instance;
+		
 		protected static T _instance;
+		
+		/// the timestamp at which this singleton got initialized
+		[MMReadOnly]
 		public float InitializationTime;
 
 		/// <summary>
@@ -26,6 +33,7 @@ namespace MoreMountains.Tools
 					{
 						GameObject obj = new GameObject ();
 						obj.hideFlags = HideFlags.HideAndDontSave;
+						obj.name = typeof(T).Name + "_AutoCreated";
 						_instance = obj.AddComponent<T> ();
 					}
 				}
@@ -38,12 +46,20 @@ namespace MoreMountains.Tools
 		/// </summary>
 		protected virtual void Awake ()
 		{
+			InitializeSingleton();			
+		}
+
+		/// <summary>
+		/// Initializes the singleton.
+		/// </summary>
+		protected virtual void InitializeSingleton()
+		{
 			if (!Application.isPlaying)
 			{
 				return;
 			}
-
-			InitializationTime=Time.time;
+			
+			InitializationTime = Time.time;
 
 			DontDestroyOnLoad (this.gameObject);
 			// we check for existing objects of the same type
@@ -53,7 +69,7 @@ namespace MoreMountains.Tools
 				if (searched!=this)
 				{
 					// if we find another object of the same type (not this), and if it's older than our current object, we destroy it.
-					if (searched.GetComponent<MMPersistentHumbleSingleton<T>>().InitializationTime<InitializationTime)
+					if (searched.GetComponent<MMPersistentHumbleSingleton<T>>().InitializationTime < InitializationTime)
 					{
 						Destroy (searched.gameObject);
 					}
