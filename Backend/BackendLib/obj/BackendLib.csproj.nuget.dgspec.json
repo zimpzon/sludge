@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Unity\\Repo\\Sludge\\Backend\\BackendLib\\BackendLib.csproj": {}
+    "C:\\Repo\\sludge\\Backend\\BackendLib\\BackendLib.csproj": {}
   },
   "projects": {
-    "C:\\Unity\\Repo\\Sludge\\Backend\\BackendLib\\BackendLib.csproj": {
+    "C:\\Repo\\sludge\\Backend\\BackendLib\\BackendLib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Unity\\Repo\\Sludge\\Backend\\BackendLib\\BackendLib.csproj",
+        "projectUniqueName": "C:\\Repo\\sludge\\Backend\\BackendLib\\BackendLib.csproj",
         "projectName": "BackendLib",
-        "projectPath": "C:\\Unity\\Repo\\Sludge\\Backend\\BackendLib\\BackendLib.csproj",
-        "packagesPath": "C:\\Users\\pwe\\.nuget\\packages\\",
-        "outputPath": "C:\\Unity\\Repo\\Sludge\\Backend\\BackendLib\\obj\\",
+        "projectPath": "C:\\Repo\\sludge\\Backend\\BackendLib\\BackendLib.csproj",
+        "packagesPath": "C:\\Users\\peter\\.nuget\\packages\\",
+        "outputPath": "C:\\Repo\\sludge\\Backend\\BackendLib\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\pwe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\peter\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -55,7 +55,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -64,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }

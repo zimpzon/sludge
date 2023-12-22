@@ -1,15 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
     <AzureFunctionsVersion>v3</AzureFunctionsVersion>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\Frontend\Assets\Scripts\Game\RoundResult.cs" Link="RoundResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.13" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.2.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BackendLib\BackendLib.csproj" />

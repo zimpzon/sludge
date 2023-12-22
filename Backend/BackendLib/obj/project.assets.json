@@ -16,10 +16,14 @@
           "System.Threading.Tasks.Extensions": "4.5.2"
         },
         "compile": {
-          "lib/netstandard2.0/Azure.Core.dll": {}
+          "lib/netstandard2.0/Azure.Core.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Azure.Core.dll": {}
+          "lib/netstandard2.0/Azure.Core.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Azure.Storage.Blobs/12.9.1": {
@@ -29,10 +33,14 @@
           "System.Text.Json": "4.6.0"
         },
         "compile": {
-          "lib/netstandard2.0/Azure.Storage.Blobs.dll": {}
+          "lib/netstandard2.0/Azure.Storage.Blobs.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Azure.Storage.Blobs.dll": {}
+          "lib/netstandard2.0/Azure.Storage.Blobs.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Azure.Storage.Common/12.8.0": {
@@ -41,10 +49,14 @@
           "Azure.Core": "1.15.0"
         },
         "compile": {
-          "lib/netstandard2.0/Azure.Storage.Common.dll": {}
+          "lib/netstandard2.0/Azure.Storage.Common.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Azure.Storage.Common.dll": {}
+          "lib/netstandard2.0/Azure.Storage.Common.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.Bcl.AsyncInterfaces/1.0.0": {
@@ -56,7 +68,9 @@
           "ref/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {}
+          "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.Extensions.Configuration/3.0.1": {
@@ -65,10 +79,14 @@
           "Microsoft.Extensions.Configuration.Abstractions": "3.0.1"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll": {}
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll": {}
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.Extensions.Configuration.Abstractions/3.0.1": {
@@ -77,10 +95,14 @@
           "Microsoft.Extensions.Primitives": "3.0.1"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
+          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.Extensions.Primitives/3.0.1": {
@@ -90,19 +112,27 @@
           "System.Runtime.CompilerServices.Unsafe": "4.6.0"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {}
+          "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {}
+          "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Buffers/4.5.1": {
         "type": "package",
         "compile": {
-          "ref/netstandard2.0/System.Buffers.dll": {}
+          "ref/netstandard2.0/System.Buffers.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Buffers.dll": {}
+          "lib/netstandard2.0/System.Buffers.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Diagnostics.DiagnosticSource/4.6.0": {
@@ -111,10 +141,14 @@
           "System.Memory": "4.5.3"
         },
         "compile": {
-          "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {}
+          "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {}
+          "lib/netstandard1.3/System.Diagnostics.DiagnosticSource.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Memory/4.5.4": {
@@ -125,10 +159,14 @@
           "System.Runtime.CompilerServices.Unsafe": "4.5.3"
         },
         "compile": {
-          "lib/netstandard2.0/System.Memory.dll": {}
+          "lib/netstandard2.0/System.Memory.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Memory.dll": {}
+          "lib/netstandard2.0/System.Memory.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Memory.Data/1.0.2": {
@@ -138,37 +176,53 @@
           "System.Text.Json": "4.6.0"
         },
         "compile": {
-          "lib/netstandard2.0/System.Memory.Data.dll": {}
+          "lib/netstandard2.0/System.Memory.Data.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Memory.Data.dll": {}
+          "lib/netstandard2.0/System.Memory.Data.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Numerics.Vectors/4.5.0": {
         "type": "package",
         "compile": {
-          "ref/netstandard2.0/System.Numerics.Vectors.dll": {}
+          "ref/netstandard2.0/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Numerics.Vectors.dll": {}
+          "lib/netstandard2.0/System.Numerics.Vectors.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Runtime.CompilerServices.Unsafe/4.6.0": {
         "type": "package",
         "compile": {
-          "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+          "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Text.Encodings.Web/4.7.2": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.1/System.Text.Encodings.Web.dll": {}
+          "lib/netstandard2.1/System.Text.Encodings.Web.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.1/System.Text.Encodings.Web.dll": {}
+          "lib/netstandard2.1/System.Text.Encodings.Web.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Text.Json/4.6.0": {
@@ -183,10 +237,14 @@
           "System.Threading.Tasks.Extensions": "4.5.2"
         },
         "compile": {
-          "lib/netstandard2.0/System.Text.Json.dll": {}
+          "lib/netstandard2.0/System.Text.Json.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Text.Json.dll": {}
+          "lib/netstandard2.0/System.Text.Json.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Threading.Tasks.Extensions/4.5.2": {
@@ -195,10 +253,14 @@
           "System.Runtime.CompilerServices.Unsafe": "4.5.2"
         },
         "compile": {
-          "lib/netstandard2.0/System.Threading.Tasks.Extensions.dll": {}
+          "lib/netstandard2.0/System.Threading.Tasks.Extensions.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Threading.Tasks.Extensions.dll": {}
+          "lib/netstandard2.0/System.Threading.Tasks.Extensions.dll": {
+            "related": ".xml"
+          }
         }
       }
     }
@@ -587,19 +649,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pwe\\.nuget\\packages\\": {}
+    "C:\\Users\\peter\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Unity\\Repo\\Sludge\\Backend\\BackendLib\\BackendLib.csproj",
+      "projectUniqueName": "C:\\Repo\\sludge\\Backend\\BackendLib\\BackendLib.csproj",
       "projectName": "BackendLib",
-      "projectPath": "C:\\Unity\\Repo\\Sludge\\Backend\\BackendLib\\BackendLib.csproj",
-      "packagesPath": "C:\\Users\\pwe\\.nuget\\packages\\",
-      "outputPath": "C:\\Unity\\Repo\\Sludge\\Backend\\BackendLib\\obj\\",
+      "projectPath": "C:\\Repo\\sludge\\Backend\\BackendLib\\BackendLib.csproj",
+      "packagesPath": "C:\\Users\\peter\\.nuget\\packages\\",
+      "outputPath": "C:\\Repo\\sludge\\Backend\\BackendLib\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pwe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\peter\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -640,7 +702,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -649,7 +712,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
