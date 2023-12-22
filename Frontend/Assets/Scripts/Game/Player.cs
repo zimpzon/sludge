@@ -267,7 +267,7 @@ public class Player : MonoBehaviour
         if (GameManager.PlayerInput.Shoot != 0 && !PlayerBullet.Alive)
         {
             var look = SludgeUtil.LookAngle(trans.rotation.eulerAngles.z);
-            const float BulletSpeed = 20;
+            const float BulletSpeed = 40;
             PlayerBullet.DX = SludgeUtil.Stabilize(look.x * BulletSpeed);
             PlayerBullet.DY = SludgeUtil.Stabilize(look.y * BulletSpeed);
             PlayerBullet.X = SludgeUtil.Stabilize(trans.position.x + look.x * 0.5);
