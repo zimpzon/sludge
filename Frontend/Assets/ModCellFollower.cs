@@ -11,7 +11,7 @@ public class ModCellFollower : SludgeModifier
     SpriteRenderer spriteRenderer;
     Vector2Int myCell;
     Transform trans;
-    double timeMoveOneCell = 0.25;
+    double timeMoveOneCell = 0.5;
     double timeMoveThisCell;
     double startX;
     double startY;

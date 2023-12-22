@@ -9,13 +9,15 @@ namespace Sludge.Utility
     {
         public static double Stabilize(double d)
         {
+            return d;
             // Clamp to 3 decimal places to avoid errors creeping up
-            long temp = (long)(d * 1000);
-            return temp / 1000.0;
+            //long temp = (long)(d * 1000);
+            //return temp / 1000.0;
         }
 
         public static Vector3 StabilizeVector(Vector3 v)
-            => new Vector3((float)Stabilize(v.x), (float)Stabilize(v.y), (float)Stabilize(v.z));
+            => v;
+            //=> new Vector3((float)Stabilize(v.x), (float)Stabilize(v.y), (float)Stabilize(v.z));
 
         public static double TimeMod(double time)
             => time - (int)time;

@@ -104,7 +104,6 @@ public class LevelCells : MonoBehaviour
             if (!canMove)
             {
                 // Try just x
-                dir = backup;
                 dir.y = 0;
                 newPos = currentCellPos + dir;
                 canMove = GetCellValue(newPos) == Free;
@@ -113,6 +112,7 @@ public class LevelCells : MonoBehaviour
             if (!canMove)
             {
                 // Try just y
+                dir = backup;
                 dir.x = 0;
                 newPos = currentCellPos + dir;
                 canMove = GetCellValue(newPos) == Free;

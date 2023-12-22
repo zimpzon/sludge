@@ -34,8 +34,6 @@ public class Player : MonoBehaviour
     double speedY;
     double minSpeed = 0.0f;
     double maxSpeed = 10;
-    double turnSpeed = 250;
-    double turnMultiplier = 20;
     double accelerateSpeed = 180;
     double friction = 50.0f;
     Transform trans;
@@ -54,12 +52,10 @@ public class Player : MonoBehaviour
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
     double impulseY;
-    double impulseRotation;
 
     // Forces: summed up and added every frame. Diminished over multiple frames.
     double forceX;
     double forceY;
-    bool wasAcceleratingLastFrame;
 
     void Awake()
     {
@@ -86,7 +82,6 @@ public class Player : MonoBehaviour
         ripples.Reset();
         impulseX = 0;
         impulseY = 0;
-        impulseRotation = 0;
         currentThrowable = null;
         timeEnterSlimeCloud = -1;
         PositionSampleIdx = 0;
@@ -100,8 +95,8 @@ public class Player : MonoBehaviour
         playerY = homeY;
         angle = homeAngle;
         eyesTransform.localScale = eyesBaseScale;
+
         UpdateTransform();
-        SetPositionSample(init: true);
         PlayerBullet.Reset();
     }
 
@@ -138,11 +133,6 @@ public class Player : MonoBehaviour
     {
         impulseX += SludgeUtil.Stabilize(x);
         impulseY += SludgeUtil.Stabilize(y);
-    }
-
-    public void AddRotationImpulse(double angle)
-    {
-        impulseRotation += SludgeUtil.Stabilize(angle);
     }
 
     public void AddPositionForce(double x, double y)
@@ -194,72 +184,6 @@ public class Player : MonoBehaviour
         Alive = false;
     }
 
-    void PlayerControls()
-    {
-        bool isTurning = false;
-
-        if (GameManager.PlayerInput.Left != 0)
-        {
-            isTurning = true;
-            angle += GameManager.TickSize * (turnSpeed + (maxSpeed - speed) * turnMultiplier);
-            if (angle > 360)
-                angle -= 360;
-        }
-
-        if (GameManager.PlayerInput.Right != 0)
-        {
-            isTurning = true;
-            angle -= GameManager.TickSize * (turnSpeed + (maxSpeed - speed) * turnMultiplier);
-            if (angle < 0)
-                angle += 360;
-        }
-
-        if (!isTurning)
-        {
-            // Snap to 0, 45, 90, etc., if very close
-            int snap = Mathf.RoundToInt((float)SludgeUtil.Stabilize(angle) / 45) % 8;
-            double snappedAngle = snap * 45;
-            double diff = angle - snappedAngle;
-            double absDiff = Mathf.Abs((float)SludgeUtil.Stabilize(diff));
-            if (absDiff < 1.0f)
-            {
-                angle = snappedAngle;
-            }
-            else if (absDiff < 15)
-            {
-                angle -= SludgeUtil.Stabilize(Mathf.Sign((float)diff) * GameManager.TickSize * turnSpeed * 0.1);
-            }
-
-            angle = SludgeUtil.AngleNormalized0To360(angle);
-        }
-
-        if (GameManager.PlayerInput.Up != 0 && onConveyorBeltCount == 0)
-        {
-            speed = SludgeUtil.Stabilize(speed + GameManager.TickSize * accelerateSpeed);
-            if (speed > maxSpeed)
-                speed = maxSpeed;
-        }
-
-        bool isAccelerating = GameManager.PlayerInput.Up != 0;
-        bool accelerationStart = !wasAcceleratingLastFrame && isAccelerating;
-        bool accelerationEnd = wasAcceleratingLastFrame && !isAccelerating;
-
-        //if (GameManager.PlayerInput.UpDoubleTap != 0 && currentThrowable != null)
-        if (accelerationEnd && currentThrowable != null)
-        {
-            currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed * 1.2);
-            currentThrowable = null;
-        }
-
-        double lookX = -SludgeUtil.Stabilize(Mathf.Sin((float)(Mathf.Deg2Rad * angle)));
-        double lookY = SludgeUtil.Stabilize(Mathf.Cos((float)(Mathf.Deg2Rad * angle)));
-
-        playerX += speed * GameManager.TickSize * lookX;
-        playerY += speed * GameManager.TickSize * lookY;
-
-        wasAcceleratingLastFrame = isAccelerating;
-    }
-
     float legOffset = 0;
 
     void CheckShoot()
@@ -280,24 +204,30 @@ public class Player : MonoBehaviour
 
     void PlayerControls4Dir()
     {
+        bool hasPlayerInput = false;
+
         if (GameManager.PlayerInput.Left != 0)
         {
             speedX -= accelerateSpeed * GameManager.TickSize;
+            hasPlayerInput = true;
         }
 
         if (GameManager.PlayerInput.Right != 0)
         {
             speedX += accelerateSpeed * GameManager.TickSize;
+            hasPlayerInput = true;
         }
 
         if (GameManager.PlayerInput.Up != 0)
         {
             speedY += accelerateSpeed * GameManager.TickSize;
+            hasPlayerInput = true;
         }
 
         if (GameManager.PlayerInput.Down != 0)
         {
             speedY -= accelerateSpeed * GameManager.TickSize;
+            hasPlayerInput = true;
         }
 
         speedX = Mathf.Clamp((float)speedX, (float)-maxSpeed, (float)maxSpeed);
@@ -315,10 +245,14 @@ public class Player : MonoBehaviour
         lockLegMovement = !isMoving;
 
         const float legSpeed = 20;
+        if (hasPlayerInput)
+        {
+            angle = Mathf.Atan2((float)speedY, (float)speedX) * Mathf.Rad2Deg - 90;
+        }
+
         if (isMoving)
         {
             legOffset += (float)(GameManager.TickSize * legSpeed);
-            angle = Mathf.Atan2((float)speedY, (float)speedX) * Mathf.Rad2Deg - 90;
         }
 
         //if (accelerationEnd && currentThrowable != null)
@@ -364,7 +298,6 @@ public class Player : MonoBehaviour
         if (!Alive)
             return;
 
-        //PlayerControls();
         PlayerControls4Dir();
 
         speed = SludgeUtil.Stabilize(speed - GameManager.TickSize * friction);
@@ -376,10 +309,6 @@ public class Player : MonoBehaviour
         playerY += impulseY * GameManager.TickSize;
         impulseX = 0;
         impulseY = 0;
-
-        angle += impulseRotation;
-        angle = SludgeUtil.AngleNormalized0To360(angle);
-        impulseRotation = 0;
 
         // Force
         playerX += forceX * GameManager.TickSize;
@@ -393,10 +322,8 @@ public class Player : MonoBehaviour
 
         playerX = SludgeUtil.Stabilize(playerX);
         playerY = SludgeUtil.Stabilize(playerY);
-        angle = SludgeUtil.Stabilize(angle);
 
         UpdateTransform();
-        SetPositionSample();
 
         CheckSlimeCloud();
     }
@@ -425,23 +352,6 @@ public class Player : MonoBehaviour
     private void Update()
     {
         UpdateLegs();
-    }
-
-    void SetPositionSample(bool init = false)
-    {
-        if (!init && PositionSampleIdx > 0)
-        {
-            var prevPos = GameManager.PlayerSamples[PositionSampleIdx - 1].Pos;
-            var dist = (trans.position - prevPos).magnitude;
-            if (dist < 0.08f)
-                return;
-        }
-
-        if (!init)
-            PositionSampleIdx++;
-
-        GameManager.PlayerSamples[PositionSampleIdx].Pos = trans.position;
-        GameManager.PlayerSamples[PositionSampleIdx].Angle = angle;
     }
 
     void UpdateTransform()
