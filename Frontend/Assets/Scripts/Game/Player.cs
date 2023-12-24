@@ -33,9 +33,9 @@ public class Player : MonoBehaviour
     double speedX;
     double speedY;
     double minSpeed = 0.0f;
-    double maxSpeed = 10;
-    double accelerateSpeed = 180;
-    double friction = 50.0f;
+    public double maxSpeed = 10;
+    public double accelerateSpeed = 300;
+    public double friction = 50.0f;
     Transform trans;
     double playerX;
     double playerY;
@@ -204,31 +204,34 @@ public class Player : MonoBehaviour
 
     void PlayerControls4Dir()
     {
-        bool hasPlayerInput = false;
+        bool hasPlayerHorizontalInput = false;
+        bool hasPlayerVerticalInput = false;
 
         if (GameManager.PlayerInput.Left != 0)
         {
             speedX -= accelerateSpeed * GameManager.TickSize;
-            hasPlayerInput = true;
+            hasPlayerHorizontalInput = true;
         }
 
         if (GameManager.PlayerInput.Right != 0)
         {
             speedX += accelerateSpeed * GameManager.TickSize;
-            hasPlayerInput = true;
+            hasPlayerHorizontalInput = true;
         }
 
         if (GameManager.PlayerInput.Up != 0)
         {
             speedY += accelerateSpeed * GameManager.TickSize;
-            hasPlayerInput = true;
+            hasPlayerVerticalInput = true;
         }
 
         if (GameManager.PlayerInput.Down != 0)
         {
             speedY -= accelerateSpeed * GameManager.TickSize;
-            hasPlayerInput = true;
+            hasPlayerVerticalInput = true;
         }
+
+        bool hasPlayerInput = hasPlayerHorizontalInput || hasPlayerVerticalInput;
 
         speedX = Mathf.Clamp((float)speedX, (float)-maxSpeed, (float)maxSpeed);
         speedY = Mathf.Clamp((float)speedY, (float)-maxSpeed, (float)maxSpeed);
@@ -236,8 +239,12 @@ public class Player : MonoBehaviour
         // Speed curves
         //  _________
         // /         \
-        Friction(ref speedX);
-        Friction(ref speedY);
+
+        if (!hasPlayerHorizontalInput)
+            Friction(ref speedX);
+
+        if (!hasPlayerVerticalInput)
+            Friction(ref speedY);
 
         var moveVec = new Vector2((float)speedX, (float)speedY);
         bool isMoving = moveVec.sqrMagnitude > 0;
@@ -255,11 +262,12 @@ public class Player : MonoBehaviour
             legOffset += (float)(GameManager.TickSize * legSpeed);
         }
 
-        //if (accelerationEnd && currentThrowable != null)
-        //{
-        //    currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed * 1.2);
-        //    currentThrowable = null;
-        //}
+        if (!isMoving && currentThrowable != null)
+        {
+            currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed * 1.2);
+            currentThrowable = null;
+        }
+
         playerX += speedX * GameManager.TickSize;
         playerY += speedY * GameManager.TickSize;
     }
