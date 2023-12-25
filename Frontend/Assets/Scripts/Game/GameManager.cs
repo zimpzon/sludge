@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public Image TimeBarLeft;
     public Image TimeBarRight;
     public Tilemap Tilemap;
+    public Tilemap PillTilemap;
     public ColorSchemeScriptableObject CurrentColorScheme;
     public ColorSchemeScriptableObject CurrentUiColorScheme;
     public ColorSchemeListScriptableObject ColorSchemeList;
@@ -365,6 +366,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Tilemap size: {Tilemap.size} ({Tilemap.cellBounds})");
         LevelCells.Instance.ResetToTilemap(Tilemap);
+        PillCells.Instance.ResetToTilemap(PillTilemap);
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);

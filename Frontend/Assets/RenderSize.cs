@@ -30,10 +30,10 @@ public class RenderSize : MonoBehaviour
         float desiredViewportWidth = (int)(Screen.height * 1.6f);
         float unusableWidth = Screen.width - desiredViewportWidth;
 
-        Debug.Log("TODO: really need to lower resolution on these screens, ex work pc couldn't handle it");
         // Lower resolution for 4K screens
         if (desiredViewportWidth > 3000 && !resolutionChangeAttempted && Screen.fullScreen)
         {
+            Debug.Log("TODO: really need to lower resolution on these screens, ex work pc couldn't handle it");
             resolutionChangeAttempted = true;
 
             desiredViewportWidth /= 2;
