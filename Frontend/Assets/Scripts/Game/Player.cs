@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Sludge.Utility;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -332,6 +333,7 @@ public class Player : MonoBehaviour
         playerY = SludgeUtil.Stabilize(playerY);
 
         UpdateTransform();
+        SetPositionSample();
 
         CheckSlimeCloud();
     }
@@ -369,5 +371,22 @@ public class Player : MonoBehaviour
 
         Angle = angle;
         Rotation = trans.rotation;
+    }
+
+    void SetPositionSample(bool init = false)
+    {
+        if (!init && PositionSampleIdx > 0)
+        {
+            var prevPos = GameManager.PlayerSamples[PositionSampleIdx - 1].Pos;
+            var dist = (trans.position - prevPos).magnitude;
+            if (dist< 0.08f)
+                return;
+        }
+
+        if (!init)
+           PositionSampleIdx++;
+
+        GameManager.PlayerSamples[PositionSampleIdx].Pos = trans.position;
+        GameManager.PlayerSamples[PositionSampleIdx].Angle = angle;
     }
 }
