@@ -48,21 +48,38 @@ Shader "Sludge/OutlineShader"
 
             float4 _MainTex_TexelSize;
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
                 half4 col0 = tex2D(_MainTex, i.uv);
                 half4 colL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, 0));
+                half4 colR = tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, 0));
+                half4 colU = tex2D(_MainTex, i.uv + float2(0, -_MainTex_TexelSize.y));
                 half4 colD = tex2D(_MainTex, i.uv + float2(0, _MainTex_TexelSize.y));
+                // Sampling diagonal neighbors
+                half4 colUL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, -_MainTex_TexelSize.y));
+                half4 colUR = tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, -_MainTex_TexelSize.y));
+                half4 colDL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, _MainTex_TexelSize.y));
+                half4 colDR = tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, _MainTex_TexelSize.y));
 
                 half col0Sum = col0.r + col0.g + col0.b;
                 half isBackground = step(0.01, col0Sum);
 
-                half4 diff = abs(col0.g - colL.g) + abs(col0.g - colD.g);
-                half isEdge = step(0.01, diff);
+                // Enhanced edge detection with diagonals
+                half4 diff = abs(col0.g - colL.g) + abs(col0.g - colR.g) +
+                             abs(col0.g - colU.g) + abs(col0.g - colD.g) +
+                             abs(col0.g - colUL.g) + abs(col0.g - colUR.g) +
+                             abs(col0.g - colDL.g) + abs(col0.g - colDR.g);
+                half edgeStrength = smoothstep(0.0, 0.4, diff); // Adjust range as needed
+
                 half4 color = (col0 * isBackground) + (_WallColor * (1 - isBackground));
-                half4 result = (_EdgeColor * isEdge * 3) + (color * (1 - isEdge));
+
+                // Smooth blending of edge color
+                half4 edgeColor = _EdgeColor * edgeStrength * 3;
+                half4 result = lerp(color, edgeColor, edgeStrength); // Linear interpolation for smooth transition
+
                 return result;
             }
+
             ENDCG
         }
     }
