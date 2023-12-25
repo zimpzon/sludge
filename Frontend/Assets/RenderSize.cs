@@ -11,10 +11,10 @@ public class RenderSize : MonoBehaviour
     bool resolutionChangeAttempted = false;
     float viewPortChosenWidthAttempt;
 
+    private int _currentViewportWidth = -1;
+
     UniversalRenderPipelineAsset urp;
 
-    // 16:9  = 1.77 / 0.5625
-    // 16:10 = 1.60 / 0.6250
     private void Awake()
     {
         Cameras = FindObjectsOfType<Camera>();
@@ -26,27 +26,17 @@ public class RenderSize : MonoBehaviour
 
     void SetCameraViewports()
     {
-        // Target resolution: 16:9, by far the most common on Steam survey. All rendering should be kept inside this.
-
-        // set viewport to 16:9 or 16:10, whatever is closest to actual resolution. Everything else will get black bars left/right.
-        // Create a 16:10 viewport as that is the by far must occuring on Steam stats.
-        const float Ratio16_9 = 16.0f / 9.0f;
-        const float Ratio16_10 = 16.0f / 10.0f;
-        float currentRatio = Screen.width / (float)Screen.height;
-        float distanceTo16_9 = Mathf.Abs(Ratio16_9 - currentRatio);
-        float distanceTo16_10 = Mathf.Abs(Ratio16_10 - currentRatio);
-
-        float chosenWidth = distanceTo16_9 < distanceTo16_10 ?
-            Screen.height * Ratio16_9 : // Closest to 16:9
-            Screen.height * Ratio16_10; // Closest to 16:10
+        // Force game view inside 16:10, adding black borders as necessary
+        float desiredViewportWidth = (int)(Screen.height * 1.6f);
+        float unusableWidth = Screen.width - desiredViewportWidth;
 
         // Lower resolution for 4K screens
-        if (chosenWidth > 3000 && !resolutionChangeAttempted && Screen.fullScreen)
+        if (desiredViewportWidth > 3000 && !resolutionChangeAttempted && Screen.fullScreen)
         {
             resolutionChangeAttempted = true;
 
-            chosenWidth /= 2;
-            var lowerRes = Screen.resolutions.Where(res => res.width == chosenWidth).FirstOrDefault();
+            desiredViewportWidth /= 2;
+            var lowerRes = Screen.resolutions.Where(res => res.width == desiredViewportWidth).FirstOrDefault();
             if (lowerRes.width != 0)
             {
                 Debug.Log($"Lowering resolution since it is > 3000: {lowerRes}");
@@ -56,25 +46,28 @@ public class RenderSize : MonoBehaviour
             }
         }
 
+        //if (_currentViewportWidth == desiredViewportWidth)
+        //    return;
+
         for (int i = 0; i < Cameras.Length; ++i)
         {
             var cam = Cameras[i];
-            bool isAlreadyChosenWidth = Mathf.Abs(cam.pixelRect.width - chosenWidth) < 1f;
+            bool isAlreadyChosenWidth = Mathf.Abs(cam.pixelRect.width - desiredViewportWidth) < 1f;
             if (!isAlreadyChosenWidth)
             {
                 // WebGL was going crazy trying to resize every frame.
                 // In case resize fails don't keep trying.
-                bool widthWasAlreadyAttempted = chosenWidth == viewPortChosenWidthAttempt;
-                if (!widthWasAlreadyAttempted)
+                //bool widthWasAlreadyAttempted = desiredViewportWidth == viewPortChosenWidthAttempt;
+                //if (!widthWasAlreadyAttempted)
                 {
-                    var newPixelRect = new Rect(0, 0, chosenWidth, Screen.height);
+                    var newPixelRect = new Rect(unusableWidth / 2, 0, desiredViewportWidth, Screen.height);
                     Debug.Log($"Camera {cam.name}:");
                     Debug.Log($"- current screen resolution: {Screen.currentResolution}, current window resolution: w={Screen.width}, h={Screen.height}");
                     Debug.Log($"- fullScreen: {Screen.fullScreen}, fullScreenMode: {Screen.fullScreenMode}");
                     Debug.Log($"- changing viewport from {cam.pixelRect} to {newPixelRect}");
                     cam.pixelRect = newPixelRect;
 
-                    viewPortChosenWidthAttempt = chosenWidth;
+                    viewPortChosenWidthAttempt = desiredViewportWidth;
                 }
             }
         }
@@ -88,40 +81,7 @@ public class RenderSize : MonoBehaviour
     private void Update()
     {
         SetCameraViewports();
-        AutoPerf();
         StatsDisplay();
-    }
-
-    void AutoPerf()
-    {
-        if (!AllowDownsizingRenderScale || !Application.isFocused)
-        {
-            exponentialAvg = 0;
-            return;
-        }
-
-        // Will periodically check and lower renderscale if avg fps < 60
-        const float RequiredFps = 58; // NB: When vsync is on FPS hovers just below 60 (~59.9) so requiring 60fps will lower renderscale!
-
-        double fps = 1 / Time.unscaledDeltaTime;
-        if (exponentialAvg == 0)
-            exponentialAvg = fps;
-        else
-            exponentialAvg = (exponentialAvg * 0.99 + fps) * 0.5;
-
-        if (exponentialAvg < RequiredFps && Time.time > timeAllowRenderScaleChange)
-        {
-            timeWithBadFps += Time.deltaTime;
-            if (timeWithBadFps > 5)
-            {
-                // Low fps - Lower render scale
-                urp.renderScale = urp.renderScale * 0.5f;
-                exponentialAvg = 0;
-                timeAllowRenderScaleChange = Time.time + 2;
-            }
-        }
-        else
-            timeWithBadFps = 0;
     }
 
     void StatsDisplay()

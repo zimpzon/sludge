@@ -1,7 +1,6 @@
 using DG.Tweening;
 using Sludge.Utility;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -28,7 +27,6 @@ public class Player : MonoBehaviour
 
     public bool Alive = false;
 
-    QuadDistort ripples;
     public double angle = 90;
     double speed;
     double speedX;
@@ -67,7 +65,6 @@ public class Player : MonoBehaviour
         LegL2Base = LegL2.localPosition;
         LegR2Base = LegR2.localPosition;
 
-        ripples = GetComponentInChildren<QuadDistort>();
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
@@ -80,7 +77,6 @@ public class Player : MonoBehaviour
         speed = minSpeed;
         Alive = true;
         onConveyorBeltCount = 0;
-        ripples.Reset();
         impulseX = 0;
         impulseY = 0;
         currentThrowable = null;
@@ -177,7 +173,6 @@ public class Player : MonoBehaviour
     public void Kill()
     {
         SoundManager.Play(FxList.Instance.PlayerDie);
-        ripples.DoRipples();
         GameManager.Instance.DeathParticles.transform.position = trans.position;
         GameManager.Instance.DeathParticles.Emit(50);
         GameManager.Instance.CameraRoot.DORewind();

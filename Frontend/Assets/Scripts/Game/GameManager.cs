@@ -363,6 +363,7 @@ public class GameManager : MonoBehaviour
         BulletManager.Instance.Reset();
         CellAntManager.Instance.Reset();
 
+        Debug.Log($"Tilemap size: {Tilemap.size} ({Tilemap.cellBounds})");
         LevelCells.Instance.ResetToTilemap(Tilemap);
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
