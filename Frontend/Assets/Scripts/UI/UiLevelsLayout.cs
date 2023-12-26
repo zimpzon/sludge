@@ -83,7 +83,7 @@ public class UiLevelsLayout : MonoBehaviour
             }
 
             levelItem.colorApplier.SetColor(backgroundColor);
-            levelItem.levelScript.TextLevelNumber.color = ColorScheme.GetColor(GameManager.Instance.CurrentUiColorScheme, textColor);
+            levelItem.levelScript.TextLevelNumber.color = ColorScheme.GetColor(GameManager.I.CurrentUiColorScheme, textColor);
         }
     }
 

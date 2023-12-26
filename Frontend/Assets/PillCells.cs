@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 
 public class PillCells : MonoBehaviour
 {
-    public static PillCells Instance;
+    public static PillCells I;
 
     readonly Vector2Int OutOfBounds = new Vector2Int(int.MaxValue, int.MaxValue);
 
@@ -19,7 +19,7 @@ public class PillCells : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        I = this;
     }
 
     private void OnDrawGizmos()

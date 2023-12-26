@@ -70,11 +70,11 @@ public class ModCellFollower : SludgeModifier
 
     public override void EngineTick()
     {
-        if (GameManager.Instance.FrameCounter == 0) // Oopsie, GameManager calls Reset, EngineTick, then Reset again. Avoid nasty cell claiming.
+        if (GameManager.I.FrameCounter == 0) // Oopsie, GameManager calls Reset, EngineTick, then Reset again. Avoid nasty cell claiming.
             return;
 
         double animSpeed = 2;
-        float fAnimIdx = (float)(GameManager.Instance.EngineTime * animSpeed * Anim.Sprites.Length);
+        float fAnimIdx = (float)(GameManager.I.EngineTime * animSpeed * Anim.Sprites.Length);
         fAnimIdx += animOffset;
         int animIdx = ((int) Mathf.Abs(fAnimIdx)) % Anim.Sprites.Length;
         spriteRenderer.sprite = Anim.Sprites[animIdx];

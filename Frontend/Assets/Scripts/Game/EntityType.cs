@@ -1,6 +1,7 @@
 ﻿namespace Sludge.Utility
 {
-    public enum EntityType {
+    public enum EntityType
+    {
         Unknown,
         Nothing,
         Player,
@@ -17,5 +18,6 @@
         Portal,
         Text,
         PlayerBullet,
+        Pickup,
     };
 }

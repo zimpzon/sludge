@@ -72,12 +72,12 @@ public class ModThrowable : SludgeModifier
             return;
 
         if (!wasThrown) // Exploding while held by player
-            GameManager.Instance.Player.ThrowablePickedUp(null);
+            GameManager.I.Player.ThrowablePickedUp(null);
 
         SoundManager.Play(FxList.Instance.ThrownBombExplode);
-        GameManager.Instance.DeathParticles.transform.position = trans.position;
-        GameManager.Instance.DeathParticles.Emit(20);
-        GameManager.Instance.CameraRoot.DOShakePosition(0.1f, 0.2f);
+        GameManager.I.DeathParticles.transform.position = trans.position;
+        GameManager.I.DeathParticles.Emit(20);
+        GameManager.I.CameraRoot.DOShakePosition(0.1f, 0.2f);
 
         body.SetActive(false);
         isExploding = true;
@@ -99,11 +99,11 @@ public class ModThrowable : SludgeModifier
             }
             else if (entity == EntityType.Enemy)
             {
-                GameManager.Instance.KillEnemy(scanResults[i].gameObject);
+                GameManager.I.KillEnemy(scanResults[i].gameObject);
             }
         }
 
-        resetTime = GameManager.Instance.EngineTime + ResetDelay;
+        resetTime = GameManager.I.EngineTime + ResetDelay;
     }
 
     public void Throw(Vector2 direction, double speed)
@@ -121,10 +121,10 @@ public class ModThrowable : SludgeModifier
     {
         if (isExploding)
         {
-            if (GameManager.Instance.EngineTime > resetTime)
+            if (GameManager.I.EngineTime > resetTime)
             {
-                GameManager.Instance.DustParticles.transform.position = homePos;
-                GameManager.Instance.DustParticles.Emit(2);
+                GameManager.I.DustParticles.transform.position = homePos;
+                GameManager.I.DustParticles.Emit(2);
                 Reset();
             }
         }
@@ -133,13 +133,13 @@ public class ModThrowable : SludgeModifier
         const float SqrActivationPlayerDistance = ActivationPlayerDistance * ActivationPlayerDistance;
 
         var playerDir = Player.Position - trans.position;
-        if (!ownedByPlayer && GameManager.Instance.Player.currentThrowable == null)
+        if (!ownedByPlayer && GameManager.I.Player.currentThrowable == null)
         {
             if (playerDir.sqrMagnitude <= SqrActivationPlayerDistance)
             {
                 SoundManager.Play(FxList.Instance.ThrownBombPickedUp);
                 ownedByPlayer = true;
-                GameManager.Instance.Player.ThrowablePickedUp(this);
+                GameManager.I.Player.ThrowablePickedUp(this);
             }
         }
 

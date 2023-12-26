@@ -27,7 +27,7 @@ namespace Sludge.Modifiers
             if (!Active)
                 return;
 
-            float rotation = (float)SludgeUtil.Stabilize((GameManager.Instance.EngineTime * RoundsPerSecond * 360) + StartDegrees);
+            float rotation = (float)SludgeUtil.Stabilize((GameManager.I.EngineTime * RoundsPerSecond * 360) + StartDegrees);
             trans.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
         }
     }

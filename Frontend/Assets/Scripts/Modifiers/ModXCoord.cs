@@ -33,7 +33,7 @@ namespace Sludge.Modifiers
             if (!Active)
                 return;
 
-            double t = SludgeUtil.TimeMod((GameManager.Instance.EngineTime + TimeOffset) * TimeMultiplier);
+            double t = SludgeUtil.TimeMod((GameManager.I.EngineTime + TimeOffset) * TimeMultiplier);
             t = Ease.Apply(Easing, t);
             if (PingPong)
                 t = Ease.PingPong(t);

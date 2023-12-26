@@ -91,7 +91,7 @@ namespace Sludge.Modifiers
             const float SqrLookRange = 8 * 8;
             const float MaxScale = 0.9f;
 
-            if (GameManager.Instance.FrameCounter != 0) // Hacky hacky: EngineTick gets called once before starting round. Don't begin to open eyes even if player is in range.
+            if (GameManager.I.FrameCounter != 0) // Hacky hacky: EngineTick gets called once before starting round. Don't begin to open eyes even if player is in range.
                 eyeScaleTarget = sqrPlayerDist < SqrLookRange ? MaxScale : 0;
 
             if (state != State.LookForPlayer)
@@ -126,8 +126,8 @@ namespace Sludge.Modifiers
                 rotationSpeed += step;
                 yield return null;
             }
-            GameManager.Instance.DustParticles.transform.position = trans.position;
-            GameManager.Instance.DustParticles.Emit(3);
+            GameManager.I.DustParticles.transform.position = trans.position;
+            GameManager.I.DustParticles.Emit(3);
             state = State.Move;
         }
 
@@ -135,8 +135,8 @@ namespace Sludge.Modifiers
         {
             if (1 << collision.gameObject.layer != SludgeUtil.PlayerLayerMask)
             {
-                GameManager.Instance.DustParticles.transform.position = trans.position;
-                GameManager.Instance.DustParticles.Emit(8);
+                GameManager.I.DustParticles.transform.position = trans.position;
+                GameManager.I.DustParticles.Emit(8);
                 Reset();
             }
         }

@@ -25,7 +25,7 @@ public class ModCellAntSpawner : SludgeModifier
         myCellUp = myCell + Vector2Int.up;
         myCellDown = myCell + Vector2Int.down;
 
-        timeNextSpawn = GameManager.Instance.EngineTime + Cooldown;
+        timeNextSpawn = GameManager.I.EngineTime + Cooldown;
     }
 
     void SpawnAt(Vector2Int cell)
@@ -38,16 +38,16 @@ public class ModCellAntSpawner : SludgeModifier
         ant.gameObject.SetActive(true);
         ant.OnLoaded();
         ant.Reset();
-        GameManager.Instance.DustParticles.transform.position = ant.transform.position;
-        GameManager.Instance.DustParticles.Emit(3);
+        GameManager.I.DustParticles.transform.position = ant.transform.position;
+        GameManager.I.DustParticles.Emit(3);
 
-        timeNextSpawn = GameManager.Instance.EngineTime + Cooldown;
+        timeNextSpawn = GameManager.I.EngineTime + Cooldown;
         spawnsLeft--;
     }
 
     public override void EngineTick()
     {
-        if (spawnsLeft > 0 && GameManager.Instance.EngineTime >= timeNextSpawn)
+        if (spawnsLeft > 0 && GameManager.I.EngineTime >= timeNextSpawn)
         {
             if (LevelCells.Instance.TryClaimCell(myCellRight))
             {

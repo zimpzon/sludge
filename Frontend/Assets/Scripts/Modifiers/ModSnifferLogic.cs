@@ -80,7 +80,7 @@ public class ModSnifferLogic : SludgeModifier
         if (activationTime < 0)
         {
             SoundManager.Play(FxList.Instance.SnifferActivate);
-            activationTime = GameManager.Instance.EngineTime;
+            activationTime = GameManager.I.EngineTime;
             triggerCollider.radius = 0.25f;
             frameAtTriggerTime = Player.PositionSampleIdx;
             currentFrame = frameAtTriggerTime;
@@ -103,10 +103,10 @@ public class ModSnifferLogic : SludgeModifier
         bool largeJump = Mathf.Abs((float)(newX - posX)) + Mathf.Abs((float)(newX - posX)) > 1;
         if (largeJump)
         {
-            GameManager.Instance.DustParticles.transform.position = new Vector2((float)posX, (float)posY);
-            GameManager.Instance.DustParticles.Emit(2);
-            GameManager.Instance.DustParticles.transform.position = new Vector2((float)newX, (float)newY);
-            GameManager.Instance.DustParticles.Emit(2);
+            GameManager.I.DustParticles.transform.position = new Vector2((float)posX, (float)posY);
+            GameManager.I.DustParticles.Emit(2);
+            GameManager.I.DustParticles.transform.position = new Vector2((float)newX, (float)newY);
+            GameManager.I.DustParticles.Emit(2);
         }
 
         posX = newX;
@@ -121,7 +121,7 @@ public class ModSnifferLogic : SludgeModifier
 
         if (!isFollowing)
         {
-            double t = (GameManager.Instance.EngineTime - activationTime) / myFollowDelay;
+            double t = (GameManager.I.EngineTime - activationTime) / myFollowDelay;
             var col = deadAntRenderer.color;
             col.a = 1 - Mathf.Clamp01((float)t);
             deadAntRenderer.color = col;

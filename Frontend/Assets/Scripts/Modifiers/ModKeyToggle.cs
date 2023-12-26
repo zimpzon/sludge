@@ -30,7 +30,7 @@ public class ModKeyToggle : SludgeModifier
         spriteRenderer.enabled = StartEnabled;
         mat.SetFloat("_Visibility", StartEnabled ? 1 : 0);
 
-        spriteRenderer.color = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor.Walls);
+        spriteRenderer.color = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Walls);
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
 
         if (StartEnabled)
@@ -44,13 +44,13 @@ public class ModKeyToggle : SludgeModifier
         if (!Active)
             return;
 
-        if (doorCollider.enabled && GameManager.Instance.Keys == DisableAtKeyCount)
+        if (doorCollider.enabled && GameManager.I.Keys == DisableAtKeyCount)
         {
             StopAllCoroutines();
             StartCoroutine(DisableMe());
         }
 
-        if (!doorCollider.enabled && GameManager.Instance.Keys == EnableAtKeyCount)
+        if (!doorCollider.enabled && GameManager.I.Keys == EnableAtKeyCount)
         {
             StopAllCoroutines();
             StartCoroutine(EnableMe());
@@ -60,7 +60,7 @@ public class ModKeyToggle : SludgeModifier
     IEnumerator DisableMe()
     {
         const float AnimTime = 0.5f;
-        double startTime = GameManager.Instance.EngineTime;
+        double startTime = GameManager.I.EngineTime;
         doorCollider.enabled = false;
         SoundManager.Play(FxList.Instance.FakeWallDisappear);
 
@@ -68,7 +68,7 @@ public class ModKeyToggle : SludgeModifier
 
         while (true)
         {
-            float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
+            float t = (float)(GameManager.I.EngineTime - startTime) / AnimTime;
             mat.SetFloat("_Visibility", 1 - t);
 
             if (t >= 1.0f)
@@ -83,7 +83,7 @@ public class ModKeyToggle : SludgeModifier
     IEnumerator EnableMe()
     {
         const float AnimTime = 0.5f;
-        double startTime = GameManager.Instance.EngineTime;
+        double startTime = GameManager.I.EngineTime;
         spriteRenderer.enabled = true;
         doorCollider.enabled = true;
         SoundManager.Play(FxList.Instance.FakeWallShowUp);
@@ -92,7 +92,7 @@ public class ModKeyToggle : SludgeModifier
 
         while (true)
         {
-            float t = (float)(GameManager.Instance.EngineTime - startTime) / AnimTime;
+            float t = (float)(GameManager.I.EngineTime - startTime) / AnimTime;
             mat.SetFloat("_Visibility", t);
 
             if (t >= 1.0f)

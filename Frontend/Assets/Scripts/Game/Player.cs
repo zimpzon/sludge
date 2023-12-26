@@ -1,4 +1,5 @@
 using DG.Tweening;
+using MoreMountains.Tools;
 using Sludge.Utility;
 using UnityEngine;
 
@@ -117,10 +118,10 @@ public class Player : MonoBehaviour
 
     public void Teleport(Vector3 newPos)
     {
-        GameManager.Instance.DustParticles.transform.position = trans.position;
-        GameManager.Instance.DustParticles.Emit(10);
-        GameManager.Instance.DustParticles.transform.position = newPos;
-        GameManager.Instance.DustParticles.Emit(10);
+        GameManager.I.DustParticles.transform.position = trans.position;
+        GameManager.I.DustParticles.Emit(10);
+        GameManager.I.DustParticles.transform.position = newPos;
+        GameManager.I.DustParticles.Emit(10);
 
         playerX = SludgeUtil.Stabilize(newPos.x);
         playerY = SludgeUtil.Stabilize(newPos.y);
@@ -149,7 +150,8 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
-        if (entity == EntityType.PlayerBullet)
+
+        if (entity == EntityType.PlayerBullet || entity == EntityType.Pickup)
             return;
 
         Kill();
@@ -166,17 +168,17 @@ public class Player : MonoBehaviour
         if (timeEnterSlimeCloud > 0)
             return;
 
-        timeEnterSlimeCloud = GameManager.Instance.EngineTime;
+        timeEnterSlimeCloud = GameManager.I.EngineTime;
         eyesTransform.localScale = eyesBaseScale * 1.5f;
     }
 
     public void Kill()
     {
         SoundManager.Play(FxList.Instance.PlayerDie);
-        GameManager.Instance.DeathParticles.transform.position = trans.position;
-        GameManager.Instance.DeathParticles.Emit(50);
-        GameManager.Instance.CameraRoot.DORewind();
-        GameManager.Instance.CameraRoot.DOShakePosition(0.1f, 0.5f);
+        GameManager.I.DeathParticles.transform.position = trans.position;
+        GameManager.I.DeathParticles.Emit(50);
+        GameManager.I.CameraRoot.DORewind();
+        GameManager.I.CameraRoot.DOShakePosition(0.1f, 0.5f);
         Alive = false;
     }
 
@@ -289,7 +291,7 @@ public class Player : MonoBehaviour
         if (timeEnterSlimeCloud < 0)
             return;
 
-        double timeInSlimeCloud = GameManager.Instance.EngineTime - timeEnterSlimeCloud;
+        double timeInSlimeCloud = GameManager.I.EngineTime - timeEnterSlimeCloud;
         if (timeInSlimeCloud >= 1)
             Kill();
     }
@@ -329,7 +331,6 @@ public class Player : MonoBehaviour
 
         UpdateTransform();
         SetPositionSample();
-
         CheckSlimeCloud();
     }
 

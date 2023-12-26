@@ -101,6 +101,9 @@ namespace Sludge.Utility
             if (1 << goLayer == StaticLevelLayerMask)
                 return EntityType.StaticLevel;
 
+            if (1 << goLayer == PickupLayerMask)
+                return EntityType.Pickup;
+
             var sludgeObject = go.GetComponent<SludgeObject>();
             if (sludgeObject != null)
                 return sludgeObject.EntityType;
@@ -135,6 +138,7 @@ namespace Sludge.Utility
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
         public static int PlayerLayerMask = LayerMask.GetMask("Player");
         public static int StaticLevelLayerMask = LayerMask.GetMask("StaticLevel");
+        public static int PickupLayerMask = LayerMask.GetMask("Pickups");
         public static int WallsAndObjectsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Objects");
 
         public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");

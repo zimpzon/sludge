@@ -31,7 +31,7 @@ public class ModLaser : SludgeModifier
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player)
-            GameManager.Instance.Player.Kill();
+            GameManager.I.Player.Kill();
     }
 
     public override void EngineTick()
@@ -51,7 +51,7 @@ public class ModLaser : SludgeModifier
 
         bool isPlayer = 1 << hit.collider.gameObject.layer == SludgeUtil.PlayerLayerMask;
         if (isPlayer)
-            GameManager.Instance.Player.Kill();
+            GameManager.I.Player.Kill();
 
         float distance = (hit.point - (Vector2)transform.position).magnitude;
         distance = (float)SludgeUtil.Stabilize(distance);

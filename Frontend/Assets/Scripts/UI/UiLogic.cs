@@ -45,7 +45,7 @@ namespace Sludge.UI
 			LevelLayout.CreateLevelsSelection(LevelList.Levels);
 
 			UiPanels.Instance.Init();
-			ColorScheme.ApplyUiColors(GameManager.Instance.CurrentUiColorScheme);
+			ColorScheme.ApplyUiColors(GameManager.I.CurrentUiColorScheme);
 			UiPanels.Instance.SetAllActive(false);
 		}
 
@@ -136,7 +136,7 @@ namespace Sludge.UI
 				yield break;
 			}
 
-			GameManager.Instance.LoadLevel(levelItem.levelScript);
+			GameManager.I.LoadLevel(levelItem.levelScript);
 			GameManager.LevelReplay.FromString(roundResult.ReplayData, roundResult.LevelId);
 
 			yield return PlayLoop(levelItem.levelScript);
@@ -194,14 +194,14 @@ namespace Sludge.UI
 
 		IEnumerator PlayLoop(UiLevel uiLevel)
 		{
-			GameManager.Instance.LoadLevel(uiLevel);
+			GameManager.I.LoadLevel(uiLevel);
 			UiPanels.Instance.HideBackground();
 
 			UiPanels.Instance.ShowPanel(UiPanel.Game);
 			UiPanels.Instance.HidePanel(UiPanel.MainMenu);
 
 			SetSelectionMarker(null);
-			GameManager.Instance.StartLevel();
+			GameManager.I.StartLevel();
 
 			while (true)
 			{
@@ -216,7 +216,7 @@ namespace Sludge.UI
 			CalcProgression();
 			UpdateWorldWideAttempts();
 			LevelLayout.UpdateVisualHints();
-			ColorScheme.ApplyUiColors(GameManager.Instance.CurrentUiColorScheme);
+			ColorScheme.ApplyUiColors(GameManager.I.CurrentUiColorScheme);
 
 			UiPanels.Instance.HidePanel(UiPanel.Game);
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
@@ -229,11 +229,11 @@ namespace Sludge.UI
         {
 			if (input.IsTapped(PlayerInput.InputType.ColorNext))
 			{
-				GameManager.Instance.SetColorScheme(GameManager.Instance.ColorSchemeList.GetNext());
+				GameManager.I.SetColorScheme(GameManager.I.ColorSchemeList.GetNext());
 			}
 			if (input.IsTapped(PlayerInput.InputType.ColorPrev))
 			{
-				GameManager.Instance.SetColorScheme(GameManager.Instance.ColorSchemeList.GetPrev());
+				GameManager.I.SetColorScheme(GameManager.I.ColorSchemeList.GetPrev());
 			}
 		}
 
@@ -305,7 +305,7 @@ namespace Sludge.UI
 					levelText = $"{LevelData.DifficultyIds[(int)difficulty]} {(uiLevel.LevelIndex + 1):00} - {levelData.Name}";
 					if (uiLevel.Status == PlayerProgress.LevelStatus.NotCompleted || uiLevel.Status == PlayerProgress.LevelStatus.Escaped)
 					{
-						Color masteredColor = ColorScheme.GetColor(GameManager.Instance.CurrentUiColorScheme, SchemeColor.UiLevelMastered);
+						Color masteredColor = ColorScheme.GetColor(GameManager.I.CurrentUiColorScheme, SchemeColor.UiLevelMastered);
 						statsText = $"Escape in {SludgeUtil.ColorWrap($"{levelData.EliteCompletionTimeSeconds:0.000}", masteredColor)}s to complete chamber";
 					}
 					else

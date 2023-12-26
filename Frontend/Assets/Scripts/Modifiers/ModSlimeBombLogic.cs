@@ -68,7 +68,7 @@ public class ModSlimeBombLogic : SludgeModifier
         var go = collision.gameObject;
         var entity = SludgeUtil.GetEntityType(go);
         if (entity == EntityType.Player)
-            GameManager.Instance.Player.ExitSlimeCloud();
+            GameManager.I.Player.ExitSlimeCloud();
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -81,11 +81,11 @@ public class ModSlimeBombLogic : SludgeModifier
         // Kill stuff
         if (entity == EntityType.Player)
         {
-            GameManager.Instance.Player.InSlimeCloud();
+            GameManager.I.Player.InSlimeCloud();
         }
         else if (entity == EntityType.Enemy)
         {
-            GameManager.Instance.KillEnemy(go);
+            GameManager.I.KillEnemy(go);
         }
     }
 
@@ -103,7 +103,7 @@ public class ModSlimeBombLogic : SludgeModifier
             cloudCollider.enabled = true;
 
             countingDown = true;
-            GameManager.Instance.OnActivatingBomb();
+            GameManager.I.OnActivatingBomb();
             timeLeft = Countdown;
             countdownText.enabled = true;
         }
@@ -112,7 +112,7 @@ public class ModSlimeBombLogic : SludgeModifier
     public override void EngineTick()
     {
         if (!expanding)
-            innerSprite.transform.localScale = Vector3.one * ((Mathf.Sin((float)GameManager.Instance.EngineTime * 4) + 1) * 0.2f + 0.35f);
+            innerSprite.transform.localScale = Vector3.one * ((Mathf.Sin((float)GameManager.I.EngineTime * 4) + 1) * 0.2f + 0.35f);
 
         if (countingDown)
         {
@@ -152,10 +152,10 @@ public class ModSlimeBombLogic : SludgeModifier
                 expanding = true;
                 countdownText.enabled = false;
                 slimeRenderer.enabled = true;
-                GameManager.Instance.DeathParticles.transform.position = trans.position;
-                GameManager.Instance.DeathParticles.Emit(50);
-                GameManager.Instance.CameraRoot.DORewind();
-                GameManager.Instance.CameraRoot.DOShakePosition(0.2f, 2.0f);
+                GameManager.I.DeathParticles.transform.position = trans.position;
+                GameManager.I.DeathParticles.Emit(50);
+                GameManager.I.CameraRoot.DORewind();
+                GameManager.I.CameraRoot.DOShakePosition(0.2f, 2.0f);
                 innerSprite.transform.localScale = Vector3.one * 0.5f;
                 SetColliderScale();
             }

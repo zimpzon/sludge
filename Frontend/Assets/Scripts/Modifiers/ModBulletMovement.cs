@@ -27,11 +27,11 @@ public class ModBulletMovement : SludgeModifier
 
     public override void Reset()
     {
-        if (GameManager.Instance == null)
+        if (GameManager.I == null)
             return;
 
-        color1 = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor1);
-        color2 = ColorScheme.GetColor(GameManager.Instance.CurrentColorScheme, SchemeColor2);
+        color1 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor1);
+        color2 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor2);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -39,14 +39,14 @@ public class ModBulletMovement : SludgeModifier
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player)
         {
-            GameManager.Instance.Player.Kill();
+            GameManager.I.Player.Kill();
             return;
         }
 
         if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
         {
-            GameManager.Instance.DustParticles.transform.position = trans.position;
-            GameManager.Instance.DustParticles.Emit(5);
+            GameManager.I.DustParticles.transform.position = trans.position;
+            GameManager.I.DustParticles.Emit(5);
             BulletManager.Instance.Release(this);
         }
     }
@@ -59,7 +59,7 @@ public class ModBulletMovement : SludgeModifier
 
         // Offset flash by position so bullets don't flash in sync
         int offset = (int)(X * 20) + (int)(Y * 20);
-        var color = ((GameManager.Instance.EngineTimeMs + offset) % 200) > 100 ? color1 : color2;
+        var color = ((GameManager.I.EngineTimeMs + offset) % 200) > 100 ? color1 : color2;
         spriteRenderer.color = color;
     }
 }

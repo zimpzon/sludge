@@ -20,9 +20,9 @@ public class TimePill : SludgeObject
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player)
         {
-            GameManager.Instance.DustParticles.transform.position = trans.position;
-            GameManager.Instance.DustParticles.Emit(2);
-            GameManager.Instance.TimePillPickup(this);
+            GameManager.I.DustParticles.transform.position = trans.position;
+            GameManager.I.DustParticles.Emit(2);
+            GameManager.I.TimePillPickup(this);
             gameObject.SetActive(false);
         }
     }

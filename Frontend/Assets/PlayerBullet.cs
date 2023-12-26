@@ -50,7 +50,7 @@ public class PlayerBullet : SludgeObject
 
         if (entity == EntityType.Enemy)
         {
-            GameManager.Instance.KillEnemy(collision.gameObject);
+            GameManager.I.KillEnemy(collision.gameObject);
             Die();
         }
         else if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
@@ -61,8 +61,8 @@ public class PlayerBullet : SludgeObject
 
     void Die()
     {
-        GameManager.Instance.DustParticles.transform.position = trans.position;
-        GameManager.Instance.DustParticles.Emit(2);
+        GameManager.I.DustParticles.transform.position = trans.position;
+        GameManager.I.DustParticles.Emit(2);
         Alive = false;
         distance = 0;
     }

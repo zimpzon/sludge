@@ -75,13 +75,13 @@ namespace Sludge.Modifiers
 
         public void OnPlayerEnter()
         {
-            GameManager.Instance.Player.ConveyourBeltEnter();
+            GameManager.I.Player.ConveyourBeltEnter();
             hasPlayer = true;
         }
 
         public void OnPlayerExit()
         {
-            GameManager.Instance.Player.ConveyourBeltExit();
+            GameManager.I.Player.ConveyourBeltExit();
             hasPlayer = false;
         }
 
@@ -93,10 +93,10 @@ namespace Sludge.Modifiers
             // Pull player towards center line
             var closestPointOnCenterLine = SludgeUtil.StabilizeVector(SludgeUtil.GetClosestPointOnInfiniteLine(Player.Position, centerLineA, centerLineB));
             var directionToCenter = closestPointOnCenterLine - Player.Position;
-            GameManager.Instance.Player.AddPositionImpulse(directionToCenter.x * SuctionPower, directionToCenter.y * SuctionPower);
+            GameManager.I.Player.AddPositionImpulse(directionToCenter.x * SuctionPower, directionToCenter.y * SuctionPower);
 
             // Move along the belt
-            GameManager.Instance.Player.AddPositionImpulse(beltDirection.x * ConveyorSpeed, beltDirection.y * ConveyorSpeed);
+            GameManager.I.Player.AddPositionImpulse(beltDirection.x * ConveyorSpeed, beltDirection.y * ConveyorSpeed);
         }
     }
 }

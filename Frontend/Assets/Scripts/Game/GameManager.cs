@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
     public static string ClientId;
     public static PlayerInput PlayerInput;
     public static LevelReplay LevelReplay = new LevelReplay();
-    public static GameManager Instance;
+    public static GameManager I;
 
     public Player Player;
     public SludgeObject[] SludgeObjects;
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+        I = this;
         Startup.StaticInit();
         PlayerInput = new PlayerInput();
         levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
@@ -368,7 +368,6 @@ public class GameManager : MonoBehaviour
         LevelCells.Instance.UpdateFrom(Tilemap);
 
         Debug.Log($"Pillmap size: {Tilemap.size} ({Tilemap.cellBounds})");
-        PillCells.Instance.UpdateFrom(PillTilemap);
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);

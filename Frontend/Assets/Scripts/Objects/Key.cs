@@ -17,7 +17,7 @@ public class Key : SludgeObject
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player)
         {
-            GameManager.Instance.KeyPickup(this);
+            GameManager.I.KeyPickup(this);
             gameObject.SetActive(false);
         }
     }

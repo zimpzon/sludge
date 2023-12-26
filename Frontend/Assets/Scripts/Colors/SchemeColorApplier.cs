@@ -13,12 +13,12 @@ public class SchemeColorApplier : MonoBehaviour
 
     void Start()
     {
-        ApplyColor(GameManager.Instance?.CurrentColorScheme);
+        ApplyColor(GameManager.I?.CurrentColorScheme);
     }
 
     void OnValidate()
     {
-        ApplyColor(GameManager.Instance?.CurrentColorScheme);
+        ApplyColor(GameManager.I?.CurrentColorScheme);
     }
 
     Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)
