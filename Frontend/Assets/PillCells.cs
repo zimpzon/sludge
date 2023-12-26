@@ -57,7 +57,7 @@ public class PillCells : MonoBehaviour
         return new Vector2Int(x, y);
     }
 
-    public void ResetToTilemap(Tilemap tilemap)
+    public void UpdateFrom(Tilemap tilemap)
     {
         currentTilemap = tilemap;
         bottomOffset = tilemap.cellBounds.yMin;

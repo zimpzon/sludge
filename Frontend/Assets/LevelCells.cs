@@ -187,7 +187,7 @@ public class LevelCells : MonoBehaviour
         return cells[idx];
     }
 
-    public void ResetToTilemap(Tilemap tilemap)
+    public void UpdateFrom(Tilemap tilemap)
     {
         currentTilemap = tilemap;
         bottomOffset = tilemap.cellBounds.yMin;

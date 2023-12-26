@@ -62,17 +62,21 @@ MonoBehaviour:
   Count: 20
   Width: 8
   Height: 8
-  TimeMultiplierPositionX: 0.1
-  TimeOffsetPositionX: 0.1
+  TimeXMul: 1
+  TimeXAdd: 0
+  TimeXAddPerItem: 0.1
   EasingPositionX: 4
   PingPongX: 0
-  TimeMultiplierPositionY: 0.1
-  TimeOffsetPositionY: 0.1
+  TimeYMul: 1
+  TimeYAdd: 0
+  TimeYAddPerItem: 0.1
   EasingPositionY: 5
   PingPongY: 0
-  TimeMultiplierRotation: 0.5
-  TimeOffsetRotation: 0
+  TimeRotMul: 1
+  TimeRotAdd: 0
+  TimeRotAddPerItem: 0.1
   EasingRotation: 0
+  GizmoT: 0
 --- !u!1001 &8964533104028696673
 PrefabInstance:
   m_ObjectHideFlags: 0

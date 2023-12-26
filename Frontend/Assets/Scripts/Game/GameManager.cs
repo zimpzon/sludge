@@ -365,8 +365,10 @@ public class GameManager : MonoBehaviour
         CellAntManager.Instance.Reset();
 
         Debug.Log($"Tilemap size: {Tilemap.size} ({Tilemap.cellBounds})");
-        LevelCells.Instance.ResetToTilemap(Tilemap);
-        PillCells.Instance.ResetToTilemap(PillTilemap);
+        LevelCells.Instance.UpdateFrom(Tilemap);
+
+        Debug.Log($"Pillmap size: {Tilemap.size} ({Tilemap.cellBounds})");
+        PillCells.Instance.UpdateFrom(PillTilemap);
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);
