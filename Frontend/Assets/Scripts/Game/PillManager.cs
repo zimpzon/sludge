@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.Game
 {
-    public enum PillEater { Player }
+    public enum PillEater { Player, Ball, }
 
     public static class PillManager
     {
@@ -19,7 +19,9 @@ namespace Assets.Scripts.Game
             pillCenter.x += 0.5f;
             pillCenter.y += 0.5f;
 
-            ParticleEmitter.I.EmitPills(pillCenter, 3);
+            SoundManager.Play(FxList.Instance.TimePillPickup);
+
+            ParticleEmitter.I.EmitPills(pos, 1);
         }
     }
 }

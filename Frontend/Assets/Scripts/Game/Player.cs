@@ -151,7 +151,7 @@ public class Player : MonoBehaviour
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
 
-        if (entity == EntityType.PlayerBullet || entity == EntityType.Pickup)
+        if (entity == EntityType.PlayerBullet || entity == EntityType.Player || entity == EntityType.Pickup)
             return;
 
         Kill();
