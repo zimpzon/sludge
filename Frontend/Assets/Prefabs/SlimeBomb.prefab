@@ -170,7 +170,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.56, y: 2.56}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 2.56, y: 2.56}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -5370,7 +5370,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5846408767900166671}
-  - component: {fileID: 5846408767900166669}
+  - component: {fileID: 351097138970306557}
   m_Layer: 0
   m_Name: SlimeBomb
   m_TagString: Untagged
@@ -5398,7 +5398,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5846408767900166669
+--- !u!114 &351097138970306557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5407,8 +5407,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 5846408767900166704}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e76da2997e95d94a9a0904b9696b9ef, type: 3}
+  m_Script: {fileID: 11500000, guid: 48ce2412384985c4e8337bdd34fb7c1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Modifiers: []
-  HighlightParticles: {fileID: 5846408767562817553}
+  HighlightParticles: {fileID: 0}

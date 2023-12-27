@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3275722174295455193}
-  - component: {fileID: 3275722174295455192}
   - component: {fileID: 3275722174295455199}
   - component: {fileID: 2005602706348247794}
   - component: {fileID: 7737138576031971790}
+  - component: {fileID: 7315295390004490541}
   m_Layer: 7
   m_Name: CellAnt
   m_TagString: Untagged
@@ -30,24 +30,12 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3275722174984989411}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3275722174295455192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3275722174295455194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca1617eedbee6cb478b831d0b8065a5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Modifiers: []
 --- !u!114 &3275722174295455199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,6 +86,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &7315295390004490541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3275722174295455194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0daea48440e84854788f4573a1221ef2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Modifiers: []
 --- !u!1 &3275722174984989436
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +126,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.1, y: 3.1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3275722174295455193}
   m_RootOrder: 0

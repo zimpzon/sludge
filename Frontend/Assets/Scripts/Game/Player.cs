@@ -1,5 +1,4 @@
 using DG.Tweening;
-using MoreMountains.Tools;
 using Sludge.Utility;
 using UnityEngine;
 
@@ -16,7 +15,6 @@ public class Player : MonoBehaviour
     public Transform LegR1;
     public Transform LegL2;
     public Transform LegR2;
-    public PlayerBullet PlayerBullet;
 
     Vector2 LegL0Base;
     Vector2 LegR0Base;
@@ -95,7 +93,6 @@ public class Player : MonoBehaviour
         eyesTransform.localScale = eyesBaseScale;
 
         UpdateTransform();
-        PlayerBullet.Reset();
     }
 
     public void ThrowablePickedUp(ModThrowable throwable)
@@ -150,7 +147,6 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
-
         if (entity == EntityType.PlayerBullet || entity == EntityType.Player || entity == EntityType.Pickup)
             return;
 
@@ -174,6 +170,8 @@ public class Player : MonoBehaviour
 
     public void Kill()
     {
+        return;
+
         SoundManager.Play(FxList.Instance.PlayerDie);
         GameManager.I.DeathParticles.transform.position = trans.position;
         GameManager.I.DeathParticles.Emit(50);
@@ -183,22 +181,6 @@ public class Player : MonoBehaviour
     }
 
     float legOffset = 0;
-
-    void CheckShoot()
-    {
-        if (GameManager.PlayerInput.Shoot != 0 && !PlayerBullet.Alive)
-        {
-            var look = SludgeUtil.LookAngle(trans.rotation.eulerAngles.z);
-            const float BulletSpeed = 40;
-            PlayerBullet.DX = SludgeUtil.Stabilize(look.x * BulletSpeed);
-            PlayerBullet.DY = SludgeUtil.Stabilize(look.y * BulletSpeed);
-            PlayerBullet.X = SludgeUtil.Stabilize(trans.position.x + look.x * 0.5);
-            PlayerBullet.Y = SludgeUtil.Stabilize(trans.position.y + look.y * 0.5);
-
-            PlayerBullet.Fire();
-            //SoundManager.Play(FxList.Instance.PlayerShoot);
-        }
-    }
 
     void PlayerControls4Dir()
     {
@@ -298,9 +280,6 @@ public class Player : MonoBehaviour
 
     public void EngineTick()
     {
-        CheckShoot();
-        PlayerBullet.Tick();
-
         if (!Alive)
             return;
 

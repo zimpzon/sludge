@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1125160334116693582}
   - component: {fileID: 847233473439404134}
-  - component: {fileID: 4607856457548451604}
+  - component: {fileID: 5584940220202734839}
   m_Layer: 10
   m_Name: TimePill
   m_TagString: Untagged
@@ -60,7 +60,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.25, y: 1.25}
   m_EdgeRadius: 0
---- !u!114 &4607856457548451604
+--- !u!114 &5584940220202734839
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1125160334116693583}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed4a6d1223029e947a5b45989c62a519, type: 3}
+  m_Script: {fileID: 11500000, guid: 137ce3bb2abfc1143b2c0e9c9834a9cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Modifiers: []

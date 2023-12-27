@@ -19,5 +19,7 @@
         Text,
         PlayerBullet,
         Pickup,
+        BallCollector,
+        PillBallCollector,
     };
 }

@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9051099697747623385}
-  - component: {fileID: 9051099697747623387}
   - component: {fileID: 9051099697747623386}
+  - component: {fileID: 1698258958060027455}
   m_Layer: 0
   m_Name: SwarmPill
   m_TagString: Untagged
@@ -33,19 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9051099697747623387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9051099697747623384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fef671739182fc4c808179fdb54c401, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Modifiers: []
 --- !u!114 &9051099697747623386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,14 +48,31 @@ MonoBehaviour:
   Count: 20
   Width: 8
   Height: 8
-  TimeMultiplierPositionX: 0.1
-  TimeOffsetPositionX: 0.1
+  TimeXMul: 1
+  TimeXAdd: 0
+  TimeXAddPerItem: 0.1
   EasingPositionX: 4
   PingPongX: 0
-  TimeMultiplierPositionY: 0.1
-  TimeOffsetPositionY: 0.1
+  TimeYMul: 1
+  TimeYAdd: 0
+  TimeYAddPerItem: 0.1
   EasingPositionY: 5
   PingPongY: 0
-  TimeMultiplierRotation: 0.5
-  TimeOffsetRotation: 0
+  TimeRotMul: 1
+  TimeRotAdd: 0
+  TimeRotAddPerItem: 0.1
   EasingRotation: 0
+  GizmoT: 0
+--- !u!114 &1698258958060027455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9051099697747623384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0bc40bc75b40864d8e65301715f00aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Modifiers: []
