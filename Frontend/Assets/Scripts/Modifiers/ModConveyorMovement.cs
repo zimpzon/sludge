@@ -31,6 +31,7 @@ namespace Sludge.Modifiers
 
         void SetSize()
         {
+            // TODO: SET tiling based on scale
             spriteRenderer = GetComponent<SpriteRenderer>();
             spriteRenderer.size = new Vector2(Length, 1);
         }

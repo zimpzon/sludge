@@ -1,7 +1,7 @@
+using DG.Tweening;
 using Sludge;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
-using Sludge.Replays;
 using Sludge.Shared;
 using Sludge.SludgeObjects;
 using Sludge.UI;
@@ -12,6 +12,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 // First script to run
 public class GameManager : MonoBehaviour
@@ -28,6 +29,11 @@ public class GameManager : MonoBehaviour
     public const double TickSize = 0.016;
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000.0 / TickSizeMs;
+
+    public Vector3 PlayerLandStartOffset = new Vector3(25, -16);
+    public float PlayerLandRotationSpeed = 500;
+    public float PlayerLandDuration = 0.5f;
+    public float PlayerLandMaxScaleAdd = 1;
 
     public Transform CameraRoot;
     public Tilemap Tilemap;
@@ -257,7 +263,7 @@ public class GameManager : MonoBehaviour
 
             yield return UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
 
-            PlayerInput.PauseInput(0.3f);
+            yield return PlayerLand();
 
             while (startRound == false)
             {
@@ -285,6 +291,38 @@ public class GameManager : MonoBehaviour
 
             yield return Playing();
         }
+    }
+
+    IEnumerator PlayerLand()
+    {
+        float t = 1.0f;
+
+        Vector3 targetPos = Player.transform.position;
+        Vector3 baseScale = Player.transform.localScale;
+
+        SoundManager.Play(FxList.Instance.PlayerLanding);
+        CameraRoot.DOShakePosition(PlayerLandDuration, 0.1f);
+
+        while (t >= 0)
+        {
+            Vector3 pos = targetPos + PlayerLandStartOffset * t;
+            Player.transform.SetPositionAndRotation(pos, Quaternion.Euler(0, 0, t * PlayerLandRotationSpeed));
+            Player.transform.localScale = baseScale + Vector3.one * PlayerLandMaxScaleAdd * t;
+            Player.SetAlpha(Mathf.Clamp01(1.0f - (t * 2.0f)));
+
+            t -= Time.deltaTime / PlayerLandDuration;
+            yield return null;
+        }
+
+        SoundManager.Play(FxList.Instance.PlayerLanded);
+        DeathParticles.transform.position = Player.transform.position;
+        DeathParticles.Emit(50);
+        CameraRoot.DORewind();
+        CameraRoot.DOShakePosition(0.3f, 0.5f);
+
+        Player.SetAlpha(1.0f);
+        Player.transform.SetPositionAndRotation(targetPos, Quaternion.identity);
+        Player.transform.localScale = baseScale;
     }
 
     void ResetLevel()
@@ -317,6 +355,7 @@ public class GameManager : MonoBehaviour
             SludgeObjects[i].Reset();
 
         Player.Prepare();
+        Player.SetAlpha(0.0f);
 
         UpdateSludgeObjects();
         SetHighlightedObjects(bombActivated: false);

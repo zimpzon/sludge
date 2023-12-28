@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     double speedY;
     Vector2 moveVec;
     double minSpeed = 0.0f;
-    public double maxSpeed = 10;
+    public double maxSpeed = 14;
     public double accelerateSpeed = 300;
     public double friction = 50.0f;
     Transform trans;
@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
     Vector2 eyesBaseScale;
     Vector2 playerBaseScale;
     double timeEnterSlimeCloud;
+    SpriteRenderer[] childSprites;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -71,6 +72,8 @@ public class Player : MonoBehaviour
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
         eyesBaseScale = eyesTransform.localScale;
         playerBaseScale = trans.localScale;
+
+        childSprites = GetComponentsInChildren<SpriteRenderer>();
     }
 
     public void Prepare()
@@ -94,8 +97,19 @@ public class Player : MonoBehaviour
         playerY = homeY;
         angle = homeAngle;
         eyesTransform.localScale = eyesBaseScale;
+        SetAlpha(1.0f);
 
         UpdateTransform();
+    }
+
+    public void SetAlpha(float alpha)
+    {
+        foreach (SpriteRenderer child in childSprites)
+        {
+            Color col = child.color;
+            col.a = alpha;
+            child.color = col;
+        }
     }
 
     public void ThrowablePickedUp(ModThrowable throwable)
@@ -177,7 +191,7 @@ public class Player : MonoBehaviour
         GameManager.I.DeathParticles.transform.position = trans.position;
         GameManager.I.DeathParticles.Emit(50);
         GameManager.I.CameraRoot.DORewind();
-        GameManager.I.CameraRoot.DOShakePosition(0.1f, 0.5f);
+        GameManager.I.CameraRoot.DOShakePosition(0.2f, 0.7f);
         Alive = false;
     }
 
