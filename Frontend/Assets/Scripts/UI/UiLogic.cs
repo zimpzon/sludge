@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
 using Sludge.Shared;
@@ -15,12 +16,12 @@ namespace Sludge.UI
 		public static UiLogic Instance;
 		public bool StartCurrentScene = false;
 		public UiLevelsLayout LevelLayout;
-		public GameObject ButtonPlay;
-		public GameObject ButtonControls;
+        public GameObject ButtonPlayCasual;
+        public GameObject ButtonPlayHard;
+        public GameObject ButtonControls;
 		public GameObject ButtonExit;
 		public GameObject GameRoot;
 		public UiSelectionMarker UiSelectionMarker;
-		public TMP_Text TextProgression;
 		public TMP_Text TextWorldWideAttempts;
 
 		public static long WorldWideAttempts;
@@ -53,7 +54,6 @@ namespace Sludge.UI
         {
 			double oldValue = GameProgressPct;
 			GameProgressPct = SludgeUtil.CalcProgression(out LevelsCompletedCount, out LevelsEliteCount, out LevelCount);
-			TextProgression.text = $"Progression: {GameProgressPct:0}%";
 			if (oldValue != -1 && GameProgressPct != oldValue)
             {
 				StartCoroutine(PlayFabStats.Instance.StorePlayerProgression(GameProgressPct));
@@ -112,9 +112,6 @@ namespace Sludge.UI
 		public void ControlsClick()
 		{
 			StopAllCoroutines();
-
-			//StartCoroutine(StartReplay("1748FFB0")); // LEVEL REPLAY HACK
-
 			StartCoroutine(ControlsLoop());
 		}
 
@@ -154,7 +151,7 @@ namespace Sludge.UI
 
 		IEnumerator MainMenuLoop()
 		{
-			SetSelectionMarker(ButtonPlay);
+			SetSelectionMarker(ButtonPlayCasual);
 
 			UiPanels.Instance.ShowBackground();
 			UiPanels.Instance.HidePanel(UiPanel.Game);
@@ -164,11 +161,11 @@ namespace Sludge.UI
 			UiPanels.Instance.HidePanel(UiPanel.Settings2);
 
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
-
+			
 			UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
-				if (go == ButtonPlay)
+                if (go == ButtonPlayCasual)
 					PlayClick();
 				else if (go == ButtonControls)
 					ControlsClick();

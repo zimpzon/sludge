@@ -5,7 +5,8 @@ using UnityEngine.Tilemaps;
 public class LevelElements : MonoBehaviour
 {
     public Player Player;
-    public Tilemap Tilemap;
+    public Tilemap WallTilemap;
+    public Tilemap PillTilemap;
     public GameObject ObjectsRoot;
     public TileListScriptableObject TileList;
     public ObjectListScriptableObject ObjectPrefabList;

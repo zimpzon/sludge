@@ -38,9 +38,10 @@ public static class LevelSerializer
         data.UniqueId = levelSettings.UniqueId;
         // Player
         data.PlayerTransform = LevelDataTransform.Get(elements.Player.transform);
-            
+
         // Tilemap
-        Tilemap(data, elements.Tilemap, elements.TileList);
+        data.WallTilemap = SerializeTilemap(elements.WallTilemap, elements.TileList);
+        data.PillTilemap = SerializeTilemap(elements.PillTilemap, elements.TileList);
 
         // Objects
         var objects = elements.ObjectsRoot.GetComponentsInChildren<SludgeObject>();
@@ -60,13 +61,17 @@ public static class LevelSerializer
         return data;
     }
 
-    static void Tilemap(LevelData data, Tilemap map, TileListScriptableObject tileList)
+    static LevelTilemapData SerializeTilemap(Tilemap map, TileListScriptableObject tileList)
     {
         var bounds = map.cellBounds;
-        data.TilesX = bounds.position.x;
-        data.TilesY = bounds.position.y;
-        data.TilesW = bounds.size.x;
-        data.TilesH = bounds.size.y;
+
+        var result = new LevelTilemapData
+        {
+            TilesX = bounds.position.x,
+            TilesY = bounds.position.y,
+            TilesW = bounds.size.x,
+            TilesH = bounds.size.y,
+        };
 
         TileBase[] allTiles = map.GetTilesBlock(bounds);
 
@@ -78,13 +83,15 @@ public static class LevelSerializer
                 int tileIdx = tileList.GetTileIndex(tile);
 
                 var tilePos = new Vector3Int();
-                tilePos.x = x + data.TilesX;
-                tilePos.y = y + data.TilesY;
+                tilePos.x = x + result.TilesX;
+                tilePos.y = y + result.TilesY;
                 int tileRotation = (int)map.GetTransformMatrix(tilePos).rotation.eulerAngles.z;
 
                 // Include rotation information in stored tileIdx
-                data.TileIndices.Add(tileIdx + tileRotation * 1000);
+                result.TileIndices.Add(tileIdx + tileRotation * 1000);
             }
         }
+
+        return result;
     }
 }

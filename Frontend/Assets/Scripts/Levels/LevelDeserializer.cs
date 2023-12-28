@@ -3,6 +3,7 @@ using Sludge.Shared;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public static class LevelDeserializer
 {
@@ -27,40 +28,68 @@ public static class LevelDeserializer
         }
 
         // Clear existing tiles
-        var tilemapCollider = elements.Tilemap.gameObject.GetComponent<CompositeCollider2D>();
-        tilemapCollider.generationType = CompositeCollider2D.GenerationType.Manual;
-        elements.Tilemap.ClearAllTiles();
-        elements.Tilemap.CompressBounds();
-        tilemapCollider.GenerateGeometry();
+        void ClearTilemap(Tilemap tilemap)
+        {
+            tilemap.gameObject.TryGetComponent<CompositeCollider2D>(out var tilemapCollider);
+            if (tilemapCollider != null)
+            {
+                tilemapCollider.generationType = CompositeCollider2D.GenerationType.Manual;
+            }
+
+            tilemap.ClearAllTiles();
+            tilemap.CompressBounds();
+
+            if (tilemapCollider != null)
+            {
+                tilemapCollider.GenerateGeometry();
+            }
+        }
+
+        ClearTilemap(elements.WallTilemap);
+        ClearTilemap(elements.PillTilemap);
 
         // Place player
         data.PlayerTransform.Set(elements.Player.transform);
 
         // Place new tiles
-        var tilePos = new Vector3Int();
-
-        for (int y = 0; y < data.TilesH; ++y)
+        void PlaceTiles(Tilemap tilemap, LevelTilemapData data, bool isPills)
         {
-            for (int x = 0; x < data.TilesW; ++x)
-            {
-                tilePos.x = x + data.TilesX;
-                tilePos.y = y + data.TilesY;
-                int tileIdx = data.TileIndices[y * data.TilesW + x];
-                // Tile rotation is stored as rot * 1000
-                int tileRotation = tileIdx / 1000;
-                tileIdx %= 1000;
-                var tile = elements.TileList.Tiles[tileIdx];
-                elements.Tilemap.SetTile(tilePos, tile);
+            tilemap.gameObject.TryGetComponent<CompositeCollider2D>(out var tilemapCollider);
 
-                var tileTransform = new Matrix4x4();
-                tileTransform.SetTRS(Vector3.zero, Quaternion.Euler(0, 0, tileRotation), Vector3.one);
-                elements.Tilemap.SetTransformMatrix(tilePos, tileTransform);
+            var tilePos = new Vector3Int();
+
+            for (int y = 0; y < data.TilesH; ++y)
+            {
+                for (int x = 0; x < data.TilesW; ++x)
+                {
+                    tilePos.x = x + data.TilesX;
+                    tilePos.y = y + data.TilesY;
+                    int tileIdx = data.TileIndices[y * data.TilesW + x];
+                    // Tile rotation is stored as rot * 1000
+                    int tileRotation = tileIdx / 1000;
+                    tileIdx %= 1000;
+                    var tile = elements.TileList.Tiles[tileIdx];
+                    tilemap.SetTile(tilePos, tile);
+
+                    var tileTransform = new Matrix4x4();
+
+                    const float HardcodedPillScale = 0.5f;
+                    tileTransform.SetTRS(Vector3.zero, Quaternion.Euler(0, 0, tileRotation), isPills ? Vector3.one * HardcodedPillScale : Vector3.one);
+                    tilemap.SetTransformMatrix(tilePos, tileTransform);
+                }
             }
+
+            if (tilemapCollider != null)
+            {
+                tilemapCollider.generationType = CompositeCollider2D.GenerationType.Synchronous;
+                tilemapCollider.GenerateGeometry();
+            }
+
+            tilemap.CompressBounds();
         }
 
-        tilemapCollider.generationType = CompositeCollider2D.GenerationType.Synchronous;
-        tilemapCollider.GenerateGeometry();
-        elements.Tilemap.CompressBounds();
+        PlaceTiles(elements.WallTilemap, data.WallTilemap, isPills: false);
+        PlaceTiles(elements.PillTilemap, data.PillTilemap, isPills: true);
 
         // Place new Objects
         for (int i = 0; i < data.Objects.Count; ++i)
