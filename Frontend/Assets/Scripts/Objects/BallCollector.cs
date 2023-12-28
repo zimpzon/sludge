@@ -7,7 +7,7 @@ public class BallCollector : SludgeObject
 {
     public override EntityType EntityType => EntityType.BallCollector;
 
-    public float speed = 6.0f;
+    public float speed = 14.0f;
     public float ScaleAtFullSize = 0.65f;
 
     public Transform displayBody;
