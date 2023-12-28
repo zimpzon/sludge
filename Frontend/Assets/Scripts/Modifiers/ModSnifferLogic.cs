@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ModSnifferLogic : SludgeModifier
 {
-    static double FollowDelay = 2;
+    static double FollowDelay = 3;
     const double followDelayIncrease = 0.25;
     double myFollowDelay;
     double speed = 1.0;

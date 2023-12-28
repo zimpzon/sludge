@@ -18,7 +18,7 @@ namespace Sludge.Utility
             DOTween.Init();
             Physics2D.simulationMode = SimulationMode2D.Script;
 
-            GameManager.ClientId = PlayerPrefs.GetString("ClientId", Guid.NewGuid().ToString());
+            GameManager.ClientId = PlayerPrefs.GetString("ClientId", Guid.NewGuid().ToString("N"));
             PlayerPrefs.SetString("ClientId", GameManager.ClientId);
             Debug.Log($"clientId: {GameManager.ClientId}");
             PlayerPrefs.Save();

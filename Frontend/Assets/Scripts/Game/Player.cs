@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
     double speed;
     double speedX;
     double speedY;
+    Vector2 moveVec;
     double minSpeed = 0.0f;
     public double maxSpeed = 10;
     public double accelerateSpeed = 300;
@@ -45,6 +46,7 @@ public class Player : MonoBehaviour
     public ModThrowable currentThrowable;
     Transform eyesTransform;
     Vector2 eyesBaseScale;
+    Vector2 playerBaseScale;
     double timeEnterSlimeCloud;
 
     // Impulses: summed up and added every frame. Then cleared.
@@ -68,6 +70,7 @@ public class Player : MonoBehaviour
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
         eyesBaseScale = eyesTransform.localScale;
+        playerBaseScale = trans.localScale;
     }
 
     public void Prepare()
@@ -213,8 +216,13 @@ public class Player : MonoBehaviour
 
         bool hasPlayerInput = hasPlayerHorizontalInput || hasPlayerVerticalInput;
 
-        speedX = Mathf.Clamp((float)speedX, (float)-maxSpeed, (float)maxSpeed);
-        speedY = Mathf.Clamp((float)speedY, (float)-maxSpeed, (float)maxSpeed);
+        moveVec = new Vector2((float)speedX, (float)speedY);
+        if (moveVec.sqrMagnitude > maxSpeed * maxSpeed)
+        {
+            moveVec = moveVec.normalized * (float)maxSpeed;
+            speedX = moveVec.x;
+            speedY = moveVec.y;
+        }
 
         // Speed curves
         //  _________
@@ -226,7 +234,6 @@ public class Player : MonoBehaviour
         if (!hasPlayerVerticalInput)
             Friction(ref speedY);
 
-        var moveVec = new Vector2((float)speedX, (float)speedY);
         bool isMoving = moveVec.sqrMagnitude > 0;
 
         lockLegMovement = !isMoving;
@@ -343,6 +350,7 @@ public class Player : MonoBehaviour
     {
         trans.rotation = Quaternion.Euler(0, 0, (float)angle);
         trans.position = new Vector3((float)playerX, (float)playerY, 0);
+        trans.localScale = new Vector2(playerBaseScale.x, moveVec.magnitude > 0 ? playerBaseScale.y * 1.1f : playerBaseScale.y);
 
         Angle = angle;
         Rotation = trans.rotation;

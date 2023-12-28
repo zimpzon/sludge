@@ -17,6 +17,10 @@ using UnityEngine.UI;
 // First script to run
 public class GameManager : MonoBehaviour
 {
+    // Level switching:
+    // LoadLevel() is the only way in
+    // StartLevel() resets and starts what was loaded.
+
     public static PlayerSample[] PlayerSamples = new PlayerSample[30000];
 
     public static readonly string Version = "0.1b";
@@ -122,10 +126,6 @@ public class GameManager : MonoBehaviour
         ColorScheme.ApplyColors(scheme);
         ColorScheme.ApplyUiColors(scheme);
     }
-
-    // Level switching:
-    // LoadLevel() is the only way in
-    // StartLevel() resets and starts what was loaded.
 
     public void StartLevel()
     {
