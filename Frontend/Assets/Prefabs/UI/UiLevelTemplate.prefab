@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2089497019513489096}
   m_RootOrder: 0
@@ -65,12 +66,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'E
-
-    01'
+  m_text: 99
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e772bfea6826d1140953a2a73b025888, type: 2}
-  m_sharedMaterial: {fileID: 5148622715726982854, guid: e772bfea6826d1140953a2a73b025888, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3ca4d2f306ccea545b06ae7c31441886, type: 2}
+  m_sharedMaterial: {fileID: 1676728505900478140, guid: 3ca4d2f306ccea545b06ae7c31441886, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -166,9 +165,10 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089497019513489097}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2089497019047886937}
   m_Father: {fileID: 0}
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.79215693, g: 0.8470589, b: 0.15294118, a: 1}
+  m_Color: {r: 0.355, g: 0.355, b: 0.355, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef221f3a00efa0a488cbe070feaeaf05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 18
+  SchemeColor: 17
   BrightnessOffset: 0
 --- !u!114 &1218861052254991215
 MonoBehaviour:
@@ -263,8 +263,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3656773aadb7bf54f8e2703d27e10efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Status: 0
   IsUnlocked: 0
   LevelIndex: 0
+  Next: {fileID: 0}
   TextLevelNumber: {fileID: 2089497019047886936}
 --- !u!114 &-1238557737644251606
 MonoBehaviour:

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Sludge.UI
 {
-    public enum UiPanel { MainMenu, LevelSelect, Game, BetweenRoundsMenu, Settings, Settings2 }
+    public enum UiPanel { MainMenu, LevelSelect, Game, BetweenRoundsMenu, Settings }
 
     public class UiPanels : MonoBehaviour
     {
@@ -17,7 +17,6 @@ namespace Sludge.UI
         public GameObject PanelGame;
         public GameObject PanelBetweenRoundsMenu;
         public GameObject PanelSettings;
-        public GameObject PanelSettings2;
 
         Vector2 panelLevelSelectHidePos;
         Vector2 panelLevelSelectShowPos = new Vector3(110, -46);
@@ -25,12 +24,10 @@ namespace Sludge.UI
         Vector2 panelMainMenuShowPos;
         Vector2 panelGameHidePos = new Vector2(0, 40);
         Vector2 panelGameShowPos = new Vector2(0, 0);
-        Vector2 panelBetweenRoundsHidePos = new Vector2(0, 30);
-        Vector2 panelBetweenRoundsShowPos = new Vector2(0, -40);
+        Vector2 panelBetweenRoundsHidePos = new Vector2(0, -320);
+        Vector2 panelBetweenRoundsShowPos = new Vector2(0, -283);
         Vector2 panelSettingsHidePos;
         Vector2 panelSettingsShowPos = new Vector3(110, -46);
-        Vector2 panelSettings2HidePos;
-        Vector2 panelSettings2ShowPos = new Vector3(110, -46);
 
         private void Awake()
         {
@@ -44,7 +41,6 @@ namespace Sludge.UI
             PanelLevelSelect.SetActive(active);
             PanelGame.SetActive(active);
             PanelSettings.SetActive(active);
-            PanelSettings2.SetActive(active);
         }
 
         public void Init()
@@ -54,7 +50,6 @@ namespace Sludge.UI
             panelMainMenuShowPos = PanelMainMenu.GetComponent<RectTransform>().anchoredPosition;
             panelMainMenuHidePos = panelMainMenuShowPos + Vector2.left * 760;
             panelSettingsHidePos = PanelSettings.GetComponent<RectTransform>().anchoredPosition;
-            panelSettings2HidePos = PanelSettings2.GetComponent<RectTransform>().anchoredPosition;
         }
 
         public void ShowBackground() => PanelBackground.SetActive(true);
@@ -91,11 +86,6 @@ namespace Sludge.UI
                     hidePos = panelSettingsHidePos;
                     showPos = panelSettingsShowPos;
                     return PanelSettings;
-
-                case UiPanel.Settings2:
-                    hidePos = panelSettings2HidePos;
-                    showPos = panelSettings2ShowPos;
-                    return PanelSettings2;
 
                 default:
                     Debug.LogError($"Unknown panel: {panel}");

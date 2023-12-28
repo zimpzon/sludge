@@ -1,4 +1,3 @@
-using DG.Tweening;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
 using Sludge.Shared;
@@ -134,7 +133,6 @@ namespace Sludge.UI
 			UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
 			UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
 			UiPanels.Instance.HidePanel(UiPanel.Settings);
-			UiPanels.Instance.HidePanel(UiPanel.Settings2);
 
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 			
@@ -148,9 +146,6 @@ namespace Sludge.UI
 				else if (go == ButtonExit)
 					ExitClick();
 			};
-
-			// Allow dynamic renderscale now that we are up and running
-			RenderSize.AllowDownsizingRenderScale = true;
 
 			while (true)
 			{
@@ -292,10 +287,10 @@ namespace Sludge.UI
 					statsText = "Escape more chambers to unlock";
 				}
 
-				uilevelSelection.TextLevelName.text = levelText;
-				uilevelSelection.TextLevelInfo.text = statsText;
-				uilevelSelection.TextLevelTimings.text = timingsText;
-				uilevelSelection.TextLevelOtherInfo.text = otherText;
+				//uilevelSelection.TextLevelName.text = levelText;
+				//uilevelSelection.TextLevelInfo.text = statsText;
+				//uilevelSelection.TextLevelTimings.text = timingsText;
+				//uilevelSelection.TextLevelOtherInfo.text = otherText;
 
 				charsShown = 0;
 				latestSelectedLevelUniqueId = levelData.UniqueId;
@@ -315,13 +310,13 @@ namespace Sludge.UI
 				CheckChangeColorScheme(GameManager.PlayerInput);
 				DoUiNavigation(GameManager.PlayerInput);
 
-				int intCharsShown = (int)charsShown;
-				uilevelSelection.TextLevelName.maxVisibleCharacters = intCharsShown >> 1;
-				uilevelSelection.TextLevelInfo.maxVisibleCharacters = intCharsShown;
-				uilevelSelection.TextLevelTimings.maxVisibleCharacters = intCharsShown;
-				uilevelSelection.TextLevelOtherInfo.maxVisibleCharacters = intCharsShown;
+				//int intCharsShown = (int)charsShown;
+				//uilevelSelection.TextLevelName.maxVisibleCharacters = intCharsShown >> 1;
+				//uilevelSelection.TextLevelInfo.maxVisibleCharacters = intCharsShown;
+				//uilevelSelection.TextLevelTimings.maxVisibleCharacters = intCharsShown;
+				//uilevelSelection.TextLevelOtherInfo.maxVisibleCharacters = intCharsShown;
 
-				charsShown += charRevealSpeed * Time.deltaTime;
+				//charsShown += charRevealSpeed * Time.deltaTime;
 
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {

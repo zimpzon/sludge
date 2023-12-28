@@ -299,6 +299,7 @@ public class GameManager : MonoBehaviour
 
         Vector3 targetPos = Player.transform.position;
         Vector3 baseScale = Player.transform.localScale;
+        Quaternion baseRotation = Player.transform.rotation;
 
         SoundManager.Play(FxList.Instance.PlayerLanding);
         CameraRoot.DOShakePosition(PlayerLandDuration, 0.1f);
@@ -306,7 +307,7 @@ public class GameManager : MonoBehaviour
         while (t >= 0)
         {
             Vector3 pos = targetPos + PlayerLandStartOffset * t;
-            Player.transform.SetPositionAndRotation(pos, Quaternion.Euler(0, 0, t * PlayerLandRotationSpeed));
+            Player.transform.SetPositionAndRotation(pos, Quaternion.Euler(0, 0, t * PlayerLandRotationSpeed + baseRotation.eulerAngles.z));
             Player.transform.localScale = baseScale + Vector3.one * PlayerLandMaxScaleAdd * t;
             Player.SetAlpha(Mathf.Clamp01(1.0f - (t * 2.0f)));
 
@@ -316,13 +317,14 @@ public class GameManager : MonoBehaviour
 
         SoundManager.Play(FxList.Instance.PlayerLanded);
         DeathParticles.transform.position = Player.transform.position;
-        DeathParticles.Emit(50);
+        DeathParticles.Emit(30);
         CameraRoot.DORewind();
         CameraRoot.DOShakePosition(0.3f, 0.5f);
 
         Player.SetAlpha(1.0f);
         Player.transform.SetPositionAndRotation(targetPos, Quaternion.identity);
         Player.transform.localScale = baseScale;
+        Player.transform.rotation = baseRotation;
     }
 
     void ResetLevel()

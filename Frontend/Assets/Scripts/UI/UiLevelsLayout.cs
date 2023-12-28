@@ -50,11 +50,8 @@ public class UiLevelsLayout : MonoBehaviour
             var levelItem = LevelItems[i];
             bool isUnlocked = SludgeUtil.LevelIsUnlocked(i);
 
-            var difficulty = levelItem.levelScript.LevelData.Difficulty;
             var levelProgress = PlayerProgress.GetLevelProgress(levelItem.levelScript.LevelData.UniqueId);
-            string levelText = isUnlocked ?
-                $"{LevelData.DifficultyIds[(int)difficulty]}\n{(i + 1):00}" :
-                "?";
+            string levelText = isUnlocked ? $"{i + 1}" : "?";
 
             levelItem.levelScript.Status = levelProgress.LevelStatus;
             levelItem.levelScript.TextLevelNumber.text = levelText;

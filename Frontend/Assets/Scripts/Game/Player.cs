@@ -97,8 +97,11 @@ public class Player : MonoBehaviour
         playerY = homeY;
         angle = homeAngle;
         eyesTransform.localScale = eyesBaseScale;
-        SetAlpha(1.0f);
 
+        legOffset = 0;
+        UpdateLegs();
+
+        SetAlpha(1.0f);
         UpdateTransform();
     }
 

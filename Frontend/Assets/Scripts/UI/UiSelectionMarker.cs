@@ -7,6 +7,7 @@ public class UiSelectionMarker : MonoBehaviour
 
     public GameObject target { get; private set; }
 
+    public float targetOffset = 0;
     public RectTransform TL;
     public RectTransform TR;
     public RectTransform BL;
@@ -70,7 +71,7 @@ public class UiSelectionMarker : MonoBehaviour
 
     void Update()
     {
-        float offset = (Mathf.Sin(Time.time * 10) + 1) * 2 + 1;
+        float offset = (Mathf.Sin(Time.time * 10) + 1) * 2 + targetOffset;
         UpdatePositions(target, offset);
     }
 }
