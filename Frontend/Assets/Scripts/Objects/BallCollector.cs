@@ -17,9 +17,19 @@ public class BallCollector : SludgeObject
     float eyeScaleTarget;
     Transform trans;
     System.Random rnd;
+    Vector2 basePos;
+    Vector2 baseScale;
 
     Rigidbody2D rigidBody;
     bool isHeld;
+
+    public override void Reset()
+    {
+        trans.position = basePos;
+        trans.localScale = baseScale;
+        rigidBody.velocity = Vector3.one * speed;
+        base.Reset();
+    }
 
     public void HoldPosition(bool hold)
     {
@@ -43,11 +53,15 @@ public class BallCollector : SludgeObject
     private void Awake()
     {
         trans = transform;
+        basePos = trans.position;
+        baseScale = trans.localScale;
+
         rigidBody = GetComponent<Rigidbody2D>();
-        rigidBody.velocity = Vector3.one * speed;
         eye = transform.Find("Eye").transform;
         pupil = transform.Find("Pupil").transform;
         rnd = new System.Random((int)(trans.position.x * 100 + trans.position.y * 100));
+
+        Reset();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

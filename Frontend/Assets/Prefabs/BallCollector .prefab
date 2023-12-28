@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1929304134282642122}
   - component: {fileID: 4421267268381270485}
   - component: {fileID: 8366835919421259499}
-  m_Layer: 7
+  m_Layer: 16
   m_Name: BodyUnderlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 28364fc0b531cb5429d474bba007af2c, type: 3}
-  m_Color: {r: 0.7294118, g: 0, b: 0.028855067, a: 1}
+  m_Color: {r: 0.7254902, g: 0.043037575, b: 0.23656607, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -109,7 +109,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7449418965740872868}
   - component: {fileID: 7700450659040614206}
-  m_Layer: 7
+  m_Layer: 16
   m_Name: Pupil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 2726039073692372235}
   - component: {fileID: 2726039073692372245}
   - component: {fileID: 1764150321}
-  m_Layer: 7
+  m_Layer: 16
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 28364fc0b531cb5429d474bba007af2c, type: 3}
-  m_Color: {r: 0.92941177, g: 0, b: 0.03676694, a: 1}
+  m_Color: {r: 0.9254902, g: 0.054901984, b: 0.30178156, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 2726039074211080832}
   - component: {fileID: 2726039074211080833}
   - component: {fileID: 2726039074211080838}
-  m_Layer: 7
+  m_Layer: 16
   m_Name: 'BallCollector '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -382,7 +382,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5098836822803524306}
-  m_Layer: 7
+  m_Layer: 16
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -415,7 +415,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1295945561912611656}
   - component: {fileID: 1986410651080981733}
-  m_Layer: 7
+  m_Layer: 16
   m_Name: White
   m_TagString: Untagged
   m_Icon: {fileID: 0}

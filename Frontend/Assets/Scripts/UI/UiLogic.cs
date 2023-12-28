@@ -115,30 +115,6 @@ namespace Sludge.UI
 			StartCoroutine(ControlsLoop());
 		}
 
-		public IEnumerator StartReplay(string replayId)
-		{
-			using var request = UnityWebRequest.Get($"https://sludgefunctions.azurewebsites.net/api/get-round-result/{replayId}");
-			yield return request.SendWebRequest();
-			if (string.IsNullOrWhiteSpace(request.downloadHandler.text))
-			{
-				Debug.LogError($"No data found for replayId: {replayId}");
-				yield break;
-			}
-
-			var roundResult = JsonUtility.FromJson<RoundResult>(request.downloadHandler.text);
-			var levelItem = UiLogic.Instance.LevelLayout.GetLevelFromUniqueId(roundResult.LevelId);
-			if (levelItem == null)
-			{
-				Debug.LogError($"Level not found: {roundResult.LevelId}");
-				yield break;
-			}
-
-			GameManager.I.LoadLevel(levelItem.levelScript);
-			GameManager.LevelReplay.FromString(roundResult.ReplayData, roundResult.LevelId);
-
-			yield return PlayLoop(levelItem.levelScript);
-		}
-
 		public void DoUiNavigation(PlayerInput playerInput)
         {
 			UiNavigation.TryMove(UiSelectionMarker, playerInput);
@@ -296,7 +272,7 @@ namespace Sludge.UI
 				string otherText = "";
 				if (uiLevel.IsUnlocked)
                 {
-					timingsText = $"Time limit\t<mspace=0.5em>{levelData.TimeSeconds,6:0.000}s</mspace>\nComplete\t<mspace=0.5em>{levelData.EliteCompletionTimeSeconds,6:0.000}s</mspace>\nYour best\t<mspace=0.5em>-.---s</mspace>";
+					timingsText = $"Complete\t<mspace=0.5em>{levelData.EliteCompletionTimeSeconds,6:0.000}s</mspace>\nYour best\t<mspace=0.5em>-.---s</mspace>";
 					otherText = $"Attempts\t0";
 
 					levelText = $"{LevelData.DifficultyIds[(int)difficulty]} {(uiLevel.LevelIndex + 1):00} - {levelData.Name}";

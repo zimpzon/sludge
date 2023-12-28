@@ -16,7 +16,6 @@ public static class LevelSerializer
 #if UNITY_EDITOR
         data.Name = levelSettings.LevelName;
         data.Difficulty = levelSettings.Difficulty;
-        data.TimeSeconds = levelSettings.StartTimeSeconds;
         data.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
         data.SortKey = levelSettings.SortKey;
 

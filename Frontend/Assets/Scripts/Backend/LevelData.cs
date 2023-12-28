@@ -21,7 +21,6 @@ namespace Sludge.Shared
         public int SortKey = 999999;
         public string Name = "(no name)";
         public LevelDifficulty Difficulty;
-        public double TimeSeconds = 20;
         public double EliteCompletionTimeSeconds = 10;
         public LevelDataTransform PlayerTransform = new LevelDataTransform();
         public LevelTilemapData WallTilemap = new LevelTilemapData();

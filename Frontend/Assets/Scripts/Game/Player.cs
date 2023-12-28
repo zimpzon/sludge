@@ -150,7 +150,7 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
-        if (entity == EntityType.PlayerBullet || entity == EntityType.Player || entity == EntityType.Pickup)
+        if (entity == EntityType.PlayerBullet || entity == EntityType.Player || entity == EntityType.Pickup || entity == EntityType.BallCollector)
             return;
 
         Kill();

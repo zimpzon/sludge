@@ -12,7 +12,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 // First script to run
 public class GameManager : MonoBehaviour
@@ -31,8 +30,6 @@ public class GameManager : MonoBehaviour
     public const double TicksPerSecond = 1000.0 / TickSizeMs;
 
     public Transform CameraRoot;
-    public Image TimeBarLeft;
-    public Image TimeBarRight;
     public Tilemap Tilemap;
     public Tilemap PillTilemap;
     public ColorSchemeScriptableObject CurrentColorScheme;
@@ -40,24 +37,16 @@ public class GameManager : MonoBehaviour
     public ColorSchemeListScriptableObject ColorSchemeList;
 
     public GameObject ButtonStartRound;
-    public GameObject ButtonWatchReplay;
-    public GameObject ButtonGoToNextLevel;
 
     public ParticleSystem DeathParticles;
     public ParticleSystem DustParticles;
     public ParticleSystem CompletedParticles;
     public ParticleSystem MarkerParticles;
 
-    public TMP_Text TextLevelStatus;
-
-    public TMP_Text TextLevelTime;
-    public TMP_Text TextLevelName;
-    public TMP_Text TextLevelMasterTime;
     public Material OutlineMaterial;
 
     public static string ClientId;
     public static PlayerInput PlayerInput;
-    public static LevelReplay LevelReplay = new LevelReplay();
     public static GameManager I;
 
     public Player Player;
@@ -67,13 +56,12 @@ public class GameManager : MonoBehaviour
     public Exit[] Exits;
     public ParticleSystem[] ExitsHighlight;
 
-    public bool IsReplay;
     public double UnityTime;
     public double EngineTime;
     public int EngineTimeMs;
     public int FrameCounter;
     public int Keys;
-    LevelData currentLevelData = new LevelData { TimeSeconds = 30, EliteCompletionTimeSeconds = 20, };
+    LevelData currentLevelData = new LevelData { EliteCompletionTimeSeconds = 60, };
     PlayerProgress.LevelProgress currentLevelProgress = new PlayerProgress.LevelProgress();
     UiLevel currentUiLevel;
     bool levelJustMastered;
@@ -150,7 +138,6 @@ public class GameManager : MonoBehaviour
         {
             // Starting game from current scene in editor
             currentLevelData.Name = levelSettings.LevelName;
-            currentLevelData.TimeSeconds = levelSettings.StartTimeSeconds;
             currentLevelData.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
             levelSettings.ColorSchemeName = levelSettings.ColorScheme.name;
             currentLevelData.ColorSchemeName = levelSettings.ColorSchemeName;
@@ -186,8 +173,6 @@ public class GameManager : MonoBehaviour
                 SetColorScheme(defaultColorScheme);
         }
 
-        TextLevelName.text = currentLevelData.Name;
-        TextLevelMasterTime.text = $"Complete: {currentLevelData.EliteCompletionTimeSeconds:0.000}";
         Player.SetHomePosition();
 
         SludgeObjects = FindObjectsOfType<SludgeObject>();
@@ -196,8 +181,9 @@ public class GameManager : MonoBehaviour
         SlimeBombs = SludgeObjects.Where(o => o is SlimeBomb).Cast<SlimeBomb>().ToArray();
         SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 
+        PillTilemap.gameObject.GetComponent<PillSnapshot>().Push();
+
         ResetLevel();
-        SetScoreText();
 
         Tilemap.gameObject.SetActive(true);
     }
@@ -230,30 +216,6 @@ public class GameManager : MonoBehaviour
         go.GetComponent<UiNavigation>().Enabled = active;
     }
 
-    void SetScoreText(RoundResult roundResult = null)
-    {
-        var highlightColor = ColorScheme.GetColor(CurrentColorScheme, SchemeColor.UiTextHighlighted);
-
-        TextLevelStatus.text = "";
-        var prevLevelProgress = PlayerProgress.GetLevelProgress(currentLevelData.UniqueId);
-        if (roundResult?.Completed == true)
-        {
-            // Reached exit
-            TextLevelStatus.text += roundResult.IsEliteTime ? "- You swiftly escaped -\n" : "- You barely escaped -\n";
-            bool completedJustNow = roundResult.IsEliteTime && prevLevelProgress.LevelStatus < PlayerProgress.LevelStatus.Completed;
-            if (completedJustNow)
-                QuickText.Instance.ShowText("Chamber completed!");
-        }
-        else
-        {
-            // Dead or just arrived on level
-            bool levelCompleted = prevLevelProgress.LevelStatus == PlayerProgress.LevelStatus.Completed;
-            TextLevelStatus.text += !levelCompleted ?
-                $"Escape in {SludgeUtil.ColorWrap($"{levelSettings.EliteCompletionTimeSeconds:0.000}", highlightColor)} seconds to complete chamber" :
-                "- You have completed this chamber -";
-        }
-    }
-
     void GoToNextLevel()
     {
         // TODO: Some transition to next level?
@@ -278,11 +240,8 @@ public class GameManager : MonoBehaviour
             bool canGoToNextLevel = currentLevelProgress.LevelStatus >= PlayerProgress.LevelStatus.Escaped && currentUiLevel.Next != null;
 
             SetMenuButtonActive(ButtonStartRound, true);
-            SetMenuButtonActive(ButtonWatchReplay, LevelReplay.HasReplay(currentLevelData.UniqueId));
-            SetMenuButtonActive(ButtonGoToNextLevel, canGoToNextLevel);
 
-            // Select 'next level' if player got access just now. Else keep last selection.
-            var selectedButton = levelJustMastered && canGoToNextLevel ? ButtonGoToNextLevel : latestSelection;
+            var selectedButton = ButtonStartRound;
             UiLogic.Instance.SetSelectionMarker(selectedButton);
             latestSelection = selectedButton;
 
@@ -296,14 +255,6 @@ public class GameManager : MonoBehaviour
                 {
                     startRound = true;
                 }
-                else if (go == ButtonWatchReplay && go.GetComponent<UiNavigation>().Enabled)
-                {
-                    startReplay = true;
-                }
-                else if (go == ButtonGoToNextLevel && go.GetComponent<UiNavigation>().Enabled)
-                {
-                    GoToNextLevel();
-                };
             };
 
             ResetLevel();
@@ -314,19 +265,12 @@ public class GameManager : MonoBehaviour
 
             while (startReplay == false && startRound == false)
             {
-                // Menu selection loop - start new round, start replay, etc.
                 PlayerInput.GetHumanInput();
                 UiLogic.Instance.DoUiNavigation(PlayerInput);
 
                 if (PlayerInput.Up > 0 && latestSelection == ButtonStartRound)
                 {
                     startRound = true;
-                }
-
-                if (PlayerInput.Up > 0 && latestSelection == ButtonGoToNextLevel)
-                {
-                    GoToNextLevel();
-                    yield break;
                 }
 
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
@@ -343,7 +287,7 @@ public class GameManager : MonoBehaviour
             UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
             UiLogic.Instance.SetSelectionMarker(null);
 
-            yield return Playing(isReplay: startReplay);
+            yield return Playing();
         }
     }
 
@@ -368,6 +312,7 @@ public class GameManager : MonoBehaviour
         LevelCells.Instance.UpdateFrom(Tilemap);
 
         Debug.Log($"Pillmap size: {Tilemap.size} ({Tilemap.cellBounds})");
+        PillTilemap.gameObject.GetComponent<PillSnapshot>().Pop();
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);
@@ -386,20 +331,9 @@ public class GameManager : MonoBehaviour
         SetHighlightedObjects(bombActivated: true);
     }
 
-    IEnumerator Playing(bool isReplay)
+    IEnumerator Playing()
     {
         SoundManager.Play(FxList.Instance.StartRound);
-
-        IsReplay = isReplay;
-        if (isReplay)
-        {
-            LevelReplay.BeginReplay();
-            QuickText.Instance.ShowText("replay");
-        }
-        else
-        {
-            LevelReplay.BeginRecording(currentLevelData.UniqueId);
-        }
 
         while (Player.Alive)
         {
@@ -408,8 +342,8 @@ public class GameManager : MonoBehaviour
             while (EngineTime <= UnityTime)
             {
                 PlayerInput.GetHumanInput();
+                DoTick();
 
-                DoTick(isReplay);
                 latestRoundResult.RoundTotalTime += TickSize;
             }
 
@@ -419,7 +353,7 @@ public class GameManager : MonoBehaviour
             if (PlayerInput.BackActive() || Input.GetKeyDown(KeyCode.R))
             {
                 latestRoundResult.Cancelled = true;
-                QuickText.Instance.ShowText(isReplay ? "replay cancelled" : "restart");
+                QuickText.Instance.ShowText("restart");
                 yield break;
             }
 
@@ -427,9 +361,6 @@ public class GameManager : MonoBehaviour
         }
 
         roundTime = SludgeUtil.Stabilize(roundTime);
-        bool playerCompletedRound = !isReplay && !latestRoundResult.Cancelled;
-        if (playerCompletedRound)
-            LevelReplay.CommitReplay();
 
         latestRoundResult.ClientId = ClientId;
         latestRoundResult.Version = Version;
@@ -439,29 +370,21 @@ public class GameManager : MonoBehaviour
 
         latestRoundResult.LevelId = currentLevelData.UniqueId;
         latestRoundResult.LevelName = currentLevelData.Name;
-        latestRoundResult.IsReplay = isReplay;
         latestRoundResult.Completed = levelComplete;
         latestRoundResult.EndTime = roundTime;
         latestRoundResult.RoundTotalTime = SludgeUtil.Stabilize(latestRoundResult.RoundTotalTime);
-        latestRoundResult.OutOfTime = roundTime >= currentLevelData.TimeSeconds;
         latestRoundResult.IsEliteTime = levelComplete && EngineTime <= levelSettings.EliteCompletionTimeSeconds;
-        latestRoundResult.ReplayData = latestRoundResult.Cancelled ? null : LevelReplay.LatestCommittedToReplayString();
 
-        levelJustMastered = currentLevelProgress.LevelStatus < PlayerProgress.LevelStatus.Escaped && latestRoundResult.Completed;
-        if (latestRoundResult.Completed && latestRoundResult.IsEliteTime)
+        if (latestRoundResult.Completed)
         {
             SoundManager.Play(FxList.Instance.LevelCompleteGood);
             QuickText.Instance.ShowText("Completed!");
         }
-        else if (latestRoundResult.Completed && !latestRoundResult.IsEliteTime)
+        else
         {
-            SoundManager.Play(FxList.Instance.LevelCompleteBad);
+            QuickText.Instance.ShowText("dead");
         }
 
-        if (latestRoundResult.OutOfTime)
-            QuickText.Instance.ShowText("time ran out");
-
-        SetScoreText(latestRoundResult);
         PlayerProgress.UpdateLevelStatus(latestRoundResult);
 
         UiLogic.Instance.CalcProgression();
@@ -527,35 +450,12 @@ public class GameManager : MonoBehaviour
 
     void UpdateTime()
     {
-        if (roundTime >= currentLevelData.TimeSeconds)
-        {
-            roundTime = currentLevelData.TimeSeconds;
-            Player.Kill();
-        }
-
         int timeIdx = (int)(roundTime * 1000.0);
         timeIdx = Mathf.Clamp(timeIdx, 0, Strings.TimeStrings.Length - 1);
-
-        TextLevelTime.text = Strings.TimeStrings[timeIdx];
-        double maxTime = currentLevelData.TimeSeconds;
-        double fillAmount = roundTime / maxTime;
-        float fillBar = 1 - (float)fillAmount;
-        TimeBarLeft.fillAmount = fillBar;
-        TimeBarRight.fillAmount = fillBar;
     }
 
-    void DoTick(bool isReplay)
+    void DoTick()
     {
-        if (isReplay)
-        {
-            int state = LevelReplay.GetReplayState(FrameCounter);
-            PlayerInput.SetState(state);
-        }
-        else
-        {
-            LevelReplay.RecordState(PlayerInput.GetState(), FrameCounter);
-        }
-
         Player.Position = Player.transform.position;
 
         EngineTimeMs = FrameCounter * TickSizeMs;
