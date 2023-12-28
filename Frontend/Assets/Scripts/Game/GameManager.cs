@@ -388,7 +388,7 @@ public class GameManager : MonoBehaviour
 
         Analytics.Instance.SaveStats(latestRoundResult);
 
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.75f);
     }
 
     public void LevelCompleted(Exit exit)

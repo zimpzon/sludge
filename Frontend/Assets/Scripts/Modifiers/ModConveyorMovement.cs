@@ -6,7 +6,7 @@ namespace Sludge.Modifiers
     public class ModConveyorMovement : SludgeModifier
     {
         const float SuctionPower = 0.01f;
-        const float ConveyorSpeed = 5;
+        const float ConveyorSpeed = 14;
 
         public int Length = 1;
 
