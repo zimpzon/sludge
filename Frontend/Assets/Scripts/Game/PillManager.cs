@@ -6,6 +6,15 @@ namespace Assets.Scripts.Game
 
     public static class PillManager
     {
+        public static int TotalPills;
+        public static int PillsLeft;
+
+        public static void Reset(int totalPills)
+        {
+            TotalPills = totalPills;
+            PillsLeft = TotalPills;
+        }
+
         public static void EatPill(Vector3 pos, PillEater eater)
         {
             Vector3Int tilePos = GameManager.I.PillTilemap.WorldToCell(pos);
@@ -22,6 +31,9 @@ namespace Assets.Scripts.Game
             SoundManager.Play(FxList.Instance.TimePillPickup);
 
             ParticleEmitter.I.EmitPills(pos, 1);
+
+            PillsLeft--;
+            GameManager.I.UpdatePillsLeft(flashy: true);
         }
     }
 }

@@ -135,7 +135,7 @@ public class ModSlimeBombLogic : SludgeModifier
                 SoundManager.Play(FxList.Instance.ClockTick);
 
                 countdownText.text = second.ToString();
-                countdownText.transform.DORewind();
+                countdownText.transform.DOKill();
                 countdownText.transform.localScale = Vector3.one * 3.0f;
                 countdownText.transform.DOScale(0.0f, 1.0f);
 
@@ -154,7 +154,7 @@ public class ModSlimeBombLogic : SludgeModifier
                 slimeRenderer.enabled = true;
                 GameManager.I.DeathParticles.transform.position = trans.position;
                 GameManager.I.DeathParticles.Emit(50);
-                GameManager.I.CameraRoot.DORewind();
+                GameManager.I.CameraRoot.DOKill();
                 GameManager.I.CameraRoot.DOShakePosition(0.2f, 2.0f);
                 innerSprite.transform.localScale = Vector3.one * 0.5f;
                 SetColliderScale();

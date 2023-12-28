@@ -1,3 +1,4 @@
+using Assets.Scripts.Game;
 using DG.Tweening;
 using Sludge;
 using Sludge.Colors;
@@ -12,7 +13,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 // First script to run
 public class GameManager : MonoBehaviour
@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour
     public ParticleSystem DustParticles;
     public ParticleSystem CompletedParticles;
     public ParticleSystem MarkerParticles;
+
+    public TMP_Text TextPillsLeft;
 
     public Material OutlineMaterial;
 
@@ -318,13 +320,24 @@ public class GameManager : MonoBehaviour
         SoundManager.Play(FxList.Instance.PlayerLanded);
         DeathParticles.transform.position = Player.transform.position;
         DeathParticles.Emit(30);
-        CameraRoot.DORewind();
+        CameraRoot.DOKill();
         CameraRoot.DOShakePosition(0.3f, 0.5f);
 
         Player.SetAlpha(1.0f);
         Player.transform.SetPositionAndRotation(targetPos, Quaternion.identity);
         Player.transform.localScale = baseScale;
         Player.transform.rotation = baseRotation;
+    }
+
+    public void UpdatePillsLeft(bool flashy = false)
+    {
+        TextPillsLeft.text = $"{PillManager.PillsLeft}/{PillManager.TotalPills}";
+        if (flashy)
+        {
+            TextPillsLeft.transform.DOKill();
+            TextPillsLeft.transform.localScale = Vector3.one * 1.1f;
+            TextPillsLeft.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutElastic);
+        }
     }
 
     void ResetLevel()
@@ -340,6 +353,9 @@ public class GameManager : MonoBehaviour
 
         levelComplete = false;
         Keys = 0;
+
+        PillManager.Reset(PillTilemap.gameObject.GetComponent<PillSnapshot>().TotalPills);
+        UpdatePillsLeft();
 
         BulletManager.Instance.Reset();
         CellAntManager.Instance.Reset();

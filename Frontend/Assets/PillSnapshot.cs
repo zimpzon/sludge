@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class PillSnapshot : MonoBehaviour
 {
+    public int TotalPills = -1;
+
     List<TileBase> tiles = new List<TileBase>();
     List<Matrix4x4> transforms = new List<Matrix4x4>();
 
@@ -17,6 +20,8 @@ public class PillSnapshot : MonoBehaviour
             tiles.Add(tilemap.GetTile(pos));
             transforms.Add(tilemap.GetTransformMatrix(pos));
         }
+
+        TotalPills = tiles.Count(t => t != null);
     }
 
     public void Pop()

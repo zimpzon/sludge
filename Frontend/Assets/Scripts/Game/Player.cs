@@ -193,7 +193,7 @@ public class Player : MonoBehaviour
         SoundManager.Play(FxList.Instance.PlayerDie);
         GameManager.I.DeathParticles.transform.position = trans.position;
         GameManager.I.DeathParticles.Emit(50);
-        GameManager.I.CameraRoot.DORewind();
+        GameManager.I.CameraRoot.DOKill();
         GameManager.I.CameraRoot.DOShakePosition(0.2f, 0.7f);
         Alive = false;
     }
