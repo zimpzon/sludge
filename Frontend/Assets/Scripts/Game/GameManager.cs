@@ -229,7 +229,6 @@ public class GameManager : MonoBehaviour
     {
         levelJustMastered = false;
 
-        GameObject latestSelection = ButtonStartRound.gameObject;
         UpdateTime();
 
         while (true)
@@ -243,12 +242,9 @@ public class GameManager : MonoBehaviour
 
             var selectedButton = ButtonStartRound;
             UiLogic.Instance.SetSelectionMarker(selectedButton);
-            latestSelection = selectedButton;
 
-            bool startReplay = false;
             bool startRound = false;
 
-            UiNavigation.OnNavigationChanged = (go) => latestSelection = go;
             UiNavigation.OnNavigationSelected = (go) =>
             {
                 if (go == ButtonStartRound)
@@ -263,12 +259,12 @@ public class GameManager : MonoBehaviour
 
             PlayerInput.PauseInput(0.3f);
 
-            while (startReplay == false && startRound == false)
+            while (startRound == false)
             {
                 PlayerInput.GetHumanInput();
                 UiLogic.Instance.DoUiNavigation(PlayerInput);
 
-                if (PlayerInput.Up > 0 && latestSelection == ButtonStartRound)
+                if (PlayerInput.Up > 0 || PlayerInput.Down > 0 || PlayerInput.Left > 0 || PlayerInput.Right > 0)
                 {
                     startRound = true;
                 }
@@ -379,15 +375,15 @@ public class GameManager : MonoBehaviour
         {
             SoundManager.Play(FxList.Instance.LevelCompleteGood);
             QuickText.Instance.ShowText("Completed!");
+
+            PlayerProgress.UpdateLevelStatus(latestRoundResult);
+            UiLogic.Instance.CalcProgression();
         }
         else
         {
-            QuickText.Instance.ShowText("dead");
+            // dead
         }
 
-        PlayerProgress.UpdateLevelStatus(latestRoundResult);
-
-        UiLogic.Instance.CalcProgression();
         latestRoundResult.ProgressionAfter = UiLogic.Instance.GameProgressPct;
 
         Analytics.Instance.SaveStats(latestRoundResult);

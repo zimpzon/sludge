@@ -12,7 +12,7 @@ namespace Sludge.Tiles
         public int GetObjectIndex(GameObject obj)
         {
             // This can only build in Editor.
-            var prefab = PrefabUtility.GetCorrespondingObjectFromSource(obj);
+            var prefab = PrefabUtility.GetCorrespondingObjectFromOriginalSource(obj);
             for (int i = 0; i < ObjectPrefabs.Length; ++i)
             {
                 if (ObjectPrefabs[i] == prefab)

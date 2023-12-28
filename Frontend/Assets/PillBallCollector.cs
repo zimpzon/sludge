@@ -11,6 +11,8 @@ public class PillBallCollector : SludgeObject
     public override void Reset()
     {
         gameObject.SetActive(true);
+        TrappedBallCollector.transform.SetParent(transform);
+
         TrappedBallCollector.Reset();
         TrappedBallCollector.HoldPosition(hold: true);
 
@@ -22,7 +24,7 @@ public class PillBallCollector : SludgeObject
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player || entity == EntityType.BallCollector)
         {
-            gameObject.transform.DetachChildren();
+            TrappedBallCollector.transform.SetParent(null);
             TrappedBallCollector.HoldPosition(hold: false);
             gameObject.SetActive(false);
         }

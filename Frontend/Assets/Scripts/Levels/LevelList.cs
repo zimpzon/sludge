@@ -17,13 +17,11 @@ public static class LevelList
 		for (int i = 0; i < allLevels.Length; ++i)
         {
 			var levelData = JsonConvert.DeserializeObject<LevelData>(allLevels[i].text);
-			if (string.IsNullOrEmpty(levelData.Name))
-				levelData.Name = $"(no name)";
 
 			if (idUniqueTest.Contains(levelData.UniqueId))
 			{
 				string testId = $"duplicate-{i}";
-				Debug.LogError($"Level id {levelData.UniqueId} already exists, skipping. Level name: {levelData.Name}. Assigning test id: {testId}");
+				Debug.LogError($"Level id {levelData.UniqueId} already exists, skipping. Assigning test id: {testId}");
 				levelData.UniqueId = testId;
 			}
 
