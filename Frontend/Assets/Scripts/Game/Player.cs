@@ -23,6 +23,9 @@ public class Player : MonoBehaviour
     Vector2 LegL2Base;
     Vector2 LegR2Base;
     bool lockLegMovement = true;
+    int frameLastWallHit;
+    int squashCounter;
+    float playerMoveDampen;
 
     public bool Alive = false;
 
@@ -35,6 +38,7 @@ public class Player : MonoBehaviour
     public double maxSpeed = 14;
     public double accelerateSpeed = 300;
     public double friction = 50.0f;
+    float playerMoveDampenDecaySpeed = 5;
     Transform trans;
     double playerX;
     double playerY;
@@ -87,6 +91,9 @@ public class Player : MonoBehaviour
         currentThrowable = null;
         timeEnterSlimeCloud = -1;
         PositionSampleIdx = 0;
+        frameLastWallHit = 0;
+        squashCounter = 0;
+        playerMoveDampen = 0.0f;
 
         forceX = 0;
         forceY = 0;
@@ -180,14 +187,24 @@ public class Player : MonoBehaviour
             entity == EntityType.BallCollector;
 
         if (harmlessHit)
+        {
             return;
+        }
 
         bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
         if (wallHit)
         {
+            frameLastWallHit = GameManager.I.FrameCounter;
+            if (squashCounter++ > 5)
+            {
+                Kill();
+                return;
+            }
+
             SoundManager.Play(FxList.Instance.PortalEnter);
             Vector3 dir = ((Vector3)collision.GetContact(0).point - trans.position).normalized;
             SetPositionForce(-dir.x * FX, -dir.y * FY);
+            playerMoveDampen = 1.0f;
             return;
         }
 
@@ -294,8 +311,11 @@ public class Player : MonoBehaviour
             currentThrowable = null;
         }
 
-        playerX += speedX * GameManager.TickSize;
-        playerY += speedY * GameManager.TickSize;
+        playerX += speedX * GameManager.TickSize * (1.0f - playerMoveDampen);
+        playerY += speedY * GameManager.TickSize * (1.0f - playerMoveDampen);
+
+        playerMoveDampen -= (float)GameManager.TickSize * playerMoveDampenDecaySpeed;
+        playerMoveDampen = Mathf.Clamp01(playerMoveDampen);
     }
 
     void Friction(ref double a)
@@ -329,6 +349,10 @@ public class Player : MonoBehaviour
         if (!Alive)
             return;
 
+        // reset squash counter if not hitting wall for a few frames
+        if (GameManager.I.FrameCounter > frameLastWallHit + 1)
+            squashCounter = 0;
+
         PlayerControls4Dir();
 
         speed = SludgeUtil.Stabilize(speed - GameManager.TickSize * friction);
@@ -344,8 +368,6 @@ public class Player : MonoBehaviour
         // Force
         playerX += forceX * GameManager.TickSize;
         playerY += forceY * GameManager.TickSize;
-
-        // TODO: can cast/overlap be used to prevent wall clipping?
 
         if (forceX > 0)
         {
@@ -372,9 +394,6 @@ public class Player : MonoBehaviour
             if (forceY > 0)
                 forceY = 0;
         }
-
-        playerX = SludgeUtil.Stabilize(playerX);
-        playerY = SludgeUtil.Stabilize(playerY);
 
         UpdateTransform();
         SetPositionSample();
