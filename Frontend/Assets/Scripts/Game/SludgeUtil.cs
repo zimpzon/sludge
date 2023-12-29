@@ -53,14 +53,6 @@ namespace Sludge.Utility
             return line_start + Vector3.Project(point - line_start, line_end - line_start);
         }
 
-        public static bool LevelIsUnlocked(int levelIdx)
-        {
-            const float RequiredUnlockPct = 0.8f; // Pct of previous levels that must be completed.
-            const float MinimumScore = 1 + (1 - RequiredUnlockPct);
-            bool isUnlocked = Mathf.CeilToInt(UiLogic.Instance.LevelsCompletedCount * MinimumScore) >= levelIdx;
-            return isUnlocked;
-        }
-
         public static void SetActiveRecursive(GameObject go, bool active)
         {
             go.SetActive(active);
@@ -88,7 +80,6 @@ namespace Sludge.Utility
             if (sludgeObject != null)
                 return sludgeObject.EntityType;
 
-            //Debug.LogWarning($"Unknown gameobject entity type, go name: {go.name}");
             return EntityType.Unknown;
         }
 

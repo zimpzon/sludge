@@ -89,7 +89,6 @@ public class ModSnifferLogic : SludgeModifier
 
             triggerX = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.x);
             triggerY = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.y);
-            triggerAngle = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Angle);
         }
     }
 
@@ -111,7 +110,6 @@ public class ModSnifferLogic : SludgeModifier
 
         posX = newX;
         posY = newY;
-        angle = SludgeUtil.Stabilize(GameManager.PlayerSamples[frame].Angle);
     }
 
     public override void EngineTick()

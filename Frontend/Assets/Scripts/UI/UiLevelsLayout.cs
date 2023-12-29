@@ -58,7 +58,7 @@ public class UiLevelsLayout : MonoBehaviour
         for (int i = 0; i < LevelItems.Count; ++i)
         {
             var levelItem = LevelItems[i];
-            bool isUnlocked = SludgeUtil.LevelIsUnlocked(i);
+            bool isUnlocked = true; // TODO: check for real
 
             string levelText = isUnlocked ? $"{i + 1}" : "?";
 

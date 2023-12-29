@@ -156,6 +156,12 @@ public class Player : MonoBehaviour
         forceY += SludgeUtil.Stabilize(y);
     }
 
+    public void SetPositionForce(double x, double y)
+    {
+        forceX = SludgeUtil.Stabilize(x);
+        forceY = SludgeUtil.Stabilize(y);
+    }
+
     public void SetHomePosition()
     {
         homeX = SludgeUtil.Stabilize(trans.position.x);
@@ -164,14 +170,32 @@ public class Player : MonoBehaviour
         Debug.Log($"Setting player home: {homeX}, {homeY}");
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
-        if (entity == EntityType.PlayerBullet || entity == EntityType.Player || entity == EntityType.Pickup || entity == EntityType.BallCollector)
+
+        bool harmlessHit = entity == EntityType.PlayerBullet ||
+            entity == EntityType.Player ||
+            entity == EntityType.Pickup ||
+            entity == EntityType.BallCollector;
+
+        if (harmlessHit)
             return;
+
+        bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
+        if (wallHit)
+        {
+            SoundManager.Play(FxList.Instance.PortalEnter);
+            Vector3 dir = ((Vector3)collision.GetContact(0).point - trans.position).normalized;
+            SetPositionForce(-dir.x * FX, -dir.y * FY);
+            return;
+        }
 
         Kill();
     }
+
+    public float FX = 10;
+    public float FY = 10;
 
     public void ExitSlimeCloud()
     {
@@ -320,12 +344,34 @@ public class Player : MonoBehaviour
         // Force
         playerX += forceX * GameManager.TickSize;
         playerY += forceY * GameManager.TickSize;
-        forceX = SludgeUtil.Stabilize(forceX - GameManager.TickSize * friction);
-        if (forceX < 0)
-            forceX = 0;
-        forceY = SludgeUtil.Stabilize(forceY - GameManager.TickSize * friction);
-        if (forceY < 0)
-            forceY = 0;
+
+        // TODO: can cast/overlap be used to prevent wall clipping?
+
+        if (forceX > 0)
+        {
+            forceX = SludgeUtil.Stabilize(forceX - GameManager.TickSize * friction);
+            if (forceX < 0)
+                forceX = 0;
+        }
+        else if (forceX < 0)
+        {
+            forceX = SludgeUtil.Stabilize(forceX + GameManager.TickSize * friction);
+            if (forceX > 0)
+                forceX = 0;
+        }
+
+        if (forceY > 0)
+        {
+            forceY = SludgeUtil.Stabilize(forceY - GameManager.TickSize * friction);
+            if (forceY < 0)
+                forceY = 0;
+        }
+        else if (forceY < 0)
+        {
+            forceY = SludgeUtil.Stabilize(forceY + GameManager.TickSize * friction);
+            if (forceY > 0)
+                forceY = 0;
+        }
 
         playerX = SludgeUtil.Stabilize(playerX);
         playerY = SludgeUtil.Stabilize(playerY);
@@ -385,6 +431,5 @@ public class Player : MonoBehaviour
            PositionSampleIdx++;
 
         GameManager.PlayerSamples[PositionSampleIdx].Pos = trans.position;
-        GameManager.PlayerSamples[PositionSampleIdx].Angle = angle;
     }
 }

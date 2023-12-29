@@ -5,6 +5,5 @@ namespace Sludge
     public struct PlayerSample
     {
         public Vector3 Pos;
-        public double Angle;
     }
 }
