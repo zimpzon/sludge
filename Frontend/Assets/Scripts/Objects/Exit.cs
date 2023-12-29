@@ -10,7 +10,13 @@ public class Exit : SludgeObject
     public ParticleSystem HighlightParticles;
     public ModRotation InnerRotation;
 
+    SpriteRenderer[] childSprites;
     bool isActive;
+
+    private void Awake()
+    {
+        childSprites = GetComponentsInChildren<SpriteRenderer>();
+    }
 
     public override void Reset()
     {
@@ -18,9 +24,19 @@ public class Exit : SludgeObject
         SetActive(false);
     }
 
+    void SetAlpha(float alpha)
+    {
+        foreach (SpriteRenderer child in childSprites)
+        {
+            Color col = child.color;
+            col.a = alpha;
+            child.color = col;
+        }
+    }
+
     void SetActive(bool active)
     {
-        InnerRotation.GetComponent<ModRotation>().Active = active;
+        SetAlpha(active ? 1.0f : 0.5f);
         isActive = active;
     }
 

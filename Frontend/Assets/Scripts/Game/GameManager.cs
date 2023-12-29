@@ -69,11 +69,8 @@ public class GameManager : MonoBehaviour
     public int EngineTimeMs;
     public int FrameCounter;
     public int Keys;
-    LevelData currentLevelData = new LevelData { EliteCompletionTimeSeconds = 60, };
-    PlayerProgress.LevelProgress currentLevelProgress = new PlayerProgress.LevelProgress();
+    LevelData currentLevelData = new LevelData();
     UiLevel currentUiLevel;
-    bool levelJustMastered;
-    double roundTime;
     LevelElements levelElements;
     LevelSettings levelSettings;
     bool levelComplete;
@@ -137,7 +134,6 @@ public class GameManager : MonoBehaviour
 
         if (levelData != null)
         {
-            Debug.Log($"Loading level: {levelData.Name}");
             LevelDeserializer.Run(levelData, levelElements, levelSettings);
             currentLevelData = levelData;
             currentUiLevel = uiLevel;
@@ -145,8 +141,6 @@ public class GameManager : MonoBehaviour
         else
         {
             // Starting game from current scene in editor
-            currentLevelData.Name = levelSettings.LevelName;
-            currentLevelData.EliteCompletionTimeSeconds = levelSettings.EliteCompletionTimeSeconds;
             levelSettings.ColorSchemeName = levelSettings.ColorScheme.name;
             currentLevelData.ColorSchemeName = levelSettings.ColorSchemeName;
 
@@ -196,24 +190,6 @@ public class GameManager : MonoBehaviour
         Tilemap.gameObject.SetActive(true);
     }
 
-    void SetHighlightedObjects(bool bombActivated)
-    {
-        bool highlightExits = bombActivated || SlimeBombs.Length == 0;
-        bool highlightBombs = !highlightExits;
-
-        for (int i = 0; i < Exits.Length; ++i)
-        {
-            SludgeUtil.EnableEmission(ExitsHighlight[i], highlightExits);
-            if (highlightExits)
-                Exits[i].Activate();
-        }
-
-        for (int i = 0; i < SlimeBombs.Length; ++i)
-        {
-            SludgeUtil.EnableEmission(SlimeBombsHighlight[i], highlightBombs);
-        }
-    }
-
     void SetMenuButtonActive(GameObject go, bool active)
     {
         // Button face
@@ -227,23 +203,15 @@ public class GameManager : MonoBehaviour
     void GoToNextLevel()
     {
         StopAllCoroutines();
-        UiLogic.Instance.latestSelectedLevelUniqueId = currentUiLevel.Next.LevelData.UniqueId;
         LoadLevel(currentUiLevel.Next);
         StartLevel();
     }
 
     IEnumerator BetweenRoundsLoop(string replayId = null)
     {
-        levelJustMastered = false;
-
-        UpdateTime();
-
         while (true)
         {
             GC.Collect();
-
-            currentLevelProgress = PlayerProgress.GetLevelProgress(currentLevelData.UniqueId);
-            bool canGoToNextLevel = currentLevelProgress.LevelStatus >= PlayerProgress.LevelStatus.Escaped && currentUiLevel.Next != null;
 
             SetMenuButtonActive(ButtonStartRound, true);
 
@@ -272,12 +240,6 @@ public class GameManager : MonoBehaviour
                 UiLogic.Instance.DoUiNavigation(PlayerInput);
 
                 UiLogic.CheckChangeColorScheme(PlayerInput);
-
-                if (PlayerInput.RevealExitsCheat())
-                {
-                    // sound testing hack
-                    SoundManager.Play(FxList.Instance.LevelComplete);
-                }
 
                 if (PlayerInput.Up > 0 || PlayerInput.Down > 0 || PlayerInput.Left > 0 || PlayerInput.Right > 0)
                 {
@@ -339,27 +301,22 @@ public class GameManager : MonoBehaviour
     public void OnPillEaten()
     {
         UpdatePillsLeft();
+
         TextPillsLeft.transform.DOKill();
         TextPillsLeft.transform.localScale = Vector3.one * 1.1f;
         TextPillsLeft.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutElastic);
 
         if (PillManager.PillsLeft == 0)
         {
-            RevealExits();
+            ActivateExits();
         }
     }
 
-    void HideExits()
-    {
-        foreach(var exit in Exits)
-            exit.gameObject.SetActive(false);
-    }
-
-    void RevealExits()
+    void ActivateExits()
     {
         foreach (var exit in Exits)
         {
-            exit.gameObject.SetActive(true);
+            exit.Activate();
 
             SoundManager.Play(FxList.Instance.FakeWallShowUp);
             DeathParticles.transform.position = exit.transform.position;
@@ -382,7 +339,6 @@ public class GameManager : MonoBehaviour
         EngineTimeMs = 0;
         FrameCounter = 0;
         UnityTime = 0;
-        roundTime = 0;
         latestRoundResult = new RoundResult();
 
         levelComplete = false;
@@ -410,14 +366,11 @@ public class GameManager : MonoBehaviour
         Player.SetAlpha(0.0f);
 
         UpdateSludgeObjects();
-        SetHighlightedObjects(bombActivated: false);
-
-        HideExits();
     }
 
     public void OnActivatingBomb()
     {
-        SetHighlightedObjects(bombActivated: true);
+        //SetHighlightedObjects(bombActivated: true);
     }
 
     IEnumerator Playing()
@@ -432,17 +385,10 @@ public class GameManager : MonoBehaviour
             {
                 PlayerInput.GetHumanInput();
                 DoTick();
-
-                latestRoundResult.RoundTotalTime += TickSize;
             }
 
             if (levelComplete)
                 break;
-
-            if (PlayerInput.RevealExitsCheat())
-            {
-                RevealExits();
-            }
 
             if (PlayerInput.BackActive() || PlayerInput.RestartKey())
             {
@@ -454,35 +400,19 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        roundTime = SludgeUtil.Stabilize(roundTime);
-
-        latestRoundResult.ClientId = ClientId;
-        latestRoundResult.Version = Version;
-        latestRoundResult.Platform = Application.platform.ToString();
-        latestRoundResult.UnixTimestamp = SludgeUtil.UnixTimeNow();
-        latestRoundResult.UniqueId = UnityEngine.Random.Range(1 << 28, 1 << 29).ToString("X").ToUpper();
-
-        latestRoundResult.LevelId = currentLevelData.UniqueId;
-        latestRoundResult.LevelName = currentLevelData.Name;
         latestRoundResult.Completed = levelComplete;
-        latestRoundResult.EndTime = roundTime;
-        latestRoundResult.RoundTotalTime = SludgeUtil.Stabilize(latestRoundResult.RoundTotalTime);
-        latestRoundResult.IsEliteTime = levelComplete && EngineTime <= levelSettings.EliteCompletionTimeSeconds;
 
         if (latestRoundResult.Completed)
         {
             SoundManager.Play(FxList.Instance.LevelComplete);
             QuickText.Instance.ShowText("Completed!");
 
-            PlayerProgress.UpdateLevelStatus(latestRoundResult);
-            UiLogic.Instance.CalcProgression();
+            PlayerProgress.UpdateProgress(latestRoundResult);
         }
         else
         {
             // dead
         }
-
-        latestRoundResult.ProgressionAfter = UiLogic.Instance.GameProgressPct;
 
         Analytics.Instance.SaveStats(latestRoundResult);
 
@@ -514,14 +444,10 @@ public class GameManager : MonoBehaviour
         DustParticles.transform.position = pill.transform.position;
         DustParticles.Emit(1);
         SoundManager.Play(FxList.Instance.TimePillPickup);
-        roundTime += TimePillBonusTime;
-        if (roundTime < 0)
-            roundTime = 0;
     }
 
     void UpdateAll()
     {
-        UpdateTime();
         UpdatePlayer();
         UpdateSludgeObjects();
         BulletManager.Instance.EngineTick();
@@ -542,19 +468,12 @@ public class GameManager : MonoBehaviour
         Player.EngineTick();
     }
 
-    void UpdateTime()
-    {
-        int timeIdx = (int)(roundTime * 1000.0);
-        timeIdx = Mathf.Clamp(timeIdx, 0, Strings.TimeStrings.Length - 1);
-    }
-
     void DoTick()
     {
         Player.Position = Player.transform.position;
 
         EngineTimeMs = FrameCounter * TickSizeMs;
         EngineTime = EngineTimeMs * 0.001;
-        roundTime += TickSize;
 
         UpdateAll();
         Physics2D.Simulate((float)TickSize);

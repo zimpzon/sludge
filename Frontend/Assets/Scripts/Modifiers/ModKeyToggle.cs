@@ -36,6 +36,8 @@ public class ModKeyToggle : SludgeModifier
         spriteRenderer.color = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Walls);
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
 
+        flipAtLastPillCollectedExecuted = false;
+
         if (StartEnabled)
         {
             LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
@@ -65,11 +67,13 @@ public class ModKeyToggle : SludgeModifier
 
             if (doorCollider.enabled)
             {
-                DisableMe();
+                StopAllCoroutines();
+                StartCoroutine(DisableMe());
             }
             else
             {
-                EnableMe();
+                StopAllCoroutines();
+                StartCoroutine(EnableMe());
             }
         }
     }

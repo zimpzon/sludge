@@ -2,7 +2,6 @@ using Sludge.Colors;
 using Sludge.Shared;
 using Sludge.Utility;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class UiLevelsLayout : MonoBehaviour
@@ -11,12 +10,11 @@ public class UiLevelsLayout : MonoBehaviour
     public GameObject LevelPrefab;
     public List<LevelItem> LevelItems = new List<LevelItem>();
 
-    public LevelItem GetLevelFromUniqueId(string qualifiedName)
-        => LevelItems.Where(li => li.levelScript.LevelData.UniqueId == qualifiedName).First();
+    PlayerProgress.LevelNamespace _levelNamespace;
 
-    public void CreateLevelsSelection(List<LevelData> levels)
+    public void CreateLevelsSelection(List<LevelData> levels, PlayerProgress.LevelNamespace levelNamespace)
     {
-        levels = levels.OrderBy(l => l.Difficulty).ThenBy(l => l.SortKey).ThenBy(l => l.UniqueId).ToList();
+        _levelNamespace = levelNamespace;
 
         int levelCounter = 0;
         for (int i = 0; i < levels.Count; ++i)
@@ -43,6 +41,18 @@ public class UiLevelsLayout : MonoBehaviour
         SetNavigation(LevelItems);
     }
 
+    public LevelItem GetLevelFromId(int id)
+    {
+        if (LevelItems.Count == 0)
+            Debug.LogError($"add at least one level in each namespace!");
+
+        bool defaultToFirstItem = id <= 0 || id >= LevelItems.Count;
+        if (defaultToFirstItem)
+            return LevelItems[0];
+
+        return LevelItems[id];
+    }
+
     public void UpdateVisualHints()
     {
         for (int i = 0; i < LevelItems.Count; ++i)
@@ -50,10 +60,8 @@ public class UiLevelsLayout : MonoBehaviour
             var levelItem = LevelItems[i];
             bool isUnlocked = SludgeUtil.LevelIsUnlocked(i);
 
-            var levelProgress = PlayerProgress.GetLevelProgress(levelItem.levelScript.LevelData.UniqueId);
             string levelText = isUnlocked ? $"{i + 1}" : "?";
 
-            levelItem.levelScript.Status = levelProgress.LevelStatus;
             levelItem.levelScript.TextLevelNumber.text = levelText;
             levelItem.levelScript.IsUnlocked = isUnlocked;
             levelItem.levelScript.LevelIndex = i;
@@ -63,12 +71,7 @@ public class UiLevelsLayout : MonoBehaviour
             SchemeColor backgroundColor;
             SchemeColor textColor;
 
-            if (levelProgress.LevelStatus == PlayerProgress.LevelStatus.Escaped)
-            {
-                backgroundColor = SchemeColor.UiLevelCompleted;
-                textColor = SchemeColor.UiTextDefault;
-            }
-            else if (levelProgress.LevelStatus == PlayerProgress.LevelStatus.Completed)
+            if (PlayerProgress.LevelIsCompleted(_levelNamespace, levelItem.levelScript.LevelData.LevelId))
             {
                 backgroundColor = SchemeColor.UiLevelMastered;
                 textColor = SchemeColor.UiTextDefault;

@@ -38,7 +38,7 @@ namespace Sludge.PlayerInputs
         public int Shoot;
 
         public bool RestartKey() => Input.GetKeyDown(KeyCode.R);
-        public bool RevealExitsCheat() => Input.GetKeyDown(KeyCode.P);
+        public bool CustomCheatKey() => Input.GetKeyDown(KeyCode.P);
 
         public bool UpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0.5f;
         public bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.5f;

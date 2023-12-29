@@ -61,26 +61,6 @@ namespace Sludge.Utility
             return isUnlocked;
         }
 
-        public static double CalcProgression(out int levelsCompletedCount, out int levelsEliteCount, out int levelCount)
-        {
-            levelsCompletedCount = 0;
-            levelsEliteCount = 0;
-
-            for (int i = 0; i < LevelList.Levels.Count; ++i)
-            {
-                var level = LevelList.Levels[i];
-                var levelProgress = PlayerProgress.GetLevelProgress(level.UniqueId);
-
-                levelsCompletedCount += levelProgress.LevelStatus >= PlayerProgress.LevelStatus.Escaped ? 1 : 0;
-                levelsEliteCount += levelProgress.LevelStatus >= PlayerProgress.LevelStatus.Completed ? 1 : 0;
-            }
-
-            levelCount = LevelList.Levels.Count;
-            double pctPerLevel = (1.0 / levelCount * 100);
-            double progression = (levelsCompletedCount * pctPerLevel * 0.5) + (levelsEliteCount * pctPerLevel * 0.5);
-            return progression;
-        }
-
         public static void SetActiveRecursive(GameObject go, bool active)
         {
             go.SetActive(active);

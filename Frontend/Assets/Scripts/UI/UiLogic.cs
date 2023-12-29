@@ -1,6 +1,5 @@
 using Sludge.Colors;
 using Sludge.PlayerInputs;
-using Sludge.Shared;
 using Sludge.Utility;
 using System.Collections;
 using TMPro;
@@ -14,8 +13,9 @@ namespace Sludge.UI
 	{
 		public static UiLogic Instance;
 		public bool StartCurrentScene = false;
-		public UiLevelsLayout LevelLayout;
-        public GameObject ButtonPlayCasual;
+		public UiLevelsLayout LevelLayoutCasual;
+		public UiLevelsLayout LevelLayoutHard;
+		public GameObject ButtonPlayCasual;
         public GameObject ButtonPlayHard;
         public GameObject ButtonControls;
 		public GameObject ButtonExit;
@@ -29,7 +29,9 @@ namespace Sludge.UI
 		public int LevelsEliteCount;
 		public double GameProgressPct = -1;
 
-		public string latestSelectedLevelUniqueId;
+		public int latestSelectedCasualLevelId = -1;
+		public int latestSelectedHardLevelId = -1;
+		public PlayerProgress.LevelNamespace latestSelectedLevelNamespace;
 
 		private void Awake()
         {
@@ -41,22 +43,12 @@ namespace Sludge.UI
 				ButtonExit.SetActive(false);
             }
 
-			CalcProgression();
-			LevelLayout.CreateLevelsSelection(LevelList.Levels);
+			LevelLayoutCasual.CreateLevelsSelection(LevelList.CasualLevels, PlayerProgress.LevelNamespace.Casual);
+			LevelLayoutHard.CreateLevelsSelection(LevelList.HardLevels, PlayerProgress.LevelNamespace.Hard);
 
 			UiPanels.Instance.Init();
 			ColorScheme.ApplyUiColors(GameManager.I.CurrentUiColorScheme);
 			UiPanels.Instance.SetAllActive(false);
-		}
-
-		public void CalcProgression()
-        {
-			double oldValue = GameProgressPct;
-			GameProgressPct = SludgeUtil.CalcProgression(out LevelsCompletedCount, out LevelsEliteCount, out LevelCount);
-			if (oldValue != -1 && GameProgressPct != oldValue)
-            {
-				StartCoroutine(PlayFabStats.Instance.StorePlayerProgression(GameProgressPct));
-            }
 		}
 
 		private void Start()
@@ -102,10 +94,10 @@ namespace Sludge.UI
 			TextWorldWideAttempts.text = $"World wide attempts: {totalAttempts}";
 		}
 
-		public void PlayClick()
+		public void ShowCasualLevelsClick()
 		{
 			StopAllCoroutines();
-			StartCoroutine(LevelSelectLoop());
+			StartCoroutine(LevelSelectLoop(PlayerProgress.LevelNamespace.Casual));
 		}
 
 		public void ControlsClick()
@@ -140,7 +132,7 @@ namespace Sludge.UI
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
                 if (go == ButtonPlayCasual)
-					PlayClick();
+					ShowCasualLevelsClick();
 				else if (go == ButtonControls)
 					ControlsClick();
 				else if (go == ButtonExit)
@@ -181,16 +173,18 @@ namespace Sludge.UI
 		public void BackFromGame()
         {
 			StopAllCoroutines();
-			CalcProgression();
 			UpdateWorldWideAttempts();
-			LevelLayout.UpdateVisualHints();
+
+			LevelLayoutCasual.UpdateVisualHints();
+			LevelLayoutHard.UpdateVisualHints();
+
 			ColorScheme.ApplyUiColors(GameManager.I.CurrentUiColorScheme);
 
 			UiPanels.Instance.HidePanel(UiPanel.Game);
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 			UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
 			UiPanels.Instance.ShowBackground();
-			StartCoroutine(LevelSelectLoop());
+			StartCoroutine(LevelSelectLoop(latestSelectedLevelNamespace));
 		}
 
 		public static void CheckChangeColorScheme(PlayerInput input)
@@ -228,8 +222,10 @@ namespace Sludge.UI
 			}
 		}
 
-		IEnumerator LevelSelectLoop()
+		IEnumerator LevelSelectLoop(PlayerProgress.LevelNamespace levelNamespace)
 		{
+			latestSelectedLevelNamespace = levelNamespace;
+
 			UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = null;
 
@@ -259,48 +255,26 @@ namespace Sludge.UI
             {
 				var uiLevel = go.GetComponent<UiLevel>();
 				var levelData = uiLevel.LevelData;
-				var levelStatus = PlayerProgress.GetLevelProgress(levelData.UniqueId);
-				var difficulty = uiLevel.LevelData.Difficulty;
 				string levelText;
-				string statsText;
-				string timingsText = "";
-				string otherText = "";
 				if (uiLevel.IsUnlocked)
                 {
-					timingsText = $"Complete\t<mspace=0.5em>{levelData.EliteCompletionTimeSeconds,6:0.000}s</mspace>\nYour best\t<mspace=0.5em>-.---s</mspace>";
-					otherText = $"Attempts\t0";
-
-					levelText = $"{LevelData.DifficultyIds[(int)difficulty]} {(uiLevel.LevelIndex + 1):00} - {levelData.Name}";
-					if (uiLevel.Status == PlayerProgress.LevelStatus.NotCompleted || uiLevel.Status == PlayerProgress.LevelStatus.Escaped)
-					{
-						Color masteredColor = ColorScheme.GetColor(GameManager.I.CurrentUiColorScheme, SchemeColor.UiLevelMastered);
-						statsText = $"Escape in {SludgeUtil.ColorWrap($"{levelData.EliteCompletionTimeSeconds:0.000}", masteredColor)}s to complete chamber";
-					}
-					else
-                    {
-						statsText = "You have completed this chamber";
-                    }
+					levelText = $"{uiLevel.LevelData.Namespace}{(uiLevel.LevelIndex + 1):000}";
                 }
 				else
                 {
 					levelText = "<Locked>";
-					statsText = "Escape more chambers to unlock";
 				}
 
-				//uilevelSelection.TextLevelName.text = levelText;
-				//uilevelSelection.TextLevelInfo.text = statsText;
-				//uilevelSelection.TextLevelTimings.text = timingsText;
-				//uilevelSelection.TextLevelOtherInfo.text = otherText;
+				uilevelSelection.TextLevelName.text = levelText;
 
 				charsShown = 0;
-				latestSelectedLevelUniqueId = levelData.UniqueId;
+				if (latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual)
+					latestSelectedCasualLevelId = levelData.LevelId;
+				else
+					latestSelectedHardLevelId = levelData.LevelId;
 			}
 
-			// Reselect latest selected - or first level
-			if (string.IsNullOrWhiteSpace(latestSelectedLevelUniqueId))
-				latestSelectedLevelUniqueId = LevelLayout.LevelItems[0].levelScript.LevelData.UniqueId;
-
-			var level = LevelLayout.GetLevelFromUniqueId(latestSelectedLevelUniqueId);
+			LevelItem level = latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ? LevelLayoutCasual.GetLevelFromId(latestSelectedCasualLevelId) : LevelLayoutHard.GetLevelFromId(latestSelectedHardLevelId);
 			SetSelectionMarker(level.go);
 			OnNavigationChanged(level.go);
 
@@ -310,13 +284,11 @@ namespace Sludge.UI
 				CheckChangeColorScheme(GameManager.PlayerInput);
 				DoUiNavigation(GameManager.PlayerInput);
 
-				//int intCharsShown = (int)charsShown;
-				//uilevelSelection.TextLevelName.maxVisibleCharacters = intCharsShown >> 1;
-				//uilevelSelection.TextLevelInfo.maxVisibleCharacters = intCharsShown;
-				//uilevelSelection.TextLevelTimings.maxVisibleCharacters = intCharsShown;
-				//uilevelSelection.TextLevelOtherInfo.maxVisibleCharacters = intCharsShown;
+				int intCharsShown = (int)charsShown;
+				uilevelSelection.TextLevelName.maxVisibleCharacters = intCharsShown >> 1;
 
-				//charsShown += charRevealSpeed * Time.deltaTime;
+				charsShown += charRevealSpeed * Time.deltaTime;
+
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
 					UiPanels.Instance.HidePanel(UiPanel.LevelSelect);

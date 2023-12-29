@@ -1,86 +1,70 @@
 ﻿using Newtonsoft.Json;
 using Sludge.UI;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sludge.Utility
 {
     public class PlayerProgress
     {
-        public class LevelProgress
+        public enum LevelNamespace { NotSet, Casual, Hard };
+
+        public static SaveGame saveGame = new SaveGame();
+
+        public class SaveGame
         {
-            public LevelStatus LevelStatus;
-            public double BestTime = -1;
+            public int CasualMaxCompleted;
+            public int HardMaxCompleted;
         }
 
-        public static PlayerProgress Progress = new PlayerProgress();
+        private const string PrefsName = "cazzle-savegame-v1";
 
-        public enum LevelStatus { NotCompleted = 0, Escaped = 1, Completed = 2 };
-        static Dictionary<string, LevelProgress> LevelStates = new Dictionary<string, LevelProgress>();
-
-        private const string PrefsName = "player_progress_alpha1";
-
-        public static LevelProgress GetLevelProgress(string levelUniqueId)
+        public static bool LevelIsCompleted(LevelNamespace ns, int levelId)
         {
-            if (string.IsNullOrWhiteSpace(levelUniqueId))
-            {
-                Debug.LogWarning("GetLevelStatus called with empty levelUniqueId");
-                return new LevelProgress();
-            }
+            if (ns == LevelNamespace.Casual)
+                return levelId <= saveGame.CasualMaxCompleted;
+            else if (ns == LevelNamespace.Hard)
+                return levelId <= saveGame.HardMaxCompleted;
 
-            if (!LevelStates.TryGetValue(levelUniqueId, out var result))
-                return new LevelProgress();
+            Debug.LogError($"unknown level namespace: {ns}");
 
-            return result;
+            return true;
         }
 
-        public static void UpdateLevelStatus(RoundResult roundResult)
+        public static void UpdateProgress(RoundResult roundResult)
         {
             if (!roundResult.Completed || UiLogic.Instance.StartCurrentScene)
                 return;
 
-            var currentProgress = GetLevelProgress(roundResult.LevelId);
-
-            bool hasChanged = false;
-            if (roundResult.EndTime < currentProgress.BestTime)
+            if (roundResult.LevelNamespace == LevelNamespace.Casual && roundResult.LevelId > saveGame.CasualMaxCompleted)
             {
-                currentProgress.BestTime = roundResult.EndTime;
-                hasChanged = true;
+                saveGame.CasualMaxCompleted = roundResult.LevelId;
+                Save();
             }
-
-            var resultStatus = roundResult.IsEliteTime ? LevelStatus.Completed : LevelStatus.Escaped;
-            if (resultStatus > currentProgress.LevelStatus)
+            else if (roundResult.LevelNamespace == LevelNamespace.Hard && roundResult.LevelId > saveGame.HardMaxCompleted)
             {
-                currentProgress.LevelStatus = resultStatus;
-                hasChanged = true;
+                saveGame.HardMaxCompleted = roundResult.LevelId;
+                Save();
             }
-
-            if (!hasChanged)
-                return;
-
-            LevelStates[roundResult.LevelId] = currentProgress;
-            Save();
-            Debug.Log($"Progress saved, new status for {roundResult.LevelName}: {JsonConvert.SerializeObject(currentProgress)}");
         }
 
         public static void Save()
         {
-            string json = JsonConvert.SerializeObject(LevelStates);
+            Debug.Log($"Saving game...");
+            string json = JsonConvert.SerializeObject(saveGame);
             PlayerPrefs.SetString(PrefsName, json);
             PlayerPrefs.Save();
         }
 
         public static void Load()
         {
+            Debug.Log("Loading game...");
+            saveGame = new SaveGame();
+
             string json = PlayerPrefs.GetString(PrefsName, null);
             if (json == null)
                 return;
 
-            LevelStates = JsonConvert.DeserializeObject<Dictionary<string, LevelProgress>>(json);
-            if (LevelStates == null)
-                LevelStates = new Dictionary<string, LevelProgress>();
-
-            Debug.Log("Progress loaded: " + json);
+            saveGame = JsonConvert.DeserializeObject<SaveGame>(json) ?? new SaveGame();
         }
     }
 }

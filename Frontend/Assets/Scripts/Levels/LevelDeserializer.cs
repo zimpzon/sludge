@@ -10,11 +10,6 @@ public static class LevelDeserializer
     public static void Run(LevelData data, LevelElements elements, LevelSettings levelSettings)
     {
         // Level settings
-        levelSettings.LevelName = data.Name;
-        levelSettings.Difficulty = data.Difficulty;
-        levelSettings.EliteCompletionTimeSeconds = data.EliteCompletionTimeSeconds;
-        levelSettings.UniqueId = data.UniqueId;
-        levelSettings.SortKey = data.SortKey;
         levelSettings.ColorSchemeName = data.ColorSchemeName;
 
         // Clear existing bullets

@@ -5,30 +5,41 @@ using UnityEngine;
 
 public static class LevelList
 {
-	public static List<LevelData> Levels = new List<LevelData>();
+	public static List<LevelData> CasualLevels = new List<LevelData>();
+	public static List<LevelData> HardLevels = new List<LevelData>();
 
 	public static void LoadLevels()
     {
-		Levels.Clear();
-
-		HashSet<string> idUniqueTest = new HashSet<string>();
+		CasualLevels.Clear();
+		HardLevels.Clear();
 
 		var allLevels = Resources.LoadAll<TextAsset>("Levels");
 		for (int i = 0; i < allLevels.Length; ++i)
         {
-			var levelData = JsonConvert.DeserializeObject<LevelData>(allLevels[i].text);
+			LevelData levelData = JsonConvert.DeserializeObject<LevelData>(allLevels[i].text);
+			levelData.SetNamespaceAndIdFromFilename(allLevels[i].name);
 
-			if (idUniqueTest.Contains(levelData.UniqueId))
+			if (levelData.LevelId <= 0)
+				Debug.LogError("missing level id, it should have been auto-set when saving a level in the format [namespace]-[levelId]");
+
+			if (levelData.Namespace == Sludge.Utility.PlayerProgress.LevelNamespace.NotSet)
+				Debug.LogError("missing level namespacee, it should have been auto-set when saving a level in the format [namespace]-[levelId] ");
+
+			if (levelData.Namespace == Sludge.Utility.PlayerProgress.LevelNamespace.Casual)
 			{
-				string testId = $"duplicate-{i}";
-				Debug.LogError($"Level id {levelData.UniqueId} already exists, skipping. Assigning test id: {testId}");
-				levelData.UniqueId = testId;
+				CasualLevels.Add(levelData);
 			}
-
-			idUniqueTest.Add(levelData.UniqueId);
-			Levels.Add(levelData);
+			else if (levelData.Namespace == Sludge.Utility.PlayerProgress.LevelNamespace.Hard)
+            {
+				HardLevels.Add(levelData);
+            }
+			else
+            {
+				Debug.LogError($"unknown level namespace: {levelData.Namespace}");
+            }
 		}
 
-		Debug.Log($"Loaded {Levels.Count} levels");
+		Debug.Log($"Loaded {CasualLevels.Count} casual levels");
+		Debug.Log($"Loaded {HardLevels.Count} hard levels");
 	}
 }
