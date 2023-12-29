@@ -226,7 +226,6 @@ public class GameManager : MonoBehaviour
 
     void GoToNextLevel()
     {
-        // TODO: Some transition to next level?
         StopAllCoroutines();
         UiLogic.Instance.latestSelectedLevelUniqueId = currentUiLevel.Next.LevelData.UniqueId;
         LoadLevel(currentUiLevel.Next);
@@ -271,6 +270,14 @@ public class GameManager : MonoBehaviour
             {
                 PlayerInput.GetHumanInput();
                 UiLogic.Instance.DoUiNavigation(PlayerInput);
+
+                UiLogic.CheckChangeColorScheme(PlayerInput);
+
+                if (PlayerInput.RevealExitsCheat())
+                {
+                    // sound testing hack
+                    SoundManager.Play(FxList.Instance.LevelComplete);
+                }
 
                 if (PlayerInput.Up > 0 || PlayerInput.Down > 0 || PlayerInput.Left > 0 || PlayerInput.Right > 0)
                 {
@@ -329,15 +336,42 @@ public class GameManager : MonoBehaviour
         Player.transform.rotation = baseRotation;
     }
 
-    public void UpdatePillsLeft(bool flashy = false)
+    public void OnPillEaten()
+    {
+        UpdatePillsLeft();
+        TextPillsLeft.transform.DOKill();
+        TextPillsLeft.transform.localScale = Vector3.one * 1.1f;
+        TextPillsLeft.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutElastic);
+
+        if (PillManager.PillsLeft == 0)
+        {
+            RevealExits();
+        }
+    }
+
+    void HideExits()
+    {
+        foreach(var exit in Exits)
+            exit.gameObject.SetActive(false);
+    }
+
+    void RevealExits()
+    {
+        foreach (var exit in Exits)
+        {
+            exit.gameObject.SetActive(true);
+
+            SoundManager.Play(FxList.Instance.FakeWallShowUp);
+            DeathParticles.transform.position = exit.transform.position;
+            DeathParticles.Emit(30);
+            CameraRoot.DOKill();
+            CameraRoot.DOShakePosition(0.3f, 0.2f);
+        }
+    }
+
+    public void UpdatePillsLeft()
     {
         TextPillsLeft.text = $"{PillManager.PillsLeft}/{PillManager.TotalPills}";
-        if (flashy)
-        {
-            TextPillsLeft.transform.DOKill();
-            TextPillsLeft.transform.localScale = Vector3.one * 1.1f;
-            TextPillsLeft.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutElastic);
-        }
     }
 
     void ResetLevel()
@@ -377,6 +411,8 @@ public class GameManager : MonoBehaviour
 
         UpdateSludgeObjects();
         SetHighlightedObjects(bombActivated: false);
+
+        HideExits();
     }
 
     public void OnActivatingBomb()
@@ -403,7 +439,12 @@ public class GameManager : MonoBehaviour
             if (levelComplete)
                 break;
 
-            if (PlayerInput.BackActive() || Input.GetKeyDown(KeyCode.R))
+            if (PlayerInput.RevealExitsCheat())
+            {
+                RevealExits();
+            }
+
+            if (PlayerInput.BackActive() || PlayerInput.RestartKey())
             {
                 latestRoundResult.Cancelled = true;
                 QuickText.Instance.ShowText("restart");
@@ -430,7 +471,7 @@ public class GameManager : MonoBehaviour
 
         if (latestRoundResult.Completed)
         {
-            SoundManager.Play(FxList.Instance.LevelCompleteGood);
+            SoundManager.Play(FxList.Instance.LevelComplete);
             QuickText.Instance.ShowText("Completed!");
 
             PlayerProgress.UpdateLevelStatus(latestRoundResult);

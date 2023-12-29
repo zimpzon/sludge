@@ -15509,7 +15509,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &500047641
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16842,7 +16842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
+  m_Color: {r: 0.96470594, g: 1, b: 0.003921569, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -18063,7 +18063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &968647631
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23280,7 +23280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
+  m_Color: {r: 0.96470594, g: 1, b: 0.003921569, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -23371,7 +23371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
+  m_Color: {r: 0.96470594, g: 1, b: 0.003921569, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -23483,7 +23483,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: (todo)
+  m_text: Nightmare
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ca4d2f306ccea545b06ae7c31441886, type: 2}
   m_sharedMaterial: {fileID: 1676728505900478140, guid: 3ca4d2f306ccea545b06ae7c31441886, type: 2}
@@ -24033,7 +24033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.8490566, g: 0.8490566, b: 0.8490566, a: 1}
+  m_Color: {r: 0.96470594, g: 1, b: 0.003921569, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -24548,7 +24548,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Levels
+  m_text: Adventure
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3ca4d2f306ccea545b06ae7c31441886, type: 2}
   m_sharedMaterial: {fileID: 1676728505900478140, guid: 3ca4d2f306ccea545b06ae7c31441886, type: 2}
@@ -25568,7 +25568,7 @@ MonoBehaviour:
     loop: 0
     cooldown: 0
     comment: 
-  UiExecuteSelected:
+  UiShowMenu:
     clips:
     - {fileID: 8300000, guid: 71ea742a4bb952549aacb13e2a05868e, type: 3}
     volume: 1
@@ -25578,9 +25578,19 @@ MonoBehaviour:
     loop: 0
     cooldown: 0
     comment: 
+  UiHideMenu:
+    clips:
+    - {fileID: 8300000, guid: 71ea742a4bb952549aacb13e2a05868e, type: 3}
+    volume: 1
+    volumeVariation: 0
+    pitch: 5
+    pitchVariation: 0
+    loop: 0
+    cooldown: 0
+    comment: 
   UiChangeSelection:
     clips:
-    - {fileID: 8300000, guid: d812e546726c8a6449c64ada76353ab0, type: 3}
+    - {fileID: 8300000, guid: 71ea742a4bb952549aacb13e2a05868e, type: 3}
     volume: 1
     volumeVariation: 0
     pitch: 1
@@ -25639,22 +25649,12 @@ MonoBehaviour:
     loop: 0
     cooldown: 0
     comment: 
-  LevelCompleteBad:
+  LevelComplete:
     clips:
-    - {fileID: 8300000, guid: a991cbc62bae3c24b957cc349512257e, type: 3}
-    volume: 1
+    - {fileID: 8300000, guid: 85f83ca9e725cc442b40461c9e4df2ba, type: 3}
+    volume: 0.25
     volumeVariation: 0
-    pitch: 1
-    pitchVariation: 0
-    loop: 0
-    cooldown: 0
-    comment: 
-  LevelCompleteGood:
-    clips:
-    - {fileID: 8300000, guid: 41aa2828f47faae4391fcd1c2f380ca2, type: 3}
-    volume: 1
-    volumeVariation: 0
-    pitch: 1
+    pitch: 0.5
     pitchVariation: 0
     loop: 0
     cooldown: 0
@@ -26108,7 +26108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.51113826, g: 0.49508238, b: 0.62352943, a: 1}
+  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -26412,7 +26412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381e1a9f1ab4188458fbad610fac8769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartCurrentScene: 1
+  StartCurrentScene: 0
   LevelLayout: {fileID: 74663400}
   ButtonPlayCasual: {fileID: 169547720}
   ButtonPlayHard: {fileID: 1691106024}

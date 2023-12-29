@@ -33,7 +33,7 @@ namespace Assets.Scripts.Game
             ParticleEmitter.I.EmitPills(pos, 1);
 
             PillsLeft--;
-            GameManager.I.UpdatePillsLeft(flashy: true);
+            GameManager.I.OnPillEaten();
         }
     }
 }

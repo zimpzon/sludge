@@ -97,6 +97,11 @@ namespace Sludge.UI
 
         YieldInstruction ShowPanel(UiPanel panel, bool show, bool instant = false)
         {
+            if (!instant)
+            {
+                SoundManager.Play(show ? FxList.Instance.UiShowMenu : FxList.Instance.UiHideMenu);
+            }
+
             float time = instant ? 0 : ChangeTime;
             var go = GetPanelSettings(panel, out var hidePos, out var showPos);
             if (show)

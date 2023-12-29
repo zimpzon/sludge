@@ -1,3 +1,4 @@
+using Assets.Scripts.Game;
 using Sludge.Colors;
 using Sludge.Modifiers;
 using Sludge.Utility;
@@ -10,10 +11,12 @@ public class ModKeyToggle : SludgeModifier
     public int DisableAtKeyCount = -1;
     public int EnableAtKeyCount = -1;
     public bool StartEnabled = true;
+    public bool FlipWhenLastPillCollected = false;
 
     Collider2D doorCollider;
     SpriteRenderer spriteRenderer;
     Material mat;
+    bool flipAtLastPillCollectedExecuted;
 
     private void Awake()
     {
@@ -54,6 +57,20 @@ public class ModKeyToggle : SludgeModifier
         {
             StopAllCoroutines();
             StartCoroutine(EnableMe());
+        }
+
+        if (FlipWhenLastPillCollected && !flipAtLastPillCollectedExecuted && PillManager.PillsLeft == 0)
+        {
+            flipAtLastPillCollectedExecuted = true;
+
+            if (doorCollider.enabled)
+            {
+                DisableMe();
+            }
+            else
+            {
+                EnableMe();
+            }
         }
     }
 

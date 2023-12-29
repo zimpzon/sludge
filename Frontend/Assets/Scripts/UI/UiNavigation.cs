@@ -42,13 +42,23 @@ public class UiNavigation : MonoBehaviour
 				else
 				{
 					// Select
-					UiSelectionMarker.Instance.SetTarget(gameObject);
-					if (OnNavigationChanged != null)
-						OnNavigationChanged(gameObject);
+					ChangeSelection(UiSelectionMarker.Instance, gameObject);
 				}
 			}
 		}
 	}
+
+	static void ChangeSelection(UiSelectionMarker selectionMarker, GameObject newSelection)
+	{
+        SoundManager.Play(FxList.Instance.UiChangeSelection);
+
+        selectionMarker.SetTarget(newSelection);
+
+        if (OnNavigationChanged != null)
+        {
+            OnNavigationChanged(newSelection);
+        }
+    }
 
     public static void TryMove(UiSelectionMarker selectionMarker, PlayerInput playerInput)
     {
@@ -65,6 +75,7 @@ public class UiNavigation : MonoBehaviour
 		if (playerInput.IsTapped(PlayerInput.InputType.Select) && OnNavigationSelected != null)
 		{
 			OnNavigationSelected(selectionMarker.target);
+			return;
 		}
 
 		if (playerInput.IsTapped(PlayerInput.InputType.Down))
@@ -81,12 +92,7 @@ public class UiNavigation : MonoBehaviour
 	{
 		if (moveTarget != null && moveTarget.activeSelf)
 		{
-			selectionMarker.SetTarget(moveTarget);
-
-			if (OnNavigationChanged != null)
-			{
-				OnNavigationChanged(moveTarget);
-			}
+            ChangeSelection(selectionMarker, moveTarget);
 		}
 	}
 }

@@ -6,15 +6,15 @@ public class FxList : MonoBehaviour
     public static FxList Instance;
 
     public SoundItem UiNope;
-    public SoundItem UiExecuteSelected;
+    public SoundItem UiShowMenu;
+    public SoundItem UiHideMenu;
     public SoundItem UiChangeSelection;
     public SoundItem StartRound;
     public SoundItem PlayerDie;
     public SoundItem PlayerShoot;
     public SoundItem PlayerLanding;
     public SoundItem PlayerLanded;
-    public SoundItem LevelCompleteBad;
-    public SoundItem LevelCompleteGood;
+    public SoundItem LevelComplete;
     public SoundItem SlimeBombExplode;
     public SoundItem EnemyShoot;
     public SoundItem EnemyDie;

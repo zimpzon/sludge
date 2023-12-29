@@ -153,7 +153,7 @@ namespace Sludge.UI
 				CheckChangeColorScheme(GameManager.PlayerInput);
 				DoUiNavigation(GameManager.PlayerInput);
 
-				if (Input.GetKeyDown(KeyCode.P) && Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl))
+				if (Input.GetKeyDown(KeyCode.P) && Input.GetKey(KeyCode.RightShift) && Input.GetKey(KeyCode.RightControl))
 					PlayerPrefs.DeleteAll();
 
                 yield return null;
@@ -193,7 +193,7 @@ namespace Sludge.UI
 			StartCoroutine(LevelSelectLoop());
 		}
 
-		void CheckChangeColorScheme(PlayerInput input)
+		public static void CheckChangeColorScheme(PlayerInput input)
         {
 			if (input.IsTapped(PlayerInput.InputType.ColorNext))
 			{
@@ -317,7 +317,6 @@ namespace Sludge.UI
 				//uilevelSelection.TextLevelOtherInfo.maxVisibleCharacters = intCharsShown;
 
 				//charsShown += charRevealSpeed * Time.deltaTime;
-
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
 					UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
