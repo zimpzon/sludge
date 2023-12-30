@@ -8,7 +8,7 @@ public class BallCollector : SludgeObject
     public override EntityType EntityType => EntityType.BallCollector;
 
     public float speed = 14.0f;
-    public float ScaleAtFullSize = 0.65f;
+    public float ScaleAtFullSize = 1f;
 
     public Transform displayBody;
     Transform eye;
@@ -44,6 +44,7 @@ public class BallCollector : SludgeObject
             rigidBody.simulated = false;
             rigidBody.constraints |= RigidbodyConstraints2D.FreezePositionX;
             rigidBody.constraints |= RigidbodyConstraints2D.FreezePositionY;
+            rigidBody.velocity = Vector3.zero;
         }
         else
         {
@@ -77,7 +78,6 @@ public class BallCollector : SludgeObject
         bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
         if (wallHit)
         {
-            DebugLinesScript.Show("WALL", Time.time);
             frameLastWallHit = GameManager.I.FrameCounter;
             if (squashCounter++ > 2)
             {
@@ -96,7 +96,10 @@ public class BallCollector : SludgeObject
 
     void Kill()
     {
-        DebugLinesScript.Show("SQUASH", Time.time);
+        SoundManager.Play(FxList.Instance.BallCollectorDie);
+        GameManager.I.DeathParticles.transform.position = trans.position;
+        GameManager.I.DeathParticles.Emit(3);
+
         gameObject.SetActive(false);
     }
 
@@ -106,11 +109,15 @@ public class BallCollector : SludgeObject
         float sqrPlayerDist = playerDir.sqrMagnitude;
         playerDir.Normalize();
 
-        const float SqrLookRange = 5 * 5;
+        const float SqrLookRange = 999 * 999;
         const float MaxScale = 0.9f;
 
         if (GameManager.I.FrameCounter != 0) // Hacky hacky: EngineTick gets called once before starting round. Don't begin to open eyes even if player is in range.
-            eyeScaleTarget = sqrPlayerDist < SqrLookRange ? MaxScale : 0;
+        {
+            bool playerIsClose = sqrPlayerDist < SqrLookRange;
+            bool hasOpenEye = !isHeld && playerIsClose;
+            eyeScaleTarget = hasOpenEye ? MaxScale : 0;
+        }
 
         eyeScale += (float)((eyeScaleTarget > eyeScale) ? GameManager.TickSize * 4.0f : -GameManager.TickSize * 4.0f);
         eyeScale = Mathf.Clamp(eyeScale, 0, MaxScale);
@@ -135,7 +142,7 @@ public class BallCollector : SludgeObject
 
         trans.localScale = Vector3.one * currentScale;
 
-        const float RecoverSpeed = 0.5f;
+        const float RecoverSpeed = 0.75f;
         if (rigidBody.velocity.sqrMagnitude < speed * speed)
         {
             rigidBody.velocity += rigidBody.velocity.normalized * Time.fixedDeltaTime * speed * RecoverSpeed;
@@ -155,6 +162,8 @@ public class BallCollector : SludgeObject
         // reset squash counter if not hitting wall for a few frames
         if (GameManager.I.FrameCounter > frameLastWallHit + 1)
             squashCounter = 0;
+
+        PillManager.EatPill(trans.position, PillEater.Ball);
 
         UpdateEye();
         eye.transform.localScale = new Vector2(1, eyeScale);

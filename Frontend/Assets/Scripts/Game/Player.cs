@@ -316,6 +316,8 @@ public class Player : MonoBehaviour
 
         playerMoveDampen -= (float)GameManager.TickSize * playerMoveDampenDecaySpeed;
         playerMoveDampen = Mathf.Clamp01(playerMoveDampen);
+
+        eyesTransform.localScale = eyesBaseScale * (playerMoveDampen > 0 ? 1.5f : 1.0f);
     }
 
     void Friction(ref double a)

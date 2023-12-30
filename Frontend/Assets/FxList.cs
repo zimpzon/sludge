@@ -9,6 +9,7 @@ public class FxList : MonoBehaviour
     public SoundItem UiShowMenu;
     public SoundItem UiHideMenu;
     public SoundItem UiChangeSelection;
+
     public SoundItem StartRound;
     public SoundItem PlayerDie;
     public SoundItem PlayerShoot;
@@ -33,6 +34,8 @@ public class FxList : MonoBehaviour
     public SoundItem Countdown3;
     public SoundItem Countdown2;
     public SoundItem Countdown1;
+    public SoundItem BallCollectorSpawn;
+    public SoundItem BallCollectorDie;
 
     private void Awake()
     {

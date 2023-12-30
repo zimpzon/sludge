@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 838317220}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.65, y: 0.65, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5917612401240600436}
@@ -108,6 +108,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5917612401240600436}
+  - component: {fileID: 474107636225653821}
   - component: {fileID: 784664706841243767}
   - component: {fileID: 547978590315584386}
   m_Layer: 10
@@ -126,7 +127,7 @@ Transform:
   m_GameObject: {fileID: 5917612401240600437}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.5, y: 8, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8632067019789213746}
@@ -134,6 +135,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &474107636225653821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5917612401240600437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32216fc1288399c468e9afcdd2d8ee6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Modifiers: []
+  TrappedBallCollector: {fileID: 8632067019789213751}
 --- !u!61 &784664706841243767
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -256,6 +271,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2726039074211080838, guid: 884c2bff7d875e046a3ab99df4dc2bab, type: 3}
+      propertyPath: ScaleAtFullSize
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2726039074211080839, guid: 884c2bff7d875e046a3ab99df4dc2bab, type: 3}
       propertyPath: m_Name
       value: 'TrappedBallCollector '
@@ -279,3 +298,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2726039074211080835, guid: 884c2bff7d875e046a3ab99df4dc2bab, type: 3}
   m_PrefabInstance: {fileID: 5917612400089565873}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8632067019789213751 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2726039074211080838, guid: 884c2bff7d875e046a3ab99df4dc2bab, type: 3}
+  m_PrefabInstance: {fileID: 5917612400089565873}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d43135ee635e1ff458ab192e90bf5f53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

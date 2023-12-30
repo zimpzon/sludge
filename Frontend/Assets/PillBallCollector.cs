@@ -24,6 +24,7 @@ public class PillBallCollector : SludgeObject
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player || entity == EntityType.BallCollector)
         {
+            SoundManager.Play(FxList.Instance.BallCollectorSpawn);
             TrappedBallCollector.transform.SetParent(null);
             TrappedBallCollector.HoldPosition(hold: false);
             gameObject.SetActive(false);
