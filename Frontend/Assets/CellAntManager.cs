@@ -45,7 +45,7 @@ public class CellAntManager : MonoBehaviour
 
     ModCellFollower Create()
     {
-        var ant = Instantiate(CellAntProto, Vector3.one * 128851, Quaternion.identity, this.gameObject.transform);
+        var ant = Instantiate(CellAntProto, Vector3.one * 12851, Quaternion.identity, this.gameObject.transform);
         var mod = ant.GetComponent<ModCellFollower>();
         return mod;
     }

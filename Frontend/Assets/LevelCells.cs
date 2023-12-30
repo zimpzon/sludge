@@ -210,7 +210,7 @@ public class LevelCells : MonoBehaviour
                 var tile = tilemap.GetTile(pos);
 
                 int cellIdx = (y * w) + x;
-                cells[cellIdx] = tile == FloorTile ? Free : StaticWall;
+                cells[cellIdx] = tile == null ? Free : StaticWall;
             }
         }
     }

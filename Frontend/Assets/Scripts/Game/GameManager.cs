@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
 
     public static readonly string Version = "0.1b";
 
-    const double TimePillBonusTime = -1.0;
     public const double TickSize = 0.016;
     public const int TickSizeMs = 16;
     public const double TicksPerSecond = 1000.0 / TickSizeMs;
