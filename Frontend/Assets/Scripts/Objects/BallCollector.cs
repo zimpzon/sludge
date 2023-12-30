@@ -19,6 +19,8 @@ public class BallCollector : SludgeObject
     System.Random rnd;
     Vector2 basePos;
     Vector2 baseScale;
+    int frameLastWallHit;
+    int squashCounter;
 
     Rigidbody2D rigidBody;
     bool isHeld;
@@ -28,6 +30,9 @@ public class BallCollector : SludgeObject
         trans.position = basePos;
         trans.localScale = baseScale;
         rigidBody.velocity = Vector3.one * speed;
+        frameLastWallHit = 0;
+        squashCounter = 0;
+
         base.Reset();
     }
 
@@ -64,17 +69,35 @@ public class BallCollector : SludgeObject
         Reset();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         ContactPoint2D contactPoint = collision.contacts[0];
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
+
+        bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
+        if (wallHit)
+        {
+            DebugLinesScript.Show("WALL", Time.time);
+            frameLastWallHit = GameManager.I.FrameCounter;
+            if (squashCounter++ > 2)
+            {
+                Kill();
+                return;
+            }
+        }
+
         if (entity != EntityType.Pickup)
         {
             return;
         }
 
         PillManager.EatPill(contactPoint.point, PillEater.Ball);
-        // add trail
+    }
+
+    void Kill()
+    {
+        DebugLinesScript.Show("SQUASH", Time.time);
+        gameObject.SetActive(false);
     }
 
     void UpdateEye()
@@ -129,6 +152,10 @@ public class BallCollector : SludgeObject
 
     void Update()
     {
+        // reset squash counter if not hitting wall for a few frames
+        if (GameManager.I.FrameCounter > frameLastWallHit + 1)
+            squashCounter = 0;
+
         UpdateEye();
         eye.transform.localScale = new Vector2(1, eyeScale);
     }
