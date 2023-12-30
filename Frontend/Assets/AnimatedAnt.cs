@@ -110,8 +110,8 @@ public class AnimatedAnt : MonoBehaviour
 
         if (animateAntennaRange != 0)
         {
-            double t = SludgeUtil.TimeMod((Time.time * (float)animateAntennaSpeed * animationSpeedScale) + animationOffset);
-            double t01 = Ease.PingPong(Ease.Apply(Easings.Linear, t));
+            double t = SludgeUtil.TimeMod((Time.time * (float)animateAntennaSpeed * animationSpeedScale) + animationOffset, pingPong: true);
+            double t01 = Ease.Apply(Easings.Linear, t);
             double range = animateAntennaRange;
             double rotZ = t01 * range - range * 0.5;
             antennaLeftTrans.localRotation = Quaternion.Euler(0, 0, (float)rotZ);
@@ -119,8 +119,8 @@ public class AnimatedAnt : MonoBehaviour
 
         if (GnawingMandibles)
         {
-            double t = SludgeUtil.TimeMod((Time.time * animationSpeedScale) + animationOffset);
-            double rotZ = Ease.PingPong(Ease.Apply(Easings.Linear, t)) * GnawingMandiblesRange - GnawingMandiblesRange * 0.5;
+            double t = SludgeUtil.TimeMod((Time.time * animationSpeedScale) + animationOffset, pingPong: true);
+            double rotZ = Ease.Apply(Easings.Linear, t) * GnawingMandiblesRange - GnawingMandiblesRange * 0.5;
             mandibleLeftTrans.localRotation = Quaternion.Euler(0, 0, (float)rotZ);
         }
 

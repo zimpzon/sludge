@@ -30,7 +30,6 @@ namespace Sludge.Easing
         public static double Flip(double t) => 1.0 - t;
         public static double Mix(double a, double b, double t) => (a * (1.0 - t)) + (b * t);
         public static double Scale(double a, double t) => a * t;
-        public static double PingPong(double t) => t <= 0.5 ? t * 2 : 1 - ((t - 0.5) * 2);
         public static double BounceStart(double t) => Mathf.Abs(((float)t * 2.0f) - 1.0f);
         public static double BounceEnd(double t) => 1.0 - BounceStart(t);
 

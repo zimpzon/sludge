@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     float playerMoveDampen;
 
     public bool Alive = false;
+    public bool WallsAreDeadly = true;
 
     public double angle = 90;
     double speed;
@@ -194,6 +195,12 @@ public class Player : MonoBehaviour
         bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
         if (wallHit)
         {
+            if (WallsAreDeadly)
+            {
+                Kill();
+                return;
+            }
+
             frameLastWallHit = GameManager.I.FrameCounter;
             if (squashCounter++ > 5)
             {

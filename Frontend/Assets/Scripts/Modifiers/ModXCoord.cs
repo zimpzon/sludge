@@ -7,14 +7,25 @@ namespace Sludge.Modifiers
     public class ModXCoord : SludgeModifier
     {
         public bool Active = true;
-        public float Range = 5;
-        public double TimeOffset = 0.0;
+        [Range(0, 100)] public float Range = 5;
+        [Range(0, 1)] public float CurrentlyAt = 0.5f;
         public double TimeMultiplier = 1.0;
         public bool PingPong = true;
         public Easings Easing = Easings.Linear;
 
         Transform trans;
         Vector3 startPos;
+
+        Vector3 T0(Vector3 from) => from + Vector3.left * Range * CurrentlyAt;
+        Vector3 T1(Vector3 from) => from + Vector3.right * Range * (1 - CurrentlyAt);
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawCube(T0(transform.position), Vector3.one * 0.75f);
+            Gizmos.DrawCube(T1(transform.position), Vector3.one * 0.75f);
+            Gizmos.DrawLine(T0(transform.position), T1(transform.position));
+        }
 
         public override void Reset()
         {
@@ -33,14 +44,13 @@ namespace Sludge.Modifiers
             if (!Active)
                 return;
 
-            double t = SludgeUtil.TimeMod((GameManager.I.EngineTime + TimeOffset) * TimeMultiplier);
-            t = Ease.Apply(Easing, t);
-            if (PingPong)
-                t = Ease.PingPong(t);
+            double t = GameManager.I.EngineTime * TimeMultiplier + CurrentlyAt;
+            t = SludgeUtil.TimeMod(t, PingPong);
 
-            double offsetX = SludgeUtil.Stabilize(t * Range);
+            t = Ease.Apply(Easing, t);
+
             var pos = trans.position;
-            pos.x = startPos.x + (float)offsetX;
+            pos.x = Mathf.Lerp(T0(startPos).x, T1(startPos).x, (float)t);
             transform.position = pos;
         }
     }

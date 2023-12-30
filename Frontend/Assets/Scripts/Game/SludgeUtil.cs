@@ -17,10 +17,16 @@ namespace Sludge.Utility
 
         public static Vector3 StabilizeVector(Vector3 v)
             => v;
-            //=> new Vector3((float)Stabilize(v.x), (float)Stabilize(v.y), (float)Stabilize(v.z));
+        //=> new Vector3((float)Stabilize(v.x), (float)Stabilize(v.y), (float)Stabilize(v.z));
 
-        public static double TimeMod(double time)
-            => time - (int)time;
+        public static double TimeMod(double t, bool pingPong)
+        {
+            double t2 = t / 2;
+            double frac = t2 - (int)t2;
+            return pingPong ? PingPong(frac) : frac * 2;
+        }
+    
+        private static double PingPong(double t) => t <= 0.5 ? t * 2 : 1 - ((t - 0.5) * 2);
 
         public static Vector2 LookAngle(double angle)
         {

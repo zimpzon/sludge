@@ -67,16 +67,14 @@ public class ModSwarm : SludgeModifier
     {
         for (int i = 0; i < Count; ++i)
         {
-            double tx = SludgeUtil.TimeMod(t * TimeXMul + TimeXAddPerItem * i + TimeXAdd);
-            if (PingPongX) tx = Ease.PingPong(tx);
+            double tx = SludgeUtil.TimeMod(t * TimeXMul + TimeXAddPerItem * i + TimeXAdd, PingPongX);
             double x = SludgeUtil.Stabilize(Ease.Apply(EasingPositionX, tx) * Width);
 
-            double ty = SludgeUtil.TimeMod(t * TimeYMul + TimeYAddPerItem * i + TimeYAdd);
-            if (PingPongY) ty = Ease.PingPong(ty);
+            double ty = SludgeUtil.TimeMod(t * TimeYMul + TimeYAddPerItem * i + TimeYAdd, PingPongY);
             double y = SludgeUtil.Stabilize(Ease.Apply(EasingPositionY, ty) * Height);
             var pos = new Vector2((float)x, (float)y);
 
-            double tRot = SludgeUtil.TimeMod(t * TimeRotMul + TimeRotAddPerItem * i + TimeRotAdd);
+            double tRot = SludgeUtil.TimeMod(t * TimeRotMul + TimeRotAddPerItem * i + TimeRotAdd, pingPong: false);
             double rotZ = SludgeUtil.Stabilize(Ease.Apply(EasingRotation, tRot));
             var rotation = Quaternion.Euler(0, 0, (float)rotZ * 360);
 
@@ -93,16 +91,14 @@ public class ModSwarm : SludgeModifier
 
         for (int i = 0; i < Count; ++i)
         {
-            double tx = SludgeUtil.TimeMod(t * TimeXMul + TimeXAddPerItem * i + TimeXAdd);
-            if (PingPongX) tx = Ease.PingPong(tx);
+            double tx = SludgeUtil.TimeMod(t * TimeXMul + TimeXAddPerItem * i + TimeXAdd, PingPongX);
             double x = SludgeUtil.Stabilize(Ease.Apply(EasingPositionX, tx) * Width);
 
-            double ty = SludgeUtil.TimeMod(t * TimeYMul + TimeYAddPerItem * i + TimeYAdd);
-            if (PingPongY) ty = Ease.PingPong(ty);
+            double ty = SludgeUtil.TimeMod(t * TimeYMul + TimeYAddPerItem * i + TimeYAdd, PingPongY);
             double y = SludgeUtil.Stabilize(Ease.Apply(EasingPositionY, ty) * Height);
             var pos = new Vector2((float)x, (float)y);
 
-            double tRot = SludgeUtil.TimeMod(t * TimeRotMul + TimeRotAddPerItem * i + TimeRotAdd);
+            double tRot = SludgeUtil.TimeMod(t * TimeRotMul + TimeRotAddPerItem * i + TimeRotAdd, pingPong: false);
             double rotZ = SludgeUtil.Stabilize(Ease.Apply(EasingRotation, tRot));
             var rotation = Quaternion.Euler(0, 0, (float)rotZ * 360);
 
