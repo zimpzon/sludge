@@ -15,6 +15,16 @@ namespace Sludge.Shared
 
     public class LevelData
     {
+        public string LevelName;
+        public string ColorSchemeName;
+        public PlayerProgress.LevelNamespace Namespace;
+        public int LevelId = 0;
+
+        public LevelDataTransform PlayerTransform = new LevelDataTransform();
+        public LevelTilemapData WallTilemap = new LevelTilemapData();
+        public LevelTilemapData PillTilemap = new LevelTilemapData();
+        public List<LevelDataObject> Objects = new List<LevelDataObject>();
+
         public string FileNameFromNamespaceAndId() => $"{Namespace}-{LevelId:000}";
 
         public PlayerProgress.LevelNamespace NameSpaceFromFilename(string filename)
@@ -34,14 +44,5 @@ namespace Sludge.Shared
             Namespace = NameSpaceFromFilename(filename);
             LevelId = IdFromFilename(filename);
         }
-
-        public string ColorSchemeName;
-        public PlayerProgress.LevelNamespace Namespace;
-        public int LevelId = 0;
-
-        public LevelDataTransform PlayerTransform = new LevelDataTransform();
-        public LevelTilemapData WallTilemap = new LevelTilemapData();
-        public LevelTilemapData PillTilemap = new LevelTilemapData();
-        public List<LevelDataObject> Objects = new List<LevelDataObject>();
     }
 }

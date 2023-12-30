@@ -29,8 +29,6 @@ namespace Sludge.UI
 		public int LevelsEliteCount;
 		public double GameProgressPct = -1;
 
-		public int latestSelectedCasualLevelId = -1;
-		public int latestSelectedHardLevelId = -1;
 		public PlayerProgress.LevelNamespace latestSelectedLevelNamespace;
 
 		private void Awake()
@@ -94,10 +92,10 @@ namespace Sludge.UI
 			TextWorldWideAttempts.text = $"World wide attempts: {totalAttempts}";
 		}
 
-		public void ShowCasualLevelsClick()
+		public void ShowLevelsSelect(PlayerProgress.LevelNamespace levelSelection)
 		{
 			StopAllCoroutines();
-			StartCoroutine(LevelSelectLoop(PlayerProgress.LevelNamespace.Casual));
+			StartCoroutine(LevelSelectLoop(levelSelection));
 		}
 
 		public void ControlsClick()
@@ -132,8 +130,10 @@ namespace Sludge.UI
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
                 if (go == ButtonPlayCasual)
-					ShowCasualLevelsClick();
-				else if (go == ButtonControls)
+					ShowLevelsSelect(PlayerProgress.LevelNamespace.Casual);
+                else if (go == ButtonPlayHard)
+                    ShowLevelsSelect(PlayerProgress.LevelNamespace.Hard);
+                else if (go == ButtonControls)
 					ControlsClick();
 				else if (go == ButtonExit)
 					ExitClick();
@@ -165,8 +165,9 @@ namespace Sludge.UI
 
 			while (true)
 			{
-				// Wait for game sequence to end. Important: Only game loop calls GetHumanInput since coroutine ticks and engine ticks are not synced.
-				yield return null;
+                // todo: what are we waiting for? I assume StopAllCoroutines will abort this, but still...
+                // Wait for game sequence to end. Important: Only game loop calls GetHumanInput since coroutine ticks and engine ticks are not synced.
+                yield return null;
 			}
 		}
 
@@ -226,7 +227,7 @@ namespace Sludge.UI
 		{
 			latestSelectedLevelNamespace = levelNamespace;
 
-			UiNavigation.OnNavigationChanged = null;
+            UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = null;
 
 			yield return UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
@@ -234,8 +235,9 @@ namespace Sludge.UI
 			double charsShown = 0;
 			double charRevealSpeed = 150;
 			var uilevelSelection = UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>();
+            uilevelSelection.TextLevelNamespace.text = PlayerProgress.NamespaceDisplayName(latestSelectedLevelNamespace);
 
-			UiNavigation.OnNavigationSelected = (go) =>
+            UiNavigation.OnNavigationSelected = (go) =>
 			{
 				var uiLevel = go.GetComponent<UiLevel>();
 				if (!uiLevel.IsUnlocked)
@@ -258,7 +260,7 @@ namespace Sludge.UI
 				string levelText;
 				if (uiLevel.IsUnlocked)
                 {
-					levelText = $"{uiLevel.LevelData.Namespace}{(uiLevel.LevelIndex + 1):000}";
+					levelText = $"{uiLevel.LevelData.LevelName}";
                 }
 				else
                 {
@@ -268,14 +270,17 @@ namespace Sludge.UI
 				uilevelSelection.TextLevelName.text = levelText;
 
 				charsShown = 0;
-				if (latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual)
-					latestSelectedCasualLevelId = levelData.LevelId;
-				else
-					latestSelectedHardLevelId = levelData.LevelId;
 			}
 
-			LevelItem level = latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ? LevelLayoutCasual.GetLevelFromId(latestSelectedCasualLevelId) : LevelLayoutHard.GetLevelFromId(latestSelectedHardLevelId);
-			SetSelectionMarker(level.go);
+            // show either casual or hard levels
+            LevelLayoutCasual.gameObject.SetActive(latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual);
+            LevelLayoutHard.gameObject.SetActive(latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Hard);
+
+            LevelItem level = latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
+				LevelLayoutCasual.GetLevelFromId(0) :
+				LevelLayoutHard.GetLevelFromId(0);
+
+            SetSelectionMarker(level.go);
 			OnNavigationChanged(level.go);
 
 			while (true)

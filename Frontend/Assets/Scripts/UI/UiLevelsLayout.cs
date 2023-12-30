@@ -58,7 +58,7 @@ public class UiLevelsLayout : MonoBehaviour
         for (int i = 0; i < LevelItems.Count; ++i)
         {
             var levelItem = LevelItems[i];
-            bool isUnlocked = true; // TODO: check for real
+            bool isUnlocked = true; // TODO: always unlocked for now
 
             string levelText = isUnlocked ? $"{i + 1}" : "?";
 

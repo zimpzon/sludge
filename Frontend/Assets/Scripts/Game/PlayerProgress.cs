@@ -6,6 +6,16 @@ namespace Sludge.Utility
 {
     public class PlayerProgress
     {
+        public static string NamespaceDisplayName(LevelNamespace ns)
+        {
+            if (ns == LevelNamespace.Casual)
+                return "Dream";
+            else if (ns == LevelNamespace.Hard)
+                return "Nightmare";
+
+            return $"Unknown ns: {ns}";
+        }
+
         public enum LevelNamespace { NotSet, Casual, Hard };
 
         public static SaveGame saveGame = new SaveGame();

@@ -25,7 +25,6 @@ public class ModStalkerLogic : SludgeModifier
         trans = transform;
         myCollider = GetComponent<Collider2D>();
         ant = GetComponentInChildren<AnimatedAnt>();
-        ant.GetComponent<CircleCollider2D>().enabled = false;
         scanFilter.SetLayerMask(SludgeUtil.WallsAndObjectsLayerMask);
         ant.animationOffset = Mathf.Clamp01((float)(basePosX * 0.117 + basePosY * 0.3311));
         ant.animationSpeedScale = 1;
