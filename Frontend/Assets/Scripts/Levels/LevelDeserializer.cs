@@ -10,6 +10,7 @@ public static class LevelDeserializer
     public static void Run(LevelData data, LevelElements elements, LevelSettings levelSettings)
     {
         // Level settings
+        levelSettings.LevelName = data.LevelName;
         levelSettings.ColorSchemeName = data.ColorSchemeName;
 
         // Clear existing bullets

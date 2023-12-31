@@ -11,6 +11,7 @@ public static class LevelSerializer
     public static LevelData Run(LevelElements elements, LevelSettings levelSettings)
     {
         var data = new LevelData();
+        data.LevelName = levelSettings.LevelName;
 
 #if UNITY_EDITOR
         if (levelSettings.ColorScheme != null)
