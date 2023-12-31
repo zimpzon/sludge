@@ -21,6 +21,9 @@ namespace Sludge.Modifiers
 
         private void OnDrawGizmos()
         {
+            if (!Active)
+                return;
+
             Gizmos.color = Color.cyan;
             Gizmos.DrawCube(T0(transform.position), Vector3.one * 0.75f);
             Gizmos.DrawCube(T1(transform.position), Vector3.one * 0.75f);

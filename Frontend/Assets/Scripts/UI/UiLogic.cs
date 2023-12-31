@@ -1,10 +1,12 @@
 using Sludge.Colors;
 using Sludge.PlayerInputs;
 using Sludge.Utility;
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using static UiNavigation;
 
 namespace Sludge.UI
 {
@@ -16,12 +18,14 @@ namespace Sludge.UI
 		public UiLevelsLayout LevelLayoutCasual;
 		public UiLevelsLayout LevelLayoutHard;
 		public GameObject ButtonPlayCasual;
-        public GameObject ButtonPlayHard;
-        public GameObject ButtonControls;
+		public GameObject ButtonPlayHard;
+		public GameObject ButtonControls;
 		public GameObject ButtonExit;
 		public GameObject GameRoot;
 		public UiSelectionMarker UiSelectionMarker;
 		public TMP_Text TextWorldWideAttempts;
+
+		[NonSerialized] public UiNavigationGroup ActiveNavigationGroup;
 
 		public static long WorldWideAttempts;
 		public int LevelCount;
@@ -114,9 +118,14 @@ namespace Sludge.UI
 			Application.Quit();
 		}
 
+		GameObject mainMenuLatestSelection;
+
 		IEnumerator MainMenuLoop()
 		{
-			SetSelectionMarker(ButtonPlayCasual);
+			ActiveNavigationGroup = UiNavigationGroup.MainMenu;
+
+			var selection = mainMenuLatestSelection ?? ButtonPlayCasual;
+			SetSelectionMarker(selection);
 
 			UiPanels.Instance.ShowBackground();
 			UiPanels.Instance.HidePanel(UiPanel.Game);
@@ -129,6 +138,8 @@ namespace Sludge.UI
 			UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
+				mainMenuLatestSelection = go;
+
                 if (go == ButtonPlayCasual)
 					ShowLevelsSelect(PlayerProgress.LevelNamespace.Casual);
                 else if (go == ButtonPlayHard)
@@ -154,7 +165,9 @@ namespace Sludge.UI
 
 		IEnumerator PlayLoop(UiLevel uiLevel)
 		{
-			GameManager.I.LoadLevel(uiLevel);
+            ActiveNavigationGroup = UiNavigationGroup.InGame;
+
+            GameManager.I.LoadLevel(uiLevel);
 			UiPanels.Instance.HideBackground();
 
 			UiPanels.Instance.ShowPanel(UiPanel.Game);
@@ -165,7 +178,6 @@ namespace Sludge.UI
 
 			while (true)
 			{
-                // todo: what are we waiting for? I assume StopAllCoroutines will abort this, but still...
                 // Wait for game sequence to end. Important: Only game loop calls GetHumanInput since coroutine ticks and engine ticks are not synced.
                 yield return null;
 			}
@@ -202,7 +214,9 @@ namespace Sludge.UI
 
 		IEnumerator ControlsLoop()
 		{
-			UiNavigation.OnNavigationChanged = null;
+            ActiveNavigationGroup = UiNavigationGroup.Settings;
+
+            UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = null;
 			yield return UiPanels.Instance.ShowPanel(UiPanel.Settings);
 
@@ -225,7 +239,8 @@ namespace Sludge.UI
 
 		IEnumerator LevelSelectLoop(PlayerProgress.LevelNamespace levelNamespace)
 		{
-			latestSelectedLevelNamespace = levelNamespace;
+            ActiveNavigationGroup = UiNavigationGroup.LevelSelect;
+            latestSelectedLevelNamespace = levelNamespace;
 
             UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = null;

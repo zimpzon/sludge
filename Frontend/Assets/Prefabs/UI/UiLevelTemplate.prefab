@@ -263,7 +263,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3656773aadb7bf54f8e2703d27e10efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Status: 0
   IsUnlocked: 0
   LevelIndex: 0
   Next: {fileID: 0}
@@ -285,6 +284,7 @@ MonoBehaviour:
   Up: {fileID: 0}
   Down: {fileID: 0}
   Enabled: 1
+  NavigationGroup: 2
 --- !u!114 &4586924140922533537
 MonoBehaviour:
   m_ObjectHideFlags: 0

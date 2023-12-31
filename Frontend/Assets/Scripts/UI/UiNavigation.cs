@@ -1,14 +1,18 @@
 using Sludge.PlayerInputs;
+using Sludge.UI;
 using System;
 using UnityEngine;
 
 public class UiNavigation : MonoBehaviour
 {
+	public enum UiNavigationGroup { None, MainMenu, LevelSelect, Settings, InGame, };
+
     public GameObject Left;
     public GameObject Right;
     public GameObject Up;
     public GameObject Down;
 	public bool Enabled = true;
+	public UiNavigationGroup NavigationGroup;
 
 	public static Action<GameObject> OnNavigationChanged;
 	public static Action<GameObject> OnNavigationSelected;
@@ -28,6 +32,13 @@ public class UiNavigation : MonoBehaviour
 
 	private void Update()
     {
+		if (NavigationGroup == UiNavigationGroup.None)
+			Debug.LogError($"Navigation group not set on {gameObject.name}");
+
+        // Don't react on mouse clicks on buttons that are not active in this context
+        if (NavigationGroup != UiLogic.Instance.ActiveNavigationGroup)
+            return;
+
 		if (Input.GetMouseButtonDown(0))
         {
 			bool isClicked = RectTransformUtility.RectangleContainsScreenPoint(myRect, Input.mousePosition);

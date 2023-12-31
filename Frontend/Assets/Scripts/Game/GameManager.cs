@@ -115,6 +115,11 @@ public class GameManager : MonoBehaviour
     public void SetColorScheme(ColorSchemeScriptableObject scheme)
     {
         CurrentColorScheme = scheme;
+        ApplyColorScheme(scheme);
+    }
+
+    public static void ApplyColorScheme(ColorSchemeScriptableObject scheme)
+    {
         ColorScheme.ApplyColors(scheme);
         ColorScheme.ApplyUiColors(scheme);
     }
