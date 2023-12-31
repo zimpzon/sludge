@@ -9,7 +9,8 @@ namespace Sludge.UI
     {
         public static UiPanels Instance;
 
-        const float ChangeTime = 0.1f;
+        public float PanelChangeTime = 0.1f;
+        public bool DebugIgnoreInstant = false;
 
         public GameObject PanelBackground;
         public GameObject PanelMainMenu;
@@ -97,12 +98,7 @@ namespace Sludge.UI
 
         YieldInstruction ShowPanel(UiPanel panel, bool show, bool instant = false)
         {
-            if (!instant)
-            {
-                SoundManager.Play(show ? FxList.Instance.UiShowMenu : FxList.Instance.UiHideMenu);
-            }
-
-            float time = instant ? 0 : ChangeTime;
+            float time = instant && !DebugIgnoreInstant ? 0 : PanelChangeTime;
             var go = GetPanelSettings(panel, out var hidePos, out var showPos);
             if (show)
                 go.SetActive(true);

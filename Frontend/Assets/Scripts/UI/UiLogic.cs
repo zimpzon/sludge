@@ -1,9 +1,11 @@
+using DG.Tweening;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
 using Sludge.Utility;
 using System;
 using System.Collections;
 using TMPro;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 using static UiNavigation;
@@ -28,12 +30,11 @@ namespace Sludge.UI
 		[NonSerialized] public UiNavigationGroup ActiveNavigationGroup;
 
 		public static long WorldWideAttempts;
-		public int LevelCount;
-		public int LevelsCompletedCount;
-		public int LevelsEliteCount;
-		public double GameProgressPct = -1;
-
-		public PlayerProgress.LevelNamespace latestSelectedLevelNamespace;
+        [NonSerialized] public int LevelCount;
+        [NonSerialized] public int LevelsCompletedCount;
+        [NonSerialized] public int LevelsEliteCount;
+        [NonSerialized] public double GameProgressPct = -1;
+		[NonSerialized] public PlayerProgress.LevelNamespace latestSelectedLevelNamespace;
 
 		private void Awake()
         {
@@ -218,16 +219,20 @@ namespace Sludge.UI
 
             UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = null;
-			yield return UiPanels.Instance.ShowPanel(UiPanel.Settings);
+            
+			SoundManager.Play(FxList.Instance.UiShowMenu);
+            yield return UiPanels.Instance.ShowPanel(UiPanel.Settings);
+            UiPanels.Instance.PanelSettings.transform.DOPunchPosition(Vector3.up * 4, 0.3f);
 
-			while (true)
+            while (true)
 			{
 				GameManager.PlayerInput.GetHumanInput();
 				CheckChangeColorScheme(GameManager.PlayerInput);
 
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
 				{
-					UiPanels.Instance.HidePanel(UiPanel.Settings);
+                    SoundManager.Play(FxList.Instance.UiHideMenu);
+                    UiPanels.Instance.HidePanel(UiPanel.Settings);
 					StopAllCoroutines();
 					StartCoroutine(MainMenuLoop());
 					break;
@@ -245,19 +250,23 @@ namespace Sludge.UI
             UiNavigation.OnNavigationChanged = null;
 			UiNavigation.OnNavigationSelected = null;
 
-			yield return UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
-
-			double charsShown = 0;
-			double charRevealSpeed = 150;
-			var uilevelSelection = UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>();
+            var uilevelSelection = UiPanels.Instance.PanelLevelSelect.GetComponent<UiLevelSelection>();
             uilevelSelection.TextLevelNamespace.text = PlayerProgress.NamespaceDisplayName(latestSelectedLevelNamespace);
+            uilevelSelection.TextLevelName.text = "";
+
+            SoundManager.Play(FxList.Instance.UiShowMenu);
+            yield return UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
+			UiPanels.Instance.PanelLevelSelect.transform.DOPunchPosition(Vector3.left * 4, 0.3f);
+
+            double charsShown = 0;
+			double charRevealSpeed = 150;
 
             UiNavigation.OnNavigationSelected = (go) =>
 			{
 				var uiLevel = go.GetComponent<UiLevel>();
 				if (!uiLevel.IsUnlocked)
                 {
-					// TODO: Nope-sound
+					SoundManager.Play(FxList.Instance.UiNope);
 					return;
                 }
 
@@ -311,7 +320,8 @@ namespace Sludge.UI
 
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
-					UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
+                    SoundManager.Play(FxList.Instance.UiHideMenu);
+                    UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
 					StopAllCoroutines();
 					StartCoroutine(MainMenuLoop());
 					break;
