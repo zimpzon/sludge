@@ -6062,7 +6062,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4761125003896187734, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4761125003896187734, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17768,6 +17768,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 575714713}
   m_CullTransparentMesh: 1
+--- !u!4 &634578783 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9051099697747623385, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
+  m_PrefabInstance: {fileID: 1436158435}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &636233659
 GameObject:
   m_ObjectHideFlags: 0
@@ -26227,7 +26232,7 @@ Transform:
   - {fileID: 423872270}
   - {fileID: 961602746}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1067746681
 MonoBehaviour:
@@ -26392,7 +26397,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1127773637
 GameObject:
@@ -32369,7 +32374,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1823264093}
     m_Modifications:
     - target: {fileID: 5596111277496216260, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: m_Color.b
@@ -32401,7 +32406,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623385, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623385, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: m_LocalPosition.x
@@ -32421,15 +32426,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623385, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623385, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623385, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623385, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -32445,15 +32450,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623386, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: Count
-      value: 14
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623386, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: Width
-      value: 30
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623386, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: GizmoT
-      value: 1.94
+      value: 5.2
       objectReference: {fileID: 0}
     - target: {fileID: 9051099697747623386, guid: fde0a5e1276744d47a75f3f3c71f1254, type: 3}
       propertyPath: TimeXMul
@@ -32623,7 +32628,7 @@ Transform:
   - {fileID: 1720020188}
   - {fileID: 675412805}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1523565627
 MonoBehaviour:
@@ -33314,10 +33319,10 @@ MonoBehaviour:
     comment: 
   PlayerDie:
     clips:
-    - {fileID: 8300000, guid: 400f6d270de41f94aae42b24603b2be8, type: 3}
+    - {fileID: 8300000, guid: 5fef6cdabacaf3146ac2c9de817a7adc, type: 3}
     volume: 1
     volumeVariation: 0
-    pitch: 1
+    pitch: 0.77
     pitchVariation: 0
     loop: 0
     cooldown: 0
@@ -33726,6 +33731,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 634578783}
   - {fileID: 1705215883}
   m_Father: {fileID: 1523565626}
   m_RootOrder: 4

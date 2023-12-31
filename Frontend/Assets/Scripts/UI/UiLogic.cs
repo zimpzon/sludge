@@ -34,8 +34,10 @@ namespace Sludge.UI
         [NonSerialized] public int LevelsEliteCount;
         [NonSerialized] public double GameProgressPct = -1;
 		[NonSerialized] public PlayerProgress.LevelNamespace latestSelectedLevelNamespace;
+        private int lastSelectedCasualLevelId = -1;
+        private int lastSelectedHardLevelId = -1;
 
-		private void Awake()
+        private void Awake()
         {
 			Instance = this;
 			UiSelectionMarker.gameObject.SetActive(true);
@@ -285,7 +287,16 @@ namespace Sludge.UI
                 go.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
 
                 var uiLevel = go.GetComponent<UiLevel>();
-				var levelData = uiLevel.LevelData;
+                if (latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual)
+				{
+                    lastSelectedCasualLevelId = uiLevel.LevelIndex;
+                }
+                else if (latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Hard)
+                {
+                    lastSelectedHardLevelId = uiLevel.LevelIndex;
+                }
+
+                var levelData = uiLevel.LevelData;
 				string levelText;
 				if (uiLevel.IsUnlocked)
                 {
@@ -304,10 +315,11 @@ namespace Sludge.UI
             // show either casual or hard levels
             LevelLayoutCasual.gameObject.SetActive(latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual);
             LevelLayoutHard.gameObject.SetActive(latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Hard);
-
+			
+			// select a level in the current namespace/difficulty
             LevelItem level = latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
-				LevelLayoutCasual.GetLevelFromId(0) :
-				LevelLayoutHard.GetLevelFromId(0);
+				LevelLayoutCasual.GetLevelFromId(lastSelectedCasualLevelId) :
+				LevelLayoutHard.GetLevelFromId(lastSelectedHardLevelId);
 
             SetSelectionMarker(level.go);
 			OnNavigationChanged(level.go);
