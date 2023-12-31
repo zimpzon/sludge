@@ -253,7 +253,7 @@ public class Player : MonoBehaviour
         GameManager.I.DeathParticles.transform.position = trans.position;
         GameManager.I.DeathParticles.Emit(50);
         GameManager.I.CameraRoot.DOKill();
-        GameManager.I.CameraRoot.DOShakePosition(0.2f, 0.7f);
+        GameManager.I.CameraRoot.DOShakePosition(1.0f, 0.7f);
 
         EmitDeathExplosionParticles();
         bodyRoot.SetActive(false);

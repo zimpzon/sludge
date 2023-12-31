@@ -238,7 +238,7 @@ public class GameManager : MonoBehaviour
 
             yield return UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
 
-            yield return RevealPlayer(landing: attempts == 0);
+            yield return RevealPlayer(landing: true);
 
             while (startRound == false)
             {
@@ -269,7 +269,7 @@ public class GameManager : MonoBehaviour
             yield return Playing();
             attempts++;
 
-            yield return new WaitForSeconds(2.75f);
+            yield return new WaitForSeconds(1.0f);
         }
     }
 
