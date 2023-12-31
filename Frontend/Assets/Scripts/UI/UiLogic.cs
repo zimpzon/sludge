@@ -5,7 +5,6 @@ using Sludge.Utility;
 using System;
 using System.Collections;
 using TMPro;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 using static UiNavigation;

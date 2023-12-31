@@ -213,6 +213,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator BetweenRoundsLoop(string replayId = null)
     {
+        int attempts = 0;
+
         while (true)
         {
             GC.Collect();
@@ -236,7 +238,7 @@ public class GameManager : MonoBehaviour
 
             yield return UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
 
-            yield return PlayerLand();
+            yield return RevealPlayer(landing: attempts == 0);
 
             while (startRound == false)
             {
@@ -265,10 +267,13 @@ public class GameManager : MonoBehaviour
             UiLogic.Instance.SetSelectionMarker(null);
 
             yield return Playing();
+            attempts++;
+
+            yield return new WaitForSeconds(2.75f);
         }
     }
 
-    IEnumerator PlayerLand()
+    IEnumerator RevealPlayer(bool landing)
     {
         float t = 1.0f;
 
@@ -276,25 +281,35 @@ public class GameManager : MonoBehaviour
         Vector3 baseScale = Player.transform.localScale;
         Quaternion baseRotation = Player.transform.rotation;
 
-        SoundManager.Play(FxList.Instance.PlayerLanding);
-        CameraRoot.DOShakePosition(PlayerLandDuration, 0.1f);
-
-        while (t >= 0)
+        if (landing)
         {
-            Vector3 pos = targetPos + PlayerLandStartOffset * t;
-            Player.transform.SetPositionAndRotation(pos, Quaternion.Euler(0, 0, t * PlayerLandRotationSpeed + baseRotation.eulerAngles.z));
-            Player.transform.localScale = baseScale + Vector3.one * PlayerLandMaxScaleAdd * t;
-            Player.SetAlpha(Mathf.Clamp01(1.0f - (t * 2.0f)));
+            SoundManager.Play(FxList.Instance.PlayerLanding);
+            CameraRoot.DOShakePosition(PlayerLandDuration, 0.1f);
 
-            t -= Time.deltaTime / PlayerLandDuration;
-            yield return null;
+            while (t >= 0)
+            {
+                Vector3 pos = targetPos + PlayerLandStartOffset * t;
+                Player.transform.SetPositionAndRotation(pos, Quaternion.Euler(0, 0, t * PlayerLandRotationSpeed + baseRotation.eulerAngles.z));
+                Player.transform.localScale = baseScale + Vector3.one * PlayerLandMaxScaleAdd * t;
+                Player.SetAlpha(Mathf.Clamp01(1.0f - (t * 2.0f)));
+
+                t -= Time.deltaTime / PlayerLandDuration;
+                yield return null;
+            }
+
+            SoundManager.Play(FxList.Instance.PlayerLanded);
+            DeathParticles.transform.position = Player.transform.position;
+            DeathParticles.Emit(50);
+            CameraRoot.DOKill();
+            CameraRoot.DOShakePosition(0.5f, 0.5f);
         }
-
-        SoundManager.Play(FxList.Instance.PlayerLanded);
-        DeathParticles.transform.position = Player.transform.position;
-        DeathParticles.Emit(30);
-        CameraRoot.DOKill();
-        CameraRoot.DOShakePosition(0.3f, 0.5f);
+        else
+        {
+            // not landing, just showing up
+            // TODO: maybe some respawn sound?
+            DeathParticles.transform.position = Player.transform.position;
+            DeathParticles.Emit(20);
+        }
 
         Player.SetAlpha(1.0f);
         Player.transform.SetPositionAndRotation(targetPos, Quaternion.identity);
@@ -415,12 +430,10 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // dead
+            // dead, did not complete level
         }
 
         Analytics.Instance.SaveStats(latestRoundResult);
-
-        yield return new WaitForSeconds(0.75f);
     }
 
     public void LevelCompleted(Exit exit)

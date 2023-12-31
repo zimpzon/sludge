@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     public static Quaternion Rotation;
     public static int PositionSampleIdx;
 
+    public ParticleSystem BodyDeathParticles;
+
     public Transform LegL0;
     public Transform LegR0;
     public Transform LegL1;
@@ -23,12 +25,15 @@ public class Player : MonoBehaviour
     Vector2 LegL2Base;
     Vector2 LegR2Base;
     bool lockLegMovement = true;
-    int frameLastWallHit;
-    int squashCounter;
     float playerMoveDampen;
+    double deathScheduleTime;
+    bool deathScheduled;
 
     public bool Alive = false;
     public bool WallsAreDeadly = true;
+    public int ExplodeParticleCount = 200;
+    public float EyeScaleSurprised = 1.5f;
+    public float DeathMiniDelay = 0.5f;
 
     public double angle = 90;
     double speed;
@@ -54,6 +59,7 @@ public class Player : MonoBehaviour
     Vector2 playerBaseScale;
     double timeEnterSlimeCloud;
     SpriteRenderer[] childSprites;
+    GameObject bodyRoot;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -75,6 +81,7 @@ public class Player : MonoBehaviour
         trans = transform;
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
+        bodyRoot = SludgeUtil.FindByName(trans, "Body").gameObject;
         eyesBaseScale = eyesTransform.localScale;
         playerBaseScale = trans.localScale;
 
@@ -92,9 +99,9 @@ public class Player : MonoBehaviour
         currentThrowable = null;
         timeEnterSlimeCloud = -1;
         PositionSampleIdx = 0;
-        frameLastWallHit = 0;
-        squashCounter = 0;
         playerMoveDampen = 0.0f;
+        deathScheduleTime = float.MaxValue;
+        deathScheduled = false;
 
         forceX = 0;
         forceY = 0;
@@ -108,6 +115,7 @@ public class Player : MonoBehaviour
 
         legOffset = 0;
         UpdateLegs();
+        bodyRoot.SetActive(true);
 
         SetAlpha(1.0f);
         UpdateTransform();
@@ -201,13 +209,6 @@ public class Player : MonoBehaviour
                 return;
             }
 
-            frameLastWallHit = GameManager.I.FrameCounter;
-            if (squashCounter++ > 5)
-            {
-                Kill();
-                return;
-            }
-
             SoundManager.Play(FxList.Instance.PortalEnter);
             Vector3 dir = ((Vector3)collision.GetContact(0).point - trans.position).normalized;
             SetPositionForce(-dir.x * FX, -dir.y * FY);
@@ -233,17 +234,50 @@ public class Player : MonoBehaviour
             return;
 
         timeEnterSlimeCloud = GameManager.I.EngineTime;
-        eyesTransform.localScale = eyesBaseScale * 1.5f;
+        eyesTransform.localScale = eyesBaseScale * EyeScaleSurprised;
     }
 
     public void Kill()
+    {
+        if (deathScheduled)
+            return;
+
+        eyesTransform.localScale = eyesBaseScale * EyeScaleSurprised;
+        deathScheduleTime = GameManager.I.EngineTime + DeathMiniDelay;
+        deathScheduled = true;
+    }
+
+    public void ExecuteDelayedKill()
     {
         SoundManager.Play(FxList.Instance.PlayerDie);
         GameManager.I.DeathParticles.transform.position = trans.position;
         GameManager.I.DeathParticles.Emit(50);
         GameManager.I.CameraRoot.DOKill();
         GameManager.I.CameraRoot.DOShakePosition(0.2f, 0.7f);
+
+        EmitDeathExplosionParticles();
+        bodyRoot.SetActive(false);
+
         Alive = false;
+    }
+
+    void EmitDeathExplosionParticles()
+    {
+        // Body particles
+        BodyDeathParticles.Emit(ExplodeParticleCount);
+
+        var main = BodyDeathParticles.main;
+        var saveColor = main.startColor;
+
+        // Leg particles
+        main.startColor = Color.black;
+        BodyDeathParticles.Emit(ExplodeParticleCount / 10);
+
+        // Eye particles
+        main.startColor = Color.white;
+        BodyDeathParticles.Emit(ExplodeParticleCount / 20);
+
+        main.startColor = saveColor;
     }
 
     float legOffset = 0;
@@ -323,8 +357,6 @@ public class Player : MonoBehaviour
 
         playerMoveDampen -= (float)GameManager.TickSize * playerMoveDampenDecaySpeed;
         playerMoveDampen = Mathf.Clamp01(playerMoveDampen);
-
-        eyesTransform.localScale = eyesBaseScale * (playerMoveDampen > 0 ? 1.5f : 1.0f);
     }
 
     void Friction(ref double a)
@@ -358,9 +390,16 @@ public class Player : MonoBehaviour
         if (!Alive)
             return;
 
-        // reset squash counter if not hitting wall for a few frames
-        if (GameManager.I.FrameCounter > frameLastWallHit + 1)
-            squashCounter = 0;
+        if (deathScheduled)
+        {
+            bool deathTimeReached = GameManager.I.EngineTime >= deathScheduleTime;
+            if (deathTimeReached)
+            {
+                deathScheduled = false;
+                ExecuteDelayedKill();
+            }
+            return;
+        }
 
         PlayerControls4Dir();
 
@@ -439,7 +478,6 @@ public class Player : MonoBehaviour
     {
         trans.rotation = Quaternion.Euler(0, 0, (float)angle);
         trans.position = new Vector3((float)playerX, (float)playerY, 0);
-        trans.localScale = new Vector2(playerBaseScale.x, moveVec.magnitude > 0 ? playerBaseScale.y * 1.1f : playerBaseScale.y);
 
         Angle = angle;
         Rotation = trans.rotation;
