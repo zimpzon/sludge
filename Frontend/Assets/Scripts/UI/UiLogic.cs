@@ -135,8 +135,12 @@ namespace Sludge.UI
 			UiPanels.Instance.HidePanel(UiPanel.Settings);
 
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
-			
-			UiNavigation.OnNavigationChanged = null;
+
+			UiNavigation.OnNavigationChanged = (go) =>
+			{
+				go.transform.DOPunchScale(Vector3.one * 0.05f, 0.3f);
+			};
+
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
 				mainMenuLatestSelection = go;
@@ -279,7 +283,9 @@ namespace Sludge.UI
 
 			void OnNavigationChanged(GameObject go)
             {
-				var uiLevel = go.GetComponent<UiLevel>();
+                go.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
+
+                var uiLevel = go.GetComponent<UiLevel>();
 				var levelData = uiLevel.LevelData;
 				string levelText;
 				if (uiLevel.IsUnlocked)
