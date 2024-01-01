@@ -250,8 +250,7 @@ public class Player : MonoBehaviour
     public void ExecuteDelayedKill()
     {
         SoundManager.Play(FxList.Instance.PlayerDie);
-        GameManager.I.DeathParticles.transform.position = trans.position;
-        GameManager.I.DeathParticles.Emit(50);
+        ParticleEmitter.I.EmitDust(trans.position, 12);
         GameManager.I.CameraRoot.DOKill();
         GameManager.I.CameraRoot.DOShakePosition(1.0f, 0.7f);
 

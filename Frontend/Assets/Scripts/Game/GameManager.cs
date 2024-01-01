@@ -43,7 +43,6 @@ public class GameManager : MonoBehaviour
 
     public GameObject ButtonStartRound;
 
-    public ParticleSystem DeathParticles;
     public ParticleSystem DustParticles;
     public ParticleSystem CompletedParticles;
     public ParticleSystem MarkerParticles;
@@ -298,17 +297,12 @@ public class GameManager : MonoBehaviour
             }
 
             SoundManager.Play(FxList.Instance.PlayerLanded);
-            DeathParticles.transform.position = Player.transform.position;
-            DeathParticles.Emit(50);
             CameraRoot.DOKill();
             CameraRoot.DOShakePosition(0.5f, 0.5f);
         }
         else
         {
             // not landing, just showing up
-            // TODO: maybe some respawn sound?
-            DeathParticles.transform.position = Player.transform.position;
-            DeathParticles.Emit(20);
         }
 
         Player.SetAlpha(1.0f);
@@ -338,8 +332,6 @@ public class GameManager : MonoBehaviour
             exit.Activate();
 
             SoundManager.Play(FxList.Instance.FakeWallShowUp);
-            DeathParticles.transform.position = exit.transform.position;
-            DeathParticles.Emit(30);
             CameraRoot.DOKill();
             CameraRoot.DOShakePosition(0.3f, 0.2f);
         }

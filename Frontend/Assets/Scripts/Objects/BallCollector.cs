@@ -97,9 +97,6 @@ public class BallCollector : SludgeObject
     void Kill()
     {
         SoundManager.Play(FxList.Instance.BallCollectorDie);
-        GameManager.I.DeathParticles.transform.position = trans.position;
-        GameManager.I.DeathParticles.Emit(3);
-
         gameObject.SetActive(false);
     }
 

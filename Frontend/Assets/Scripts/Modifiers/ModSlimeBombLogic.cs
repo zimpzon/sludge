@@ -152,8 +152,6 @@ public class ModSlimeBombLogic : SludgeModifier
                 expanding = true;
                 countdownText.enabled = false;
                 slimeRenderer.enabled = true;
-                GameManager.I.DeathParticles.transform.position = trans.position;
-                GameManager.I.DeathParticles.Emit(50);
                 GameManager.I.CameraRoot.DOKill();
                 GameManager.I.CameraRoot.DOShakePosition(0.2f, 2.0f);
                 innerSprite.transform.localScale = Vector3.one * 0.5f;

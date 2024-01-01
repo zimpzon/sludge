@@ -75,8 +75,6 @@ public class ModThrowable : SludgeModifier
             GameManager.I.Player.ThrowablePickedUp(null);
 
         SoundManager.Play(FxList.Instance.ThrownBombExplode);
-        GameManager.I.DeathParticles.transform.position = trans.position;
-        GameManager.I.DeathParticles.Emit(20);
         GameManager.I.CameraRoot.DOShakePosition(0.1f, 0.2f);
 
         body.SetActive(false);

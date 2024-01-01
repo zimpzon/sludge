@@ -5,7 +5,7 @@ namespace Sludge.Modifiers
 {
     public class ModConveyorMovement : SludgeModifier
     {
-        const float SuctionPower = 0.01f;
+        const float SuctionPower = 0.5f;
         const float ConveyorSpeed = 14;
 
         public int Length = 1;
@@ -33,7 +33,9 @@ namespace Sludge.Modifiers
         {
             // TODO: SET tiling based on scale
             spriteRenderer = GetComponent<SpriteRenderer>();
-            spriteRenderer.size = new Vector2(Length, 1);
+            //int tileX = Mathf.RoundToInt(trans.localScale.x);
+            //int tileY = Mathf.RoundToInt(trans.localScale.y);
+            //spriteRenderer.material.SetVector("_Tiling", new Vector4(tileX, tileY, 0, 0));
         }
 
         public override void OnLoaded()
