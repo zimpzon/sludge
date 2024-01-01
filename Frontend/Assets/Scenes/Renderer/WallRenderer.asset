@@ -15,7 +15,7 @@ MonoBehaviour:
   m_Active: 1
   settings:
     renderPassEvent: 500
-    blitMaterial: {fileID: 2100000, guid: 54dcd712949eab84aaca959d08bb232a, type: 2}
+    blitMaterial: {fileID: 2100000, guid: d3fe21999c1cc7e4ea74f02b54b8e042, type: 2}
     blitMaterialPassIndex: -1
     sourceType: 0
     destinationType: 0
@@ -56,10 +56,10 @@ MonoBehaviour:
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 0
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 576
   m_DefaultStencilState:
     overrideStencilState: 0
     stencilReference: 0
