@@ -1,109 +1,47 @@
 using Sludge.Modifiers;
-using Sludge.Utility;
 using UnityEngine;
 
 public class ModStalkerLogic : SludgeModifier
 {
-    float speedNear = 4;
-    float speedFar = 3;
+    public float ChaseForce = 1000.0f;
+
     Transform trans;
-    Collider2D myCollider;
+    Rigidbody2D rigidBody;
     AnimatedAnt ant;
-    RaycastHit2D[] scanHits = new RaycastHit2D[1];
-    ContactFilter2D scanFilter = new ContactFilter2D();
-    double posX;
-    double posY;
-    double basePosX;
-    double basePosY;
+    Vector3 basePos;
+    Quaternion baseRot;
 
     private void Awake()
     {
         trans = transform;
-        myCollider = GetComponent<Collider2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
         ant = GetComponentInChildren<AnimatedAnt>();
-        scanFilter.SetLayerMask(SludgeUtil.WallsAndObjectsLayerMask);
-        ant.animationOffset = Mathf.Clamp01((float)(basePosX * 0.117 + basePosY * 0.3311));
+        ant.animationOffset = Mathf.Clamp01((float)(basePos.x * 0.117 + basePos.y * 0.3311));
         ant.animationSpeedScale = 1;
     }
 
     public override void OnLoaded()
     {
         trans = transform;
-        basePosX = SludgeUtil.Stabilize(trans.position.x);
-        basePosY = SludgeUtil.Stabilize(trans.position.y);
+        basePos = trans.position;
+        baseRot = trans.rotation;
     }
 
     public override void Reset()
     {
         ant.animationSpeedScale = 1;
-        posX = basePosX;
-        posY = basePosY;
-        UpdateTransform(angle: 0);
-    }
-    
-    void UpdateTransform(double angle)
-    {
-        trans.rotation = Quaternion.Euler(0, 0, (float)angle);
-        trans.position = new Vector3((float)posX, (float)posY, 0);
+        trans.position = basePos;
+        trans.rotation = baseRot;
     }
 
     public override void EngineTick()
     {
         var playerDir = Player.Position - trans.position;
-        double playerDistance = SludgeUtil.Stabilize(playerDir.magnitude);
+        trans.rotation = Quaternion.LookRotation(Vector3.forward, playerDir);
+
+        float playerDistance = playerDir.magnitude;
         ant.animationSpeedScale = playerDistance > 5 ? 1 : 2;
-        double speed = playerDistance > 5 ? speedFar : speedNear;
 
-        playerDir *= (float)SludgeUtil.Stabilize(1.0 / playerDistance);
-        playerDir.x = (float)SludgeUtil.Stabilize(playerDir.x);
-        playerDir.y = (float)SludgeUtil.Stabilize(playerDir.y);
-
-        //if (!GameManager.Instance.IsReplay)
-        //{
-        //    xx[GameManager.Instance.FrameCounter] = posX;
-        //    yy[GameManager.Instance.FrameCounter] = posY;
-        //}
-        //else
-        //{
-        //    float errorX = Mathf.Abs((float)(xx[GameManager.Instance.FrameCounter] - posX));
-        //    float errorY = Mathf.Abs((float)(yy[GameManager.Instance.FrameCounter] - posY));
-        //    float error = errorX + errorY;
-        //    DebugLinesScript.Show(gameObject.name, error);
-        //}
-
-        double angle = SludgeUtil.Stabilize(Mathf.Atan2(-playerDir.x, playerDir.y) * Mathf.Rad2Deg);
-
-        const float Stopdistance = 0.15f;
-
-        var scanDir = playerDir;
-        int hitCount = myCollider.Cast(scanDir, scanFilter, scanHits, Stopdistance);
-        if (hitCount >= 1)
-        {
-            var scanA = scanDir.x > scanDir.y ? new Vector2(scanDir.x, 0) : new Vector2(0, scanDir.y);
-            var scanB = scanDir.x > scanDir.y ? new Vector2(0, scanDir.y) : new Vector2(scanDir.x, 0);
-            hitCount = myCollider.Cast(scanA, scanFilter, scanHits, Stopdistance);
-            if (hitCount >= 1)
-            {
-                hitCount = myCollider.Cast(scanB, scanFilter, scanHits, Stopdistance);
-                if (hitCount >= 1)
-                {
-                    UpdateTransform(angle);
-                    return;
-                }
-                else
-                {
-                    scanDir = scanB;
-                }
-            }
-            else
-            {
-                scanDir = scanA;
-            }
-        }
-
-        posX = SludgeUtil.Stabilize(posX + speed * GameManager.TickSize * scanDir.x);
-        posY = SludgeUtil.Stabilize(posY + speed * GameManager.TickSize * scanDir.y);
-
-        UpdateTransform(angle);
+        rigidBody.AddForce(playerDir.normalized * ChaseForce * (float)GameManager.TickSize);
     }
 }
