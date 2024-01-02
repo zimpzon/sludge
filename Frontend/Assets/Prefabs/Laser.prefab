@@ -4827,6 +4827,7 @@ GameObject:
   - component: {fileID: 5287462854484810114}
   - component: {fileID: 2036143378}
   - component: {fileID: 2036143377}
+  - component: {fileID: 899749876}
   m_Layer: 7
   m_Name: Laser
   m_TagString: Untagged
@@ -4892,7 +4893,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 0
   Range: 5
-  TimeOffset: 0
+  CurrentlyAt: 0.5
   TimeMultiplier: 1
   PingPong: 1
   Easing: 0
@@ -4908,10 +4909,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42fe4142cc461e646a48116d84d1b3f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Active: 1
+  Active: 0
   Range: 23
   CurrentlyAt: 0.5
-  TimeOffset: 0
   TimeMultiplier: 0.2
   PingPong: 1
   Easing: 0
@@ -4952,6 +4952,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &899749876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5287462854484810112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e220f1eb05008a64fa908f35610d6268, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 1
+  OnFrom: 0.5
+  OnTo: 1
 --- !u!1 &5287462855557816857
 GameObject:
   m_ObjectHideFlags: 0
@@ -5032,7 +5047,7 @@ LineRenderer:
   - {x: 2.2131686, y: 0.006322384, z: -7.802127}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.5
+    widthMultiplier: 0.8
     widthCurve:
       serializedVersion: 2
       m_Curve:

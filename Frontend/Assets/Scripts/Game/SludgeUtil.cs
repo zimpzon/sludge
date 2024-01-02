@@ -23,7 +23,7 @@ namespace Sludge.Utility
         {
             double t2 = t / 2;
             double frac = t2 - (int)t2;
-            return pingPong ? PingPong(frac) : frac * 2;
+            return pingPong ? PingPong(frac) : t - (int)t;
         }
     
         private static double PingPong(double t) => t <= 0.5 ? t * 2 : 1 - ((t - 0.5) * 2);

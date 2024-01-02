@@ -30,9 +30,15 @@ public class ModPickupSequence : SludgeModifier
         PickupSequenceManager.OnPickup(this);
     }
 
-    public void SetPickupActive(bool activate)
+    public void OnBecameActive()
     {
+        Debug.Log($"Became active: {name}");
+    }
 
+    public void OnPickedUp()
+    {
+        Debug.Log($"picked up: {name}");
+        gameObject.SetActive(false);
     }
 
     public override void EngineTick()

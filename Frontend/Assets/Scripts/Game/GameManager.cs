@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     public ParticleSystem MarkerParticles;
 
     public TMP_Text TextPillsLeft;
+    public TMP_Text TextLevelName;
 
     public Material OutlineMaterial;
 
@@ -60,7 +61,6 @@ public class GameManager : MonoBehaviour
     public SlimeBomb[] SlimeBombs;
     public ParticleSystem[] SlimeBombsHighlight;
     public Exit[] Exits;
-    public ParticleSystem[] ExitsHighlight;
 
     public double UnityTime;
     public double EngineTime;
@@ -140,10 +140,13 @@ public class GameManager : MonoBehaviour
             LevelDeserializer.Run(levelData, levelElements, levelSettings);
             currentLevelData = levelData;
             currentUiLevel = uiLevel;
+            TextLevelName.text = levelData.LevelName;
         }
         else
         {
             // Starting game from current scene in editor
+            TextLevelName.text = "(started from editor)";
+
             levelSettings.ColorSchemeName = levelSettings.ColorScheme.name;
             currentLevelData.ColorSchemeName = levelSettings.ColorSchemeName;
 
@@ -182,7 +185,6 @@ public class GameManager : MonoBehaviour
 
         SludgeObjects = FindObjectsOfType<SludgeObject>();
         Exits = SludgeObjects.Where(o => o is Exit).Cast<Exit>().ToArray();
-        ExitsHighlight = Exits.Select(e => e.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
         SlimeBombs = SludgeObjects.Where(o => o is SlimeBomb).Cast<SlimeBomb>().ToArray();
         SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 
@@ -318,12 +320,11 @@ public class GameManager : MonoBehaviour
     public void OnPillEaten()
     {
         UpdatePillsLeft();
+    }
 
-        TextPillsLeft.transform.DOKill();
-        TextPillsLeft.transform.localScale = Vector3.one * 1.1f;
-        TextPillsLeft.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutElastic);
-
-        if (PillManager.PillsLeft == 0)
+    public void OnSequenceLetterEaten()
+    {
+        if (PickupSequenceManager.LettersLeft == 0)
         {
             ActivateExits();
         }
@@ -343,13 +344,12 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePillsLeft()
     {
-        TextPillsLeft.text = $"{PillManager.PillsLeft}/{PillManager.TotalPills}";
+        double masteryPct = 100 - ((PillManager.PillsLeft / (PillManager.TotalPills + double.Epsilon)) * 100);
+        TextPillsLeft.text = $"({masteryPct:0.0}%)";
     }
 
     void ResetLevel()
     {
-        Debug.Log($"ResetLevel()");
-
         EngineTime = 0;
         EngineTimeMs = 0;
         FrameCounter = 0;
