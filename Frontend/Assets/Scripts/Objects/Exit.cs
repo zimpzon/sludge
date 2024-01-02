@@ -37,7 +37,6 @@ public class Exit : SludgeObject
     void SetActive(bool active)
     {
         SetAlpha(active ? 1.0f : 0.5f);
-        HighlightParticles.gameObject.SetActive(active);
         isActive = active;
     }
 
