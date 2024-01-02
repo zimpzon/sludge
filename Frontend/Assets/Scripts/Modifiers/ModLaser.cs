@@ -1,6 +1,7 @@
 using Sludge.Modifiers;
 using Sludge.Utility;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class ModLaser : SludgeModifier
 {
@@ -60,17 +61,28 @@ public class ModLaser : SludgeModifier
         float distance = (hit.point - (Vector2)transform.position).magnitude;
         distance = (float)SludgeUtil.Stabilize(distance);
 
-        // length of laser is determined, check if it hits player
-        RaycastHit2D playerHit = Physics2D.Raycast(trans.position, direction, distance, SludgeUtil.PlayerLayerMask);
-        if (playerHit.collider != null)
-        {
-            GameManager.I.Player.Kill();
-        }
-
         line.SetPosition(0, Vector2.zero);
         line.SetPosition(1, new Vector2(distance, 0));
 
         particles.transform.position = hit.point;
         particlesFixed.transform.position = hit.point;
+
+        // length of laser is determined, check if it hits something killable
+        RaycastHit2D killableTarget = Physics2D.Raycast(trans.position, direction, distance, SludgeUtil.KillableLayerMask);
+        if (killableTarget.collider != null)
+        {
+            DebugLinesScript.Show("HIT", Time.time);
+
+            var entity = SludgeUtil.GetEntityType(killableTarget.transform.gameObject);
+            if (entity == EntityType.Player)
+            {
+                GameManager.I.Player.Kill();
+            }
+            else if (entity == EntityType.Enemy)
+            {
+                DebugLinesScript.Show("ENEMY", Time.time);
+                GameManager.I.KillEnemy(killableTarget.transform.gameObject);
+            }
+        }
     }
 }

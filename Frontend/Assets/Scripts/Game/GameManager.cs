@@ -60,7 +60,6 @@ public class GameManager : MonoBehaviour
     public SludgeObject[] SludgeObjects;
     public SlimeBomb[] SlimeBombs;
     public ParticleSystem[] SlimeBombsHighlight;
-    public Exit[] Exits;
 
     public double UnityTime;
     public double EngineTime;
@@ -184,7 +183,6 @@ public class GameManager : MonoBehaviour
         Player.SetHomePosition();
 
         SludgeObjects = FindObjectsOfType<SludgeObject>();
-        Exits = SludgeObjects.Where(o => o is Exit).Cast<Exit>().ToArray();
         SlimeBombs = SludgeObjects.Where(o => o is SlimeBomb).Cast<SlimeBomb>().ToArray();
         SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 
@@ -320,32 +318,16 @@ public class GameManager : MonoBehaviour
     public void OnPillEaten()
     {
         UpdatePillsLeft();
-    }
-
-    public void OnSequenceLetterEaten()
-    {
-        if (PickupSequenceManager.LettersLeft == 0)
+        bool levelComplete = PillManager.PillsLeft == 0;
+        if (levelComplete)
         {
-            ActivateExits();
-        }
-    }
-
-    void ActivateExits()
-    {
-        foreach (var exit in Exits)
-        {
-            exit.Activate();
-
-            SoundManager.Play(FxList.Instance.FakeWallShowUp);
-            CameraRoot.DOKill();
-            CameraRoot.DOShakePosition(0.3f, 0.2f);
+            LevelCompleted();
         }
     }
 
     public void UpdatePillsLeft()
     {
-        double masteryPct = 100 - ((PillManager.PillsLeft / (PillManager.TotalPills + double.Epsilon)) * 100);
-        TextPillsLeft.text = $"({masteryPct:0.0}%)";
+        TextPillsLeft.text = $"({PillManager.PillsLeft}/{PillManager.TotalPills})";
     }
 
     void ResetLevel()
@@ -435,15 +417,15 @@ public class GameManager : MonoBehaviour
         Analytics.Instance.SaveStats(latestRoundResult);
     }
 
-    public void LevelCompleted(Exit exit)
+    public void LevelCompleted()
     {
-        CompletedParticles.transform.position = exit.transform.position;
+        var pos = Player.transform.position;
+        CompletedParticles.transform.position = pos;
         CompletedParticles.Emit(11);
 
-        MarkerParticles.transform.position = exit.transform.position;
+        MarkerParticles.transform.position = pos;
         MarkerParticles.Emit(1);
 
-        SludgeUtil.EnableEmission(exit.transform.Find("HighlightParticles").GetComponent<ParticleSystem>(), enabled: false, clearParticles: true);
         levelComplete = true;
     }
 

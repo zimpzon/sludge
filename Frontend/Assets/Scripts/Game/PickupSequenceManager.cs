@@ -43,7 +43,7 @@ namespace Assets.Scripts.Game
             next?.OnBecameActive();
             currentValue = next?.SequenceValue;
 
-            GameManager.I.OnSequenceLetterEaten();
+            //GameManager.I.OnSequenceLetterEaten();
         }
     }
 }

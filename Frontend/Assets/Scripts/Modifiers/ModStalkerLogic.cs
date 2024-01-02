@@ -2,12 +2,8 @@ using Sludge.Modifiers;
 using Sludge.Utility;
 using UnityEngine;
 
-// Do not overuse this guy. Small position errors can get out of hand when turning corners preventing correct replays.
 public class ModStalkerLogic : SludgeModifier
 {
-    //double[] xx = new double[60 * 60];
-    //double[] yy = new double[60 * 60];
-
     float speedNear = 4;
     float speedFar = 3;
     Transform trans;

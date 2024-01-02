@@ -110,16 +110,17 @@ namespace Sludge.Utility
         public static string ColorWrap(string s, Color col)
             => $"<color=#{ColorUtility.ToHtmlStringRGBA(col)}>{s}</color>";
 
+        public static int KillableLayerMask = LayerMask.GetMask("Objects", "Player");
         public static int ThrowableExplosionLayerMask = LayerMask.GetMask("Objects", "OutlinedObjects");
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
         public static int PlayerLayerMask = LayerMask.GetMask("Player");
-        public static int PlayerLayer = LayerMask.NameToLayer("Player");
         public static int StaticLevelLayerMask = LayerMask.GetMask("StaticLevel");
         public static int PickupLayerMask = LayerMask.GetMask("Pickups");
         public static int WallsAndObjectsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Objects");
 
         public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");
         public static int ObjectsLayerNumber = LayerMask.NameToLayer("Objects");
+        public static int PlayerLayerNumber = LayerMask.NameToLayer("Player");
     }
 }

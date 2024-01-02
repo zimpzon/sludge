@@ -54,6 +54,6 @@ public class Exit : SludgeObject
         if (entity != EntityType.Player)
             return;
 
-        GameManager.I.LevelCompleted(this);
+        //GameManager.I.LevelCompleted(this);
     }
 }
