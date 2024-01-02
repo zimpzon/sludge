@@ -2,15 +2,14 @@ using Sludge.Modifiers;
 using Sludge.Utility;
 using UnityEngine;
 
-// TODO: Maybe flicker faster and faster (with increasing alpha) until firing a very fast elongated projectile
-// (with elongated we won't miss edge colliders when moving fast).
 public class ModLaser : SludgeModifier
 {
     LineRenderer line;
     ParticleSystem particles;
     ParticleSystem particlesFixed;
     Transform trans;
-
+    ModTimeToggle timeToggle;
+    
     private void Awake()
     {
         trans = transform;
@@ -18,6 +17,7 @@ public class ModLaser : SludgeModifier
         line.positionCount = 2;
         particles = transform.Find("Particles").GetComponentInChildren<ParticleSystem>();
         particlesFixed = transform.Find("ParticlesFixed").GetComponentInChildren<ParticleSystem>();
+        timeToggle = GetComponent<ModTimeToggle>();
     }
 
     public override void Reset()
@@ -36,6 +36,14 @@ public class ModLaser : SludgeModifier
 
     public override void EngineTick()
     {
+        if (timeToggle.Active && !timeToggle.IsOn())
+        {
+            line.enabled = false;
+            particles.gameObject.SetActive(false);
+            particlesFixed.gameObject.SetActive(false);
+            return;
+        }
+
         if (!line.enabled)
         {
             line.enabled = true;
