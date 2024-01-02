@@ -274,6 +274,8 @@ public class GameManager : MonoBehaviour
 
     IEnumerator RevealPlayer(bool landing)
     {
+        Player.AvoidCollisions(true);
+
         float t = 1.0f;
 
         Vector3 targetPos = Player.transform.position;
@@ -309,6 +311,8 @@ public class GameManager : MonoBehaviour
         Player.transform.SetPositionAndRotation(targetPos, Quaternion.identity);
         Player.transform.localScale = baseScale;
         Player.transform.rotation = baseRotation;
+
+        Player.AvoidCollisions(false);
     }
 
     public void OnPillEaten()
@@ -357,6 +361,9 @@ public class GameManager : MonoBehaviour
 
         PillManager.Reset(PillTilemap.gameObject.GetComponent<PillSnapshot>().TotalPills);
         UpdatePillsLeft();
+
+        var pickupSequences = SludgeObjects.Where(o => o is PickupSequence).Cast<PickupSequence>().ToList();
+        PickupSequenceManager.Reset(pickupSequences);
 
         BulletManager.Instance.Reset();
         CellAntManager.Instance.Reset();
@@ -448,13 +455,6 @@ public class GameManager : MonoBehaviour
         Keys++;
     }
 
-    public void TimePillPickup(TimePill pill)
-    {
-        DustParticles.transform.position = pill.transform.position;
-        DustParticles.Emit(1);
-        SoundManager.Play(FxList.Instance.TimePillPickup);
-    }
-
     void UpdateAll()
     {
         UpdatePlayer();
@@ -485,7 +485,6 @@ public class GameManager : MonoBehaviour
         EngineTime = EngineTimeMs * 0.001;
 
         UpdateAll();
-        Physics2D.Simulate((float)TickSize);
 
         FrameCounter++;
     }

@@ -10,7 +10,6 @@
         Bullet,
         Throwable,
         Enemy,
-        TimePill,
         Key,
         Exit,
         Conveyor,

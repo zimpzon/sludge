@@ -8,8 +8,8 @@ public class ModTargetLaserTracker : SludgeModifier
     const float WidthMin = 0.05f;
     const float WidthMax = 0.08f;
     const float KillTime = 1f;
-    const float BulletSpeed = 10f;
-    const float BulletDelay = 0.5f;
+    const float BulletSpeed = 80f;
+    const float BulletDelay = 0.1f;
 
     public Transform Body;
 
@@ -43,7 +43,8 @@ public class ModTargetLaserTracker : SludgeModifier
         playerDir.x = (float)SludgeUtil.Stabilize(playerDir.x);
         playerDir.y = (float)SludgeUtil.Stabilize(playerDir.y);
 
-        int hit = Physics2D.Raycast(trans.position, playerDir, scanForPlayerFilter, scanHits);
+        const float radius = 0.5f;
+        int hit = Physics2D.CircleCast(trans.position, radius, playerDir, scanForPlayerFilter, scanHits);
         if (hit == 0)
             return;
 

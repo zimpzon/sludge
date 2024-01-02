@@ -56,10 +56,10 @@ public class Player : MonoBehaviour
     public ModThrowable currentThrowable;
     Transform eyesTransform;
     Vector2 eyesBaseScale;
-    Vector2 playerBaseScale;
     double timeEnterSlimeCloud;
     SpriteRenderer[] childSprites;
     GameObject bodyRoot;
+    Collider2D[] allColliders;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -83,16 +83,15 @@ public class Player : MonoBehaviour
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
         bodyRoot = SludgeUtil.FindByName(trans, "Body").gameObject;
         eyesBaseScale = eyesTransform.localScale;
-        playerBaseScale = trans.localScale;
 
         childSprites = GetComponentsInChildren<SpriteRenderer>();
+        allColliders = GetComponentsInChildren<Collider2D>();
     }
 
     public void Prepare()
     {
         Debug.Log($"Player.Prepare()");
         speed = minSpeed;
-        Alive = true;
         onConveyorBeltCount = 0;
         impulseX = 0;
         impulseY = 0;
@@ -119,6 +118,14 @@ public class Player : MonoBehaviour
 
         SetAlpha(1.0f);
         UpdateTransform();
+
+        Alive = true;
+    }
+
+    public void AvoidCollisions(bool avoid)
+    {
+        foreach (var col in allColliders)
+            col.enabled = !avoid;
     }
 
     public void SetAlpha(float alpha)
@@ -183,7 +190,6 @@ public class Player : MonoBehaviour
         homeX = SludgeUtil.Stabilize(trans.position.x);
         homeY = SludgeUtil.Stabilize(trans.position.y);
         homeAngle = SludgeUtil.Stabilize(trans.rotation.eulerAngles.z);
-        Debug.Log($"Setting player home: {homeX}, {homeY}");
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -200,15 +206,12 @@ public class Player : MonoBehaviour
             return;
         }
 
-        bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
-        if (wallHit)
-        {
-            if (WallsAreDeadly)
-            {
-                Kill();
-                return;
-            }
+        Debug.DrawLine(collision.GetContact(0).point, Vector3.zero, Color.yellow, 20);
+        Debug.DrawLine(transform.position, Vector3.zero, Color.cyan, 20);
 
+        bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
+        if (wallHit && !WallsAreDeadly)
+        {
             SoundManager.Play(FxList.Instance.PortalEnter);
             Vector3 dir = ((Vector3)collision.GetContact(0).point - trans.position).normalized;
             SetPositionForce(-dir.x * FX, -dir.y * FY);
@@ -239,7 +242,7 @@ public class Player : MonoBehaviour
 
     public void Kill()
     {
-        if (deathScheduled)
+        if (deathScheduled || !Alive)
             return;
 
         eyesTransform.localScale = eyesBaseScale * EyeScaleSurprised;
@@ -256,6 +259,7 @@ public class Player : MonoBehaviour
 
         EmitDeathExplosionParticles();
         bodyRoot.SetActive(false);
+        trans.position = Vector3.one * 5544; // move out of the way
 
         Alive = false;
     }

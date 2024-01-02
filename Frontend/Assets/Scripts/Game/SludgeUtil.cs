@@ -114,6 +114,7 @@ namespace Sludge.Utility
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
         public static int PlayerLayerMask = LayerMask.GetMask("Player");
+        public static int PlayerLayer = LayerMask.NameToLayer("Player");
         public static int StaticLevelLayerMask = LayerMask.GetMask("StaticLevel");
         public static int PickupLayerMask = LayerMask.GetMask("Pickups");
         public static int WallsAndObjectsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Objects");

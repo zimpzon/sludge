@@ -45,16 +45,19 @@ public class ModLaser : SludgeModifier
 
         var direction = (line.transform.rotation * Vector2.right).normalized;
 
-        var hit = Physics2D.Raycast(trans.position, direction, 1000);
+        RaycastHit2D hit = Physics2D.Raycast(trans.position, direction, 1000, SludgeUtil.ScanForWallsLayerMask);
         if (hit.collider == null)
             return;
 
-        bool isPlayer = 1 << hit.collider.gameObject.layer == SludgeUtil.PlayerLayerMask;
-        if (isPlayer)
-            GameManager.I.Player.Kill();
-
         float distance = (hit.point - (Vector2)transform.position).magnitude;
         distance = (float)SludgeUtil.Stabilize(distance);
+
+        // length of laser is determined, check if it hits player
+        RaycastHit2D playerHit = Physics2D.Raycast(trans.position, direction, distance, SludgeUtil.PlayerLayerMask);
+        if (playerHit.collider != null)
+        {
+            GameManager.I.Player.Kill();
+        }
 
         line.SetPosition(0, Vector2.zero);
         line.SetPosition(1, new Vector2(distance, 0));
