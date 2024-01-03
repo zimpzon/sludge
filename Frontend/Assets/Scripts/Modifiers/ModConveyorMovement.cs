@@ -1,9 +1,10 @@
+using Assets.Scripts.Levels;
 using Sludge.Utility;
 using UnityEngine;
 
 namespace Sludge.Modifiers
 {
-    public class ModConveyorMovement : SludgeModifier
+    public class ModConveyorMovement : SludgeModifier, ICustomSerialized
     {
         const float SuctionPower = 0.5f;
         const float ConveyorSpeed = 14;
@@ -14,7 +15,6 @@ namespace Sludge.Modifiers
         Vector2 beltDirection;
         Vector2 centerLineA;
         Vector2 centerLineB;
-        float beltAngle;
         Transform trans;
         bool hasPlayer;
 
@@ -31,11 +31,7 @@ namespace Sludge.Modifiers
 
         void SetSize()
         {
-            // TODO: SET tiling based on scale
             spriteRenderer = GetComponent<SpriteRenderer>();
-            //int tileX = Mathf.RoundToInt(trans.localScale.x);
-            //int tileY = Mathf.RoundToInt(trans.localScale.y);
-            //spriteRenderer.material.SetVector("_Tiling", new Vector4(tileX, tileY, 0, 0));
         }
 
         public override void OnLoaded()
@@ -55,7 +51,6 @@ namespace Sludge.Modifiers
             centerLineA = SludgeUtil.StabilizeVector(trans.TransformPoint(Vector2.left * 0.5f));
             centerLineB = SludgeUtil.StabilizeVector(trans.TransformPoint(Vector2.right * 0.5f));
             beltDirection = (centerLineB - centerLineA).normalized;
-            beltAngle = (float)SludgeUtil.Stabilize(SludgeUtil.AngleNormalized0To360(Mathf.Atan2(centerLineA.x - centerLineB.x, centerLineB.y - centerLineA.y) * Mathf.Rad2Deg));
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
@@ -100,6 +95,19 @@ namespace Sludge.Modifiers
 
             // Move along the belt
             GameManager.I.Player.AddPositionImpulse(beltDirection.x * ConveyorSpeed, beltDirection.y * ConveyorSpeed);
+        }
+
+        public string SerializeCustomData()
+        {
+            return JsonUtility.ToJson(spriteRenderer.size);
+        }
+
+        public void DeserializeCustomData(string customData)
+        {
+            if (string.IsNullOrWhiteSpace(customData))
+                return;
+
+            spriteRenderer.size = JsonUtility.FromJson<Vector2>(customData);
         }
     }
 }

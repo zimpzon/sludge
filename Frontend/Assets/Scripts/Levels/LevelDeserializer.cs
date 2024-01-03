@@ -1,3 +1,4 @@
+using Assets.Scripts.Levels;
 using Sludge.Modifiers;
 using Sludge.Shared;
 using System.Linq;
@@ -97,6 +98,8 @@ public static class LevelDeserializer
             var instance = GameObject.Instantiate(prefab);
 #endif
             storedObj.Transform.Set(instance.transform);
+
+            instance.GetComponent<ICustomSerialized>()?.DeserializeCustomData(storedObj.CustomData);
 
             var modifiers = instance.GetComponentsInChildren<SludgeModifier>();
             for (int j = 0; j < modifiers.Count(); ++j)

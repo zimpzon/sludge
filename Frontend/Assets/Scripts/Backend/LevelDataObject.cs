@@ -1,5 +1,5 @@
-using Sludge.Modifiers;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Sludge.Shared
 {
@@ -7,6 +7,7 @@ namespace Sludge.Shared
     {
         public int ObjectIdx;
         public LevelDataTransform Transform;
+        public string CustomData;
         public List<string> Modifiers = new List<string>();
     }
 }

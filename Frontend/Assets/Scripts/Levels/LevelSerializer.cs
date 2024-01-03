@@ -1,3 +1,4 @@
+using Assets.Scripts.Levels;
 using Sludge.Modifiers;
 using Sludge.Shared;
 using Sludge.SludgeObjects;
@@ -29,7 +30,7 @@ public static class LevelSerializer
         // Player
         data.PlayerTransform = LevelDataTransform.Get(elements.Player.transform);
 
-        // Tilemap
+        // Tilemaps
         data.WallTilemap = SerializeTilemap(elements.WallTilemap, elements.TileList);
         data.PillTilemap = SerializeTilemap(elements.PillTilemap, elements.TileList);
 
@@ -43,6 +44,7 @@ public static class LevelSerializer
             {
                 ObjectIdx = elements.ObjectPrefabList.GetObjectIndex(obj.gameObject),
                 Transform = LevelDataTransform.Get(obj.transform),
+                CustomData = obj.GetComponent<ICustomSerialized>()?.SerializeCustomData(),
                 Modifiers = modifiers.Select(m => JsonUtility.ToJson(m)).ToList(),
             };
             data.Objects.Add(storedObject);
