@@ -63,6 +63,7 @@ public class ModExitLogic : SludgeModifier
         bool openExit = PillManager.PillsLeft == 0;
         if (openExit)
         {
+            SoundManager.Play(FxList.Instance.ExitOpen);
             SetActive(true);
         }
     }
