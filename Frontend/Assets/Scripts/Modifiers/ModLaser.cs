@@ -4,22 +4,26 @@ using UnityEngine;
 
 public class ModLaser : SludgeModifier
 {
-    public Transform BodyTrans;
-    public Transform LineTrans;
     public float Quiver = 0.1f;
+
     LineRenderer line;
     ParticleSystem particlesWorldSpace;
     ParticleSystem particlesLocalSpace;
     Transform trans;
     ModTimeToggle timeToggle;
+    Transform bodyTrans;
+    Transform lineTrans;
     Vector3 bodyBaseScale;
     Vector3 lineBaseScale;
 
     private void Awake()
     {
         trans = transform;
-        bodyBaseScale = BodyTrans.localScale;
-        lineBaseScale = LineTrans.localScale;
+        bodyTrans = SludgeUtil.FindByName(transform, "Body");
+        lineTrans = SludgeUtil.FindByName(transform, "Line");
+        bodyBaseScale = bodyTrans.localScale;
+
+        lineBaseScale = lineTrans.localScale;
         line = GetComponentInChildren<LineRenderer>();
         line.positionCount = 2;
         particlesWorldSpace = SludgeUtil.FindByName(transform, "ParticlesWorldSpace").GetComponentInChildren<ParticleSystem>();
@@ -29,8 +33,8 @@ public class ModLaser : SludgeModifier
 
     public override void Reset()
     {
-        BodyTrans.localScale = bodyBaseScale;
-        LineTrans.localScale = lineBaseScale;
+        bodyTrans.localScale = bodyBaseScale;
+        lineTrans.localScale = lineBaseScale;
 
         line.enabled = false;
         particlesWorldSpace.gameObject.SetActive(false);
@@ -48,8 +52,8 @@ public class ModLaser : SludgeModifier
     {
         if (timeToggle.Active && !timeToggle.IsOn())
         {
-            BodyTrans.localScale = bodyBaseScale;
-            LineTrans.localScale = lineBaseScale;
+            bodyTrans.localScale = bodyBaseScale;
+            lineTrans.localScale = lineBaseScale;
 
             line.enabled = false;
             particlesWorldSpace.gameObject.SetActive(false);
@@ -59,7 +63,7 @@ public class ModLaser : SludgeModifier
 
         // slight quivering when laser is on
         Vector3 offset = new Vector3(Random.value * Quiver, Random.value * Quiver, 0);
-        BodyTrans.localScale = bodyBaseScale + offset;
+        bodyTrans.localScale = bodyBaseScale + offset;
         //offset *= 0.25f;
         //LineTrans.localScale = lineBaseScale + offset;
 

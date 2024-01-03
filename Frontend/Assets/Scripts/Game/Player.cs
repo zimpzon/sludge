@@ -480,6 +480,19 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            trans.localScale = Vector3.one * 0.5f;
+        }
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            trans.localScale = Vector3.one * 1.0f;
+        }
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            trans.localScale = Vector3.one * 0.25f;
+        }
+
         UpdateLegs();
     }
 
