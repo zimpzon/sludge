@@ -831,6 +831,26 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 6763693638552090092, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
+      propertyPath: MaxSpeed
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 6763693638552090092, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
+      propertyPath: BurstForce
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6763693638552090092, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
+      propertyPath: RotationSPeed
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 6763693638552090092, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
+      propertyPath: RotationSpeed
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6763693638552090092, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
+      propertyPath: ApproxBurstCooldown
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6763693638552090093, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -893,15 +913,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7715410534965845418, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.206
+      value: 0.63529414
       objectReference: {fileID: 0}
     - target: {fileID: 7715410534965845418, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.206
+      value: 0.49803925
       objectReference: {fileID: 0}
     - target: {fileID: 7715410534965845418, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.206
+      value: 0.23137257
       objectReference: {fileID: 0}
     - target: {fileID: 7715410534965845418, guid: c674bdc8e4438fb4c8f767e3212404fa, type: 3}
       propertyPath: InitialModule.startLifetime.minScalar

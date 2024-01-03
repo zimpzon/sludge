@@ -4,8 +4,11 @@ using UnityEngine;
 public class ModStalkerLogic : SludgeModifier
 {
     public float ChaseForce = 1000.0f;
-    public float RotationSPeed = 10.0f;
+    public float RotationSpeed = 300.0f;
     public float MaxSpeed = 15.0f;
+    public float ApproxBurstDuration = 0.5f;
+    public float ApproxBurstCooldown = 4.0f;
+    public float BurstForce = 5000;
     public ParticleSystem ExhaustParticles;
 
     Transform trans;
@@ -59,7 +62,7 @@ public class ModStalkerLogic : SludgeModifier
         float desiredAngle = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg - 90;
 
         var targetRot = Quaternion.Euler(0, 0, desiredAngle);
-        float step = RotationSPeed * (float)GameManager.TickSize;
+        float step = RotationSpeed * (float)GameManager.TickSize;
         trans.rotation = Quaternion.RotateTowards(trans.rotation, targetRot, step);
         Vector2 myLookDir = trans.localRotation * Vector2.up;
 
@@ -67,15 +70,13 @@ public class ModStalkerLogic : SludgeModifier
         float dot = Vector2.Dot(playerDir, myLookDir);
 
         // use less force the more wrong the desired direction is
-        float cone = 0.2f;
         float force = ChaseForce * Mathf.Clamp01(dot) * (float)GameManager.TickSize;
         rigidBody.AddForce(myLookDir * force);
 
         if ((float)GameManager.I.EngineTime < currentBurstEnd)
         {
             ExhaustParticles.Emit(2);
-            const float burstForce = 5000;
-            rigidBody.AddForce(myLookDir * burstForce * (float)GameManager.TickSize);
+            rigidBody.AddForce(myLookDir * BurstForce * (float)GameManager.TickSize);
         }
         else
         {
@@ -92,8 +93,8 @@ public class ModStalkerLogic : SludgeModifier
             bool beginBurst = timeRightInFront > 1 && (float)GameManager.I.EngineTime > burstReadyAt;
             if (beginBurst)
             {
-                currentBurstEnd = (float)GameManager.I.EngineTime + 0.5f + Random.value * 0.25f;
-                burstReadyAt = (float)GameManager.I.EngineTime + 4.0f + Random.value;
+                currentBurstEnd = (float)GameManager.I.EngineTime + ApproxBurstDuration + Random.value * 0.25f;
+                burstReadyAt = (float)GameManager.I.EngineTime + ApproxBurstCooldown + Random.value;
             }
         }
 
