@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public bool IgnoreWalls = false;
+    public bool IgnoreEnemies = false;
+
     public static Vector3 Position;
     public static double Angle;
     public static Quaternion Rotation;
@@ -206,9 +209,6 @@ public class Player : MonoBehaviour
             return;
         }
 
-        Debug.DrawLine(collision.GetContact(0).point, Vector3.zero, Color.yellow, 20);
-        Debug.DrawLine(transform.position, Vector3.zero, Color.cyan, 20);
-
         bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
         if (wallHit && !WallsAreDeadly)
         {
@@ -219,7 +219,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        Kill();
+        Kill(killedByWall: wallHit);
     }
 
     public float FX = 10;
@@ -240,8 +240,14 @@ public class Player : MonoBehaviour
         eyesTransform.localScale = eyesBaseScale * EyeScaleSurprised;
     }
 
-    public void Kill()
+    public void Kill(bool killedByWall = false)
     {
+        if (killedByWall && IgnoreWalls)
+            return;
+
+        if (IgnoreEnemies && !killedByWall)
+            return;
+
         if (deathScheduled || !Alive)
             return;
 
