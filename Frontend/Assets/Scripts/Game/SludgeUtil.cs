@@ -1,5 +1,4 @@
 ﻿using Sludge.SludgeObjects;
-using Sludge.UI;
 using System;
 using UnityEngine;
 
@@ -122,5 +121,14 @@ namespace Sludge.Utility
         public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");
         public static int ObjectsLayerNumber = LayerMask.NameToLayer("Objects");
         public static int PlayerLayerNumber = LayerMask.NameToLayer("Player");
+
+        public static readonly ContactFilter2D ScanForPlayerFilter = new ContactFilter2D();
+        public static readonly ContactFilter2D ScanForWallFilter = new ContactFilter2D();
+
+        static SludgeUtil()
+        {
+            ScanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
+            ScanForWallFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
+        }
     }
 }

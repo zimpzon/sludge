@@ -1,4 +1,5 @@
 using Sludge.Modifiers;
+using Sludge.Utility;
 using UnityEngine;
 
 public class ModStalkerLogic : SludgeModifier
@@ -58,7 +59,13 @@ public class ModStalkerLogic : SludgeModifier
             return;
         }
 
-        var playerDir = (Player.Position - trans.position).normalized;
+        var playerDir = Player.Position - trans.position;
+        float distanceToPlayer = playerDir.magnitude;
+        bool wallBetweenMeAndPlayer = Physics2D.Raycast(trans.position, playerDir.normalized, distanceToPlayer, SludgeUtil.ScanForWallFilter.layerMask);
+        Debug.DrawLine(transform.position, Player.Position, !wallBetweenMeAndPlayer ? Color.green : Color.red, 0.1f);
+        if (wallBetweenMeAndPlayer)
+            return;
+
         float desiredAngle = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg - 90;
 
         var targetRot = Quaternion.Euler(0, 0, desiredAngle);

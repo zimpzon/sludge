@@ -327,7 +327,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePillsLeft()
     {
-        TextPillsLeft.text = $"({PillManager.PillsLeft}/{PillManager.TotalPills})";
+        TextPillsLeft.text = $"{PillManager.PillsLeft}/{PillManager.TotalPills}";
     }
 
     void ResetLevel()

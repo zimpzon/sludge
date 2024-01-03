@@ -15,8 +15,6 @@ public class ModTargetLaserTracker : SludgeModifier
 
     LineRenderer lineRenderer;
     RaycastHit2D[] scanHits = new RaycastHit2D[1];
-    ContactFilter2D scanForPlayerFilter = new ContactFilter2D();
-    ContactFilter2D scanForWallFilter = new ContactFilter2D();
     Transform trans;
     double timeInSight;
     double bulletCountdown;
@@ -27,8 +25,6 @@ public class ModTargetLaserTracker : SludgeModifier
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         trans = transform;
-        scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
-        scanForWallFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
     }
 
     public override void Reset()
@@ -40,11 +36,8 @@ public class ModTargetLaserTracker : SludgeModifier
     public override void EngineTick()
     {
         var playerDir = (Player.Position - trans.position);
-        playerDir.x = (float)SludgeUtil.Stabilize(playerDir.x);
-        playerDir.y = (float)SludgeUtil.Stabilize(playerDir.y);
-
         const float radius = 0.5f;
-        int hit = Physics2D.CircleCast(trans.position, radius, playerDir, scanForPlayerFilter, scanHits);
+        int hit = Physics2D.CircleCast(trans.position, radius, playerDir, SludgeUtil.ScanForPlayerFilter, scanHits);
         if (hit == 0)
             return;
 
@@ -60,7 +53,7 @@ public class ModTargetLaserTracker : SludgeModifier
         }
 
         // We have LoS, find out where we hit a wall behind the player.
-        Physics2D.Raycast(trans.position, playerDir, scanForWallFilter, scanHits);
+        Physics2D.Raycast(trans.position, playerDir, SludgeUtil.ScanForWallFilter, scanHits);
 
         double killT = 1.0 - ((KillTime - timeInSight) / KillTime);
         lineRenderer.widthMultiplier = (float)((WidthMax - WidthMin) * killT + WidthMin);
