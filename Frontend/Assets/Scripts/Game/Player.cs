@@ -161,6 +161,13 @@ public class Player : MonoBehaviour
 
     public void ConveyourBeltEnter()
     {
+        //speedX = 0;
+        //speedY = 0;
+        impulseX = 0;
+        impulseY = 0;
+        forceX = 0;
+        forceY = 0;
+
         onConveyorBeltCount++;
     }
 
@@ -313,8 +320,8 @@ public class Player : MonoBehaviour
 
     void PlayerControls4Dir()
     {
-        if (onConveyorBeltCount > 0)
-            return;
+        //if (onConveyorBeltCount > 0)
+        //    return;
 
         bool hasPlayerHorizontalInput = false;
         bool hasPlayerVerticalInput = false;
