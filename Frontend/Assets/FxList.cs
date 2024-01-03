@@ -36,6 +36,7 @@ public class FxList : MonoBehaviour
     public SoundItem Countdown1;
     public SoundItem BallCollectorSpawn;
     public SoundItem BallCollectorDie;
+    public SoundItem RocketBurst;
 
     private void Awake()
     {

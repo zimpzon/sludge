@@ -93,6 +93,8 @@ public class ModStalkerLogic : SludgeModifier
             bool beginBurst = timeRightInFront > 1 && (float)GameManager.I.EngineTime > burstReadyAt;
             if (beginBurst)
             {
+                SoundManager.Play(FxList.Instance.RocketBurst);
+
                 currentBurstEnd = (float)GameManager.I.EngineTime + ApproxBurstDuration + Random.value * 0.25f;
                 burstReadyAt = (float)GameManager.I.EngineTime + ApproxBurstCooldown + Random.value;
             }

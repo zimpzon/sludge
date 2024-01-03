@@ -71,8 +71,6 @@ public class ModLaser : SludgeModifier
         RaycastHit2D killableTarget = Physics2D.Raycast(trans.position, direction, distance, SludgeUtil.KillableLayerMask);
         if (killableTarget.collider != null)
         {
-            DebugLinesScript.Show("HIT", Time.time);
-
             var entity = SludgeUtil.GetEntityType(killableTarget.transform.gameObject);
             if (entity == EntityType.Player)
             {
@@ -80,7 +78,6 @@ public class ModLaser : SludgeModifier
             }
             else if (entity == EntityType.Enemy)
             {
-                DebugLinesScript.Show("ENEMY", Time.time);
                 GameManager.I.KillEnemy(killableTarget.transform.gameObject);
             }
         }

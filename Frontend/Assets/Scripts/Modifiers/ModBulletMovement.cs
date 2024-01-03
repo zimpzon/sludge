@@ -37,13 +37,25 @@ public class ModBulletMovement : SludgeModifier
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
+
+        bool destroyBullet = false;
         if (entity == EntityType.Player)
         {
             GameManager.I.Player.Kill();
-            return;
+            destroyBullet = true;
+        }
+        else if (entity == EntityType.Enemy)
+        {
+            GameManager.I.KillEnemy(collision.gameObject);
+            destroyBullet = true;
         }
 
         if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
+        {
+            destroyBullet = true;
+        }
+
+        if (destroyBullet)
         {
             GameManager.I.DustParticles.transform.position = trans.position;
             GameManager.I.DustParticles.Emit(5);

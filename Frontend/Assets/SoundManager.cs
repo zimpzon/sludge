@@ -16,7 +16,7 @@ public class SoundManager : MonoBehaviour
 
         if (item.clips == null || item.clips.Length == 0)
         {
-            Debug.LogError($"Sound item has no audio clips, comment: {item.comment}");
+            //Debug.LogWarning($"Sound item has no audio clips, comment: {item.comment}");
             return;
         }
 
