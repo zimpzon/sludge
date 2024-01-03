@@ -9,7 +9,6 @@ public class ModLineGun : SludgeModifier
     public double DelayBeforeFirstBullet = 0;
     public double BulletSpeed = 1;
 
-    AnimatedAnt ant;
     Transform trans;
     double countdown;
     double firstBulletCountdown;
@@ -18,7 +17,6 @@ public class ModLineGun : SludgeModifier
     private void Awake()
     {
         trans = transform;
-        ant = GetComponentInChildren<AnimatedAnt>();
     }
 
     public override void Reset()
@@ -54,8 +52,6 @@ public class ModLineGun : SludgeModifier
                     childTransTween = childTrans.DOPunchScale(Vector3.one * 0.25f, 0.2f);
                 else
                     childTransTween.Restart();
-
-                ant.ShotFired();
 
                 SoundManager.Play(FxList.Instance.EnemyShoot);
             }
