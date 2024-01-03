@@ -108,6 +108,13 @@ public class ModCellFollower : SludgeModifier
             double diffX = Player.Position.x - x;
             double diffY = Player.Position.y - y;
 
+            bool playerIsDangerous = GameManager.I.Player.Size == Player.PlayerSize.Large;
+            if (playerIsDangerous)
+            {
+                diffX *= -1;
+                diffY *= -1;
+            }
+
             const double Mid = 0.5;
             if (diffX > Mid)
                 desiredDir.x = 1;

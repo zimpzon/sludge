@@ -1,9 +1,12 @@
 using DG.Tweening;
 using Sludge.Utility;
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public enum PlayerSize { Small, Normal, Large };
+
     public bool IgnoreWalls = false;
     public bool IgnoreEnemies = false;
 
@@ -31,12 +34,15 @@ public class Player : MonoBehaviour
     float playerMoveDampen;
     double deathScheduleTime;
     bool deathScheduled;
+    float targetScale;
+    float currentScale;
 
     public bool Alive = false;
     public bool WallsAreDeadly = true;
     public int ExplodeParticleCount = 200;
     public float EyeScaleSurprised = 1.5f;
     public float DeathMiniDelay = 0.5f;
+    [NonSerialized] public PlayerSize Size = PlayerSize.Normal;
 
     public double angle = 90;
     double speed;
@@ -63,6 +69,7 @@ public class Player : MonoBehaviour
     SpriteRenderer[] childSprites;
     GameObject bodyRoot;
     Collider2D[] allColliders;
+    float playerBaseScale;
 
     // Impulses: summed up and added every frame. Then cleared.
     double impulseX;
@@ -82,6 +89,8 @@ public class Player : MonoBehaviour
         LegR2Base = LegR2.localPosition;
 
         trans = transform;
+        playerBaseScale = trans.localScale.x; // just assuming uniform scale
+
         wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
         bodyRoot = SludgeUtil.FindByName(trans, "Body").gameObject;
@@ -104,6 +113,10 @@ public class Player : MonoBehaviour
         playerMoveDampen = 0.0f;
         deathScheduleTime = float.MaxValue;
         deathScheduled = false;
+
+        trans.localScale = Vector3.one * playerBaseScale;
+        currentScale = playerBaseScale;
+        SetSize(PlayerSize.Normal);
 
         forceX = 0;
         forceY = 0;
@@ -219,7 +232,14 @@ public class Player : MonoBehaviour
             return;
         }
 
-        Kill(killedByWall: wallHit);
+        if (!wallHit && Size == PlayerSize.Large)
+        {
+            GameManager.I.KillEnemy(collision.gameObject);
+        }
+        else
+        {
+            Kill(killedByWall: wallHit);
+        }
     }
 
     public float FX = 10;
@@ -478,20 +498,41 @@ public class Player : MonoBehaviour
         leg.localPosition = legBase + Vector2.up * offset;
     }
 
+    void SetSize(PlayerSize size)
+    {
+        Size = size;
+
+        if (size == PlayerSize.Small)
+        {
+            targetScale = playerBaseScale * 0.75f;
+        }
+        else if (size == PlayerSize.Normal)
+        {
+            targetScale = playerBaseScale;
+        }
+        else if (size == PlayerSize.Large)
+        {
+            targetScale = playerBaseScale * 2.0f;
+        }
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            trans.localScale = Vector3.one * 0.5f;
+            SetSize(PlayerSize.Small);
         }
         if (Input.GetKeyDown(KeyCode.F2))
         {
-            trans.localScale = Vector3.one * 1.0f;
+            SetSize(PlayerSize.Normal);
         }
         if (Input.GetKeyDown(KeyCode.F3))
         {
-            trans.localScale = Vector3.one * 0.25f;
+            SetSize(PlayerSize.Large);
         }
+
+        trans.localScale = Vector3.one * currentScale;
+        currentScale = Mathf.Lerp(currentScale, targetScale, Time.deltaTime * 10);
 
         UpdateLegs();
     }

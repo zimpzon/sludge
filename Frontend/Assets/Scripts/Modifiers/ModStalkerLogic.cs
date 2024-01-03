@@ -59,12 +59,18 @@ public class ModStalkerLogic : SludgeModifier
             return;
         }
 
-        var playerDir = Player.Position - trans.position;
+        Vector3 playerDir = Player.Position - trans.position;
+
         float distanceToPlayer = playerDir.magnitude;
         bool wallBetweenMeAndPlayer = Physics2D.Raycast(trans.position, playerDir.normalized, distanceToPlayer, SludgeUtil.ScanForWallFilter.layerMask);
-        Debug.DrawLine(transform.position, Player.Position, !wallBetweenMeAndPlayer ? Color.green : Color.red, 0.1f);
         if (wallBetweenMeAndPlayer)
             return;
+
+        bool playerIsDangerous = GameManager.I.Player.Size == Player.PlayerSize.Large;
+        if (playerIsDangerous)
+        {
+            playerDir *= -1;
+        }
 
         float desiredAngle = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg - 90;
 
