@@ -318,11 +318,6 @@ public class GameManager : MonoBehaviour
     public void OnPillEaten()
     {
         UpdatePillsLeft();
-        bool levelComplete = PillManager.PillsLeft == 0;
-        if (levelComplete)
-        {
-            LevelCompleted();
-        }
     }
 
     public void UpdatePillsLeft()

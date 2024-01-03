@@ -8,6 +8,7 @@ namespace Sludge.Modifiers
     {
         public float SuctionPower = 30.0f;
         public float ConveyorSpeed = 14;
+        public bool DisableSuction = false;
 
         SpriteRenderer spriteRenderer;
         Vector2 beltDirection;
@@ -87,9 +88,12 @@ namespace Sludge.Modifiers
                 return;
 
             // Pull player towards center line
-            var closestPointOnCenterLine = SludgeUtil.StabilizeVector(SludgeUtil.GetClosestPointOnInfiniteLine(Player.Position, centerLineA, centerLineB));
-            var directionToCenter = closestPointOnCenterLine - Player.Position;
-            GameManager.I.Player.AddPositionImpulse(directionToCenter.x * SuctionPower, directionToCenter.y * SuctionPower);
+            if (!DisableSuction)
+            {
+                var closestPointOnCenterLine = SludgeUtil.StabilizeVector(SludgeUtil.GetClosestPointOnInfiniteLine(Player.Position, centerLineA, centerLineB));
+                var directionToCenter = closestPointOnCenterLine - Player.Position;
+                GameManager.I.Player.AddPositionImpulse(directionToCenter.x * SuctionPower, directionToCenter.y * SuctionPower);
+            }
 
             // Move along the belt
             GameManager.I.Player.AddPositionImpulse(beltDirection.x * ConveyorSpeed, beltDirection.y * ConveyorSpeed);
