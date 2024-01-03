@@ -6,10 +6,8 @@ namespace Sludge.Modifiers
 {
     public class ModConveyorMovement : SludgeModifier, ICustomSerialized
     {
-        const float SuctionPower = 0.5f;
-        const float ConveyorSpeed = 14;
-
-        public int Length = 1;
+        public float SuctionPower = 0.5f;
+        public float ConveyorSpeed = 14;
 
         SpriteRenderer spriteRenderer;
         Vector2 beltDirection;

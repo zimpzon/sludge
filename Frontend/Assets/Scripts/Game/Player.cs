@@ -313,6 +313,9 @@ public class Player : MonoBehaviour
 
     void PlayerControls4Dir()
     {
+        if (onConveyorBeltCount > 0)
+            return;
+
         bool hasPlayerHorizontalInput = false;
         bool hasPlayerVerticalInput = false;
 
