@@ -64,8 +64,8 @@ public class ModStalkerLogic : SludgeModifier
 
         float distanceToPlayer = playerDir.magnitude;
         bool wallBetweenMeAndPlayer = Physics2D.Raycast(trans.position, playerDir.normalized, distanceToPlayer, SludgeUtil.ScanForWallFilter.layerMask);
-        if (wallBetweenMeAndPlayer)
-            return;
+        //if (wallBetweenMeAndPlayer)
+        //    return;
 
         bool playerIsDangerous = GameManager.I.Player.Size == Player.PlayerSize.Large;
         if (playerIsDangerous)

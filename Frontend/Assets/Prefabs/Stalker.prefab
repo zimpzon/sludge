@@ -62,13 +62,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1d017ed298b2d742aebe6ed9ffb5c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChaseForce: 1000
+  ChaseForce: 2000
   RotationSpeed: 250
   MaxSpeed: 15
-  ApproxBurstDuration: 0.5
-  ApproxBurstCooldown: 4
+  ApproxBurstDuration: 1
+  ApproxBurstCooldown: 3
   BurstForce: 5000
-  ExhaustParticles: {fileID: 7715410534965845418}
 --- !u!58 &8491247980404449923
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -330,7 +329,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.206, g: 0.206, b: 0.206, a: 1}
+      maxColor: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
