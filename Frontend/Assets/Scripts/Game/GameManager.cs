@@ -270,8 +270,11 @@ public class GameManager : MonoBehaviour
             attempts++;
             lastRoundCancelled = latestRoundResult.Cancelled;
 
-            float afterRoundDelay = lastRoundCancelled ? 1.5f : 1.0f;
-            yield return new WaitForSeconds(afterRoundDelay);
+            if (!lastRoundCancelled)
+            {
+                float afterRoundDelay = latestRoundResult.Completed ? 1.5f : 1.0f;
+                yield return new WaitForSeconds(afterRoundDelay);
+            }
         }
     }
 
