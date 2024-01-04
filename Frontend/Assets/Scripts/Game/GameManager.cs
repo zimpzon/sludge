@@ -268,7 +268,8 @@ public class GameManager : MonoBehaviour
             yield return Playing();
             attempts++;
 
-            yield return new WaitForSeconds(1.0f);
+            float afterRoundDelay = latestRoundResult.Completed ? 1.5f : 1.0f;
+            yield return new WaitForSeconds(afterRoundDelay);
         }
     }
 

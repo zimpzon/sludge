@@ -34,7 +34,7 @@ public class ModExitLogic : SludgeModifier
     void SetActive(bool active)
     {
         particles.gameObject.SetActive(active);
-        SetAlpha(active ? 1.0f : 0.2f);
+        SetAlpha(active ? 1.0f : 0.4f);
         isActive = active;
     }
 
@@ -53,6 +53,7 @@ public class ModExitLogic : SludgeModifier
             return;
 
         GameManager.I.LevelCompleted();
+        SetActive(false);
     }
 
     public override void EngineTick()
