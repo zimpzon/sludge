@@ -443,7 +443,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9254902, g: 0.054901984, b: 0.30178156, a: 0.6313726}
+      maxColor: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 0.6313726}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4972,7 +4972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 3
+  SchemeColor: 1
   BrightnessOffset: 0
 --- !u!1 &7595431642774947496
 GameObject:

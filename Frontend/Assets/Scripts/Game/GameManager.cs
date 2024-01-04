@@ -213,6 +213,7 @@ public class GameManager : MonoBehaviour
     IEnumerator BetweenRoundsLoop(string replayId = null)
     {
         int attempts = 0;
+        bool lastRoundCancelled = false;
 
         while (true)
         {
@@ -237,7 +238,7 @@ public class GameManager : MonoBehaviour
 
             yield return UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
 
-            yield return RevealPlayer(landing: true);
+            yield return RevealPlayer(landing: !lastRoundCancelled);
 
             while (startRound == false)
             {
@@ -267,8 +268,9 @@ public class GameManager : MonoBehaviour
 
             yield return Playing();
             attempts++;
+            lastRoundCancelled = latestRoundResult.Cancelled;
 
-            float afterRoundDelay = latestRoundResult.Completed ? 1.5f : 1.0f;
+            float afterRoundDelay = lastRoundCancelled ? 1.5f : 1.0f;
             yield return new WaitForSeconds(afterRoundDelay);
         }
     }
