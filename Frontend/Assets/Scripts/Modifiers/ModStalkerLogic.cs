@@ -75,8 +75,13 @@ public class ModStalkerLogic : SludgeModifier
 
         float desiredAngle = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg - 90;
 
+        // turnspeed is inversely proportional to speed
+        float speedPct = Mathf.Clamp01(rigidBody.velocity.magnitude / MaxSpeed);
+        float scaledTurnSpeed = RotationSpeed * (1 - Mathf.Clamp(speedPct, 0.0f, 0.75f));
+
         var targetRot = Quaternion.Euler(0, 0, desiredAngle);
-        float step = RotationSpeed * (float)GameManager.TickSize;
+        float step = RotationSpeed * (float)GameManager.TickSize * scaledTurnSpeed;
+
         trans.rotation = Quaternion.RotateTowards(trans.rotation, targetRot, step);
         Vector2 myLookDir = trans.localRotation * Vector2.up;
 

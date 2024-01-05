@@ -69,8 +69,7 @@ public static class LevelDeserializer
 
                     var tileTransform = new Matrix4x4();
 
-                    const float HardcodedPillScale = 0.5f;
-                    tileTransform.SetTRS(Vector3.zero, Quaternion.Euler(0, 0, tileRotation), isPills ? Vector3.one * HardcodedPillScale : Vector3.one);
+                    tileTransform.SetTRS(Vector3.zero, Quaternion.Euler(0, 0, tileRotation), Vector3.one);
                     tilemap.SetTransformMatrix(tilePos, tileTransform);
                 }
             }
