@@ -28,21 +28,20 @@ public class Player : MonoBehaviour
     // airwalking: if the player jumps right after walking off a ledge, execute jump anyways
     // roof dodging: if a jump hits the roof, and there would have been room just to the left or side, slide and don't stop jump
 
-    public float JumpHeight = 1.5f;
-    public float JumpTimeToPeak = 0.5f;
-    public float JumpTimeToDescend = 0.4f;
-    public float JumpMaxHoldTime = 0.4f;
-    public float MaxFallVelocity = 10.0f;
+    public float JumpHeight = 1.25f;
+    public float JumpTimeToPeak = 0.3f;
+    public float JumpTimeToDescend = 0.25f;
+    public float JumpMaxHoldTime = 0.2f;
+    public float MaxFallVelocity = 15.0f;
     public float AirControl = 0.25f;
 
-    public int ForgivingJumpMs = 100;
+    public int ForgivingJumpMs = 200;
 
     public float RunPeak = 10.0f;
     public float RunTimeToPeak = 0.15f;
     public float RunTimeToStop = 0.25f;
 
-    public int RayCount = 32;
-    public float RayScanRange = 5;
+    public float WallDistance = 0.02f;
 
     float jumpVelocity;
     float jumpGravity;
@@ -323,23 +322,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    int hitsLeft = 0;
-    int hitsRight = 0;
-    int hitsUp = 0;
-    int hitsDown = 0;
-
-    void CheckRays()
-    {
-        float step = 360.0f / RayCount;
-        for (int i = 0; i < RayCount; i++)
-        {
-            Vector2 dir = Quaternion.Euler(0, 0, step * i) * Vector2.up;
-            RaycastHit2D hit = Physics2D.Raycast(trans.position, dir, RayScanRange, SludgeUtil.ScanForWallsLayerMask);
-            bool didHit = hit.collider != null;
-            Debug.DrawRay(trans.position, dir * RayScanRange, didHit ? Color.red : Color.green, 0.1f);
-        }
-    }
-
     public void EngineTick()
     {
         if (!Alive)
@@ -453,7 +435,7 @@ public class Player : MonoBehaviour
         }
 
         // just before the actual hit
-        float desiredDistance = SludgeUtil.colliderHits[0].distance - 0.01f;
+        float desiredDistance = SludgeUtil.colliderHits[0].distance - WallDistance;
 
         Vector2 validNewPos = from + step.normalized * desiredDistance;
         return validNewPos;
