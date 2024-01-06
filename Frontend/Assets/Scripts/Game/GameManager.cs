@@ -280,7 +280,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator RevealPlayer(bool landing)
     {
-        Player.AvoidCollisions(true);
+        Player.DisableCollisions(true);
 
         float t = 1.0f;
 
@@ -318,7 +318,7 @@ public class GameManager : MonoBehaviour
         Player.transform.localScale = baseScale;
         Player.transform.rotation = baseRotation;
 
-        Player.AvoidCollisions(false);
+        Player.DisableCollisions(false);
     }
 
     public void OnPillEaten()
@@ -470,5 +470,7 @@ public class GameManager : MonoBehaviour
         UpdateAll();
 
         FrameCounter++;
+
+        Physics2D.Simulate((float)TickSize);
     }
 }

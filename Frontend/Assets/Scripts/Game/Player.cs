@@ -3,145 +3,136 @@ using Sludge.Utility;
 using System;
 using UnityEngine;
 
+enum JumpState { NotSet, Grounded, AscendingActive, AscendingPassive, Descending }
+
+class JumpStateParam
+{
+    public JumpState jumpState = JumpState.Descending;
+    public Vector2 force;
+    public bool isHoldingJump;
+    public bool wasGroundedLastFrame;
+    public int jumpHoldStartTime;
+
+    public int forgivingJumpEndTime;
+}
+
 public class Player : MonoBehaviour
 {
+    private JumpStateParam JumpStateParam = new JumpStateParam();
+
     public enum PlayerSize { Small, Normal, Large };
 
-    public bool IgnoreWalls = false;
+    public static Vector3 Position;
+
+    // forgiving jump: if player presses jump just before landing, execute jump anyways
+    // airwalking: if the player jumps right after walking off a ledge, execute jump anyways
+    // roof dodging: if a jump hits the roof, and there would have been room just to the left or side, slide and don't stop jump
+
+    public float JumpHeight = 1.5f;
+    public float JumpTimeToPeak = 0.5f;
+    public float JumpTimeToDescend = 0.4f;
+    public float JumpMaxHoldTime = 0.4f;
+    public float MaxFallVelocity = 10.0f;
+    public float AirControl = 0.25f;
+
+    public int ForgivingJumpMs = 100;
+
+    public float RunPeak = 10.0f;
+    public float RunTimeToPeak = 0.15f;
+    public float RunTimeToStop = 0.25f;
+
+    public int RayCount = 32;
+    public float RayScanRange = 5;
+
+    float jumpVelocity;
+    float jumpGravity;
+    float fallGravity;
+
+    float acceleration;
+    float deceleration;
+
+    Transform groundChecker;
+    Transform headChecker;
+
     public bool IgnoreEnemies = false;
 
-    public static Vector3 Position;
-    public static double Angle;
-    public static Quaternion Rotation;
     public static int PositionSampleIdx;
 
     public ParticleSystem BodyDeathParticles;
 
-    public Transform LegL0;
-    public Transform LegR0;
-    public Transform LegL1;
-    public Transform LegR1;
-    public Transform LegL2;
-    public Transform LegR2;
-
-    Vector2 LegL0Base;
-    Vector2 LegR0Base;
-    Vector2 LegL1Base;
-    Vector2 LegR1Base;
-    Vector2 LegL2Base;
-    Vector2 LegR2Base;
-    bool lockLegMovement = true;
-    float playerMoveDampen;
     double deathScheduleTime;
     bool deathScheduled;
     float targetScale;
     float currentScale;
 
     public bool Alive = false;
-    public bool WallsAreDeadly = true;
     public int ExplodeParticleCount = 200;
     public float EyeScaleSurprised = 1.5f;
     public float DeathMiniDelay = 0.5f;
     [NonSerialized] public PlayerSize Size = PlayerSize.Normal;
 
-    public double angle = 90;
-    double speed;
-    double speedX;
-    double speedY;
-    Vector2 moveVec;
-    double minSpeed = 0.0f;
-    public double maxSpeed = 14;
-    public double accelerateSpeed = 300;
-    public double friction = 50.0f;
-    float playerMoveDampenDecaySpeed = 5;
     Transform trans;
-    double playerX;
-    double playerY;
-    double homeX;
-    double homeY;
-    double homeAngle;
-    ContactFilter2D wallScanFilter = new ContactFilter2D();
+    Vector3 homePos;
+    Rigidbody2D physicsBody;
     int onConveyorBeltCount;
-    public ModThrowable currentThrowable;
     Transform eyesTransform;
     Vector2 eyesBaseScale;
-    double timeEnterSlimeCloud;
     SpriteRenderer[] childSprites;
     GameObject bodyRoot;
     Collider2D[] allColliders;
     float playerBaseScale;
-
-    // Impulses: summed up and added every frame. Then cleared.
-    double impulseX;
-    double impulseY;
-
-    // Forces: summed up and added every frame. Diminished over multiple frames.
-    double forceX;
-    double forceY;
+    CircleCollider2D playerCollider;
 
     void Awake()
     {
-        LegL0Base = LegL0.localPosition;
-        LegR0Base = LegR0.localPosition;
-        LegL1Base = LegL1.localPosition;
-        LegR1Base = LegR1.localPosition;
-        LegL2Base = LegL2.localPosition;
-        LegR2Base = LegR2.localPosition;
-
         trans = transform;
-        playerBaseScale = trans.localScale.x; // just assuming uniform scale
+        physicsBody = GetComponent<Rigidbody2D>();
 
-        wallScanFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
+        playerBaseScale = trans.localScale.x; // just assuming uniform scale
+        groundChecker = SludgeUtil.FindByName(trans, "GroundChecker").transform;
+        headChecker = SludgeUtil.FindByName(trans, "HeadChecker").transform;
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
         bodyRoot = SludgeUtil.FindByName(trans, "Body").gameObject;
         eyesBaseScale = eyesTransform.localScale;
+        playerCollider = GetComponent<CircleCollider2D>();
 
         childSprites = GetComponentsInChildren<SpriteRenderer>();
         allColliders = GetComponentsInChildren<Collider2D>();
+
+        jumpVelocity = (2.0f * JumpHeight) / JumpTimeToPeak;
+        jumpGravity = (-2.0f * JumpHeight) / (JumpTimeToPeak * JumpTimeToPeak);
+        fallGravity = (-2.0f * JumpHeight) / (JumpTimeToDescend * JumpTimeToDescend);
+
+        acceleration = RunPeak / RunTimeToPeak;
+        deceleration = RunPeak / RunTimeToStop;
     }
 
     public void Prepare()
     {
-        Debug.Log($"Player.Prepare()");
-        speed = minSpeed;
         onConveyorBeltCount = 0;
-        impulseX = 0;
-        impulseY = 0;
-        currentThrowable = null;
-        timeEnterSlimeCloud = -1;
         PositionSampleIdx = 0;
-        playerMoveDampen = 0.0f;
         deathScheduleTime = float.MaxValue;
         deathScheduled = false;
 
         trans.localScale = Vector3.one * playerBaseScale;
+        trans.position = homePos;
         currentScale = playerBaseScale;
         SetSize(PlayerSize.Normal);
 
-        forceX = 0;
-        forceY = 0;
-        speedX = 0;
-        speedY = 0;
+        JumpStateParam = new JumpStateParam();
 
-        playerX = homeX;
-        playerY = homeY;
-        angle = homeAngle;
         eyesTransform.localScale = eyesBaseScale;
 
-        legOffset = 0;
-        UpdateLegs();
         bodyRoot.SetActive(true);
-
         SetAlpha(1.0f);
-        UpdateTransform();
 
         Alive = true;
     }
 
-    public void AvoidCollisions(bool avoid)
+    public void DisableCollisions(bool disable)
     {
         foreach (var col in allColliders)
-            col.enabled = !avoid;
+            col.enabled = !disable;
     }
 
     public void SetAlpha(float alpha)
@@ -154,21 +145,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ThrowablePickedUp(ModThrowable throwable)
-    {
-        currentThrowable = throwable;
-    }
-
     public void ConveyourBeltEnter()
     {
-        //speedX = 0;
-        //speedY = 0;
-        impulseX = 0;
-        impulseY = 0;
-        forceX = 0;
-        forceY = 0;
-
-        onConveyorBeltCount++;
     }
 
     public void ConveyourBeltExit()
@@ -185,34 +163,15 @@ public class Player : MonoBehaviour
         GameManager.I.DustParticles.Emit(10);
         GameManager.I.DustParticles.transform.position = newPos;
         GameManager.I.DustParticles.Emit(10);
-
-        playerX = SludgeUtil.Stabilize(newPos.x);
-        playerY = SludgeUtil.Stabilize(newPos.y);
     }
 
     public void AddPositionImpulse(double x, double y)
     {
-        impulseX += SludgeUtil.Stabilize(x);
-        impulseY += SludgeUtil.Stabilize(y);
-    }
-
-    public void AddPositionForce(double x, double y)
-    {
-        forceX += SludgeUtil.Stabilize(x);
-        forceY += SludgeUtil.Stabilize(y);
-    }
-
-    public void SetPositionForce(double x, double y)
-    {
-        forceX = SludgeUtil.Stabilize(x);
-        forceY = SludgeUtil.Stabilize(y);
     }
 
     public void SetHomePosition()
     {
-        homeX = SludgeUtil.Stabilize(trans.position.x);
-        homeY = SludgeUtil.Stabilize(trans.position.y);
-        homeAngle = SludgeUtil.Stabilize(trans.rotation.eulerAngles.z);
+        homePos = transform.position;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -230,46 +189,15 @@ public class Player : MonoBehaviour
         }
 
         bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
-        if (wallHit && !WallsAreDeadly)
+        if (wallHit)
         {
-            SoundManager.Play(FxList.Instance.PortalEnter);
-            Vector3 dir = ((Vector3)collision.GetContact(0).point - trans.position).normalized;
-            SetPositionForce(-dir.x * FX, -dir.y * FY);
-            playerMoveDampen = 1.0f;
             return;
         }
-
-        if (!wallHit && Size == PlayerSize.Large)
-        {
-            GameManager.I.KillEnemy(collision.gameObject);
-        }
-        else
-        {
-            Kill(killedByWall: wallHit);
-        }
-    }
-
-    public float FX = 10;
-    public float FY = 10;
-
-    public void ExitSlimeCloud()
-    {
-        timeEnterSlimeCloud = -1;
-        eyesTransform.localScale = eyesBaseScale;
-    }
-
-    public void InSlimeCloud()
-    {
-        if (timeEnterSlimeCloud > 0)
-            return;
-
-        timeEnterSlimeCloud = GameManager.I.EngineTime;
-        eyesTransform.localScale = eyesBaseScale * EyeScaleSurprised;
     }
 
     public void Kill(bool killedByWall = false)
     {
-        if (killedByWall && IgnoreWalls)
+        if (killedByWall)
             return;
 
         if (IgnoreEnemies && !killedByWall)
@@ -316,118 +244,108 @@ public class Player : MonoBehaviour
         main.startColor = saveColor;
     }
 
-    float legOffset = 0;
+    bool IsFalling() => JumpStateParam.force.y < 0;
+    bool IsGrounded() => Physics2D.OverlapCircle(groundChecker.position, 0.1f, SludgeUtil.ScanForWallsLayerMask);
+    bool IsBumpingHead() => Physics2D.OverlapCircle(headChecker.position, 0.1f, SludgeUtil.ScanForWallsLayerMask);
+    bool IsWithinForgivingJumpPeriod() => JumpStateParam.forgivingJumpEndTime > GameManager.I.EngineTimeMs;
 
-    void PlayerControls4Dir()
+    void JumpStateGrounded(JumpStateParam param)
     {
-        //if (onConveyorBeltCount > 0)
-        //    return;
+        if (param.jumpState != JumpState.Grounded) return;
 
-        bool hasPlayerHorizontalInput = false;
-        bool hasPlayerVerticalInput = false;
+        bool jumpTapped = GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
+        bool allowForgivingJump = !param.wasGroundedLastFrame && IsWithinForgivingJumpPeriod();
 
-        if (GameManager.PlayerInput.Left != 0)
+        if (jumpTapped || allowForgivingJump)
         {
-            speedX -= accelerateSpeed * GameManager.TickSize;
-            hasPlayerHorizontalInput = true;
-        }
+            if (allowForgivingJump && !jumpTapped)
+                DebugLinesScript.Show("did ForgivingJump", Time.time);
+            else
+                DebugLinesScript.Show("did StandardJump", Time.time);
 
-        if (GameManager.PlayerInput.Right != 0)
-        {
-            speedX += accelerateSpeed * GameManager.TickSize;
-            hasPlayerHorizontalInput = true;
-        }
+            param.force.y = jumpVelocity;
+            param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
 
-        if (GameManager.PlayerInput.Up != 0)
-        {
-            speedY += accelerateSpeed * GameManager.TickSize;
-            hasPlayerVerticalInput = true;
-        }
-
-        if (GameManager.PlayerInput.Down != 0)
-        {
-            speedY -= accelerateSpeed * GameManager.TickSize;
-            hasPlayerVerticalInput = true;
-        }
-
-        bool hasPlayerInput = hasPlayerHorizontalInput || hasPlayerVerticalInput;
-
-        moveVec = new Vector2((float)speedX, (float)speedY);
-        if (moveVec.sqrMagnitude > maxSpeed * maxSpeed)
-        {
-            moveVec = moveVec.normalized * (float)maxSpeed;
-            speedX = moveVec.x;
-            speedY = moveVec.y;
-        }
-
-        // Speed curves
-        //  _________
-        // /         \
-
-        if (!hasPlayerHorizontalInput)
-            Friction(ref speedX);
-
-        if (!hasPlayerVerticalInput)
-            Friction(ref speedY);
-
-        bool isMoving = moveVec.sqrMagnitude > 0;
-
-        lockLegMovement = !isMoving;
-
-        const float legSpeed = 20;
-        if (hasPlayerInput)
-        {
-            angle = Mathf.Atan2((float)speedY, (float)speedX) * Mathf.Rad2Deg - 90;
-        }
-
-        if (isMoving)
-        {
-            legOffset += (float)(GameManager.TickSize * legSpeed);
-        }
-
-        if (!isMoving && currentThrowable != null)
-        {
-            currentThrowable.Throw(trans.rotation * Vector2.up, maxSpeed * 1.2);
-            currentThrowable = null;
-        }
-
-        playerX += speedX * GameManager.TickSize * (1.0f - playerMoveDampen);
-        playerY += speedY * GameManager.TickSize * (1.0f - playerMoveDampen);
-
-        playerMoveDampen -= (float)GameManager.TickSize * playerMoveDampenDecaySpeed;
-        playerMoveDampen = Mathf.Clamp01(playerMoveDampen);
-    }
-
-    void Friction(ref double a)
-    {
-        if (a > 0)
-        {
-            a -= friction * GameManager.TickSize;
-            if (a < 0)
-                a = 0;
-        }
-        else if (a < 0)
-        {
-            a += friction * GameManager.TickSize;
-            if (a > 0)
-                a = 0;
+            param.jumpState = JumpState.AscendingActive;
         }
     }
 
-    void CheckSlimeCloud()
+    void JumpStateAscendingActive(JumpStateParam param)
     {
-        if (timeEnterSlimeCloud < 0)
+        if (param.jumpState != JumpState.AscendingActive) return;
+
+        bool jumpReleased = !GameManager.PlayerInput.JumpActive();
+        if (jumpReleased)
+        {
+            param.jumpState = JumpState.AscendingPassive;
             return;
+        }
 
-        double timeInSlimeCloud = GameManager.I.EngineTime - timeEnterSlimeCloud;
-        if (timeInSlimeCloud >= 1)
-            Kill();
+        bool reachedMaxJumpHold = GameManager.I.EngineTimeMs - param.jumpHoldStartTime > JumpMaxHoldTime * 1000;
+        if (reachedMaxJumpHold)
+        {
+            param.jumpState = JumpState.AscendingPassive;
+            return;
+        }
+
+        if (IsBumpingHead())
+        {
+            param.jumpState = JumpState.Descending;
+            return;
+        }
+    }
+
+    void JumpStateAscendingPassive(JumpStateParam param)
+    {
+        if (param.jumpState != JumpState.AscendingPassive) return;
+
+        if (IsFalling())
+        {
+            param.jumpState = JumpState.Descending;
+            return;
+        }
+
+        if (IsBumpingHead())
+        {
+            param.jumpState = JumpState.Descending;
+            return;
+        }
+    }
+
+    void JumpStateDescending(JumpStateParam param)
+    {
+        if (param.jumpState != JumpState.Descending) return;
+
+        if (IsGrounded())
+        {
+            param.jumpState = JumpState.Grounded;
+            return;
+        }
+    }
+
+    int hitsLeft = 0;
+    int hitsRight = 0;
+    int hitsUp = 0;
+    int hitsDown = 0;
+
+    void CheckRays()
+    {
+        float step = 360.0f / RayCount;
+        for (int i = 0; i < RayCount; i++)
+        {
+            Vector2 dir = Quaternion.Euler(0, 0, step * i) * Vector2.up;
+            RaycastHit2D hit = Physics2D.Raycast(trans.position, dir, RayScanRange, SludgeUtil.ScanForWallsLayerMask);
+            bool didHit = hit.collider != null;
+            Debug.DrawRay(trans.position, dir * RayScanRange, didHit ? Color.red : Color.green, 0.1f);
+        }
     }
 
     public void EngineTick()
     {
         if (!Alive)
             return;
+
+        //CheckRays();
 
         if (deathScheduled)
         {
@@ -440,72 +358,105 @@ public class Player : MonoBehaviour
             return;
         }
 
-        PlayerControls4Dir();
-
-        speed = SludgeUtil.Stabilize(speed - GameManager.TickSize * friction);
-        if (speed < minSpeed)
-            speed = minSpeed;
-
-        // Impulse
-        playerX += impulseX * GameManager.TickSize;
-        playerY += impulseY * GameManager.TickSize;
-        impulseX = 0;
-        impulseY = 0;
-
-        // Force
-        playerX += forceX * GameManager.TickSize;
-        playerY += forceY * GameManager.TickSize;
-
-        if (forceX > 0)
-        {
-            forceX = SludgeUtil.Stabilize(forceX - GameManager.TickSize * friction);
-            if (forceX < 0)
-                forceX = 0;
-        }
-        else if (forceX < 0)
-        {
-            forceX = SludgeUtil.Stabilize(forceX + GameManager.TickSize * friction);
-            if (forceX > 0)
-                forceX = 0;
-        }
-
-        if (forceY > 0)
-        {
-            forceY = SludgeUtil.Stabilize(forceY - GameManager.TickSize * friction);
-            if (forceY < 0)
-                forceY = 0;
-        }
-        else if (forceY < 0)
-        {
-            forceY = SludgeUtil.Stabilize(forceY + GameManager.TickSize * friction);
-            if (forceY > 0)
-                forceY = 0;
-        }
-
-        UpdateTransform();
         SetPositionSample();
-        CheckSlimeCloud();
+
+        JumpStateGrounded(JumpStateParam);
+        JumpStateAscendingActive(JumpStateParam);
+        JumpStateAscendingPassive(JumpStateParam);
+        JumpStateDescending(JumpStateParam);
+
+        JumpStateParam.wasGroundedLastFrame = IsGrounded();
+
+        int direction = 0;
+        if (GameManager.PlayerInput.Left != 0)
+        {
+            direction = -1;
+        }
+        else if (GameManager.PlayerInput.Right != 0)
+        {
+            direction = 1;
+        }
+
+        DebugLinesScript.Show("JumpState", JumpStateParam.jumpState);
+        DebugLinesScript.Show("force", JumpStateParam.force);
+        DebugLinesScript.Show("isGrounded", IsGrounded());
+
+        if (direction != 0)
+        {
+            // accelerate according to player input
+            JumpStateParam.force.x += acceleration * direction * (float)GameManager.TickSize * AirControl;
+            if (direction < 0)
+            {
+                JumpStateParam.force.x = Mathf.Clamp(JumpStateParam.force.x, -RunPeak, 0);
+            }
+            else
+            {
+                JumpStateParam.force.x = Mathf.Clamp(JumpStateParam.force.x, 0, RunPeak);
+            }
+        }
+        else
+        {
+            // decelerate
+            if (JumpStateParam.force.x < 0)
+            {
+                JumpStateParam.force.x += deceleration * (float)GameManager.TickSize * AirControl;
+                JumpStateParam.force.x = Mathf.Min(JumpStateParam.force.x, 0);
+            }
+            else
+            {
+                JumpStateParam.force.x -= deceleration * (float)GameManager.TickSize * AirControl;
+                JumpStateParam.force.x = Mathf.Max(JumpStateParam.force.x, 0);
+            }
+        }
+
+        // update simulation
+        if (JumpStateParam.jumpState != JumpState.AscendingActive && JumpStateParam.jumpState != JumpState.Grounded)
+        {
+            float gravity = JumpStateParam.force.y < 0 ? fallGravity : jumpGravity;
+            JumpStateParam.force.y += gravity * (float)GameManager.TickSize;
+        }
+
+        JumpStateParam.force.y = Mathf.Max(JumpStateParam.force.y, -MaxFallVelocity);
+        bool noForce = JumpStateParam.force.magnitude < 0.0001f;
+        if (noForce)
+        {
+            return;
+        }
+
+        Vector2 moveStep = JumpStateParam.force * (float)GameManager.TickSize;
+        Vector2 moveStepX = new Vector2(moveStep.x, 0);
+        Vector2 moveStepY = new Vector2(0, moveStep.y);
+
+        Vector2 acceptedNewPos = TryMove(moveStepX, physicsBody.position);
+        acceptedNewPos = TryMove(moveStepY, acceptedNewPos);
+        physicsBody.MovePosition(acceptedNewPos);
     }
 
-    void UpdateLegs()
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawSphere(xxx, playerCollider.radius);
+    //}
+
+    float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;
+
+    Vector2 TryMove(Vector2 step, Vector2 from)
     {
-        SetLegOffset(LegL2, LegL2Base, legOffset, 0.0f);
-        SetLegOffset(LegL0, LegL0Base, legOffset, 0.8f);
-        SetLegOffset(LegL1, LegL1Base, legOffset, 1.6f);
+        Vector2 newPos = from + step;
+        //Debug.DrawRay(from, (newPos - from).normalized * 3, Color.yellow, 0.1f);
+        float len = step.magnitude;
 
-        SetLegOffset(LegR2, LegR2Base, legOffset, 2.0f);
-        SetLegOffset(LegR0, LegR0Base, legOffset, 2.8f);
-        SetLegOffset(LegR1, LegR1Base, legOffset, 3.6f);
-    }
+        int hitsFullMove = Physics2D.CircleCastNonAlloc(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.colliderHits, len, SludgeUtil.ScanForWallsLayerMask);
+        if (hitsFullMove == 0)
+        {
+            return newPos;
+        }
 
-    void SetLegOffset(Transform leg, Vector2 legBase, float baseOffset, float legOffset)
-    {
-        float legRange = 0.3f;
-        float offset = (Mathf.PingPong(baseOffset + legOffset, 2) - 1) * legRange;
-        if (lockLegMovement)
-            offset = 0;
+        // just before the actual hit
+        float desiredDistance = SludgeUtil.colliderHits[0].distance - 0.01f;
 
-        leg.localPosition = legBase + Vector2.up * offset;
+        Vector2 validNewPos = from + step.normalized * desiredDistance;
+        return validNewPos;
     }
 
     void SetSize(PlayerSize size)
@@ -543,17 +494,6 @@ public class Player : MonoBehaviour
 
         trans.localScale = Vector3.one * currentScale;
         currentScale = Mathf.Lerp(currentScale, targetScale, Time.deltaTime * 10);
-
-        UpdateLegs();
-    }
-
-    void UpdateTransform()
-    {
-        trans.rotation = Quaternion.Euler(0, 0, (float)angle);
-        trans.position = new Vector3((float)playerX, (float)playerY, 0);
-
-        Angle = angle;
-        Rotation = trans.rotation;
     }
 
     void SetPositionSample(bool init = false)

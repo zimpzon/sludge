@@ -6,7 +6,7 @@ namespace Sludge.PlayerInputs
 {
     public class PlayerInput
     {
-        public enum InputType { Up, Down, Left, Right, Select, Back, ColorNext, ColorPrev };
+        public enum InputType { Up, Down, Left, Right, Jump, Select, Back, ColorNext, ColorPrev };
 
         Dictionary<InputType, InputState> inputs = new Dictionary<InputType, InputState>();
 
@@ -16,6 +16,7 @@ namespace Sludge.PlayerInputs
             inputs[InputType.Down] = new InputState { IsActivated = DownActive };
             inputs[InputType.Left] = new InputState { IsActivated = LeftActive };
             inputs[InputType.Right] = new InputState { IsActivated = RightActive };
+            inputs[InputType.Jump] = new InputState { IsActivated = JumpActive };
             inputs[InputType.Back] = new InputState { IsActivated = BackActive };
             inputs[InputType.Select] = new InputState { IsActivated = SelectActive };
             inputs[InputType.ColorNext] = new InputState { IsActivated = ColorNextActive };
@@ -44,6 +45,7 @@ namespace Sludge.PlayerInputs
         public bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.5f;
         public bool LeftActive() => Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.5f;
         public bool RightActive() => Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.5f;
+        public bool JumpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.C) || Input.GetKey(KeyCode.Space);
         public bool BackActive() => Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Backspace);
         public bool SelectActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter);
         public bool ShootActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.LeftShift);

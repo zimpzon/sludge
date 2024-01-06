@@ -71,8 +71,8 @@ public class ModThrowable : SludgeModifier
         if (isExploding)
             return;
 
-        if (!wasThrown) // Exploding while held by player
-            GameManager.I.Player.ThrowablePickedUp(null);
+        //if (!wasThrown) // Exploding while held by player
+        //    GameManager.I.Player.ThrowablePickedUp(null);
 
         SoundManager.Play(FxList.Instance.ThrownBombExplode);
         GameManager.I.CameraRoot.DOShakePosition(0.1f, 0.2f);
@@ -130,16 +130,16 @@ public class ModThrowable : SludgeModifier
         const float ActivationPlayerDistance = 0.7f * 0.7f;
         const float SqrActivationPlayerDistance = ActivationPlayerDistance * ActivationPlayerDistance;
 
-        var playerDir = Player.Position - trans.position;
-        if (!ownedByPlayer && GameManager.I.Player.currentThrowable == null)
-        {
-            if (playerDir.sqrMagnitude <= SqrActivationPlayerDistance)
-            {
-                SoundManager.Play(FxList.Instance.ThrownBombPickedUp);
-                ownedByPlayer = true;
-                GameManager.I.Player.ThrowablePickedUp(this);
-            }
-        }
+        //var playerDir = Player.Position - trans.position;
+        //if (!ownedByPlayer && GameManager.I.Player.currentThrowable == null)
+        //{
+        //    if (playerDir.sqrMagnitude <= SqrActivationPlayerDistance)
+        //    {
+        //        SoundManager.Play(FxList.Instance.ThrownBombPickedUp);
+        //        ownedByPlayer = true;
+        //        GameManager.I.Player.ThrowablePickedUp(this);
+        //    }
+        //}
 
         if (ownedByPlayer)
         {
@@ -153,8 +153,8 @@ public class ModThrowable : SludgeModifier
             else
             {
                 // Being carried
-                var newPos = Player.Position + (Player.Rotation * (Vector3.up * CarryDistance));
-                trans.position = new Vector2((float)SludgeUtil.Stabilize(newPos.x), (float)SludgeUtil.Stabilize(newPos.y));
+                //var newPos = Player.Position + (Player.Rotation * (Vector3.up * CarryDistance));
+                //trans.position = new Vector2((float)SludgeUtil.Stabilize(newPos.x), (float)SludgeUtil.Stabilize(newPos.y));
             }
         }
     }

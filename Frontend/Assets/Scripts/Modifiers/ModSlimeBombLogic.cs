@@ -67,8 +67,8 @@ public class ModSlimeBombLogic : SludgeModifier
 
         var go = collision.gameObject;
         var entity = SludgeUtil.GetEntityType(go);
-        if (entity == EntityType.Player)
-            GameManager.I.Player.ExitSlimeCloud();
+        //if (entity == EntityType.Player)
+        //    GameManager.I.Player.ExitSlimeCloud();
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -79,14 +79,14 @@ public class ModSlimeBombLogic : SludgeModifier
         var go = collision.gameObject;
         var entity = SludgeUtil.GetEntityType(go);
         // Kill stuff
-        if (entity == EntityType.Player)
-        {
-            GameManager.I.Player.InSlimeCloud();
-        }
-        else if (entity == EntityType.Enemy)
-        {
-            GameManager.I.KillEnemy(go);
-        }
+        //if (entity == EntityType.Player)
+        //{
+        //    GameManager.I.Player.InSlimeCloud();
+        //}
+        //else if (entity == EntityType.Enemy)
+        //{
+        //    GameManager.I.KillEnemy(go);
+        //}
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
