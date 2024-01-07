@@ -257,10 +257,10 @@ public class Player : MonoBehaviour
 
         if (jumpTapped || allowForgivingJump)
         {
-            if (allowForgivingJump && !jumpTapped)
-                DebugLinesScript.Show("did ForgivingJump", Time.time);
-            else
-                DebugLinesScript.Show("did StandardJump", Time.time);
+            //if (allowForgivingJump && !jumpTapped)
+            //    DebugLinesScript.Show("did ForgivingJump", Time.time);
+            //else
+            //    DebugLinesScript.Show("did StandardJump", Time.time);
 
             param.force.y = jumpVelocity;
             param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
@@ -359,9 +359,9 @@ public class Player : MonoBehaviour
             direction = 1;
         }
 
-        DebugLinesScript.Show("JumpState", JumpStateParam.jumpState);
-        DebugLinesScript.Show("force", JumpStateParam.force);
-        DebugLinesScript.Show("isGrounded", IsGrounded());
+        //DebugLinesScript.Show("JumpState", JumpStateParam.jumpState);
+        //DebugLinesScript.Show("force", JumpStateParam.force);
+        //DebugLinesScript.Show("isGrounded", IsGrounded());
 
         if (direction != 0)
         {
