@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     // airwalking: if the player jumps right after walking off a ledge, execute jump anyways
     // roof dodging: if a jump hits the roof, and there would have been room just to the left or side, slide and don't stop jump
 
+    public bool ShowDebug = false;
     public float JumpHeight = 1.25f;
     public float JumpTimeToPeak = 0.3f;
     public float JumpTimeToDescend = 0.25f;
@@ -97,13 +98,6 @@ public class Player : MonoBehaviour
 
         childSprites = GetComponentsInChildren<SpriteRenderer>();
         allColliders = GetComponentsInChildren<Collider2D>();
-
-        jumpVelocity = (2.0f * JumpHeight) / JumpTimeToPeak;
-        jumpGravity = (-2.0f * JumpHeight) / (JumpTimeToPeak * JumpTimeToPeak);
-        fallGravity = (-2.0f * JumpHeight) / (JumpTimeToDescend * JumpTimeToDescend);
-
-        acceleration = RunPeak / RunTimeToPeak;
-        deceleration = RunPeak / RunTimeToStop;
     }
 
     public void Prepare()
@@ -243,29 +237,39 @@ public class Player : MonoBehaviour
         main.startColor = saveColor;
     }
 
+    bool IsJumpTapped() => GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
     bool IsFalling() => JumpStateParam.force.y < 0;
     bool IsGrounded() => Physics2D.OverlapCircle(groundChecker.position, 0.1f, SludgeUtil.ScanForWallsLayerMask);
     bool IsBumpingHead() => Physics2D.OverlapCircle(headChecker.position, 0.1f, SludgeUtil.ScanForWallsLayerMask);
     bool IsWithinForgivingJumpPeriod() => JumpStateParam.forgivingJumpEndTime > GameManager.I.EngineTimeMs;
 
+    void StartJump(JumpStateParam param)
+    {
+        param.force.y = jumpVelocity;
+        param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
+    }
+
+    void SetState(JumpStateParam param, JumpState state)
+    {
+        param.jumpState = state;
+    }
+
     void JumpStateGrounded(JumpStateParam param)
     {
         if (param.jumpState != JumpState.Grounded) return;
 
-        bool jumpTapped = GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
-        bool allowForgivingJump = !param.wasGroundedLastFrame && IsWithinForgivingJumpPeriod();
-
-        if (jumpTapped || allowForgivingJump)
+        if (IsJumpTapped() || IsWithinForgivingJumpPeriod())
         {
-            //if (allowForgivingJump && !jumpTapped)
-            //    DebugLinesScript.Show("did ForgivingJump", Time.time);
-            //else
-            //    DebugLinesScript.Show("did StandardJump", Time.time);
+            StartJump(param);
 
-            param.force.y = jumpVelocity;
-            param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
+            SetState(param, JumpState.AscendingActive);
+            return;
+        }
 
-            param.jumpState = JumpState.AscendingActive;
+        if (!IsGrounded())
+        {
+            SetState(param, JumpState.Descending);
+            return;
         }
     }
 
@@ -276,20 +280,20 @@ public class Player : MonoBehaviour
         bool jumpReleased = !GameManager.PlayerInput.JumpActive();
         if (jumpReleased)
         {
-            param.jumpState = JumpState.AscendingPassive;
+            SetState(param, JumpState.AscendingPassive);
             return;
         }
 
         bool reachedMaxJumpHold = GameManager.I.EngineTimeMs - param.jumpHoldStartTime > JumpMaxHoldTime * 1000;
         if (reachedMaxJumpHold)
         {
-            param.jumpState = JumpState.AscendingPassive;
+            SetState(param, JumpState.AscendingPassive);
             return;
         }
 
         if (IsBumpingHead())
         {
-            param.jumpState = JumpState.Descending;
+            SetState(param, JumpState.Descending);
             return;
         }
     }
@@ -300,13 +304,13 @@ public class Player : MonoBehaviour
 
         if (IsFalling())
         {
-            param.jumpState = JumpState.Descending;
+            SetState(param, JumpState.Descending);
             return;
         }
 
         if (IsBumpingHead())
         {
-            param.jumpState = JumpState.Descending;
+            SetState(param, JumpState.Descending);
             return;
         }
     }
@@ -317,7 +321,7 @@ public class Player : MonoBehaviour
 
         if (IsGrounded())
         {
-            param.jumpState = JumpState.Grounded;
+            SetState(param, JumpState.Grounded);
             return;
         }
     }
@@ -326,8 +330,6 @@ public class Player : MonoBehaviour
     {
         if (!Alive)
             return;
-
-        //CheckRays();
 
         if (deathScheduled)
         {
@@ -341,6 +343,13 @@ public class Player : MonoBehaviour
         }
 
         SetPositionSample();
+
+        // set every frame to reflect editor changes
+        jumpVelocity = (2.0f * JumpHeight) / JumpTimeToPeak;
+        jumpGravity = (-2.0f * JumpHeight) / (JumpTimeToPeak * JumpTimeToPeak);
+        fallGravity = (-2.0f * JumpHeight) / (JumpTimeToDescend * JumpTimeToDescend);
+        acceleration = RunPeak / RunTimeToPeak;
+        deceleration = RunPeak / RunTimeToStop;
 
         JumpStateGrounded(JumpStateParam);
         JumpStateAscendingActive(JumpStateParam);
@@ -359,9 +368,13 @@ public class Player : MonoBehaviour
             direction = 1;
         }
 
-        //DebugLinesScript.Show("JumpState", JumpStateParam.jumpState);
-        //DebugLinesScript.Show("force", JumpStateParam.force);
-        //DebugLinesScript.Show("isGrounded", IsGrounded());
+        if (ShowDebug)
+        {
+            DebugLinesScript.Show("JumpState", JumpStateParam.jumpState);
+            DebugLinesScript.Show("force", JumpStateParam.force);
+            DebugLinesScript.Show($"isGrounded-{IsGrounded()}", Time.time);
+            DebugLinesScript.Show($"isHeadBumped-{IsBumpingHead()}", Time.time);
+        }
 
         if (direction != 0)
         {
@@ -425,7 +438,9 @@ public class Player : MonoBehaviour
     Vector2 TryMove(Vector2 step, Vector2 from)
     {
         Vector2 newPos = from + step;
-        //Debug.DrawRay(from, (newPos - from).normalized * 3, Color.yellow, 0.1f);
+        if (ShowDebug)
+            Debug.DrawRay(from, (newPos - from).normalized * 3, Color.yellow, 0.1f);
+
         float len = step.magnitude;
 
         int hitsFullMove = Physics2D.CircleCastNonAlloc(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.colliderHits, len, SludgeUtil.ScanForWallsLayerMask);
