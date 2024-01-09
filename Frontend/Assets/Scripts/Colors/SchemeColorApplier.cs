@@ -103,7 +103,7 @@ public class SchemeColorApplier : MonoBehaviour
         if (meshRenderer != null)
         {
             if (material == null)
-                material = meshRenderer.material;
+                material = meshRenderer.sharedMaterial;
 
             material.SetColor("_Color", GetColor(material.color, scheme));
         }

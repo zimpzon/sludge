@@ -155,6 +155,7 @@ public class Player : MonoBehaviour
         GameManager.I.DustParticles.Emit(10);
         GameManager.I.DustParticles.transform.position = newPos;
         GameManager.I.DustParticles.Emit(10);
+        trans.position = newPos;
     }
 
     public void AddPositionImpulse(double x, double y)
@@ -247,6 +248,8 @@ public class Player : MonoBehaviour
         param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
         param.coyoteJumpEndTime = 0;
         param.queuedJumpEndTime = 0;
+
+        ParticleEmitter.I.EmitDust(trans.position, 4);
     }
 
     void SetState(JumpStateParam param, JumpState state)
