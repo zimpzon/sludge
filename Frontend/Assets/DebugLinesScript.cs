@@ -9,7 +9,8 @@ public class DebugLinesScript : MonoBehaviour
 
     public static void Show(object key, object value)
     {
-        Instance.SetLine(key.ToString(), value);
+        if (Instance != null)
+            Instance.SetLine(key.ToString(), value);
     }
 
     Dictionary<string, string> lines_ = new Dictionary<string, string>();

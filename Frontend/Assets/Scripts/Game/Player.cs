@@ -3,17 +3,17 @@ using Sludge.Utility;
 using System;
 using UnityEngine;
 
-enum JumpState { NotSet, Grounded, AscendingActive, AscendingPassive, Descending }
+enum JumpState { NotSet, AscendingActive, AscendingPassive, Gravity }
 
 class JumpStateParam
 {
-    public JumpState jumpState = JumpState.Descending;
+    public JumpState jumpState = JumpState.Gravity;
     public Vector2 force;
     public bool isHoldingJump;
-    public bool wasGroundedLastFrame;
-    public int jumpHoldStartTime;
 
-    public int forgivingJumpEndTime;
+    public int jumpHoldStartTime = int.MaxValue;
+    public int coyoteJumpEndTime = int.MinValue;
+    public int queuedJumpEndTime = int.MinValue;
 }
 
 public class Player : MonoBehaviour
@@ -36,7 +36,8 @@ public class Player : MonoBehaviour
     public float MaxFallVelocity = 15.0f;
     public float AirControl = 0.25f;
 
-    public int ForgivingJumpMs = 200;
+    public int CoyoteJumpMs = 200;
+    public int QueuedJumpMs = 200;
 
     public float RunPeak = 10.0f;
     public float RunTimeToPeak = 0.15f;
@@ -50,9 +51,6 @@ public class Player : MonoBehaviour
 
     float acceleration;
     float deceleration;
-
-    Transform groundChecker;
-    Transform headChecker;
 
     public bool IgnoreEnemies = false;
 
@@ -82,6 +80,7 @@ public class Player : MonoBehaviour
     Collider2D[] allColliders;
     float playerBaseScale;
     CircleCollider2D playerCollider;
+    ClampedCircleDrawer circleDrawer;
 
     void Awake()
     {
@@ -89,10 +88,9 @@ public class Player : MonoBehaviour
         physicsBody = GetComponent<Rigidbody2D>();
 
         playerBaseScale = trans.localScale.x; // just assuming uniform scale
-        groundChecker = SludgeUtil.FindByName(trans, "GroundChecker").transform;
-        headChecker = SludgeUtil.FindByName(trans, "HeadChecker").transform;
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
         bodyRoot = SludgeUtil.FindByName(trans, "Body").gameObject;
+        circleDrawer = SludgeUtil.FindByName(trans, "Body/SoftBody").GetComponent<ClampedCircleDrawer>();
         eyesBaseScale = eyesTransform.localScale;
         playerCollider = GetComponent<CircleCollider2D>();
 
@@ -114,6 +112,7 @@ public class Player : MonoBehaviour
 
         JumpStateParam = new JumpStateParam();
 
+        circleDrawer.Reset();
         eyesTransform.localScale = eyesBaseScale;
 
         bodyRoot.SetActive(true);
@@ -239,38 +238,21 @@ public class Player : MonoBehaviour
 
     bool IsJumpTapped() => GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
     bool IsFalling() => JumpStateParam.force.y < 0;
-    bool IsGrounded() => Physics2D.OverlapCircle(groundChecker.position, 0.1f, SludgeUtil.ScanForWallsLayerMask);
-    bool IsBumpingHead() => Physics2D.OverlapCircle(headChecker.position, 0.1f, SludgeUtil.ScanForWallsLayerMask);
-    bool IsWithinForgivingJumpPeriod() => JumpStateParam.forgivingJumpEndTime > GameManager.I.EngineTimeMs;
+    bool IsBumpingHead() => false;
+    bool HasQueuedJump() => JumpStateParam.queuedJumpEndTime >= GameManager.I.EngineTimeMs;
+    bool HasCoyoteJump() => JumpStateParam.coyoteJumpEndTime >= GameManager.I.EngineTimeMs;
 
     void StartJump(JumpStateParam param)
     {
         param.force.y = jumpVelocity;
         param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
+        param.coyoteJumpEndTime = 0;
+        param.queuedJumpEndTime = 0;
     }
 
     void SetState(JumpStateParam param, JumpState state)
     {
         param.jumpState = state;
-    }
-
-    void JumpStateGrounded(JumpStateParam param)
-    {
-        if (param.jumpState != JumpState.Grounded) return;
-
-        if (IsJumpTapped() || IsWithinForgivingJumpPeriod())
-        {
-            StartJump(param);
-
-            SetState(param, JumpState.AscendingActive);
-            return;
-        }
-
-        if (!IsGrounded())
-        {
-            SetState(param, JumpState.Descending);
-            return;
-        }
     }
 
     void JumpStateAscendingActive(JumpStateParam param)
@@ -291,9 +273,10 @@ public class Player : MonoBehaviour
             return;
         }
 
+        // TODO: not implemented, use rays?
         if (IsBumpingHead())
         {
-            SetState(param, JumpState.Descending);
+            SetState(param, JumpState.Gravity);
             return;
         }
     }
@@ -304,25 +287,48 @@ public class Player : MonoBehaviour
 
         if (IsFalling())
         {
-            SetState(param, JumpState.Descending);
+            SetState(param, JumpState.Gravity);
             return;
         }
 
         if (IsBumpingHead())
         {
-            SetState(param, JumpState.Descending);
+            SetState(param, JumpState.Gravity);
             return;
         }
     }
 
     void JumpStateDescending(JumpStateParam param)
     {
-        if (param.jumpState != JumpState.Descending) return;
+        if (param.jumpState != JumpState.Gravity) return;
 
-        if (IsGrounded())
+        // "grounded" also includes walls atm
+        bool sortOfGrounded = circleDrawer.groundedScore > 0;
+        if (sortOfGrounded)
         {
-            SetState(param, JumpState.Grounded);
-            return;
+            param.coyoteJumpEndTime = GameManager.I.EngineTimeMs + CoyoteJumpMs;
+
+            if (IsJumpTapped() || HasQueuedJump())
+            {
+                StartJump(param);
+                SetState(param, JumpState.AscendingActive);
+                return;
+            }
+        }
+        else
+        {
+            // not touching ground
+            if (IsJumpTapped())
+            {
+                param.queuedJumpEndTime = GameManager.I.EngineTimeMs + QueuedJumpMs;
+
+                if (HasCoyoteJump())
+                {
+                    StartJump(param);
+                    SetState(param, JumpState.AscendingActive);
+                    return;
+                }
+            }
         }
     }
 
@@ -351,12 +357,9 @@ public class Player : MonoBehaviour
         acceleration = RunPeak / RunTimeToPeak;
         deceleration = RunPeak / RunTimeToStop;
 
-        JumpStateGrounded(JumpStateParam);
         JumpStateAscendingActive(JumpStateParam);
         JumpStateAscendingPassive(JumpStateParam);
         JumpStateDescending(JumpStateParam);
-
-        JumpStateParam.wasGroundedLastFrame = IsGrounded();
 
         int direction = 0;
         if (GameManager.PlayerInput.Left != 0)
@@ -372,8 +375,6 @@ public class Player : MonoBehaviour
         {
             DebugLinesScript.Show("JumpState", JumpStateParam.jumpState);
             DebugLinesScript.Show("force", JumpStateParam.force);
-            DebugLinesScript.Show($"isGrounded-{IsGrounded()}", Time.time);
-            DebugLinesScript.Show($"isHeadBumped-{IsBumpingHead()}", Time.time);
         }
 
         if (direction != 0)
@@ -405,7 +406,7 @@ public class Player : MonoBehaviour
         }
 
         // update simulation
-        if (JumpStateParam.jumpState != JumpState.AscendingActive && JumpStateParam.jumpState != JumpState.Grounded)
+        if (JumpStateParam.jumpState != JumpState.AscendingActive) // do not apply gravity while holding jump (TODO: just keep applying force instead?)
         {
             float gravity = JumpStateParam.force.y < 0 ? fallGravity : jumpGravity;
             JumpStateParam.force.y += gravity * (float)GameManager.TickSize;
@@ -427,19 +428,13 @@ public class Player : MonoBehaviour
         physicsBody.MovePosition(acceptedNewPos);
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.yellow;
-    //    Gizmos.DrawSphere(xxx, playerCollider.radius);
-    //}
-
     float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;
 
     Vector2 TryMove(Vector2 step, Vector2 from)
     {
         Vector2 newPos = from + step;
         if (ShowDebug)
-            Debug.DrawRay(from, (newPos - from).normalized * 3, Color.yellow, 0.1f);
+            Debug.DrawRay(from, (newPos - from).normalized * 2, Color.yellow, 0.1f);
 
         float len = step.magnitude;
 
