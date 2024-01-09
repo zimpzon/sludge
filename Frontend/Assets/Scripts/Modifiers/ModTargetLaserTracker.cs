@@ -8,13 +8,12 @@ public class ModTargetLaserTracker : SludgeModifier
     const float WidthMin = 0.05f;
     const float WidthMax = 0.08f;
     const float KillTime = 1f;
-    const float BulletSpeed = 80f;
-    const float BulletDelay = 0.1f;
+    const float BulletSpeed = 5;
+    const float BulletDelay = 1.0f;
 
     public Transform Body;
 
     LineRenderer lineRenderer;
-    RaycastHit2D[] scanHits = new RaycastHit2D[1];
     Transform trans;
     double timeInSight;
     double bulletCountdown;
@@ -37,11 +36,11 @@ public class ModTargetLaserTracker : SludgeModifier
     {
         var playerDir = (Player.Position - trans.position);
         const float radius = 0.5f;
-        int hit = Physics2D.CircleCast(trans.position, radius, playerDir, SludgeUtil.ScanForPlayerFilter, scanHits);
+        int hit = Physics2D.CircleCast(trans.position, radius, playerDir, SludgeUtil.ScanForPlayerFilter, SludgeUtil.scanHits);
         if (hit == 0)
             return;
 
-        int hitMask = 1 << scanHits[0].transform.gameObject.layer;
+        int hitMask = 1 << SludgeUtil.scanHits[0].transform.gameObject.layer;
         bool hasLoS = hitMask == SludgeUtil.PlayerLayerMask;
         lineRenderer.enabled = hasLoS;
 
@@ -53,13 +52,13 @@ public class ModTargetLaserTracker : SludgeModifier
         }
 
         // We have LoS, find out where we hit a wall behind the player.
-        Physics2D.Raycast(trans.position, playerDir, SludgeUtil.ScanForWallFilter, scanHits);
+        Physics2D.Raycast(trans.position, playerDir, SludgeUtil.ScanForWallFilter, SludgeUtil.scanHits);
 
         double killT = 1.0 - ((KillTime - timeInSight) / KillTime);
         lineRenderer.widthMultiplier = (float)((WidthMax - WidthMin) * killT + WidthMin);
 
         lineRenderer.SetPosition(0, trans.position);
-        lineRenderer.SetPosition(1, scanHits[0].point);
+        lineRenderer.SetPosition(1, SludgeUtil.scanHits[0].point);
 
         if (timeInSight >= KillTime)
         {

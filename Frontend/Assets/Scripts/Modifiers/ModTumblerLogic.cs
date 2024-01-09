@@ -19,8 +19,6 @@ namespace Sludge.Modifiers
         IEnumerator move;
         Vector3 moveDir;
         Transform trans;
-        RaycastHit2D[] scanHits = new RaycastHit2D[1];
-        ContactFilter2D scanForPlayerFilter = new ContactFilter2D();
         Vector3 homePos;
         double x;
         double y;
@@ -35,7 +33,6 @@ namespace Sludge.Modifiers
         void Awake()
         {
             trans = transform;
-            scanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
             spikeRenderer = transform.Find("BodyRoot/Spikes").gameObject.GetComponent<SpriteRenderer>();
             eye = transform.Find("Eye").transform;
             pupil = transform.Find("Pupil").transform;
@@ -69,6 +66,7 @@ namespace Sludge.Modifiers
 
         public override void EngineTick()
         {
+            DebugLinesScript.Show("state", state);
             UpdateEye();
             UpdateTransform();
             if (Static)
@@ -171,12 +169,12 @@ namespace Sludge.Modifiers
 
                 if (closeToXAxis || closeToYAxis)
                 {
-                    int hitCount = Physics2D.CircleCast(trans.position, 0.1f, playerDir, scanForPlayerFilter, scanHits);
+                    int hitCount = Physics2D.CircleCast(trans.position, 0.1f, playerDir, SludgeUtil.ScanForPlayerFilter, SludgeUtil.scanHits);
                     if (hitCount > 0)
                     {
-                        int hitMask = 1 << scanHits[0].transform.gameObject.layer;
+                        int hitMask = 1 << SludgeUtil.scanHits[0].transform.gameObject.layer;
                         bool hasLoS = hitMask == SludgeUtil.PlayerLayerMask;
-                        Debug.DrawLine(trans.position, scanHits[0].point, hasLoS ? Color.green : Color.red);
+                        Debug.DrawLine(trans.position, SludgeUtil.scanHits[0].point, hasLoS ? Color.green : Color.red);
                         if (hasLoS)
                         {
                             moveDir = playerDir;

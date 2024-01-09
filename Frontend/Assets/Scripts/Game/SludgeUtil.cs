@@ -6,7 +6,7 @@ namespace Sludge.Utility
 {
     public static class SludgeUtil
     {
-        public static RaycastHit2D[] colliderHits = new RaycastHit2D[10];
+        public static RaycastHit2D[] scanHits = new RaycastHit2D[10];
 
         public static double Stabilize(double d)
         {

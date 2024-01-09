@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
     public float JumpTimeToPeak = 0.3f;
     public float JumpTimeToDescend = 0.25f;
     public float JumpMaxHoldTime = 0.2f;
-    public float MaxFallVelocity = 15.0f;
+    public float MaxVelocity = 15.0f;
     public float AirControl = 0.25f;
 
     public int CoyoteJumpMs = 200;
@@ -161,12 +161,13 @@ public class Player : MonoBehaviour
         trans.position = newPos;
     }
 
-    public void AddPositionImpulse(double x, double y)
+    public void AddConveyorPulse(double x, double y)
     {
+        // add impulse for immediate response and force to be shot out when leaving the conveyor
         JumpStateParam.impulse.x += (float)x;
         JumpStateParam.impulse.y += (float)y;
 
-        if (JumpStateParam.force.magnitude < 30)
+        if (JumpStateParam.force.magnitude < MaxVelocity)
         {
             JumpStateParam.force.x += (float)x;
             JumpStateParam.force.y += (float)y;
@@ -412,7 +413,7 @@ public class Player : MonoBehaviour
             JumpStateParam.force.y += gravity * (float)GameManager.TickSize;
         }
 
-        JumpStateParam.force.y = Mathf.Max(JumpStateParam.force.y, -MaxFallVelocity);
+        JumpStateParam.force.y = Mathf.Max(JumpStateParam.force.y, -MaxVelocity);
         bool noForce = JumpStateParam.force.magnitude < 0.0001f;
         if (noForce)
         {
@@ -446,14 +447,14 @@ public class Player : MonoBehaviour
 
         float len = step.magnitude;
 
-        int hitsFullMove = Physics2D.CircleCastNonAlloc(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.colliderHits, len, SludgeUtil.ScanForWallsLayerMask);
+        int hitsFullMove = Physics2D.CircleCastNonAlloc(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.scanHits, len, SludgeUtil.ScanForWallsLayerMask);
         if (hitsFullMove == 0)
         {
             return newPos;
         }
 
         // just before the actual hit
-        float desiredDistance = SludgeUtil.colliderHits[0].distance - WallDistance;
+        float desiredDistance = SludgeUtil.scanHits[0].distance - WallDistance;
 
         Vector2 validNewPos = from + step.normalized * desiredDistance;
         return validNewPos;

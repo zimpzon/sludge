@@ -92,11 +92,11 @@ namespace Sludge.Modifiers
             {
                 var closestPointOnCenterLine = SludgeUtil.StabilizeVector(SludgeUtil.GetClosestPointOnInfiniteLine(Player.Position, centerLineA, centerLineB));
                 var directionToCenter = closestPointOnCenterLine - Player.Position;
-                GameManager.I.Player.AddPositionImpulse(directionToCenter.x * SuctionPower, directionToCenter.y * SuctionPower);
+                GameManager.I.Player.AddConveyorPulse(directionToCenter.x * SuctionPower, directionToCenter.y * SuctionPower);
             }
 
             // Move along the belt
-            GameManager.I.Player.AddPositionImpulse(beltDirection.x * ConveyorSpeed, beltDirection.y * ConveyorSpeed);
+            GameManager.I.Player.AddConveyorPulse(beltDirection.x * ConveyorSpeed, beltDirection.y * ConveyorSpeed);
         }
 
         public string SerializeCustomData()
