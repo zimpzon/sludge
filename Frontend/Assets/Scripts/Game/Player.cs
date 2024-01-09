@@ -9,6 +9,7 @@ class JumpStateParam
 {
     public JumpState jumpState = JumpState.Gravity;
     public Vector2 force;
+    public Vector2 impulse;
     public bool isHoldingJump;
 
     public int jumpHoldStartTime = int.MaxValue;
@@ -139,10 +140,12 @@ public class Player : MonoBehaviour
 
     public void ConveyourBeltEnter()
     {
+        Debug.Log("ConveyorBeltEnter");
     }
 
     public void ConveyourBeltExit()
     {
+        Debug.Log("ConveyorBeltExit");
         onConveyorBeltCount--;
         // When resetting game colliderexits are fired after resetting player, so we get an exit event after setting onConveyorBeltCount to 0.
         if (onConveyorBeltCount < 0)
@@ -160,6 +163,14 @@ public class Player : MonoBehaviour
 
     public void AddPositionImpulse(double x, double y)
     {
+        JumpStateParam.impulse.x += (float)x;
+        JumpStateParam.impulse.y += (float)y;
+
+        if (JumpStateParam.force.magnitude < 30)
+        {
+            JumpStateParam.force.x += (float)x;
+            JumpStateParam.force.y += (float)y;
+        }
     }
 
     public void SetHomePosition()
@@ -407,8 +418,16 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        // TODO: sliding up 45 degrees only works when force is low. Split up.
+
         Vector2 moveStep = JumpStateParam.force * (float)GameManager.TickSize;
+
+        void AddOneShotImpulse()
+        {
+            moveStep += JumpStateParam.impulse * (float)GameManager.TickSize;
+            JumpStateParam.impulse = Vector2.zero;
+        }
+        AddOneShotImpulse();
+
         Vector2 moveStepX = new Vector2(moveStep.x, 0);
         Vector2 moveStepY = new Vector2(0, moveStep.y);
 
