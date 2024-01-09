@@ -237,10 +237,9 @@ public class Player : MonoBehaviour
     }
 
     bool IsJumpTapped() => GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
-    bool IsFalling() => JumpStateParam.force.y < 0;
-    bool IsBumpingHead() => false;
     bool HasQueuedJump() => JumpStateParam.queuedJumpEndTime >= GameManager.I.EngineTimeMs;
     bool HasCoyoteJump() => JumpStateParam.coyoteJumpEndTime >= GameManager.I.EngineTimeMs;
+    bool HasGroundContact() => circleDrawer.groundedScore > 0;
 
     void StartJump(JumpStateParam param)
     {
@@ -272,26 +271,14 @@ public class Player : MonoBehaviour
             SetState(param, JumpState.AscendingPassive);
             return;
         }
-
-        // TODO: not implemented, use rays?
-        if (IsBumpingHead())
-        {
-            SetState(param, JumpState.Gravity);
-            return;
-        }
     }
 
     void JumpStateAscendingPassive(JumpStateParam param)
     {
         if (param.jumpState != JumpState.AscendingPassive) return;
 
-        if (IsFalling())
-        {
-            SetState(param, JumpState.Gravity);
-            return;
-        }
-
-        if (IsBumpingHead())
+        bool isPastPeak = JumpStateParam.force.y < 0;
+        if (isPastPeak)
         {
             SetState(param, JumpState.Gravity);
             return;
@@ -302,9 +289,7 @@ public class Player : MonoBehaviour
     {
         if (param.jumpState != JumpState.Gravity) return;
 
-        // "grounded" also includes walls atm
-        bool sortOfGrounded = circleDrawer.groundedScore > 0;
-        if (sortOfGrounded)
+        if (HasGroundContact())
         {
             param.coyoteJumpEndTime = GameManager.I.EngineTimeMs + CoyoteJumpMs;
 
@@ -379,8 +364,9 @@ public class Player : MonoBehaviour
 
         if (direction != 0)
         {
-            // accelerate according to player input
-            JumpStateParam.force.x += acceleration * direction * (float)GameManager.TickSize * AirControl;
+            float airborneModifier = HasGroundContact() ? 1.0f : AirControl;
+            JumpStateParam.force.x += acceleration * direction * (float)GameManager.TickSize * airborneModifier;
+
             if (direction < 0)
             {
                 JumpStateParam.force.x = Mathf.Clamp(JumpStateParam.force.x, -RunPeak, 0);
@@ -395,12 +381,12 @@ public class Player : MonoBehaviour
             // decelerate
             if (JumpStateParam.force.x < 0)
             {
-                JumpStateParam.force.x += deceleration * (float)GameManager.TickSize * AirControl;
+                JumpStateParam.force.x += deceleration * (float)GameManager.TickSize;
                 JumpStateParam.force.x = Mathf.Min(JumpStateParam.force.x, 0);
             }
             else
             {
-                JumpStateParam.force.x -= deceleration * (float)GameManager.TickSize * AirControl;
+                JumpStateParam.force.x -= deceleration * (float)GameManager.TickSize;
                 JumpStateParam.force.x = Mathf.Max(JumpStateParam.force.x, 0);
             }
         }
@@ -418,7 +404,7 @@ public class Player : MonoBehaviour
         {
             return;
         }
-
+        // TODO: sliding up 45 degrees only works when force is low. Split up.
         Vector2 moveStep = JumpStateParam.force * (float)GameManager.TickSize;
         Vector2 moveStepX = new Vector2(moveStep.x, 0);
         Vector2 moveStepY = new Vector2(0, moveStep.y);

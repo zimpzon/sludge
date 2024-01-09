@@ -8,12 +8,13 @@ public class ClampedCircleDrawer : MonoBehaviour
     public float expandSpeed = 0.05f;
     public float breathingSpeed = 4f;
     public float breathingMagnitude= 0.02f;
+    public float downwardsDotThreshold = 0.5f;
     public int rayCount = 50;
     public LayerMask obstacleLayer;
 
     [NonSerialized] public float groundedScore;
     [NonSerialized] public float contactScore;
-    [NonSerialized] public Vector2 contactVector;
+    [NonSerialized] public Vector3 groundedVector;
 
     private Transform trans;
     private Mesh mesh;
@@ -52,6 +53,9 @@ public class ClampedCircleDrawer : MonoBehaviour
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + movementDirection);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(transform.position, transform.position + groundedVector.normalized * 2);
 
         float angleStep = 360.0f / rayCount;
 
@@ -123,6 +127,7 @@ public class ClampedCircleDrawer : MonoBehaviour
     {
         groundedScore = 0;
         contactScore = 0;
+        groundedVector = Vector2.zero;
 
         float angleStep = 360.0f / rayCount;
 
@@ -138,8 +143,11 @@ public class ClampedCircleDrawer : MonoBehaviour
             float dotDown = Vector2.Dot(Vector2.down, vertex); // 1 same direction, -1 opposite direction
             contactScore += dotDown;
 
-            if (hit && dotDown > 0)
+            if (hit && dotDown > downwardsDotThreshold)
+            {
                 groundedScore += dotDown;
+                groundedVector += vertex;
+            }
 
             bool notEnoughRoom = hit && lengths[i] > maxPossibleLength;
             if (notEnoughRoom)
