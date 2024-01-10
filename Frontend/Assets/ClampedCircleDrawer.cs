@@ -12,11 +12,11 @@ public class ClampedCircleDrawer : MonoBehaviour
     public int rayCount = 50;
     public LayerMask obstacleLayer;
 
-    [NonSerialized] public float contactScoreAll;
-    [NonSerialized] public float contactScoreUp;
-    [NonSerialized] public float contactScoreDown;
-    [NonSerialized] public float contactScoreLeft;
-    [NonSerialized] public float contactScoreRight;
+    float contactScoreAll;
+    float contactScoreUp;
+    float contactScoreDown;
+    float contactScoreLeft;
+    float contactScoreRight;
 
     [NonSerialized] public bool hasAnyContact;
     [NonSerialized] public bool hasHeadContact;
@@ -183,6 +183,18 @@ public class ClampedCircleDrawer : MonoBehaviour
         hasAnyContact = contactScoreAll > 0;
         hasHeadContact = contactScoreUp > 0;
         hasGroundContact = contactScoreDown > 0;
+
+        if (contactScoreUp > 0)
+            Debug.DrawLine(trans.position, trans.position + Vector3.up * 2, Color.yellow, 0.05f);
+
+        if (contactScoreDown > 0)
+            Debug.DrawLine(trans.position, trans.position + Vector3.down * 2, Color.yellow, 0.05f);
+
+        if (contactScoreLeft > 0)
+            Debug.DrawLine(trans.position, trans.position + Vector3.left * 2, Color.yellow, 0.05f);
+
+        if (contactScoreRight > 0)
+            Debug.DrawLine(trans.position, trans.position + Vector3.right * 2, Color.yellow, 0.05f);
 
         mesh.SetVertices(vertices);
     }

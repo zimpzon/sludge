@@ -25,10 +25,6 @@ public class Player : MonoBehaviour
 
     public static Vector3 Position;
 
-    // forgiving jump: if player presses jump just before landing, execute jump anyways
-    // airwalking: if the player jumps right after walking off a ledge, execute jump anyways
-    // roof dodging: if a jump hits the roof, and there would have been room just to the left or side, slide and don't stop jump
-
     public bool ShowDebug = false;
     public float JumpHeight = 1.25f;
     public float JumpTimeToPeak = 0.3f;
