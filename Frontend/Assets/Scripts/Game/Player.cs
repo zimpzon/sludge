@@ -120,6 +120,8 @@ public class Player : MonoBehaviour
 
     public void DisableCollisions(bool disable)
     {
+        circleDrawer.disableCollisions = disable;
+
         foreach (var col in allColliders)
             col.enabled = !disable;
     }

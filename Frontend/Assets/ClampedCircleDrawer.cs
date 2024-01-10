@@ -21,6 +21,8 @@ public class ClampedCircleDrawer : MonoBehaviour
     float contactScoreLeft;
     float contactScoreRight;
 
+    [NonSerialized] public bool disableCollisions;
+
     [NonSerialized] public bool hasAnyContact;
     [NonSerialized] public bool hasHeadContact;
     [NonSerialized] public bool hasGroundContact;
@@ -161,6 +163,11 @@ public class ClampedCircleDrawer : MonoBehaviour
         {
             float angle = angleStep * i * Mathf.Deg2Rad;
             Vector3 vertex = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0);
+            if (disableCollisions)
+            {
+                vertices[i + 1] = vertex * lengths[i];
+                continue;
+            }
 
             // Raycast to check for obstacles
             RaycastHit2D hit = Physics2D.Raycast(trans.position, vertex, maxRadius, obstacleLayer);

@@ -66,7 +66,6 @@ namespace Sludge.Modifiers
 
         public override void EngineTick()
         {
-            DebugLinesScript.Show("state", state);
             UpdateEye();
             UpdateTransform();
             if (Static)
