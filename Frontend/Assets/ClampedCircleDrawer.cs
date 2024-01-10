@@ -8,13 +8,19 @@ public class ClampedCircleDrawer : MonoBehaviour
     public float expandSpeed = 0.05f;
     public float breathingSpeed = 4f;
     public float breathingMagnitude= 0.02f;
-    public float downwardsDotThreshold = 0.5f;
+    public float dotScoreThreshold = 0.5f;
     public int rayCount = 50;
     public LayerMask obstacleLayer;
 
-    [NonSerialized] public float groundedScore;
-    [NonSerialized] public float contactScore;
-    [NonSerialized] public Vector3 groundedVector;
+    [NonSerialized] public float contactScoreAll;
+    [NonSerialized] public float contactScoreUp;
+    [NonSerialized] public float contactScoreDown;
+    [NonSerialized] public float contactScoreLeft;
+    [NonSerialized] public float contactScoreRight;
+
+    [NonSerialized] public bool hasAnyContact;
+    [NonSerialized] public bool hasHeadContact;
+    [NonSerialized] public bool hasGroundContact;
 
     private Transform trans;
     private Mesh mesh;
@@ -48,14 +54,14 @@ public class ClampedCircleDrawer : MonoBehaviour
     void OnDrawGizmos()
     {
         CheckSizes();
-        DebugLinesScript.Show("groundedScore", groundedScore);
-        DebugLinesScript.Show("contactScore", contactScore);
+        DebugLinesScript.Show("groundedScore", contactScoreDown);
+        DebugLinesScript.Show("contactScore", contactScoreAll);
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + movementDirection);
 
-        Gizmos.color = Color.white;
-        Gizmos.DrawLine(transform.position, transform.position + groundedVector.normalized * 2);
+        //Gizmos.color = Color.white;
+        //Gizmos.DrawLine(transform.position, transform.position + groundedVector.normalized * 2);
 
         float angleStep = 360.0f / rayCount;
 
@@ -125,9 +131,11 @@ public class ClampedCircleDrawer : MonoBehaviour
 
     void DrawCircle()
     {
-        groundedScore = 0;
-        contactScore = 0;
-        groundedVector = Vector2.zero;
+        contactScoreAll = 0;
+        contactScoreUp = 0;
+        contactScoreDown = 0;
+        contactScoreLeft = 0;
+        contactScoreRight = 0;
 
         float angleStep = 360.0f / rayCount;
 
@@ -140,13 +148,20 @@ public class ClampedCircleDrawer : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(trans.position, vertex, maxRadius, obstacleLayer);
             float maxPossibleLength = hit ? hit.distance : maxRadius;
 
-            float dotDown = Vector2.Dot(Vector2.down, vertex); // 1 same direction, -1 opposite direction
-            contactScore += dotDown;
+            // dot: // 1 same direction, -1 opposite direction
+            float dotUp = Vector2.Dot(Vector2.up, vertex);
+            float dotDown = Vector2.Dot(Vector2.down, vertex);
+            float dotLeft = Vector2.Dot(Vector2.left, vertex);
+            float dotRight = Vector2.Dot(Vector2.right, vertex);
 
-            if (hit && dotDown > downwardsDotThreshold)
+            if (hit)
             {
-                groundedScore += dotDown;
-                groundedVector += vertex;
+                contactScoreAll += (dotUp + dotDown + dotLeft + dotRight);
+
+                contactScoreUp += dotUp > dotScoreThreshold ? dotUp : 0.0f;
+                contactScoreDown += dotDown > dotScoreThreshold ? dotDown : 0.0f;
+                contactScoreLeft += dotLeft > dotScoreThreshold ? dotLeft : 0.0f;
+                contactScoreRight += dotRight > dotScoreThreshold ? dotRight : 0.0f;
             }
 
             bool notEnoughRoom = hit && lengths[i] > maxPossibleLength;
@@ -164,6 +179,10 @@ public class ClampedCircleDrawer : MonoBehaviour
 
             vertices[i + 1] = vertex * lengths[i];
         }
+
+        hasAnyContact = contactScoreAll > 0;
+        hasHeadContact = contactScoreUp > 0;
+        hasGroundContact = contactScoreDown > 0;
 
         mesh.SetVertices(vertices);
     }

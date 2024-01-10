@@ -152,8 +152,15 @@ public class Player : MonoBehaviour
             onConveyorBeltCount = 0;
     }
 
+    void ResetJumpHandicaps()
+    {
+        JumpStateParam.coyoteJumpEndTime = int.MinValue;
+        JumpStateParam.queuedJumpEndTime = int.MinValue;
+    }
+
     public void Teleport(Vector3 newPos)
     {
+        ResetJumpHandicaps();
         GameManager.I.DustParticles.transform.position = trans.position;
         GameManager.I.DustParticles.Emit(10);
         GameManager.I.DustParticles.transform.position = newPos;
@@ -252,7 +259,7 @@ public class Player : MonoBehaviour
     bool IsJumpTapped() => GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
     bool HasQueuedJump() => JumpStateParam.queuedJumpEndTime >= GameManager.I.EngineTimeMs;
     bool HasCoyoteJump() => JumpStateParam.coyoteJumpEndTime >= GameManager.I.EngineTimeMs;
-    bool HasGroundContact() => circleDrawer.groundedScore > 0;
+    bool HasGroundContact() => circleDrawer.hasGroundContact;
 
     void StartJump(JumpStateParam param)
     {
