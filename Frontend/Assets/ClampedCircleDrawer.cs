@@ -4,6 +4,9 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ClampedCircleDrawer : MonoBehaviour
 {
+    public string sortingLayerName = string.Empty;
+    public int orderInLayer = 0;
+
     public float maxRadius = 5.0f;
     public float expandSpeed = 0.05f;
     public float breathingSpeed = 4f;
@@ -49,6 +52,21 @@ public class ClampedCircleDrawer : MonoBehaviour
         
         // normals never change after this
         mesh.RecalculateNormals();
+    }
+
+    void SetSortingLayer()
+    {
+        if (sortingLayerName != string.Empty)
+        {
+            var renderer = GetComponent<Renderer>();
+            renderer.sortingLayerName = sortingLayerName;
+            renderer.sortingOrder = orderInLayer;
+        }
+    }
+
+    private void Start()
+    {
+        SetSortingLayer();
     }
 
     void OnDrawGizmos()
