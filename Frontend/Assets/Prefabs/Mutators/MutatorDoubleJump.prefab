@@ -115,7 +115,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '4Ever
+  m_text: '2X
 
     Jump'
   m_isRightToLeft: 0
@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 3331503139408483915}
   - component: {fileID: 13934100812061085}
   m_Layer: 10
-  m_Name: Mutator4EverJump
+  m_Name: MutatorDoubleJump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db870603725bff945ad0ad4c11704ec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AirJump: 4
+  AirJump: 1
 --- !u!1 &1125160334759515139
 GameObject:
   m_ObjectHideFlags: 0

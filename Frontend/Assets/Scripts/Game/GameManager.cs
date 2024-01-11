@@ -254,7 +254,6 @@ public class GameManager : MonoBehaviour
 
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
-                    QuickText.Instance.Hide();
                     StopAllCoroutines();
                     UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
                     UiLogic.Instance.BackFromGame();
@@ -394,7 +393,7 @@ public class GameManager : MonoBehaviour
             if (PlayerInput.BackActive() || PlayerInput.RestartKey())
             {
                 latestRoundResult.Cancelled = true;
-                QuickText.Instance.ShowText("restart");
+                FeelTools.SpawnFloatingText("restart", Vector3.zero, Color.red);
                 yield break;
             }
 
@@ -406,8 +405,7 @@ public class GameManager : MonoBehaviour
         if (latestRoundResult.Completed)
         {
             SoundManager.Play(FxList.Instance.LevelComplete);
-            QuickText.Instance.ShowText("Completed!");
-
+            FeelTools.SpawnFloatingText("Completed!", Vector3.zero, Color.red);
             PlayerProgress.UpdateProgress(latestRoundResult);
         }
         else

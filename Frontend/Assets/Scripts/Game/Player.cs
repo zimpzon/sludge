@@ -10,7 +10,7 @@ public class StateParam
 {
     public JumpState jumpState = JumpState.Gravity;
 
-    public MutatorTypeAirJumpCount airJumpCount = MutatorTypeAirJumpCount.DoubleJump;
+    public MutatorTypeAirJumpCount airJumpCount = MutatorTypeAirJumpCount.QuadJump;
     public MutatorTypeJumpPower jumpPower = MutatorTypeJumpPower.DefaultPower;
     public MutatorTypePlayerSize playerSize = MutatorTypePlayerSize.DefaultMe;
 
