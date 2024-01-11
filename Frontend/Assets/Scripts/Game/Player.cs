@@ -1,25 +1,33 @@
+using Assets.Scripts.Game;
 using DG.Tweening;
 using Sludge.Utility;
 using System;
 using UnityEngine;
 
-enum JumpState { NotSet, AscendingActive, AscendingPassive, Gravity }
+public enum JumpState { NotSet, AscendingActive, AscendingPassive, Gravity }
 
-class JumpStateParam
+public class StateParam
 {
     public JumpState jumpState = JumpState.Gravity;
+
+    public MutatorTypeAirJumpCount airJumpCount = MutatorTypeAirJumpCount.DoubleJump;
+    public MutatorTypeJumpPower jumpPower = MutatorTypeJumpPower.DefaultPower;
+    public MutatorTypePlayerSize playerSize = MutatorTypePlayerSize.DefaultMe;
+
     public Vector2 force;
     public Vector2 impulse;
     public bool isHoldingJump;
+    public int airJumpsLeft = 1;
 
     public int jumpHoldStartTime = int.MaxValue;
     public int coyoteJumpEndTime = int.MinValue;
     public int queuedJumpEndTime = int.MinValue;
+    public int queuedAirJumpEndTime = int.MinValue;
 }
 
 public class Player : MonoBehaviour
 {
-    private JumpStateParam JumpStateParam = new JumpStateParam();
+    public StateParam StateParam = new StateParam();
 
     public enum PlayerSize { Small, Normal, Large };
 
@@ -107,7 +115,7 @@ public class Player : MonoBehaviour
         currentScale = playerBaseScale;
         SetSize(PlayerSize.Normal);
 
-        JumpStateParam = new JumpStateParam();
+        StateParam = new StateParam();
 
         circleDrawer.Reset();
         eyesTransform.localScale = eyesBaseScale;
@@ -138,12 +146,10 @@ public class Player : MonoBehaviour
 
     public void ConveyourBeltEnter()
     {
-        Debug.Log("ConveyorBeltEnter");
     }
 
     public void ConveyourBeltExit()
     {
-        Debug.Log("ConveyorBeltExit");
         onConveyorBeltCount--;
         // When resetting game colliderexits are fired after resetting player, so we get an exit event after setting onConveyorBeltCount to 0.
         if (onConveyorBeltCount < 0)
@@ -152,8 +158,9 @@ public class Player : MonoBehaviour
 
     void ResetJumpHandicaps()
     {
-        JumpStateParam.coyoteJumpEndTime = int.MinValue;
-        JumpStateParam.queuedJumpEndTime = int.MinValue;
+        StateParam.coyoteJumpEndTime = int.MinValue;
+        StateParam.queuedJumpEndTime = int.MinValue;
+        StateParam.queuedAirJumpEndTime = int.MinValue;
     }
 
     public void Teleport(Vector3 newPos)
@@ -169,13 +176,13 @@ public class Player : MonoBehaviour
     public void AddConveyorPulse(double x, double y)
     {
         // add impulse for immediate response and force to be shot out when leaving the conveyor
-        JumpStateParam.impulse.x += (float)x;
-        JumpStateParam.impulse.y += (float)y;
+        StateParam.impulse.x += (float)x;
+        StateParam.impulse.y += (float)y;
 
-        if (JumpStateParam.force.magnitude < MaxVelocity)
+        if (StateParam.force.magnitude < MaxVelocity)
         {
-            JumpStateParam.force.x += (float)x;
-            JumpStateParam.force.y += (float)y;
+            StateParam.force.x += (float)x;
+            StateParam.force.y += (float)y;
         }
     }
 
@@ -255,11 +262,25 @@ public class Player : MonoBehaviour
     }
 
     bool IsJumpTapped() => GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
-    bool HasQueuedJump() => JumpStateParam.queuedJumpEndTime >= GameManager.I.EngineTimeMs;
-    bool HasCoyoteJump() => JumpStateParam.coyoteJumpEndTime >= GameManager.I.EngineTimeMs;
+    bool HasQueuedJump() => StateParam.queuedJumpEndTime >= GameManager.I.EngineTimeMs;
+    bool HasQueuedAirJump() => StateParam.queuedAirJumpEndTime >= GameManager.I.EngineTimeMs;
+    bool HasCoyoteJump() => StateParam.coyoteJumpEndTime >= GameManager.I.EngineTimeMs;
     bool HasGroundContact() => circleDrawer.hasGroundContact;
 
-    void StartJump(JumpStateParam param)
+    void ResetJumpCount(StateParam param)
+    {
+        param.airJumpsLeft = MutatorUtil.GetJumpCount(param.airJumpCount);
+    }
+
+    bool HasAirJumpsLeft() => StateParam.airJumpsLeft > 0 || StateParam.airJumpsLeft < 0;
+
+    void StartAirJump(StateParam param)
+    {
+        param.airJumpsLeft--;
+        StartJump(param);
+    }
+
+    void StartJump(StateParam param)
     {
         param.force.y = jumpVelocity;
         param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
@@ -269,12 +290,12 @@ public class Player : MonoBehaviour
         ParticleEmitter.I.EmitDust(trans.position, 4);
     }
 
-    void SetState(JumpStateParam param, JumpState state)
+    void SetState(StateParam param, JumpState state)
     {
         param.jumpState = state;
     }
 
-    void JumpStateAscendingActive(JumpStateParam param)
+    void JumpStateAscendingActive(StateParam param)
     {
         if (param.jumpState != JumpState.AscendingActive) return;
 
@@ -293,11 +314,16 @@ public class Player : MonoBehaviour
         }
     }
 
-    void JumpStateAscendingPassive(JumpStateParam param)
+    void JumpStateAscendingPassive(StateParam param)
     {
         if (param.jumpState != JumpState.AscendingPassive) return;
 
-        bool isPastPeak = JumpStateParam.force.y < 0;
+        if (IsJumpTapped())
+        {
+            param.queuedAirJumpEndTime = GameManager.I.EngineTimeMs + QueuedJumpMs;
+        }
+
+        bool isPastPeak = StateParam.force.y < 0;
         if (isPastPeak)
         {
             SetState(param, JumpState.Gravity);
@@ -305,12 +331,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    void JumpStateDescending(JumpStateParam param)
+    void JumpStateDescending(StateParam param)
     {
         if (param.jumpState != JumpState.Gravity) return;
 
         if (HasGroundContact())
         {
+            ResetJumpCount(param);
             param.coyoteJumpEndTime = GameManager.I.EngineTimeMs + CoyoteJumpMs;
 
             if (IsJumpTapped() || HasQueuedJump())
@@ -323,16 +350,30 @@ public class Player : MonoBehaviour
         else
         {
             // not touching ground
+            if (HasQueuedAirJump() && HasAirJumpsLeft())
+            {
+                StartAirJump(param);
+                SetState(param, JumpState.AscendingActive);
+                return;
+            }
+
             if (IsJumpTapped())
             {
-                param.queuedJumpEndTime = GameManager.I.EngineTimeMs + QueuedJumpMs;
-
                 if (HasCoyoteJump())
                 {
                     StartJump(param);
                     SetState(param, JumpState.AscendingActive);
                     return;
                 }
+
+                if (HasAirJumpsLeft())
+                {
+                    StartAirJump(param);
+                    SetState(param, JumpState.AscendingActive);
+                    return;
+                }
+
+                param.queuedJumpEndTime = GameManager.I.EngineTimeMs + QueuedJumpMs;
             }
         }
     }
@@ -362,9 +403,9 @@ public class Player : MonoBehaviour
         acceleration = RunPeak / RunTimeToPeak;
         deceleration = RunPeak / RunTimeToStop;
 
-        JumpStateAscendingActive(JumpStateParam);
-        JumpStateAscendingPassive(JumpStateParam);
-        JumpStateDescending(JumpStateParam);
+        JumpStateAscendingActive(StateParam);
+        JumpStateAscendingPassive(StateParam);
+        JumpStateDescending(StateParam);
 
         int direction = 0;
         if (GameManager.PlayerInput.Left != 0)
@@ -378,59 +419,59 @@ public class Player : MonoBehaviour
 
         if (ShowDebug)
         {
-            DebugLinesScript.Show("JumpState", JumpStateParam.jumpState);
-            DebugLinesScript.Show("force", JumpStateParam.force);
+            DebugLinesScript.Show("JumpState", StateParam.jumpState);
+            DebugLinesScript.Show("force", StateParam.force);
         }
 
         if (direction != 0)
         {
             float airborneModifier = HasGroundContact() ? 1.0f : AirControl;
-            JumpStateParam.force.x += acceleration * direction * (float)GameManager.TickSize * airborneModifier;
+            StateParam.force.x += acceleration * direction * (float)GameManager.TickSize * airborneModifier;
 
             if (direction < 0)
             {
-                JumpStateParam.force.x = Mathf.Clamp(JumpStateParam.force.x, -RunPeak, 0);
+                StateParam.force.x = Mathf.Clamp(StateParam.force.x, -RunPeak, 0);
             }
             else
             {
-                JumpStateParam.force.x = Mathf.Clamp(JumpStateParam.force.x, 0, RunPeak);
+                StateParam.force.x = Mathf.Clamp(StateParam.force.x, 0, RunPeak);
             }
         }
         else
         {
             // decelerate
-            if (JumpStateParam.force.x < 0)
+            if (StateParam.force.x < 0)
             {
-                JumpStateParam.force.x += deceleration * (float)GameManager.TickSize;
-                JumpStateParam.force.x = Mathf.Min(JumpStateParam.force.x, 0);
+                StateParam.force.x += deceleration * (float)GameManager.TickSize;
+                StateParam.force.x = Mathf.Min(StateParam.force.x, 0);
             }
             else
             {
-                JumpStateParam.force.x -= deceleration * (float)GameManager.TickSize;
-                JumpStateParam.force.x = Mathf.Max(JumpStateParam.force.x, 0);
+                StateParam.force.x -= deceleration * (float)GameManager.TickSize;
+                StateParam.force.x = Mathf.Max(StateParam.force.x, 0);
             }
         }
 
         // update simulation
-        if (JumpStateParam.jumpState != JumpState.AscendingActive) // do not apply gravity while holding jump (TODO: just keep applying force instead?)
+        if (StateParam.jumpState != JumpState.AscendingActive) // do not apply gravity while holding jump (TODO: just keep applying force instead?)
         {
-            float gravity = JumpStateParam.force.y < 0 ? fallGravity : jumpGravity;
-            JumpStateParam.force.y += gravity * (float)GameManager.TickSize;
+            float gravity = StateParam.force.y < 0 ? fallGravity : jumpGravity;
+            StateParam.force.y += gravity * (float)GameManager.TickSize;
         }
 
-        JumpStateParam.force.y = Mathf.Max(JumpStateParam.force.y, -MaxVelocity);
-        bool noForce = JumpStateParam.force.magnitude < 0.0001f;
+        StateParam.force.y = Mathf.Max(StateParam.force.y, -MaxVelocity);
+        bool noForce = StateParam.force.magnitude < 0.0001f;
         if (noForce)
         {
             return;
         }
 
-        Vector2 moveStep = JumpStateParam.force * (float)GameManager.TickSize;
+        Vector2 moveStep = StateParam.force * (float)GameManager.TickSize;
 
         void AddOneShotImpulse()
         {
-            moveStep += JumpStateParam.impulse * (float)GameManager.TickSize;
-            JumpStateParam.impulse = Vector2.zero;
+            moveStep += StateParam.impulse * (float)GameManager.TickSize;
+            StateParam.impulse = Vector2.zero;
         }
         AddOneShotImpulse();
 
