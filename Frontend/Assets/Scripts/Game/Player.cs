@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     public float JumpTimeToDescend = 0.25f;
     public float JumpMaxHoldTime = 0.2f;
     public float MaxVelocity = 15.0f;
-    float WallSlideMaxFall = 1.0f;
+    float WallSlideMaxFall = 4.0f;
     public int WallJumpDisableHorizontalBreakingMs = 100;
     public float AirControl = 0.25f;
     public int CoyoteJumpMs = 200;
@@ -75,6 +75,7 @@ public class Player : MonoBehaviour
     bool deathScheduled;
     float targetScale;
     float currentScale;
+    float wallSlidePendingParticles;
 
     public bool Alive = false;
     public int ExplodeParticleCount = 200;
@@ -439,8 +440,6 @@ public class Player : MonoBehaviour
         bool horizontalDisabled = GameManager.I.EngineTimeMs < StateParam.disableHorizontalDirectionEndTime;
         bool moveLeftDisabled = StateParam.disabledHorizontalDirection < 0 && horizontalDisabled;
         bool moveRightDisabled = StateParam.disabledHorizontalDirection > 0 && horizontalDisabled;
-        DebugLinesScript.Show("moveLeftDisabled " + moveLeftDisabled, Time.time);
-        DebugLinesScript.Show("moveRightDisabled " + moveRightDisabled, Time.time);
 
         if (GameManager.PlayerInput.Left != 0 && !moveLeftDisabled)
         {
@@ -479,8 +478,8 @@ public class Player : MonoBehaviour
             }
         }
 
-        StateParam.isHuggingLeftWall = circleDrawer.hasLeftContact && direction < 0;
-        StateParam.isHuggingRightWall = circleDrawer.hasRightContact && direction > 0;
+        StateParam.isHuggingLeftWall = circleDrawer.hasLeftContact && !HasGroundContact();
+        StateParam.isHuggingRightWall = circleDrawer.hasRightContact && !HasGroundContact();
         StateParam.isDescending = StateParam.force.y < 0;
         StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
 
@@ -496,7 +495,17 @@ public class Player : MonoBehaviour
 
         StateParam.force.y = Mathf.Max(StateParam.force.y, -MaxVelocity);
         if (StateParam.isWallSliding)
-            StateParam.force.y = Mathf.Max(StateParam.force.y, -WallSlideMaxFall);
+        {
+            wallSlidePendingParticles += (float)GameManager.TickSize * 15;
+            while (wallSlidePendingParticles > 0)
+            {
+                wallSlidePendingParticles--;
+                ParticleEmitter.I.EmitDust(trans.position, 1);
+            }
+
+            float speed = GameManager.PlayerInput.DownActive() ? WallSlideMaxFall * 8 : WallSlideMaxFall;
+            StateParam.force.y = Mathf.Max(StateParam.force.y, -speed);
+        }
 
         bool noForce = StateParam.force.magnitude < 0.0001f;
         if (noForce)

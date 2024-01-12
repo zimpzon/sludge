@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ClampedCircleDrawer : MonoBehaviour
@@ -37,8 +36,6 @@ public class ClampedCircleDrawer : MonoBehaviour
     private float[] lengths;
 
     Vector3 prevPos;
-    Vector3 movementVelocity;
-    Vector3 movementDirection;
 
     private void Awake()
     {
@@ -137,10 +134,7 @@ public class ClampedCircleDrawer : MonoBehaviour
 
     void Update()
     {
-        movementVelocity = trans.position - prevPos;
-        movementDirection = movementVelocity.normalized;
         DrawCircle();
-
         prevPos = trans.position;
     }
 
@@ -202,9 +196,13 @@ public class ClampedCircleDrawer : MonoBehaviour
 
         hasAnyContact = contactScoreAll > 0;
         hasHeadContact = contactScoreUp > 0;
-        hasLeftContact = contactScoreLeft > 0;
-        hasRightContact = contactScoreRight > 0;
+        // 6.47 is max on vertical surface
+        hasLeftContact = contactScoreLeft > 6.4f;
+        hasRightContact = contactScoreRight > 6.4f;
         hasGroundContact = contactScoreDown > 0;
+
+        DebugLinesScript.Show("contactScoreLeft", contactScoreLeft);
+        DebugLinesScript.Show("contactScoreRight", contactScoreRight);
 
         //if (contactScoreUp > 0)
         //    Debug.DrawLine(trans.position, trans.position + Vector3.up * 2, Color.yellow, 0.05f);
