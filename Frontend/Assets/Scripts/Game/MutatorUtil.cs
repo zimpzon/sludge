@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Game
 {
@@ -14,7 +15,9 @@ namespace Assets.Scripts.Game
         {
             GameManager.I.Player.StateParam.airJumpCount = m.AirJump;
             ParticleEmitter.I.EmitDust(m.transform.position, 10);
-            FeelTools.SpawnFloatingText(m.AirJump.ToString(), m.transform.position, Color.red);
+            ParticleEmitter.I.EmitPills(m.transform.position, 4);
+            FeelTools.SpawnMutatorFloatingText(m.DisplayText, m.transform.position + Vector3.up * 0.5f);
+            SoundManager.Play(FxList.Instance.KeyPickup);
         }
 
         public static int GetJumpCount(MutatorTypeAirJumpCount m)

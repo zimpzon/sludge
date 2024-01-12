@@ -144,16 +144,31 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ConveyourBeltEnter()
+    public void ConveyourBeltEnter(Vector2 beltDirection)
     {
+        onConveyorBeltCount++;
     }
 
-    public void ConveyourBeltExit()
+    public void ConveyourBeltExit(Vector2 beltDirection)
     {
         onConveyorBeltCount--;
-        // When resetting game colliderexits are fired after resetting player, so we get an exit event after setting onConveyorBeltCount to 0.
+
+        // When resetting game, colliderexits are fired after resetting player, so we get an exit event after setting onConveyorBeltCount to 0.
         if (onConveyorBeltCount < 0)
+        {
             onConveyorBeltCount = 0;
+        } else if (onConveyorBeltCount == 0)
+        {
+            // exit force
+            StateParam.impulse = Vector2.zero;
+            StateParam.force = beltDirection.normalized * MaxVelocity;
+        }
+    }
+
+    public void AddConveyorPulse(double x, double y)
+    {
+        StateParam.impulse.x += (float)x;
+        StateParam.impulse.y += (float)y;
     }
 
     void ResetJumpHandicaps()
@@ -171,19 +186,6 @@ public class Player : MonoBehaviour
         GameManager.I.DustParticles.transform.position = newPos;
         GameManager.I.DustParticles.Emit(10);
         trans.position = newPos;
-    }
-
-    public void AddConveyorPulse(double x, double y)
-    {
-        // add impulse for immediate response and force to be shot out when leaving the conveyor
-        StateParam.impulse.x += (float)x;
-        StateParam.impulse.y += (float)y;
-
-        if (StateParam.force.magnitude < MaxVelocity)
-        {
-            StateParam.force.x += (float)x;
-            StateParam.force.y += (float)y;
-        }
     }
 
     public void SetHomePosition()
@@ -453,7 +455,10 @@ public class Player : MonoBehaviour
         }
 
         // update simulation
-        if (StateParam.jumpState != JumpState.AscendingActive) // do not apply gravity while holding jump (TODO: just keep applying force instead?)
+        // do not apply gravity while holding jump on a new jump (state = ascending active)
+        bool isOnConveyorBelt = onConveyorBeltCount > 0;
+        bool useGravity = StateParam.jumpState != JumpState.AscendingActive && !isOnConveyorBelt;
+        if (useGravity)
         {
             float gravity = StateParam.force.y < 0 ? fallGravity : jumpGravity;
             StateParam.force.y += gravity * (float)GameManager.TickSize;
@@ -467,6 +472,8 @@ public class Player : MonoBehaviour
         }
 
         Vector2 moveStep = StateParam.force * (float)GameManager.TickSize;
+        if (isOnConveyorBelt)
+            moveStep = Vector3.zero;
 
         void AddOneShotImpulse()
         {

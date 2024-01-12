@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ModMutatorAirJump : SludgeModifier
 {
+    public string DisplayText;
+
     Vector3 basePos;
 
     public MutatorTypeAirJumpCount AirJump = MutatorTypeAirJumpCount.DoubleJump;

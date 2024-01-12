@@ -6,9 +6,11 @@ namespace Sludge.Modifiers
 {
     public class ModConveyorMovement : SludgeModifier, ICustomSerialized
     {
-        public float SuctionPower = 30.0f;
-        public float ConveyorSpeed = 14;
         public bool DisableSuction = false;
+
+        // it is important to keep these values consistent between levels so not public
+        float SuctionPower = 30.0f;
+        float ConveyorSpeed = 25.0f;
 
         SpriteRenderer spriteRenderer;
         Vector2 beltDirection;
@@ -72,13 +74,13 @@ namespace Sludge.Modifiers
 
         public void OnPlayerEnter()
         {
-            GameManager.I.Player.ConveyourBeltEnter();
+            GameManager.I.Player.ConveyourBeltEnter(beltDirection);
             hasPlayer = true;
         }
 
         public void OnPlayerExit()
         {
-            GameManager.I.Player.ConveyourBeltExit();
+            GameManager.I.Player.ConveyourBeltExit(beltDirection);
             hasPlayer = false;
         }
 
