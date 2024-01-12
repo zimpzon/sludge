@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class ClampedCircleDrawer : MonoBehaviour
@@ -12,7 +13,7 @@ public class ClampedCircleDrawer : MonoBehaviour
     public float breathingSpeed = 4f;
     public float breathingMagnitude= 0.02f;
     public float dotScoreThreshold = 0.5f;
-    public int rayCount = 50;
+    public int rayCount = 32;
     public LayerMask obstacleLayer;
 
     float contactScoreAll;
@@ -24,6 +25,8 @@ public class ClampedCircleDrawer : MonoBehaviour
     [NonSerialized] public bool disableCollisions;
 
     [NonSerialized] public bool hasAnyContact;
+    [NonSerialized] public bool hasLeftContact;
+    [NonSerialized] public bool hasRightContact;
     [NonSerialized] public bool hasHeadContact;
     [NonSerialized] public bool hasGroundContact;
 
@@ -74,14 +77,6 @@ public class ClampedCircleDrawer : MonoBehaviour
     void OnDrawGizmos()
     {
         CheckSizes();
-        DebugLinesScript.Show("groundedScore", contactScoreDown);
-        DebugLinesScript.Show("contactScore", contactScoreAll);
-
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position, transform.position + movementDirection);
-
-        //Gizmos.color = Color.white;
-        //Gizmos.DrawLine(transform.position, transform.position + groundedVector.normalized * 2);
 
         float angleStep = 360.0f / rayCount;
 
@@ -181,8 +176,6 @@ public class ClampedCircleDrawer : MonoBehaviour
 
             if (hit)
             {
-                contactScoreAll += (dotUp + dotDown + dotLeft + dotRight);
-
                 contactScoreUp += dotUp > dotScoreThreshold ? dotUp : 0.0f;
                 contactScoreDown += dotDown > dotScoreThreshold ? dotDown : 0.0f;
                 contactScoreLeft += dotLeft > dotScoreThreshold ? dotLeft : 0.0f;
@@ -205,21 +198,25 @@ public class ClampedCircleDrawer : MonoBehaviour
             vertices[i + 1] = vertex * lengths[i];
         }
 
+        contactScoreAll = (contactScoreUp + contactScoreDown + contactScoreLeft + contactScoreRight) / 4;
+
         hasAnyContact = contactScoreAll > 0;
         hasHeadContact = contactScoreUp > 0;
+        hasLeftContact = contactScoreLeft > 0;
+        hasRightContact = contactScoreRight > 0;
         hasGroundContact = contactScoreDown > 0;
 
-        if (contactScoreUp > 0)
-            Debug.DrawLine(trans.position, trans.position + Vector3.up * 2, Color.yellow, 0.05f);
+        //if (contactScoreUp > 0)
+        //    Debug.DrawLine(trans.position, trans.position + Vector3.up * 2, Color.yellow, 0.05f);
 
-        if (contactScoreDown > 0)
-            Debug.DrawLine(trans.position, trans.position + Vector3.down * 2, Color.yellow, 0.05f);
+        //if (contactScoreDown > 0)
+        //    Debug.DrawLine(trans.position, trans.position + Vector3.down * 2, Color.yellow, 0.05f);
 
-        if (contactScoreLeft > 0)
-            Debug.DrawLine(trans.position, trans.position + Vector3.left * 2, Color.yellow, 0.05f);
+        //if (contactScoreLeft > 0)
+        //    Debug.DrawLine(trans.position, trans.position + Vector3.left * 2, Color.yellow, 0.05f);
 
-        if (contactScoreRight > 0)
-            Debug.DrawLine(trans.position, trans.position + Vector3.right * 2, Color.yellow, 0.05f);
+        //if (contactScoreRight > 0)
+        //    Debug.DrawLine(trans.position, trans.position + Vector3.right * 2, Color.yellow, 0.05f);
 
         mesh.SetVertices(vertices);
     }

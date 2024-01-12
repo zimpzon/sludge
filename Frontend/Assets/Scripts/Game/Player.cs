@@ -10,19 +10,26 @@ public class StateParam
 {
     public JumpState jumpState = JumpState.Gravity;
 
-    public MutatorTypeAirJumpCount airJumpCount = MutatorTypeAirJumpCount.QuadJump;
+    public MutatorTypeAirJumpCount airJumpCount = MutatorTypeAirJumpCount.SingleJump;
     public MutatorTypeJumpPower jumpPower = MutatorTypeJumpPower.DefaultPower;
     public MutatorTypePlayerSize playerSize = MutatorTypePlayerSize.DefaultMe;
 
     public Vector2 force;
     public Vector2 impulse;
     public bool isHoldingJump;
-    public int airJumpsLeft = 1;
+    public int airJumpsLeft = 0;
 
     public int jumpHoldStartTime = int.MaxValue;
     public int coyoteJumpEndTime = int.MinValue;
     public int queuedJumpEndTime = int.MinValue;
     public int queuedAirJumpEndTime = int.MinValue;
+    public int disableHorizontalDirectionEndTime = int.MinValue;
+    public int disabledHorizontalDirection = 0;
+
+    public bool isHuggingLeftWall;
+    public bool isHuggingRightWall;
+    public bool isDescending;
+    public bool isWallSliding;
 }
 
 public class Player : MonoBehaviour
@@ -39,8 +46,9 @@ public class Player : MonoBehaviour
     public float JumpTimeToDescend = 0.25f;
     public float JumpMaxHoldTime = 0.2f;
     public float MaxVelocity = 15.0f;
+    float WallSlideMaxFall = 1.0f;
+    public int WallJumpDisableHorizontalBreakingMs = 100;
     public float AirControl = 0.25f;
-
     public int CoyoteJumpMs = 200;
     public int QueuedJumpMs = 200;
 
@@ -352,6 +360,23 @@ public class Player : MonoBehaviour
         else
         {
             // not touching ground
+            if (StateParam.isWallSliding)
+            {
+                if (IsJumpTapped() || HasQueuedAirJump())
+                {
+                    // reset air jumps when wall jumping
+                    ResetJumpCount(param);
+                    StateParam.force.x = StateParam.isHuggingLeftWall ? RunPeak : -RunPeak;
+
+                    StartJump(param);
+                    SetState(param, JumpState.AscendingActive);
+
+                    StateParam.disableHorizontalDirectionEndTime = GameManager.I.EngineTimeMs + WallJumpDisableHorizontalBreakingMs;
+                    StateParam.disabledHorizontalDirection = StateParam.isHuggingLeftWall ? -1 : 1;
+                    return;
+                }
+            }
+
             if (HasQueuedAirJump() && HasAirJumpsLeft())
             {
                 StartAirJump(param);
@@ -410,11 +435,18 @@ public class Player : MonoBehaviour
         JumpStateDescending(StateParam);
 
         int direction = 0;
-        if (GameManager.PlayerInput.Left != 0)
+
+        bool horizontalDisabled = GameManager.I.EngineTimeMs < StateParam.disableHorizontalDirectionEndTime;
+        bool moveLeftDisabled = StateParam.disabledHorizontalDirection < 0 && horizontalDisabled;
+        bool moveRightDisabled = StateParam.disabledHorizontalDirection > 0 && horizontalDisabled;
+        DebugLinesScript.Show("moveLeftDisabled " + moveLeftDisabled, Time.time);
+        DebugLinesScript.Show("moveRightDisabled " + moveRightDisabled, Time.time);
+
+        if (GameManager.PlayerInput.Left != 0 && !moveLeftDisabled)
         {
             direction = -1;
         }
-        else if (GameManager.PlayerInput.Right != 0)
+        else if (GameManager.PlayerInput.Right != 0 && !moveRightDisabled)
         {
             direction = 1;
         }
@@ -423,21 +455,14 @@ public class Player : MonoBehaviour
         {
             DebugLinesScript.Show("JumpState", StateParam.jumpState);
             DebugLinesScript.Show("force", StateParam.force);
+            Debug.DrawRay(trans.position, trans.position + (Vector3)StateParam.force.normalized, Color.white, 1);
         }
 
         if (direction != 0)
         {
             float airborneModifier = HasGroundContact() ? 1.0f : AirControl;
             StateParam.force.x += acceleration * direction * (float)GameManager.TickSize * airborneModifier;
-
-            if (direction < 0)
-            {
-                StateParam.force.x = Mathf.Clamp(StateParam.force.x, -RunPeak, 0);
-            }
-            else
-            {
-                StateParam.force.x = Mathf.Clamp(StateParam.force.x, 0, RunPeak);
-            }
+            StateParam.force.x = Mathf.Clamp(StateParam.force.x, -RunPeak, RunPeak);
         }
         else
         {
@@ -454,6 +479,11 @@ public class Player : MonoBehaviour
             }
         }
 
+        StateParam.isHuggingLeftWall = circleDrawer.hasLeftContact && direction < 0;
+        StateParam.isHuggingRightWall = circleDrawer.hasRightContact && direction > 0;
+        StateParam.isDescending = StateParam.force.y < 0;
+        StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
+
         // update simulation
         // do not apply gravity while holding jump on a new jump (state = ascending active)
         bool isOnConveyorBelt = onConveyorBeltCount > 0;
@@ -465,6 +495,9 @@ public class Player : MonoBehaviour
         }
 
         StateParam.force.y = Mathf.Max(StateParam.force.y, -MaxVelocity);
+        if (StateParam.isWallSliding)
+            StateParam.force.y = Mathf.Max(StateParam.force.y, -WallSlideMaxFall);
+
         bool noForce = StateParam.force.magnitude < 0.0001f;
         if (noForce)
         {
@@ -495,9 +528,6 @@ public class Player : MonoBehaviour
     Vector2 TryMove(Vector2 step, Vector2 from)
     {
         Vector2 newPos = from + step;
-        if (ShowDebug)
-            Debug.DrawRay(from, (newPos - from).normalized * 2, Color.yellow, 0.1f);
-
         float len = step.magnitude;
 
         int hitsFullMove = Physics2D.CircleCastNonAlloc(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.scanHits, len, SludgeUtil.ScanForWallsLayerMask);
