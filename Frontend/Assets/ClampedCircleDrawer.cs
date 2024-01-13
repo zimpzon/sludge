@@ -201,9 +201,6 @@ public class ClampedCircleDrawer : MonoBehaviour
         hasRightContact = contactScoreRight > 6.4f;
         hasGroundContact = contactScoreDown > 0;
 
-        DebugLinesScript.Show("contactScoreLeft", contactScoreLeft);
-        DebugLinesScript.Show("contactScoreRight", contactScoreRight);
-
         //if (contactScoreUp > 0)
         //    Debug.DrawLine(trans.position, trans.position + Vector3.up * 2, Color.yellow, 0.05f);
 
