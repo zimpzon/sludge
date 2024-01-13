@@ -499,6 +499,7 @@ public class Player : MonoBehaviour
             wallSlidePendingParticles += (float)GameManager.TickSize * 15;
             while (wallSlidePendingParticles > 0)
             {
+                Debug.Log("Emitting wall slide particles");
                 wallSlidePendingParticles--;
                 ParticleEmitter.I.EmitDust(trans.position, 1);
             }
