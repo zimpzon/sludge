@@ -20,5 +20,6 @@
         Pickup,
         BallCollector,
         PillBallCollector,
+        Energy,
     };
 }

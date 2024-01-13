@@ -221,6 +221,11 @@ public class Player : MonoBehaviour
         {
             return;
         }
+
+        if (entity == EntityType.Energy)
+        {
+            Kill();
+        }
     }
 
     public void Kill(bool killedByWall = false)

@@ -33,6 +33,7 @@ public static class LevelSerializer
         // Tilemaps
         data.WallTilemap = SerializeTilemap(elements.WallTilemap, elements.TileList);
         data.PillTilemap = SerializeTilemap(elements.PillTilemap, elements.TileList);
+        data.EnergyTilemap = SerializeTilemap(elements.EnergyTilemap, elements.TileList);
 
         // Objects
         var objects = elements.ObjectsRoot.GetComponentsInChildren<SludgeObject>();

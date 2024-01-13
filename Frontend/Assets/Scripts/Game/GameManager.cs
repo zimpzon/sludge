@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
     public Transform CameraRoot;
     public Tilemap Tilemap;
     public Tilemap PillTilemap;
+    public Tilemap EnergyTilemap;
     public ColorSchemeScriptableObject CurrentColorScheme;
     public ColorSchemeScriptableObject CurrentUiColorScheme;
     public ColorSchemeListScriptableObject ColorSchemeList;
@@ -187,6 +188,7 @@ public class GameManager : MonoBehaviour
         SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 
         PillTilemap.gameObject.GetComponent<PillSnapshot>().Push();
+        EnergyTilemap.gameObject.GetComponent<PillSnapshot>().Push();
 
         ResetLevel();
 
@@ -350,11 +352,10 @@ public class GameManager : MonoBehaviour
         BulletManager.Instance.Reset();
         CellAntManager.Instance.Reset();
 
-        Debug.Log($"Tilemap size: {Tilemap.size} ({Tilemap.cellBounds})");
         LevelCells.Instance.UpdateFrom(Tilemap);
 
-        Debug.Log($"Pillmap size: {Tilemap.size} ({Tilemap.cellBounds})");
         PillTilemap.gameObject.GetComponent<PillSnapshot>().Pop();
+        EnergyTilemap.gameObject.GetComponent<PillSnapshot>().Pop();
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);
