@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: LaserGraphMat
-  m_Shader: {fileID: -6465566751694194690, guid: dc273050b2c115d43a4eec47add32d4e, type: 3}
+  m_Name: EnergyMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: c5e5553ea44478e48b63bead2b12a934, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -78,8 +78,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_654FAA4D: 20
-    - Vector1_CF752E1D: 10
+    - Rotation: 4.71
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -107,14 +106,15 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_AAEB15F9: {r: 0.9056604, g: 0.02135991, b: 0.6053755, a: 1}
-    - Vector2_52693BF4: {r: -0.2, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ScollSpeedB: {r: 0, g: -0.41, b: 0, a: 0}
+    - _ScrollSpeedA: {r: 0, g: 0.5, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &7390890856364034060
+--- !u!114 &3590028762243721607
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,4 +126,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 4
+  version: 5
