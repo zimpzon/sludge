@@ -21,7 +21,6 @@ public class StateParam
     public int jumpHoldStartTime = int.MaxValue;
     public int coyoteJumpEndTime = int.MinValue;
     public int queuedJumpEndTime = int.MinValue;
-    public int queuedAirJumpEndTime = int.MinValue;
     public int disableHorizontalDirectionEndTime = int.MinValue;
     public int disabledHorizontalDirection = 0;
 
@@ -190,7 +189,6 @@ public class Player : MonoBehaviour
     {
         StateParam.coyoteJumpEndTime = int.MinValue;
         StateParam.queuedJumpEndTime = int.MinValue;
-        StateParam.queuedAirJumpEndTime = int.MinValue;
     }
 
     public void Teleport(Vector3 newPos)
@@ -295,7 +293,6 @@ public class Player : MonoBehaviour
 
     bool IsJumpTapped() => GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
     bool HasQueuedJump() => StateParam.queuedJumpEndTime >= GameManager.I.EngineTimeMs;
-    bool HasQueuedAirJump() => StateParam.queuedAirJumpEndTime >= GameManager.I.EngineTimeMs;
     bool HasCoyoteJump() => StateParam.coyoteJumpEndTime >= GameManager.I.EngineTimeMs;
     bool HasGroundContact() => circleDrawer.hasGroundContact;
 
@@ -316,8 +313,7 @@ public class Player : MonoBehaviour
     {
         param.force.y = jumpVelocity;
         param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
-        param.coyoteJumpEndTime = 0;
-        param.queuedJumpEndTime = 0;
+        ResetJumpHandicaps();
 
         ParticleEmitter.I.EmitDust(trans.position, 4);
     }
@@ -350,11 +346,6 @@ public class Player : MonoBehaviour
     {
         if (param.jumpState != JumpState.AscendingPassive) return;
 
-        if (IsJumpTapped())
-        {
-            param.queuedAirJumpEndTime = GameManager.I.EngineTimeMs + QueuedJumpMs;
-        }
-
         bool isPastPeak = StateParam.force.y < 0;
         if (isPastPeak)
         {
@@ -384,7 +375,7 @@ public class Player : MonoBehaviour
             // not touching ground
             if (StateParam.isWallSliding)
             {
-                if (IsJumpTapped() || HasQueuedAirJump())
+                if (IsJumpTapped() || HasQueuedJump())
                 {
                     // reset air jumps when wall jumping
                     ResetJumpCount(param);
@@ -397,13 +388,6 @@ public class Player : MonoBehaviour
                     StateParam.disabledHorizontalDirection = StateParam.isHuggingLeftWall ? -1 : 1;
                     return;
                 }
-            }
-
-            if (HasQueuedAirJump() && HasAirJumpsLeft())
-            {
-                StartAirJump(param);
-                SetState(param, JumpState.AscendingActive);
-                return;
             }
 
             if (IsJumpTapped())
@@ -421,8 +405,14 @@ public class Player : MonoBehaviour
                     SetState(param, JumpState.AscendingActive);
                     return;
                 }
+            }
 
-                param.queuedJumpEndTime = GameManager.I.EngineTimeMs + QueuedJumpMs;
+            // check air jump after coyote jump so player won't lose an air jump if coyote jump is available
+            if (HasQueuedJump() && HasAirJumpsLeft())
+            {
+                StartAirJump(param);
+                SetState(param, JumpState.AscendingActive);
+                return;
             }
         }
     }
@@ -444,6 +434,9 @@ public class Player : MonoBehaviour
         }
 
         SetPositionSample();
+
+        if (IsJumpTapped())
+            StateParam.queuedJumpEndTime = GameManager.I.EngineTimeMs + QueuedJumpMs;
 
         // set every frame to reflect editor changes
         jumpVelocity = (2.0f * JumpHeight) / JumpTimeToPeak;

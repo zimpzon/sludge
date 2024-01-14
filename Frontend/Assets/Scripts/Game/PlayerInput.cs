@@ -52,7 +52,7 @@ namespace Sludge.PlayerInputs
         public bool ColorNextActive() => Input.GetKey(KeyCode.X);
         public bool ColorPrevActive() => Input.GetKey(KeyCode.Z);
 
-        public bool IsTapped(InputType inputType, bool claimEvent = true)
+        public bool IsTapped(InputType inputType, bool claimEvent = false)
         {
             bool result = inputs[inputType].IsTapped;
             if (claimEvent)
