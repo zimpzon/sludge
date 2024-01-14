@@ -4,6 +4,9 @@ using Sludge.Utility;
 using System;
 using UnityEngine;
 
+// IF TILEMAP COLLIDERS NOT WORKING IN RELEASE BUILD, TRY THIS:
+//  https://discussions.unity.com/t/tilemap-collider-broken-on-build/204005/2
+
 public enum JumpState { NotSet, AscendingActive, AscendingPassive, Gravity }
 
 public class StateParam
