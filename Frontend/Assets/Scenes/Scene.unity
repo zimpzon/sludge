@@ -5966,10 +5966,12 @@ MonoBehaviour:
   JumpTimeToDescend: 0.25
   JumpMaxHoldTime: 0.2
   MaxVelocity: 20
+  WallSlideMaxFall: 4
   WallJumpDisableHorizontalBreakingMs: 200
   AirControl: 0.75
   CoyoteJumpMs: 50
   QueuedJumpMs: 50
+  timeBeforeIdleMs: 1000
   RunPeak: 16
   RunTimeToPeak: 0.1
   RunTimeToStop: 0.15
@@ -21110,7 +21112,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 704445934}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.305, z: 0}
+  m_LocalPosition: {x: 0, y: -0.239, z: 0}
   m_LocalScale: {x: 0.5, y: 0.05, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -48451,6 +48453,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1523565626}
     m_Modifications:
+    - target: {fileID: 4436653674360094600, guid: 0097cd0df1742b14cad7e14f1ecb3d12, type: 3}
+      propertyPath: m_Mass
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4436653674360094600, guid: 0097cd0df1742b14cad7e14f1ecb3d12, type: 3}
+      propertyPath: m_LinearDrag
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4436653674360094600, guid: 0097cd0df1742b14cad7e14f1ecb3d12, type: 3}
+      propertyPath: m_AngularDrag
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4436653674360094601, guid: 0097cd0df1742b14cad7e14f1ecb3d12, type: 3}
       propertyPath: m_RootOrder
       value: 1

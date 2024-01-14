@@ -24,6 +24,7 @@ public class StateParam
     public int jumpHoldStartTime = int.MaxValue;
     public int coyoteJumpEndTime = int.MinValue;
     public int queuedJumpEndTime = int.MinValue;
+    public int horizontalMovementIdleTime = int.MaxValue;
     public int disableHorizontalDirectionEndTime = int.MinValue;
     public int disabledHorizontalDirection = 0;
 
@@ -52,11 +53,12 @@ public class Player : MonoBehaviour
     public float JumpTimeToDescend = 0.25f;
     public float JumpMaxHoldTime = 0.2f;
     public float MaxVelocity = 15.0f;
-    float WallSlideMaxFall = 4.0f;
+    public float WallSlideMaxFall = 4.0f;
     public int WallJumpDisableHorizontalBreakingMs = 100;
     public float AirControl = 0.25f;
     public int CoyoteJumpMs = 200;
     public int QueuedJumpMs = 200;
+    public int timeBeforeIdleMs = 1000;
 
     public float RunPeak = 10.0f;
     public float RunTimeToPeak = 0.15f;
@@ -131,14 +133,12 @@ public class Player : MonoBehaviour
         trans.position = homePos;
         currentScale = playerBaseScale;
         SetSize(PlayerSize.Normal);
-        currentAnim = string.Empty;
-
         StateParam = new StateParam();
-
         circleDrawer.Reset();
         eyesTransform.localScale = eyesBaseScale;
 
         bodyRoot.SetActive(true);
+        PlayAnim(AnimIdle.name);
         SetAlpha(1.0f);
 
         Alive = true;
@@ -250,6 +250,9 @@ public class Player : MonoBehaviour
         eyesTransform.localScale = eyesBaseScale * EyeScaleSurprised;
         deathScheduleTime = GameManager.I.EngineTime + DeathMiniDelay;
         deathScheduled = true;
+
+        // TODO: have to switch to idle or the eyes will be stuck at the side of the head
+        PlayAnim(AnimIdle.name);
     }
 
     public void ExecuteDelayedKill()
@@ -260,6 +263,7 @@ public class Player : MonoBehaviour
         GameManager.I.CameraRoot.DOShakePosition(1.0f, 0.7f);
 
         EmitDeathExplosionParticles();
+
         bodyRoot.SetActive(false);
         trans.position = Vector3.one * 5544; // move out of the way
 
@@ -271,8 +275,8 @@ public class Player : MonoBehaviour
         if (currentAnim == name)
             return;
 
-        Debug.Log("Playing anim: " + name);
-        animator.Play(name);
+        animator.CrossFade(name, 0.1f);
+
         currentAnim = name;
     }
 
@@ -469,10 +473,16 @@ public class Player : MonoBehaviour
             PlayAnim(AnimMoveRight.name);
             direction = 1;
         }
+
+        bool isHorizontallyStill = Mathf.Abs(StateParam.force.x) < 0.001f;
+        if (!isHorizontallyStill)
+        {
+            StateParam.horizontalMovementIdleTime = GameManager.I.EngineTimeMs + timeBeforeIdleMs;
+        }
         else
         {
-            // TODO: only swith to idle if resting on the ground
-            //PlayAnim(AnimIdle.name);
+            if (GameManager.I.EngineTimeMs > StateParam.horizontalMovementIdleTime && HasGroundContact())
+                PlayAnim(AnimIdle.name);
         }
 
         if (ShowDebug)
@@ -534,12 +544,6 @@ public class Player : MonoBehaviour
 
             float speed = GameManager.PlayerInput.DownActive() ? WallSlideMaxFall * 8 : WallSlideMaxFall;
             StateParam.force.y = Mathf.Max(StateParam.force.y, -speed);
-        }
-
-        bool noForce = StateParam.force.magnitude < 0.0001f;
-        if (noForce)
-        {
-            return;
         }
 
         Vector2 moveStep = StateParam.force * (float)GameManager.TickSize;
