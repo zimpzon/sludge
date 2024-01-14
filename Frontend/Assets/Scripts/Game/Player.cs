@@ -73,8 +73,6 @@ public class Player : MonoBehaviour
     float acceleration;
     float deceleration;
 
-    public bool IgnoreEnemies = false;
-
     public static int PositionSampleIdx;
 
     public ParticleSystem BodyDeathParticles;
@@ -103,6 +101,7 @@ public class Player : MonoBehaviour
     Collider2D[] allColliders;
     float playerBaseScale;
     CircleCollider2D playerCollider;
+    CircleCollider2D playerSquashedCollider; // a smaller collider used to detect player is squashed between moving walls
     ClampedCircleDrawer circleDrawer;
 
     void Awake()
@@ -116,6 +115,7 @@ public class Player : MonoBehaviour
         circleDrawer = SludgeUtil.FindByName(trans, "Body/SoftBody").GetComponent<ClampedCircleDrawer>();
         eyesBaseScale = eyesTransform.localScale;
         playerCollider = GetComponent<CircleCollider2D>();
+        playerSquashedCollider = SludgeUtil.FindByName(trans, "SquashedCollider").GetComponent<CircleCollider2D>();
 
         childSprites = GetComponentsInChildren<SpriteRenderer>();
         allColliders = GetComponentsInChildren<Collider2D>();
@@ -236,14 +236,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void Kill(bool killedByWall = false)
+    public void Kill()
     {
-        if (killedByWall)
-            return;
-
-        if (IgnoreEnemies && !killedByWall)
-            return;
-
         if (deathScheduled || !Alive)
             return;
 
@@ -422,6 +416,19 @@ public class Player : MonoBehaviour
                 SetState(param, JumpState.AscendingActive);
                 return;
             }
+        }
+    }
+
+    public void MovingWallForceMove(Vector2 push)
+    {
+        physicsBody.MovePosition(physicsBody.position + push);
+
+        int hits = Physics2D.OverlapCollider(playerSquashedCollider, SludgeUtil.ScanForWallFilter, SludgeUtil.colliderHits);
+        bool playerWasSquished = hits > 0;
+        if (playerWasSquished)
+        {
+            Kill();
+            return;
         }
     }
 

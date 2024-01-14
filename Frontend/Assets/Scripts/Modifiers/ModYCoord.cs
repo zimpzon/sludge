@@ -13,6 +13,7 @@ namespace Sludge.Modifiers
         public bool PingPong = true;
         public Easings Easing = Easings.Linear;
 
+        Rigidbody2D _rigidbody;
         Transform trans;
         Vector3 startPos;
 
@@ -45,6 +46,7 @@ namespace Sludge.Modifiers
         {
             trans = transform;
             startPos = trans.position;
+            _rigidbody = GetComponent<Rigidbody2D>();
         }
 
         public override void EngineTick()
@@ -57,9 +59,16 @@ namespace Sludge.Modifiers
 
             t = Ease.Apply(Easing, t);
 
-            var pos = trans.position;
+
+            bool hasRigidbody = _rigidbody != null;
+
+            Vector3 pos = hasRigidbody ? _rigidbody.position : trans.position;
             pos.y = Mathf.Lerp(T0(startPos).y, T1(startPos).y, (float)t);
-            transform.position = pos;
+
+            if (hasRigidbody)
+                _rigidbody.MovePosition(pos);
+            else
+                transform.position = pos;
         }
     }
 }

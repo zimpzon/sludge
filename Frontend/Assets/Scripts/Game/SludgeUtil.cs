@@ -7,6 +7,7 @@ namespace Sludge.Utility
     public static class SludgeUtil
     {
         public static RaycastHit2D[] scanHits = new RaycastHit2D[10];
+        public static Collider2D[] colliderHits = new Collider2D[10];
 
         public static double Stabilize(double d)
         {
@@ -128,11 +129,13 @@ namespace Sludge.Utility
         public static int ObjectsLayerNumber = LayerMask.NameToLayer("Objects");
         public static int PlayerLayerNumber = LayerMask.NameToLayer("Player");
 
+        public static readonly ContactFilter2D PlayerOnlyFilter = new ContactFilter2D();
         public static readonly ContactFilter2D ScanForPlayerFilter = new ContactFilter2D();
         public static readonly ContactFilter2D ScanForWallFilter = new ContactFilter2D();
 
         static SludgeUtil()
         {
+            PlayerOnlyFilter.SetLayerMask(SludgeUtil.PlayerLayerMask);
             ScanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
             ScanForWallFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);
         }
