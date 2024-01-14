@@ -112,8 +112,12 @@ public class ModSwarm : SludgeModifier
         }
     }
 
+    private void Update()
+    {
+        UpdateMembers(Time.time);
+    }
+
     public override void EngineTick()
     {
-        UpdateMembers(GameManager.I.EngineTime);
     }
 }

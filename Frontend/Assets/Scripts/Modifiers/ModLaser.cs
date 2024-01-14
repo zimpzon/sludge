@@ -50,6 +50,10 @@ public class ModLaser : SludgeModifier
 
     public override void EngineTick()
     {
+    }
+
+    private void Update()
+    {
         if (timeToggle.Active && !timeToggle.IsOn())
         {
             bodyTrans.localScale = bodyBaseScale;

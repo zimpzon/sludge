@@ -3,13 +3,13 @@ using Sludge.Modifiers;
 using Sludge.Utility;
 using UnityEngine;
 
-public class ModMutatorAirJump : SludgeModifier
+public class ModMutatorJumpType : SludgeModifier
 {
     public string DisplayText;
 
     Vector3 basePos;
 
-    public MutatorTypeAirJumpCount AirJump = MutatorTypeAirJumpCount.DoubleJump;
+    public MutatorJumpType JumpType = MutatorJumpType.DoubleJump;
 
     private void Awake()
     {
@@ -27,7 +27,7 @@ public class ModMutatorAirJump : SludgeModifier
         if (entity != EntityType.Player)
             return;
 
-        MutatorUtil.OnPickupAirJump(this);
+        MutatorUtil.OnPickupJumpType(this);
 
         transform.position = new Vector3(1000, Random.value * 1000, 0);
     }

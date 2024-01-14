@@ -10,8 +10,7 @@ public class StateParam
 {
     public JumpState jumpState = JumpState.Gravity;
 
-    public MutatorTypeAirJumpCount airJumpCount = MutatorTypeAirJumpCount.SingleJump;
-    public MutatorTypeJumpPower jumpPower = MutatorTypeJumpPower.DefaultPower;
+    public MutatorJumpType jumpType = MutatorJumpType.SingleJump;
     public MutatorTypePlayerSize playerSize = MutatorTypePlayerSize.DefaultMe;
 
     public Vector2 force;
@@ -39,6 +38,11 @@ public class Player : MonoBehaviour
     public enum PlayerSize { Small, Normal, Large };
 
     public static Vector3 Position;
+
+    public AnimationClip AnimMoveLeft;
+    public AnimationClip AnimMoveRight;
+    public AnimationClip AnimIdle;
+    string currentAnim;
 
     public bool ShowDebug = false;
     public float JumpHeight = 1.25f;
@@ -83,6 +87,7 @@ public class Player : MonoBehaviour
     public float DeathMiniDelay = 0.5f;
     [NonSerialized] public PlayerSize Size = PlayerSize.Normal;
 
+    Animator animator;
     Transform trans;
     Vector3 homePos;
     Rigidbody2D physicsBody;
@@ -102,7 +107,7 @@ public class Player : MonoBehaviour
         physicsBody = GetComponent<Rigidbody2D>();
 
         playerBaseScale = trans.localScale.x; // just assuming uniform scale
-        eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
+        eyesTransform = SludgeUtil.FindByName(trans, "Body/Face/Eyes");
         bodyRoot = SludgeUtil.FindByName(trans, "Body").gameObject;
         circleDrawer = SludgeUtil.FindByName(trans, "Body/SoftBody").GetComponent<ClampedCircleDrawer>();
         eyesBaseScale = eyesTransform.localScale;
@@ -110,6 +115,7 @@ public class Player : MonoBehaviour
 
         childSprites = GetComponentsInChildren<SpriteRenderer>();
         allColliders = GetComponentsInChildren<Collider2D>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     public void Prepare()
@@ -258,6 +264,16 @@ public class Player : MonoBehaviour
         Alive = false;
     }
 
+    void PlayAnim(string name)
+    {
+        if (currentAnim == name)
+            return;
+
+        Debug.Log("Playing anim: " + name);
+        animator.Play(name);
+        currentAnim = name;
+    }
+
     void EmitDeathExplosionParticles()
     {
         // Body particles
@@ -285,7 +301,7 @@ public class Player : MonoBehaviour
 
     void ResetJumpCount(StateParam param)
     {
-        param.airJumpsLeft = MutatorUtil.GetJumpCount(param.airJumpCount);
+        param.airJumpsLeft = MutatorUtil.GetJumpCount(param.jumpType);
     }
 
     bool HasAirJumpsLeft() => StateParam.airJumpsLeft > 0 || StateParam.airJumpsLeft < 0;
@@ -448,11 +464,17 @@ public class Player : MonoBehaviour
 
         if (GameManager.PlayerInput.Left != 0 && !moveLeftDisabled)
         {
+            PlayAnim(AnimMoveLeft.name);
             direction = -1;
         }
         else if (GameManager.PlayerInput.Right != 0 && !moveRightDisabled)
         {
+            PlayAnim(AnimMoveRight.name);
             direction = 1;
+        }
+        else
+        {
+            PlayAnim(AnimIdle.name);
         }
 
         if (ShowDebug)
@@ -486,7 +508,9 @@ public class Player : MonoBehaviour
         StateParam.isHuggingLeftWall = circleDrawer.hasLeftContact && !HasGroundContact();
         StateParam.isHuggingRightWall = circleDrawer.hasRightContact && !HasGroundContact();
         StateParam.isDescending = StateParam.force.y < 0;
+
         StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
+        StateParam.isWallSliding &= StateParam.jumpType == MutatorJumpType.WallJump;
 
         // update simulation
         // do not apply gravity while holding jump on a new jump (state = ascending active)
