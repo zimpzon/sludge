@@ -131,6 +131,7 @@ public class Player : MonoBehaviour
         trans.position = homePos;
         currentScale = playerBaseScale;
         SetSize(PlayerSize.Normal);
+        currentAnim = string.Empty;
 
         StateParam = new StateParam();
 
@@ -470,13 +471,15 @@ public class Player : MonoBehaviour
         }
         else
         {
-            PlayAnim(AnimIdle.name);
+            // TODO: only swith to idle if resting on the ground
+            //PlayAnim(AnimIdle.name);
         }
 
         if (ShowDebug)
         {
             DebugLinesScript.Show("JumpState", StateParam.jumpState);
             DebugLinesScript.Show("force", StateParam.force);
+            DebugLinesScript.Show("currentAnim", currentAnim);
             Debug.DrawRay(trans.position, trans.position + (Vector3)StateParam.force.normalized, Color.white, 1);
         }
 

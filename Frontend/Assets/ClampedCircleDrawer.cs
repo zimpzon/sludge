@@ -9,17 +9,18 @@ public class ClampedCircleDrawer : MonoBehaviour
 
     public float maxRadius = 5.0f;
     public float expandSpeed = 0.05f;
-    public float breathingSpeed = 4f;
+    //public float breathsPerSec = 1f;
     public float breathingMagnitude= 0.02f;
     public float dotScoreThreshold = 0.5f;
     public int rayCount = 32;
     public LayerMask obstacleLayer;
+    public float breathPct;
 
-    float contactScoreAll;
-    float contactScoreUp;
-    float contactScoreDown;
-    float contactScoreLeft;
-    float contactScoreRight;
+    [NonSerialized] float contactScoreAll;
+    [NonSerialized]float contactScoreUp;
+    [NonSerialized]float contactScoreDown;
+    [NonSerialized]float contactScoreLeft;
+    [NonSerialized] float contactScoreRight;
 
     [NonSerialized] public bool disableCollisions;
 
@@ -185,7 +186,9 @@ public class ClampedCircleDrawer : MonoBehaviour
             else
             {
                 // there is room, expand
-                float target = maxRadius + Mathf.Sin(Time.time * breathingSpeed) * breathingMagnitude * Mathf.Clamp01(-dotDown + 0.5f);
+                // changed to be animated from the outsitde (breathPct)
+                //float speed = Mathf.PI * 2 * breathsPerSec;
+                float target = maxRadius + Mathf.Sin(breathPct * Mathf.PI) * breathingMagnitude;
                 lengths[i] = Mathf.MoveTowards(lengths[i], target, (float)GameManager.TickSize * expandSpeed);
             }
 
