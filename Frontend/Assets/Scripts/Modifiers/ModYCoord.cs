@@ -14,6 +14,7 @@ namespace Sludge.Modifiers
         public Easings Easing = Easings.Linear;
 
         Rigidbody2D _rigidbody;
+        Collider2D _collider;
         Transform trans;
         Vector3 startPos;
 
@@ -47,6 +48,7 @@ namespace Sludge.Modifiers
             trans = transform;
             startPos = trans.position;
             _rigidbody = GetComponent<Rigidbody2D>();
+            _collider = GetComponent<Collider2D>();
         }
 
         public override void EngineTick()
@@ -56,19 +58,23 @@ namespace Sludge.Modifiers
 
             double t = GameManager.I.EngineTime * TimeMultiplier + CurrentlyAt;
             t = SludgeUtil.TimeMod(t, PingPong);
-
             t = Ease.Apply(Easing, t);
-
 
             bool hasRigidbody = _rigidbody != null;
 
             Vector3 pos = hasRigidbody ? _rigidbody.position : trans.position;
-            pos.y = Mathf.Lerp(T0(startPos).y, T1(startPos).y, (float)t);
-
-            if (hasRigidbody)
-                _rigidbody.MovePosition(pos);
-            else
+            float newY = Mathf.Lerp(T0(startPos).y, T1(startPos).y, (float)t);
+            if (!hasRigidbody)
+            {
                 transform.position = pos;
+                return;
+            }
+
+            Vector3 newPos = new Vector3(pos.x, newY, pos.z);
+            Vector3 moveVec = newPos - pos;
+            // TODO: find where (if) we hit the player during the move
+
+            _rigidbody.MovePosition(newPos);
         }
     }
 }

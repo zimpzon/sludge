@@ -421,8 +421,12 @@ public class Player : MonoBehaviour
 
     public void MovingWallForceMove(Vector2 push)
     {
+        Debug.DrawLine(trans.position, trans.position + (Vector3)push.normalized, Color.yellow, 0.05f);
         physicsBody.MovePosition(physicsBody.position + push);
+    }
 
+    private void CheckSquashed()
+    {
         int hits = Physics2D.OverlapCollider(playerSquashedCollider, SludgeUtil.ScanForWallFilter, SludgeUtil.colliderHits);
         bool playerWasSquished = hits > 0;
         if (playerWasSquished)
@@ -496,7 +500,7 @@ public class Player : MonoBehaviour
         {
             DebugLinesScript.Show("JumpState", StateParam.jumpState);
             DebugLinesScript.Show("force", StateParam.force);
-            DebugLinesScript.Show("currentAnim", currentAnim);
+            DebugLinesScript.Show("HasGroundContact", HasGroundContact());
             Debug.DrawRay(trans.position, trans.position + (Vector3)StateParam.force.normalized, Color.white, 1);
         }
 
@@ -570,6 +574,8 @@ public class Player : MonoBehaviour
         Vector2 acceptedNewPos = TryMove(moveStepX, physicsBody.position);
         acceptedNewPos = TryMove(moveStepY, acceptedNewPos);
         physicsBody.MovePosition(acceptedNewPos);
+
+        CheckSquashed();
     }
 
     float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;

@@ -23,11 +23,18 @@ namespace Sludge.Utility
 
         public static double TimeMod(double t, bool pingPong)
         {
-            double t2 = t / 2;
-            double frac = t2 - (int)t2;
-            return pingPong ? PingPong(frac) : t - (int)t;
+            // Take the absolute value of t to handle negative numbers
+            double absT = Math.Abs(t);
+            double t2 = absT / 2;
+            double frac = t2 % 1;
+
+            // Calculate the result based on the modified t
+            double result = pingPong ? PingPong(frac) : absT - (int)absT;
+
+            // Return the result with the original sign of t
+            return t >= 0 ? result : -result;
         }
-    
+
         private static double PingPong(double t) => t <= 0.5 ? t * 2 : 1 - ((t - 0.5) * 2);
 
         public static Vector2 LookAngle(double angle)
