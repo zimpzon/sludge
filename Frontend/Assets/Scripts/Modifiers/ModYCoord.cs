@@ -64,6 +64,8 @@ namespace Sludge.Modifiers
 
             Vector3 pos = hasRigidbody ? _rigidbody.position : trans.position;
             float newY = Mathf.Lerp(T0(startPos).y, T1(startPos).y, (float)t);
+            DebugLinesScript.Show("y", newY);
+
             if (!hasRigidbody)
             {
                 transform.position = pos;

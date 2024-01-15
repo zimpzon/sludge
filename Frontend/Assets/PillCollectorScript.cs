@@ -1,20 +1,25 @@
 using Assets.Scripts.Game;
-using System.Collections.Generic;
+using Sludge.Utility;
 using UnityEngine;
 
 public class PillCollectorScript : MonoBehaviour
 {
-    List<ContactPoint2D> _contacts = new List<ContactPoint2D>();
+    Transform _trans;
+    CircleCollider2D _collider;
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void Awake()
     {
-        if (collision.contactCount > 0)
+        _trans = transform;
+        _collider = GetComponent<CircleCollider2D>();
+    }
+
+    private void Update()
+    {
+        int hits = Physics2D.OverlapCircleNonAlloc(_trans.position, _collider.radius, SludgeUtil.colliderHits, SludgeUtil.PillsLayerMask);
+        DebugLinesScript.Show("huts", hits);
+        for (int i = 0; i < hits; ++i)
         {
-            int hits = collision.GetContacts(_contacts);
-            for (int i = 0; i < hits; ++i)
-            {
-                PillManager.EatPill(_contacts[i].point, PillEater.Player);
-            }
+            PillManager.EatPill(SludgeUtil.colliderHits[i].transform.position, PillEater.Player);
         }
     }
 }

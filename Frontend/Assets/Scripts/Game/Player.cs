@@ -568,12 +568,13 @@ public class Player : MonoBehaviour
         }
         AddOneShotImpulse();
 
-        Vector2 moveStepX = new Vector2(moveStep.x, 0);
-        Vector2 moveStepY = new Vector2(0, moveStep.y);
+        //Vector2 moveStepX = new Vector2(moveStep.x, 0);
+        //Vector2 moveStepY = new Vector2(0, moveStep.y);
 
-        Vector2 acceptedNewPos = TryMove(moveStepX, physicsBody.position);
-        acceptedNewPos = TryMove(moveStepY, acceptedNewPos);
-        physicsBody.MovePosition(acceptedNewPos);
+        //Vector2 acceptedNewPos = TryMove(moveStepX, physicsBody.position);
+        //acceptedNewPos = TryMove(moveStepY, acceptedNewPos);
+        //physicsBody.MovePosition(acceptedNewPos);
+        physicsBody.MovePosition(physicsBody.position + moveStep);
 
         CheckSquashed();
     }

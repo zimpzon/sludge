@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4436653674119509344}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,8 +43,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4436653674128658509}
   - component: {fileID: 4436653674128658511}
-  - component: {fileID: 4436653674128658508}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: EyeLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,20 +118,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4436653674128658508
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4436653674128658506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SchemeColor: 1
-  BrightnessOffset: 100
 --- !u!1 &4436653674360094710
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,7 +129,7 @@ GameObject:
   - component: {fileID: 4436653674360094601}
   - component: {fileID: 4436653674360094600}
   - component: {fileID: 4436653674360094603}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Baby
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +143,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4436653674360094710}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6, y: -10.4848, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -179,9 +164,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 20
+  m_LinearDrag: 1
+  m_AngularDrag: 1
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -225,7 +210,7 @@ GameObject:
   - component: {fileID: 4436653675008080835}
   - component: {fileID: 4436653675008080837}
   - component: {fileID: 4436653675008080834}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: EyeRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -323,7 +308,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4436653675047228414}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,7 +324,7 @@ Transform:
   m_GameObject: {fileID: 4436653675047228415}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.61, y: 0.61, z: 0.61}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4436653675651115273}
@@ -357,8 +342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4436653675048358987}
   - component: {fileID: 4436653675048358989}
-  - component: {fileID: 4436653675048358986}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: PupilLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -422,7 +406,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 42
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: -36.188385, g: -77.897026, b: -99.36471, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -432,20 +416,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4436653675048358986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4436653675048358984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SchemeColor: 1
-  BrightnessOffset: -100
 --- !u!1 &4436653675122029746
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,8 +426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4436653675122029749}
   - component: {fileID: 4436653675122029751}
-  - component: {fileID: 4436653675122029748}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: PupilRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -521,7 +490,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 42
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: -36.188385, g: -77.897026, b: -99.36471, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -531,20 +500,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4436653675122029748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4436653675122029746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SchemeColor: 1
-  BrightnessOffset: -100
 --- !u!1 &4436653675651115382
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,7 +511,7 @@ GameObject:
   - component: {fileID: 4436653675651115273}
   - component: {fileID: 4436653675651115275}
   - component: {fileID: 4436653675651115272}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -571,7 +526,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4436653675651115382}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.04, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
