@@ -128,30 +128,30 @@ public class BallCollector : SludgeObject
 
     private void FixedUpdate()
     {
-        if (isHeld)
-            return;
+        //if (isHeld)
+        //    return;
 
-        float currentScale = trans.localScale.x;
-        if (currentScale < ScaleAtFullSize)
-            currentScale += Time.deltaTime;
-        else if (currentScale > ScaleAtFullSize)
-            currentScale -= Time.deltaTime;
+        //float currentScale = trans.localScale.x;
+        //if (currentScale < ScaleAtFullSize)
+        //    currentScale += Time.deltaTime;
+        //else if (currentScale > ScaleAtFullSize)
+        //    currentScale -= Time.deltaTime;
 
-        trans.localScale = Vector3.one * currentScale;
+        //trans.localScale = Vector3.one * currentScale;
 
-        const float RecoverSpeed = 0.75f;
-        if (rigidBody.velocity.sqrMagnitude < speed * speed)
-        {
-            rigidBody.velocity += rigidBody.velocity.normalized * Time.fixedDeltaTime * speed * RecoverSpeed;
-        } else if (rigidBody.velocity.sqrMagnitude > speed * speed)
-        {
-            rigidBody.velocity -= rigidBody.velocity.normalized * Time.fixedDeltaTime * speed * RecoverSpeed;
-        }
-        else
-        {
-            // velocity is zero
-            rigidBody.velocity = Vector2.one * 0.01f;
-        }
+        //const float RecoverSpeed = 0.75f;
+        //if (rigidBody.velocity.sqrMagnitude < speed * speed)
+        //{
+        //    rigidBody.velocity += rigidBody.velocity.normalized * Time.fixedDeltaTime * speed * RecoverSpeed;
+        //} else if (rigidBody.velocity.sqrMagnitude > speed * speed)
+        //{
+        //    rigidBody.velocity -= rigidBody.velocity.normalized * Time.fixedDeltaTime * speed * RecoverSpeed;
+        //}
+        //else
+        //{
+        //    // velocity is zero
+        //    rigidBody.velocity = Vector2.one * 0.01f;
+        //}
     }
 
     void Update()
