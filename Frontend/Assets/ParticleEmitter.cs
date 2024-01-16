@@ -16,6 +16,11 @@ public class ParticleEmitter : MonoBehaviour
     {
         DustParticles.transform.position = pos;
         DustParticles.Emit(count);
+
+        // hacky hacky
+        int pillCount = count / 2;
+        pillCount += Random.value > 0.9f ? 1 : 0;
+        EmitPills(pos, pillCount);
     }
 
     public void EmitPills(Vector3 pos, int count)

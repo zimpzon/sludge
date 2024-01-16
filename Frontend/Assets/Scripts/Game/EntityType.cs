@@ -21,5 +21,6 @@
         BallCollector,
         PillBallCollector,
         Energy,
+        Kid,
     };
 }

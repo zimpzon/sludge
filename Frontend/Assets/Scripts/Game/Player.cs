@@ -199,9 +199,9 @@ public class Player : MonoBehaviour
     {
         ResetJumpHandicaps();
         GameManager.I.DustParticles.transform.position = trans.position;
-        GameManager.I.DustParticles.Emit(10);
+        GameManager.I.DustParticles.Emit(5);
         GameManager.I.DustParticles.transform.position = newPos;
-        GameManager.I.DustParticles.Emit(10);
+        GameManager.I.DustParticles.Emit(5);
         trans.position = newPos;
     }
 
@@ -252,7 +252,7 @@ public class Player : MonoBehaviour
     public void ExecuteDelayedKill()
     {
         SoundManager.Play(FxList.Instance.PlayerDie);
-        ParticleEmitter.I.EmitDust(trans.position, 12);
+        ParticleEmitter.I.EmitDust(trans.position, 8);
         GameManager.I.CameraRoot.DOKill();
         GameManager.I.CameraRoot.DOShakePosition(1.0f, 0.7f);
 
@@ -282,7 +282,7 @@ public class Player : MonoBehaviour
         var main = BodyDeathParticles.main;
         var saveColor = main.startColor;
 
-        // Leg particles
+        // black, for no reason, but looks better?
         main.startColor = Color.black;
         BodyDeathParticles.Emit(ExplodeParticleCount / 10);
 
@@ -317,7 +317,7 @@ public class Player : MonoBehaviour
         param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
         ResetJumpHandicaps();
 
-        ParticleEmitter.I.EmitDust(trans.position, 4);
+        ParticleEmitter.I.EmitDust(trans.position, 3);
     }
 
     void SetState(StateParam param, JumpState state)
@@ -548,7 +548,6 @@ public class Player : MonoBehaviour
             wallSlidePendingParticles += (float)GameManager.TickSize * 15;
             while (wallSlidePendingParticles > 0)
             {
-                Debug.Log("Emitting wall slide particles");
                 wallSlidePendingParticles--;
                 ParticleEmitter.I.EmitDust(trans.position, 1);
             }
@@ -568,20 +567,19 @@ public class Player : MonoBehaviour
         }
         AddOneShotImpulse();
 
-        //Vector2 moveStepX = new Vector2(moveStep.x, 0);
-        //Vector2 moveStepY = new Vector2(0, moveStep.y);
+        Vector2 moveStepX = new Vector2(moveStep.x, 0);
+        float stepLen = moveStep.magnitude;
+        Vector2 slope = CheckSlope(moveStepX, physicsBody.position);
+        moveStep += slope.normalized * stepLen;
+        moveStep = moveStep.normalized * stepLen;
 
-        //Vector2 acceptedNewPos = TryMove(moveStepX, physicsBody.position);
-        //acceptedNewPos = TryMove(moveStepY, acceptedNewPos);
-        //physicsBody.MovePosition(acceptedNewPos);
         physicsBody.MovePosition(physicsBody.position + moveStep);
-
         CheckSquashed();
     }
 
     float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;
 
-    Vector2 TryMove(Vector2 step, Vector2 from)
+    Vector2 CheckSlope(Vector2 step, Vector2 from)
     {
         Vector2 newPos = from + step;
         float len = step.magnitude;
@@ -589,14 +587,23 @@ public class Player : MonoBehaviour
         int hitsFullMove = Physics2D.CircleCastNonAlloc(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.scanHits, len, SludgeUtil.ScanForWallsLayerMask);
         if (hitsFullMove == 0)
         {
-            return newPos;
+            return Vector2.zero;
         }
 
-        // just before the actual hit
-        float desiredDistance = SludgeUtil.scanHits[0].distance - WallDistance;
-
-        Vector2 validNewPos = from + step.normalized * desiredDistance;
-        return validNewPos;
+        Vector2 normal = SludgeUtil.scanHits[0].normal;
+        float angle = Vector2.Angle(normal, Vector2.up);
+        if (angle > 45.5f)
+        {
+            return Vector2.zero;
+        }
+        
+        // move effortlessly over > 45 degree slopes, could adjust for steepness
+        Vector2 cross = Vector2.Perpendicular(normal);
+        if (Vector2.Dot(step, cross) < 0)
+            cross *= -1;
+        //Debug.DrawLine(from, from + normal, Color.yellow, 0.05f);
+        //Debug.DrawLine(from, from + cross, Color.red, 0.05f);
+        return cross;
     }
 
     void SetSize(PlayerSize size)

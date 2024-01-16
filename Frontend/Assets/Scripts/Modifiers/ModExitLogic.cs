@@ -43,17 +43,28 @@ public class ModExitLogic : SludgeModifier
         SetActive(true);
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
         if (!isActive)
             return;
 
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
-        if (entity != EntityType.Player)
+        if (entity == EntityType.Player)
+        {
+            GameManager.I.LevelCompleted();
+            SetActive(false);
             return;
+        }
 
-        GameManager.I.LevelCompleted();
-        SetActive(false);
+        if (entity == EntityType.Kid)
+        {
+            var kid = collision.gameObject.GetComponent<KidLogicMod>();
+            ParticleEmitter.I.EmitDust(kid.transform.position, 10);
+            ParticleEmitter.I.EmitPills(kid.transform.position, 5);
+            SoundManager.Play(FxList.Instance.KeyPickup);
+
+            kid.gameObject.SetActive(false);
+        }
     }
 
     public override void EngineTick()
