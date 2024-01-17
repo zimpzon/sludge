@@ -80,6 +80,17 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         if (!s.Alive)
             return;
 
+        if (s.deathScheduled)
+        {
+            bool deathTimeReached = GameManager.I.EngineTime >= s.deathScheduleTime;
+            if (deathTimeReached)
+            {
+                s.deathScheduled = false;
+                ExecuteDelayedKill();
+            }
+            return;
+        }
+
         _rigidbody.AddForce(s.impulse * (float)GameManager.TickSize, ForceMode2D.Impulse);
         s.impulse = Vector2.zero;
 
