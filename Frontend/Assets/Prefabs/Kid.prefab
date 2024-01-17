@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3407133406434811237}
   - component: {fileID: 8212005779010853343}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: SquashedCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &4436653674360094603
 BoxCollider2D:
@@ -323,6 +323,8 @@ MonoBehaviour:
   TargetTransform: {fileID: 0}
   fallGravity: 4
   maxVelocity: 15
+  EyeScaleSurprised: 1.5
+  DeathMiniDelay: 0.5
 --- !u!1 &4436653675008080832
 GameObject:
   m_ObjectHideFlags: 0
@@ -699,7 +701,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 40
   m_Sprite: {fileID: 21300000, guid: ee46c5f5e4c84a249ad461498ba7cf20, type: 3}
-  m_Color: {r: 0.9254902, g: 0.054901984, b: 0.30178156, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -721,7 +723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 3
+  SchemeColor: 29
   BrightnessOffset: 0
 --- !u!1001 &6379435523640789002
 PrefabInstance:

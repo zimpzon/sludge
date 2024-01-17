@@ -583,13 +583,13 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         }
         AddOneShotImpulse();
 
-        // climp up slopes ny adjusting moveStep if a slope is detected in CheckSlope
+        // climp up slopes by adjusting moveStep if a slope is detected in CheckSlope
         // how to not slide, or speed run, down?
-        // BUG: slight move towards slope when sliding speeds up sliding!
         Vector2 moveStepX = new Vector2(moveStep.x, 0);
         float stepLen = moveStep.magnitude;
-        Vector2 slope = CheckSlope(moveStepX, physicsBody.position);
-        moveStep += slope.normalized * stepLen;
+        Vector2 slopeAdjust = CheckSlope(moveStepX, physicsBody.position);
+
+        moveStep += slopeAdjust * stepLen;
         moveStep = moveStep.normalized * stepLen;
 
         physicsBody.MovePosition(physicsBody.position + moveStep);
@@ -600,7 +600,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     Vector2 CheckSlope(Vector2 step, Vector2 from)
     {
-        Vector2 newPos = from + step;
         float len = step.magnitude;
 
         int hitsFullMove = Physics2D.CircleCastNonAlloc(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.scanHits, len, SludgeUtil.ScanForWallsLayerMask);
@@ -615,13 +614,18 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             return Vector2.zero;
         }
-        
+
         // move effortlessly over > 45 degree slopes, could adjust for steepness
         Vector2 cross = Vector2.Perpendicular(normal);
-        if (Vector2.Dot(step, cross) < 0)
+        float dot = Vector2.Dot(step, cross);
+        if (dot < 0)
             cross *= -1;
+
         //Debug.DrawLine(from, from + normal, Color.yellow, 0.05f);
         //Debug.DrawLine(from, from + cross, Color.red, 0.05f);
+
+        float scaledBySteepness = (100 - angle) / 100;
+        cross = cross.normalized * scaledBySteepness; // 45 degrees = 0.5 power, 0 degrees = 1 power
         return cross;
     }
 

@@ -91,9 +91,16 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
             return;
         }
 
-        _rigidbody.AddForce(s.impulse * (float)GameManager.TickSize, ForceMode2D.Impulse);
-        s.impulse = Vector2.zero;
+        if (s.onConveyorBeltCount > 0)
+        {
+            _rigidbody.AddForce(s.impulse * (float)GameManager.TickSize, ForceMode2D.Impulse);
+        }
+        else
+        {
+            _rigidbody.AddForce(Vector2.down * (float)GameManager.TickSize, ForceMode2D.Impulse);
+        }
 
+        s.impulse = Vector2.zero;
         CheckSquashed();
     }
 
