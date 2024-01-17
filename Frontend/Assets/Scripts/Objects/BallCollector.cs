@@ -91,7 +91,7 @@ public class BallCollector : SludgeObject
             return;
         }
 
-        PillManager.EatPill(contactPoint.point, PillEater.Ball);
+        //PillManager.EatPill(contactPoint.point, PillEater.Ball);
     }
 
     void Kill()
@@ -160,7 +160,7 @@ public class BallCollector : SludgeObject
         if (GameManager.I.FrameCounter > frameLastWallHit + 1)
             squashCounter = 0;
 
-        PillManager.EatPill(trans.position, PillEater.Ball);
+        //PillManager.EatPill(trans.position, PillEater.Ball);
 
         UpdateEye();
         eye.transform.localScale = new Vector2(1, eyeScale);

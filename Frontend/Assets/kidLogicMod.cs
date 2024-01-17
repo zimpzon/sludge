@@ -1,52 +1,123 @@
+using DG.Tweening;
+using Sludge.Colors;
 using Sludge.Modifiers;
+using Sludge.Utility;
 using UnityEngine;
 
-public class KidLogicMod : SludgeModifier
+public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
 {
+    class S
+    {
+        public int onConveyorBeltCount;
+        public float forceY;
+        public Vector2 impulse;
+        public double deathScheduleTime;
+        public bool deathScheduled;
+        public bool Alive = true;
+    }
+
     public Transform TargetTransform;
-    public float moveSpeed = 2.0f;        // Speed of movement
-    public float jumpForce = 5.0f;        // Force of the jump
-    public float jumpCooldown = 2.0f;     // Cooldown time for jumping in seconds
+    public float fallGravity = 4.0f;
+    public float maxVelocity = 15.0f;
+    public float EyeScaleSurprised = 1.5f;
+    public float DeathMiniDelay = 0.5f;
+
+    S s = new S();
+    Transform trans;
+    Vector3 basePos;
+    Quaternion baseRotation;
+    CircleCollider2D squashedCollider; // a smaller collider used to detect squashed between moving walls
+    Transform eyesTransform;
+    Vector2 eyesBaseScale;
 
     private Rigidbody2D _rigidbody;
-    private float _lastJumpTime;
 
-    void Start()
+    void Awake()
     {
+        trans = transform;
         _rigidbody = GetComponent<Rigidbody2D>();
-        _lastJumpTime = -jumpCooldown;   // Initialize so the character can jump immediately
-        _rigidbody.centerOfMass = Vector2.down * 0.95f;
+        squashedCollider = SludgeUtil.FindByName(trans, "SquashedCollider").GetComponent<CircleCollider2D>();
+        eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
+        eyesBaseScale = eyesTransform.localScale;
+
+        basePos = transform.position;
+        baseRotation = transform.rotation;
+    }
+
+    public override void Reset()
+    {
+        s = new S();
+        gameObject.SetActive(true);
+        transform.position = basePos;
+        transform.rotation = baseRotation;
+        eyesTransform.localScale = eyesBaseScale;
+
+        base.Reset();
+    }
+
+    public void AddConveyorPulse(Vector2 pulse)
+    {
+        s.impulse += pulse;
+    }
+
+    public void OnConveyorBeltEnter(Vector2 beltDirection)
+    {
+        s.onConveyorBeltCount++;
+        _rigidbody.gravityScale = 0;
+    }
+
+    public void OnConveyorBeltExit(Vector2 beltDirection)
+    {
+        s.onConveyorBeltCount--;
+        _rigidbody.gravityScale = 1;
+
+        s.impulse = Vector2.zero;
+        _rigidbody.velocity = beltDirection.normalized * maxVelocity;
     }
 
     public override void EngineTick()
     {
-        return;
+        if (!s.Alive)
+            return;
 
-        float delta = (float)GameManager.TickSize;
+        _rigidbody.AddForce(s.impulse * (float)GameManager.TickSize, ForceMode2D.Impulse);
+        s.impulse = Vector2.zero;
 
-        // Horizontal movement towards the target
-        MoveTowardsTarget();
+        CheckSquashed();
+    }
 
-        // Jump logic
-        if (Time.time > _lastJumpTime + jumpCooldown)
+    private void CheckSquashed()
+    {
+        int hits = Physics2D.OverlapCollider(squashedCollider, SludgeUtil.ScanForWallFilter, SludgeUtil.colliderHits);
+        bool wasSquished = hits > 0;
+        if (wasSquished)
         {
-            Jump();
-            _lastJumpTime = Time.time + Random.value * 2;
+            Kill();
         }
     }
 
-    private void MoveTowardsTarget()
+    public void Kill()
     {
-        if (TargetTransform != null)
-        {
-            Vector2 direction = (TargetTransform.position - transform.position).normalized;
-            _rigidbody.velocity = new Vector2(direction.x * moveSpeed, _rigidbody.velocity.y);
-        }
+        if (s.deathScheduled || !s.Alive)
+            return;
+
+        eyesTransform.localScale = eyesBaseScale * EyeScaleSurprised;
+        s.deathScheduleTime = GameManager.I.EngineTime + DeathMiniDelay;
+        s.deathScheduled = true;
     }
 
-    private void Jump()
+    public void ExecuteDelayedKill()
     {
-        // Add vertical force for the jump
-        _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        SoundManager.Play(FxList.Instance.PlayerDie);
+        ParticleEmitter.I.EmitDust(trans.position, 4);
+        GameManager.I.CameraRoot.DOKill();
+        GameManager.I.CameraRoot.DOShakePosition(1.0f, 0.4f);
+
+        Player.I.EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Player), scale: 0.5f);
+
+        gameObject.SetActive(false);
+        trans.position = Vector3.one * 4432; // move out of the way
+
+        s.Alive = false;
     }
 }

@@ -15,9 +15,8 @@ namespace Assets.Scripts.Game
             PillsLeft = TotalPills;
         }
 
-        public static void EatPill(Vector3 pos, PillEater eater)
+        public static void EatPill(Vector3Int tilePos)
         {
-            Vector3Int tilePos = GameManager.I.PillTilemap.WorldToCell(pos);
             var tile = GameManager.I.PillTilemap.GetTile(tilePos);
             if (tile == null)
                 return;
@@ -25,12 +24,8 @@ namespace Assets.Scripts.Game
             GameManager.I.PillTilemap.SetTile(tilePos, null);
 
             Vector3 pillCenter = GameManager.I.PillTilemap.CellToWorld(tilePos);
-            pillCenter.x += 0.5f;
-            pillCenter.y += 0.5f;
-
             SoundManager.Play(FxList.Instance.TimePillPickup);
-
-            ParticleEmitter.I.EmitPills(pos, 1);
+            ParticleEmitter.I.EmitPills(pillCenter, 1);
 
             PillsLeft--;
             GameManager.I.OnPillEaten();

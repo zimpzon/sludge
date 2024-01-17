@@ -1,5 +1,6 @@
 using Assets.Scripts.Game;
 using DG.Tweening;
+using Sludge.Colors;
 using Sludge.Utility;
 using System;
 using UnityEngine;
@@ -34,20 +35,24 @@ public class StateParam
     public bool isWallSliding;
 }
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IConveyorBeltPassenger
 {
+    public static Player I;
+
     public StateParam StateParam = new StateParam();
 
     public enum PlayerSize { Small, Normal, Large };
 
     public static Vector3 Position;
 
+    public bool ShowDebug = false;
+    public bool DisableConveoyrs = false;
+
     public AnimationClip AnimMoveLeft;
     public AnimationClip AnimMoveRight;
     public AnimationClip AnimIdle;
     string currentAnim;
 
-    public bool ShowDebug = false;
     public float JumpHeight = 1.25f;
     public float JumpTimeToPeak = 0.3f;
     public float JumpTimeToDescend = 0.25f;
@@ -106,6 +111,8 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
+        I = this;
+
         trans = transform;
         physicsBody = GetComponent<Rigidbody2D>();
 
@@ -162,13 +169,19 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ConveyourBeltEnter(Vector2 beltDirection)
+    public void OnConveyorBeltEnter(Vector2 beltDirection)
     {
+        if (DisableConveoyrs)
+            return;
+
         onConveyorBeltCount++;
     }
 
-    public void ConveyourBeltExit(Vector2 beltDirection)
+    public void OnConveyorBeltExit(Vector2 beltDirection)
     {
+        if (DisableConveoyrs)
+            return;
+
         onConveyorBeltCount--;
 
         // When resetting game, colliderexits are fired after resetting player, so we get an exit event after setting onConveyorBeltCount to 0.
@@ -183,10 +196,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void AddConveyorPulse(double x, double y)
+    public void AddConveyorPulse(Vector2 pulse)
     {
-        StateParam.impulse.x += (float)x;
-        StateParam.impulse.y += (float)y;
+        if (DisableConveoyrs)
+            return;
+
+        StateParam.impulse += pulse;
     }
 
     void ResetJumpHandicaps()
@@ -256,7 +271,7 @@ public class Player : MonoBehaviour
         GameManager.I.CameraRoot.DOKill();
         GameManager.I.CameraRoot.DOShakePosition(1.0f, 0.7f);
 
-        EmitDeathExplosionParticles();
+        EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Player));
 
         bodyRoot.SetActive(false);
         trans.position = Vector3.one * 5544; // move out of the way
@@ -274,23 +289,24 @@ public class Player : MonoBehaviour
         currentAnim = name;
     }
 
-    void EmitDeathExplosionParticles()
+    public void EmitDeathExplosionParticles(Vector3 pos, Color mainColor, float scale = 1.0f)
     {
         // Body particles
-        BodyDeathParticles.Emit(ExplodeParticleCount);
+        BodyDeathParticles.transform.position = pos;
+
+        int particleCount = (int)(ExplodeParticleCount * scale);
 
         var main = BodyDeathParticles.main;
-        var saveColor = main.startColor;
+        main.startColor = mainColor;
+        BodyDeathParticles.Emit(particleCount);
 
         // black, for no reason, but looks better?
         main.startColor = Color.black;
-        BodyDeathParticles.Emit(ExplodeParticleCount / 10);
+        BodyDeathParticles.Emit(particleCount / 10);
 
         // Eye particles
         main.startColor = Color.white;
-        BodyDeathParticles.Emit(ExplodeParticleCount / 20);
-
-        main.startColor = saveColor;
+        BodyDeathParticles.Emit(particleCount / 20);
     }
 
     bool IsJumpTapped() => GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
@@ -567,6 +583,9 @@ public class Player : MonoBehaviour
         }
         AddOneShotImpulse();
 
+        // climp up slopes ny adjusting moveStep if a slope is detected in CheckSlope
+        // how to not slide, or speed run, down?
+        // BUG: slight move towards slope when sliding speeds up sliding!
         Vector2 moveStepX = new Vector2(moveStep.x, 0);
         float stepLen = moveStep.magnitude;
         Vector2 slope = CheckSlope(moveStepX, physicsBody.position);

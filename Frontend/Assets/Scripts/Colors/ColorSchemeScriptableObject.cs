@@ -77,6 +77,7 @@ namespace Sludge.Colors
         BulletFlash2,
         UiLevelUnlocked,
         Enemy1,
+        Kid,
         // <--- NB: New members must be added at bottom since enum as serialized as strings. Adding in the middle will skew all values coming after.
     }
 

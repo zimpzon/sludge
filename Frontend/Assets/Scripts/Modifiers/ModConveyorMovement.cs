@@ -1,5 +1,6 @@
 using Assets.Scripts.Levels;
 using Sludge.Utility;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sludge.Modifiers
@@ -17,7 +18,7 @@ namespace Sludge.Modifiers
         Vector2 centerLineA;
         Vector2 centerLineB;
         Transform trans;
-        bool hasPlayer;
+        List<GameObject> passengerList = new ();
 
         void Awake()
         {
@@ -56,49 +57,41 @@ namespace Sludge.Modifiers
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            var entity = SludgeUtil.GetEntityType(collision.gameObject);
-            if (entity != EntityType.Player)
+            var passenger = collision.gameObject.GetComponent<IConveyorBeltPassenger>();
+            if (passenger == null)
                 return;
 
-            OnPlayerEnter();
+            passenger.OnConveyorBeltEnter(beltDirection);
+            passengerList.Add(collision.gameObject);
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            var entity = SludgeUtil.GetEntityType(collision.gameObject);
-            if (entity != EntityType.Player)
+            var passenger = collision.gameObject.GetComponent<IConveyorBeltPassenger>();
+            if (passenger == null)
                 return;
 
-            OnPlayerExit();
-        }
-
-        public void OnPlayerEnter()
-        {
-            GameManager.I.Player.ConveyourBeltEnter(beltDirection);
-            hasPlayer = true;
-        }
-
-        public void OnPlayerExit()
-        {
-            GameManager.I.Player.ConveyourBeltExit(beltDirection);
-            hasPlayer = false;
+            passenger.OnConveyorBeltExit(beltDirection);
+            passengerList.Remove(collision.gameObject);
         }
 
         public override void EngineTick()
         {
-            if (!hasPlayer)
-                return;
-
-            // Pull player towards center line
-            if (!DisableSuction)
+            // Pull passengers towards center line
+            for (int i = 0; i < passengerList.Count; ++i)
             {
-                var closestPointOnCenterLine = SludgeUtil.StabilizeVector(SludgeUtil.GetClosestPointOnInfiniteLine(Player.Position, centerLineA, centerLineB));
-                var directionToCenter = closestPointOnCenterLine - Player.Position;
-                GameManager.I.Player.AddConveyorPulse(directionToCenter.x * SuctionPower, directionToCenter.y * SuctionPower);
-            }
+                var passengerGo = passengerList[i];
+                var passenger = passengerGo.GetComponent<IConveyorBeltPassenger>();
+                if (!DisableSuction)
+                {
+                    var closestPointOnCenterLine = SludgeUtil.StabilizeVector(SludgeUtil.GetClosestPointOnInfiniteLine(passengerGo.transform.position, centerLineA, centerLineB));
+                    var directionToCenter = closestPointOnCenterLine - passengerGo.transform.position;
+                    passengerGo.GetComponent<IConveyorBeltPassenger>().AddConveyorPulse(directionToCenter * SuctionPower);
+                }
 
-            // Move along the belt
-            GameManager.I.Player.AddConveyorPulse(beltDirection.x * ConveyorSpeed, beltDirection.y * ConveyorSpeed);
+                // Move along the belt
+                passenger.AddConveyorPulse(beltDirection * ConveyorSpeed);
+            }
         }
 
         public string SerializeCustomData()
