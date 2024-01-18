@@ -5,7 +5,7 @@ var GetURL = {
             ? document.referrer
             : document.location.href;
         var buffer = _malloc(lengthBytesUTF8(returnStr) + 1);
-        writeStringToMemory(returnStr, buffer);
+        stringToUTF8(returnStr, buffer, lengthBytesUTF8(returnStr));
         return buffer;
     }
 };

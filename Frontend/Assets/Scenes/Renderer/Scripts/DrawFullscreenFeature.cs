@@ -15,8 +15,8 @@ namespace UnityEngine.Rendering.Universal
 
             public Material blitMaterial = null;
             public int blitMaterialPassIndex = -1;
-            public BufferType sourceType = BufferType.CameraColor;
-            public BufferType destinationType = BufferType.CameraColor;
+            BufferType sourceType = BufferType.CameraColor;
+            BufferType destinationType = BufferType.CameraColor;
             public string sourceTextureId = "_SourceTexture";
             public string destinationTextureId = "_DestinationTexture";
         }

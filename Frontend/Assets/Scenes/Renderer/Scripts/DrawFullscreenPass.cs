@@ -8,9 +8,8 @@ namespace UnityEngine.Rendering.Universal
         public FilterMode filterMode { get; set; }
         public DrawFullscreenFeature.Settings settings;
 
-        RenderTargetIdentifier source;
-        RenderTargetIdentifier destination;
-        int temporaryRTId = Shader.PropertyToID("_TempRT");
+        RTHandle source;
+        RTHandle destination;
 
         int sourceId;
         int destinationId;
@@ -28,40 +27,15 @@ namespace UnityEngine.Rendering.Universal
             RenderTextureDescriptor blitTargetDescriptor = renderingData.cameraData.cameraTargetDescriptor;
             blitTargetDescriptor.depthBufferBits = 0;
 
-            isSourceAndDestinationSameTarget = settings.sourceType == settings.destinationType &&
-                (settings.sourceType == BufferType.CameraColor || settings.sourceTextureId == settings.destinationTextureId);
-
             var renderer = renderingData.cameraData.renderer;
 
-            if (settings.sourceType == BufferType.CameraColor)
-            {
-                sourceId = -1;
-                source = renderer.cameraColorTarget;
-            }
-            else
-            {
-                sourceId = Shader.PropertyToID(settings.sourceTextureId);
-                cmd.GetTemporaryRT(sourceId, blitTargetDescriptor, filterMode);
-                source = new RenderTargetIdentifier(sourceId);
-            }
+            // src = camera color
+            sourceId = -1;
+            source = renderer.cameraColorTargetHandle;
 
-            if (isSourceAndDestinationSameTarget)
-            {
-                destinationId = temporaryRTId;
-                cmd.GetTemporaryRT(destinationId, blitTargetDescriptor, filterMode);
-                destination = new RenderTargetIdentifier(destinationId);
-            }
-            else if (settings.destinationType == BufferType.CameraColor)
-            {
-                destinationId = -1;
-                destination = renderer.cameraColorTarget;
-            }
-            else
-            {
-                destinationId = Shader.PropertyToID(settings.destinationTextureId);
-                cmd.GetTemporaryRT(destinationId, blitTargetDescriptor, filterMode);
-                destination = new RenderTargetIdentifier(destinationId);
-            }
+            // dst = camera color
+            destinationId = -1;
+            destination = renderer.cameraColorTargetHandle;
         }
 
         /// <inheritdoc/>

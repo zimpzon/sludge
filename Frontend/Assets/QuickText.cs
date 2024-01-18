@@ -57,7 +57,6 @@ public class QuickText : MonoBehaviour
             float t = (endTime - Time.time) / ShowTime;
             var pos = basePos + Vector2.down * (t * MoveAmount);
             trans.anchoredPosition = pos;
-            DebugLinesScript.Show("trans.anchoredPosition", trans.anchoredPosition);
             yield return null;
         }
 
