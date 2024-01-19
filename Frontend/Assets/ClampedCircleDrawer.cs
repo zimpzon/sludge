@@ -9,7 +9,6 @@ public class ClampedCircleDrawer : MonoBehaviour
 
     public float maxRadius = 5.0f;
     public float expandSpeed = 0.05f;
-    //public float breathsPerSec = 1f;
     public float breathingMagnitude= 0.02f;
     public float dotScoreThreshold = 0.5f;
     public int rayCount = 32;
@@ -35,8 +34,6 @@ public class ClampedCircleDrawer : MonoBehaviour
     private Vector3[] vertices;
     private int[] triangles;
     private float[] lengths;
-
-    Vector3 prevPos;
 
     private void Awake()
     {
@@ -136,7 +133,6 @@ public class ClampedCircleDrawer : MonoBehaviour
     void Update()
     {
         DrawCircle();
-        prevPos = trans.position;
     }
 
     void DrawCircle()
@@ -199,7 +195,7 @@ public class ClampedCircleDrawer : MonoBehaviour
 
         hasAnyContact = contactScoreAll > 0;
         hasHeadContact = contactScoreUp > 0;
-        // 6.47 is max on vertical surface
+        // tested: 6.47 is max on vertical surface
         hasLeftContact = contactScoreLeft > 6.4f;
         hasRightContact = contactScoreRight > 6.4f;
         hasGroundContact = contactScoreDown > 0;
