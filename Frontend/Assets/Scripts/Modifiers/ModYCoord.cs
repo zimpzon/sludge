@@ -57,9 +57,7 @@ namespace Sludge.Modifiers
             double t = GameManager.I.EngineTime * TimeMultiplier + CurrentlyAt;
             t = SludgeUtil.TimeMod(t, PingPong);
 
-            DebugLinesScript.Show("T1", t);
             t = Ease.Apply(Easing, t);
-            DebugLinesScript.Show("T2", t);
 
             bool hasRigidbody = _rigidbody != null;
 
