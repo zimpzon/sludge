@@ -33,8 +33,8 @@ namespace Sludge.Easing
         public static double BounceStart(double t) => Mathf.Abs(((float)t * 2.0f) - 1.0f);
         public static double BounceEnd(double t) => 1.0 - BounceStart(t);
 
-        public static double Sin(double t) => Mathf.Sin((float)t * Mathf.PI * 2);
-        public static double Cos(double t) => Mathf.Cos((float)t * Mathf.PI * 2);
+        public static double Sin(double t) => (Mathf.Sin((float)t * Mathf.PI * 2) + 1) * 0.5f; // output scaled to 0..1
+        public static double Cos(double t) => (Mathf.Cos((float)t * Mathf.PI * 2) + 1) * 0.5f; // output scaled to 0..1
 
         public static double SmoothStart2(double t) => t * t;
         public static double SmoothStart3(double t) => t * t * t;
@@ -66,10 +66,6 @@ namespace Sludge.Easing
 
         public static double Apply(Easings easing, double t)
         {
-            // Ensure t is in the range [0, 1]
-            t = Mathf.Abs((float)t) % 2; // Map to [0, 2]
-            if (t > 1) t = 2 - t; // Reflect values in the range (1, 2] back into [0, 1]
-
             return easing switch
             {
                 Easings.Linear => Linear(t),

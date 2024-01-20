@@ -15,6 +15,7 @@ namespace Sludge.Modifiers
 
         Transform trans;
         Vector3 startPos;
+        Rigidbody2D _rigidbody;
 
         Vector3 T0(Vector3 from) => from + Vector3.left * Range * CurrentlyAt;
         Vector3 T1(Vector3 from) => from + Vector3.right * Range * (1 - CurrentlyAt);
@@ -40,6 +41,7 @@ namespace Sludge.Modifiers
         {
             trans = transform;
             startPos = trans.position;
+            _rigidbody = GetComponent<Rigidbody2D>();
         }
 
         public override void EngineTick()
@@ -52,9 +54,19 @@ namespace Sludge.Modifiers
 
             t = Ease.Apply(Easing, t);
 
-            var pos = trans.position;
-            pos.x = Mathf.Lerp(T0(startPos).x, T1(startPos).x, (float)t);
-            transform.position = pos;
+            bool hasRigidbody = _rigidbody != null;
+
+            Vector3 pos = hasRigidbody ? _rigidbody.position : trans.position;
+            float newX = Mathf.Lerp(T0(startPos).x, T1(startPos).x, (float)t);
+
+            if (!hasRigidbody)
+            {
+                transform.position = pos;
+                return;
+            }
+
+            Vector3 newPos = new Vector3(newX, pos.y, pos.z);
+            _rigidbody.MovePosition(newPos);
         }
     }
 }

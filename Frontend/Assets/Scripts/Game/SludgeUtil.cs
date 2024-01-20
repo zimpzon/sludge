@@ -25,11 +25,8 @@ namespace Sludge.Utility
         {
             // Take the absolute value of t to handle negative numbers
             double absT = Math.Abs(t);
-            double t2 = absT / 2;
-            double frac = t2 % 1;
-
-            // Calculate the result based on the modified t
-            double result = pingPong ? PingPong(frac) : absT - (int)absT;
+            double frac = t % 1;
+            double result = pingPong ? PingPong(frac) : frac;
 
             // Return the result with the original sign of t
             return t >= 0 ? result : -result;

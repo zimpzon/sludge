@@ -174,8 +174,8 @@ public class ClampedCircleDrawer : MonoBehaviour
             }
 
             // Raycast to check for obstacles (changed to sphere to not slip through diagonal gaps)
-            const float SphereRadius = 0.05f;
-            RaycastHit2D hit = Physics2D.CircleCast(trans.position, 0.05f, vertex, maxRadius, obstacleLayer);
+            const float SphereRadius = 0.01f;
+            RaycastHit2D hit = Physics2D.CircleCast(trans.position, SphereRadius, vertex, maxRadius, obstacleLayer);
             rayWasBlocked[i] = hit;
             rayHitNormal[i] = hit ? hit.normal : Vector2.zero;
             float maxPossibleLength = hit ? hit.distance : maxRadius;
