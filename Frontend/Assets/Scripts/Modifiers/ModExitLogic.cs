@@ -56,7 +56,7 @@ public class ModExitLogic : SludgeModifier
             return;
         }
 
-        if (entity == EntityType.Kid)
+        if (entity == EntityType.Friend)
         {
             var kid = collision.gameObject.GetComponent<KidLogicMod>();
             ParticleEmitter.I.EmitDust(kid.transform.position, 10);

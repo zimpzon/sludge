@@ -41,12 +41,22 @@ public class ModLaser : SludgeModifier
         particlesLocalSpace.gameObject.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        var entity = SludgeUtil.GetEntityType(collision.gameObject);
-        if (entity == EntityType.Player)
-            GameManager.I.Player.Kill();
-    }
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    var entity = SludgeUtil.GetEntityType(collision.gameObject);
+    //    if (entity == EntityType.Player)
+    //    {
+    //        GameManager.I.Player.Kill();
+    //    }
+    //    else if (entity == EntityType.Friend)
+    //    {
+    //        collision.gameObject.GetComponent<KidLogicMod>().Kill();
+    //    }
+    //    else if (entity == EntityType.Enemy)
+    //    {
+    //        GameManager.I.KillEnemy(collision.gameObject);
+    //    }
+    //}
 
     public override void EngineTick()
     {
@@ -94,13 +104,18 @@ public class ModLaser : SludgeModifier
         particlesLocalSpace.transform.position = hit.point;
 
         // length of laser is determined, check if it hits something killable
-        RaycastHit2D killableTarget = Physics2D.Raycast(trans.position, direction, distance, SludgeUtil.KillableLayerMask);
-        if (killableTarget.collider != null)
+        int hitCount = Physics2D.Raycast(trans.position, direction, SludgeUtil.KillableFilter, SludgeUtil.scanHits, distance);
+        for (int i = 0; i < hitCount; ++i)
         {
+            var killableTarget = SludgeUtil.scanHits[i];
             var entity = SludgeUtil.GetEntityType(killableTarget.transform.gameObject);
             if (entity == EntityType.Player)
             {
                 GameManager.I.Player.Kill();
+            }
+            else if (entity == EntityType.Friend)
+            {
+                killableTarget.collider.gameObject.GetComponent<KidLogicMod>()?.Kill();
             }
             else if (entity == EntityType.Enemy)
             {

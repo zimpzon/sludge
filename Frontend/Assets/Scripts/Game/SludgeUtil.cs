@@ -91,6 +91,9 @@ namespace Sludge.Utility
             if (1 << goLayer == EnergyLayerMask)
                 return EntityType.Energy;
 
+            if (1 << goLayer == FriendLayerMask)
+                return EntityType.Friend;
+
             var sludgeObject = go.GetComponent<SludgeObject>();
             if (sludgeObject != null)
                 return sludgeObject.EntityType;
@@ -119,7 +122,7 @@ namespace Sludge.Utility
         public static string ColorWrap(string s, Color col)
             => $"<color=#{ColorUtility.ToHtmlStringRGBA(col)}>{s}</color>";
 
-        public static int KillableLayerMask = LayerMask.GetMask("Objects", "Player");
+        public static int KillableLayerMask = LayerMask.GetMask("Objects", "Player", "Friend", "Enemy");
         public static int ThrowableExplosionLayerMask = LayerMask.GetMask("Objects", "OutlinedObjects");
         public static int ScanForPlayerLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Player");
         public static int ScanForWallsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects");
@@ -128,18 +131,21 @@ namespace Sludge.Utility
         public static int PickupLayerMask = LayerMask.GetMask("Pickups");
         public static int PillsLayerMask = LayerMask.GetMask("Pills");
         public static int EnergyLayerMask = LayerMask.GetMask("Energy");
+        public static int FriendLayerMask = LayerMask.GetMask("Friend");
         public static int WallsAndObjectsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Objects");
 
         public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");
         public static int ObjectsLayerNumber = LayerMask.NameToLayer("Objects");
         public static int PlayerLayerNumber = LayerMask.NameToLayer("Player");
 
+        public static readonly ContactFilter2D KillableFilter = new ContactFilter2D();
         public static readonly ContactFilter2D PlayerOnlyFilter = new ContactFilter2D();
         public static readonly ContactFilter2D ScanForPlayerFilter = new ContactFilter2D();
         public static readonly ContactFilter2D ScanForWallFilter = new ContactFilter2D();
 
         static SludgeUtil()
         {
+            KillableFilter.SetLayerMask(SludgeUtil.KillableLayerMask);
             PlayerOnlyFilter.SetLayerMask(SludgeUtil.PlayerLayerMask);
             ScanForPlayerFilter.SetLayerMask(SludgeUtil.ScanForPlayerLayerMask);
             ScanForWallFilter.SetLayerMask(SludgeUtil.ScanForWallsLayerMask);

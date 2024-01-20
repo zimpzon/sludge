@@ -49,6 +49,11 @@ public class ModBulletMovement : SludgeModifier
             GameManager.I.KillEnemy(collision.gameObject);
             destroyBullet = true;
         }
+        else if (entity == EntityType.Friend)
+        {
+            collision.gameObject.GetComponent<KidLogicMod>().Kill();
+            destroyBullet = true;
+        }
 
         if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
         {

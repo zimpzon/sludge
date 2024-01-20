@@ -244,11 +244,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             return;
         }
-
-        if (entity == EntityType.Energy)
-        {
-            Kill();
-        }
     }
 
     public void Kill()
@@ -264,7 +259,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         PlayAnim(AnimIdle.name);
     }
 
-    public void ExecuteDelayedKill()
+    void ExecuteDelayedKill()
     {
         SoundManager.Play(FxList.Instance.PlayerDie);
         ParticleEmitter.I.EmitDust(trans.position, 8);
@@ -433,12 +428,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
                 return;
             }
         }
-    }
-
-    public void MovingWallForceMove(Vector2 push)
-    {
-        Debug.DrawLine(trans.position, trans.position + (Vector3)push.normalized, Color.yellow, 0.05f);
-        physicsBody.MovePosition(physicsBody.position + push);
     }
 
     private void CheckSquashed()
