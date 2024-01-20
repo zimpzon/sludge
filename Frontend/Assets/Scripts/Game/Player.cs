@@ -593,12 +593,9 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         moveStep += slopeAdjust * stepLen;
         moveStep = moveStep.normalized * stepLen;
 
-        DebugLinesScript.Show("circleDrawer.hasFlatSurfaceToTheLeft", circleDrawer.hasFlatSurfaceToTheLeft);
-        DebugLinesScript.Show("circleDrawer.hasFlatSurfaceToTheRight", circleDrawer.hasFlatSurfaceToTheRight);
-
         // make jumping on narrow (flat) surfaces easier by disabling gravity when on edge
         // if this has unforseen consequences look for another solution
-        bool isOnEdge = circleDrawer.hasDropToTheLeft || circleDrawer.hasDropToTheRight;
+        bool isOnEdge = (circleDrawer.hasDropToTheLeft && circleDrawer.hasFlatSurfaceToTheRight) || (circleDrawer.hasDropToTheRight && circleDrawer.hasFlatSurfaceToTheLeft);
         if (isOnEdge && !isOnSlope && StateParam.jumpState == JumpState.Gravity)
         {
             // ONLY if flat surface

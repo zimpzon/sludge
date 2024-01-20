@@ -173,8 +173,9 @@ public class ClampedCircleDrawer : MonoBehaviour
                 continue;
             }
 
-            // Raycast to check for obstacles
-            RaycastHit2D hit = Physics2D.Raycast(trans.position, vertex, maxRadius, obstacleLayer);
+            // Raycast to check for obstacles (changed to sphere to not slip through diagonal gaps)
+            const float SphereRadius = 0.05f;
+            RaycastHit2D hit = Physics2D.CircleCast(trans.position, 0.05f, vertex, maxRadius, obstacleLayer);
             rayWasBlocked[i] = hit;
             rayHitNormal[i] = hit ? hit.normal : Vector2.zero;
             float maxPossibleLength = hit ? hit.distance : maxRadius;
@@ -225,18 +226,6 @@ public class ClampedCircleDrawer : MonoBehaviour
 
         hasDropToTheLeft = !rayWasBlocked[idxRayDownLeft] && rayWasBlocked[idxRayDownRight];
         hasDropToTheRight = !rayWasBlocked[idxRayDownRight] && rayWasBlocked[idxRayDownLeft];
-
-        //if (contactScoreUp > 0)
-        //    Debug.DrawLine(trans.position, trans.position + Vector3.up * 2, Color.yellow, 0.05f);
-
-        //if (contactScoreDown > 0)
-        //    Debug.DrawLine(trans.position, trans.position + Vector3.down * 2, Color.yellow, 0.05f);
-
-        //if (contactScoreLeft > 0)
-        //    Debug.DrawLine(trans.position, trans.position + Vector3.left * 2, Color.yellow, 0.05f);
-
-        //if (contactScoreRight > 0)
-        //    Debug.DrawLine(trans.position, trans.position + Vector3.right * 2, Color.yellow, 0.05f);
 
         mesh.SetVertices(vertices);
     }
