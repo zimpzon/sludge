@@ -588,9 +588,22 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         Vector2 moveStepX = new Vector2(moveStep.x, 0);
         float stepLen = moveStep.magnitude;
         Vector2 slopeAdjust = CheckSlope(moveStepX, physicsBody.position);
+        bool isOnSlope = slopeAdjust != Vector2.zero;
 
         moveStep += slopeAdjust * stepLen;
         moveStep = moveStep.normalized * stepLen;
+
+        DebugLinesScript.Show("circleDrawer.hasFlatSurfaceToTheLeft", circleDrawer.hasFlatSurfaceToTheLeft);
+        DebugLinesScript.Show("circleDrawer.hasFlatSurfaceToTheRight", circleDrawer.hasFlatSurfaceToTheRight);
+
+        // make jumping on narrow (flat) surfaces easier by disabling gravity when on edge
+        // if this has unforseen consequences look for another solution
+        bool isOnEdge = circleDrawer.hasDropToTheLeft || circleDrawer.hasDropToTheRight;
+        if (isOnEdge && !isOnSlope && StateParam.jumpState == JumpState.Gravity)
+        {
+            // ONLY if flat surface
+            moveStep.y = 0.0f;
+        }
 
         physicsBody.MovePosition(physicsBody.position + moveStep);
         CheckSquashed();
@@ -602,7 +615,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     {
         float len = step.magnitude;
 
-        int hitsFullMove = Physics2D.CircleCastNonAlloc(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.scanHits, len, SludgeUtil.ScanForWallsLayerMask);
+        int hitsFullMove = Physics2D.CircleCast(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.ScanForWallFilter, SludgeUtil.scanHits, len);
         if (hitsFullMove == 0)
         {
             return Vector2.zero;

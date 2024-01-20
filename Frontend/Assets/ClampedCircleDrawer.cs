@@ -11,14 +11,17 @@ public class ClampedCircleDrawer : MonoBehaviour
     public float expandSpeed = 0.05f;
     public float breathingMagnitude= 0.02f;
     public float dotScoreThreshold = 0.5f;
-    public int rayCount = 32;
+    const int rayCount = 32; // changing this could skew assumptions in the code
+    const int idxRayDown = 24;
+    const int idxRayDownLeft = 22;
+    const int idxRayDownRight = 26;
     public LayerMask obstacleLayer;
     public float breathPct;
 
     [NonSerialized] float contactScoreAll;
-    [NonSerialized]float contactScoreUp;
-    [NonSerialized]float contactScoreDown;
-    [NonSerialized]float contactScoreLeft;
+    [NonSerialized] float contactScoreUp;
+    [NonSerialized] float contactScoreDown;
+    [NonSerialized] float contactScoreLeft;
     [NonSerialized] float contactScoreRight;
 
     [NonSerialized] public bool disableCollisions;
@@ -29,11 +32,19 @@ public class ClampedCircleDrawer : MonoBehaviour
     [NonSerialized] public bool hasHeadContact;
     [NonSerialized] public bool hasGroundContact;
 
+    [NonSerialized] public bool hasDropToTheLeft;
+    [NonSerialized] public bool hasDropToTheRight;
+
+    [NonSerialized] public bool hasFlatSurfaceToTheLeft;
+    [NonSerialized] public bool hasFlatSurfaceToTheRight;
+
     private Transform trans;
     private Mesh mesh;
     private Vector3[] vertices;
     private int[] triangles;
     private float[] lengths;
+    private bool[] rayWasBlocked = new bool[rayCount];
+    private Vector2[] rayHitNormal = new Vector2[rayCount];
 
     private void Awake()
     {
@@ -84,6 +95,13 @@ public class ClampedCircleDrawer : MonoBehaviour
             if (hit)
             {
                 Gizmos.color = Color.blue;
+                if  (i == idxRayDown)
+                    Gizmos.color = Color.red;
+                if (i == idxRayDownLeft)
+                    Gizmos.color = Color.green;
+                if (i == idxRayDownRight)
+                    Gizmos.color = Color.yellow;
+
                 Gizmos.DrawLine(transform.position, transform.position + vertex * maxRadius);
             }
 
@@ -157,6 +175,8 @@ public class ClampedCircleDrawer : MonoBehaviour
 
             // Raycast to check for obstacles
             RaycastHit2D hit = Physics2D.Raycast(trans.position, vertex, maxRadius, obstacleLayer);
+            rayWasBlocked[i] = hit;
+            rayHitNormal[i] = hit ? hit.normal : Vector2.zero;
             float maxPossibleLength = hit ? hit.distance : maxRadius;
 
             // dot: // 1 same direction, -1 opposite direction
@@ -199,6 +219,12 @@ public class ClampedCircleDrawer : MonoBehaviour
         hasLeftContact = contactScoreLeft > 6.4f;
         hasRightContact = contactScoreRight > 6.4f;
         hasGroundContact = contactScoreDown > 0;
+
+        hasFlatSurfaceToTheLeft = (rayHitNormal[idxRayDownLeft] - Vector2.up).magnitude < 0.1f;
+        hasFlatSurfaceToTheRight = (rayHitNormal[idxRayDownRight] - Vector2.up).magnitude < 0.1f;
+
+        hasDropToTheLeft = !rayWasBlocked[idxRayDownLeft] && rayWasBlocked[idxRayDownRight];
+        hasDropToTheRight = !rayWasBlocked[idxRayDownRight] && rayWasBlocked[idxRayDownLeft];
 
         //if (contactScoreUp > 0)
         //    Debug.DrawLine(trans.position, trans.position + Vector3.up * 2, Color.yellow, 0.05f);
