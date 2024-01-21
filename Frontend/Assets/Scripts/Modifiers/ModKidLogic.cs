@@ -32,7 +32,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
 
     private Rigidbody2D _rigidbody;
 
-    void Awake()
+    public override void OnLoaded()
     {
         trans = transform;
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -106,6 +106,9 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
 
     private void CheckSquashed()
     {
+        if (GameManager.I.FrameCounter == 0) // Hacky hacky: EngineTick gets called once before starting round. could we be starting in a wall?
+            return;
+
         int hits = Physics2D.OverlapCollider(squashedCollider, SludgeUtil.ScanForWallFilter, SludgeUtil.colliderHits);
         bool wasSquished = hits > 0;
         if (wasSquished)

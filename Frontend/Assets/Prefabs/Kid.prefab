@@ -319,7 +319,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4436653674360094710}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd51a05a657c5bd48821d1fb58534f13, type: 3}
   m_Name: 
@@ -328,7 +328,6 @@ MonoBehaviour:
   fallGravity: 4
   maxVelocity: 15
   EyeScaleSurprised: 1.5
-  DeathMiniDelay: 0.5
 --- !u!1 &4436653675008080832
 GameObject:
   m_ObjectHideFlags: 0

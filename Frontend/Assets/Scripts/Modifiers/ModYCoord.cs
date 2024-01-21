@@ -64,13 +64,14 @@ namespace Sludge.Modifiers
             Vector3 pos = hasRigidbody ? _rigidbody.position : trans.position;
             float newY = Mathf.Lerp(T0(startPos).y, T1(startPos).y, (float)t);
 
+            Vector3 newPos = new Vector3(pos.x, newY, pos.z);
+
             if (!hasRigidbody)
             {
-                transform.position = pos;
+                transform.position = newPos;
                 return;
             }
 
-            Vector3 newPos = new Vector3(pos.x, newY, pos.z);
             _rigidbody.MovePosition(newPos);
         }
     }
