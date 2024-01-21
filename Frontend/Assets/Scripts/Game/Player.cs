@@ -144,6 +144,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         circleDrawer.Reset();
         eyesTransform.localScale = eyesBaseScale;
 
+        GetComponentInChildren<EnergyPillDetectorScript>().Reset();
         bodyRoot.SetActive(true);
         PlayAnim(AnimIdle.name);
         SetAlpha(1.0f);

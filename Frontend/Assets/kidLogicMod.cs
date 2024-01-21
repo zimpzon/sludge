@@ -20,7 +20,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     public float fallGravity = 4.0f;
     public float maxVelocity = 15.0f;
     public float EyeScaleSurprised = 1.5f;
-    public float DeathMiniDelay = 0.5f;
+    float DeathMiniDelay = 0.1f;
 
     S s = new S();
     Transform trans;

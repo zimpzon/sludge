@@ -38,6 +38,8 @@ public class FxList : MonoBehaviour
     public SoundItem BallCollectorDie;
     public SoundItem RocketBurst;
     public SoundItem ExitOpen;
+    public SoundItem TriggerEnergy;
+    public SoundItem ArmEnergy;
 
     private void Awake()
     {
