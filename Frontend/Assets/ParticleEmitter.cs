@@ -6,6 +6,7 @@ public class ParticleEmitter : MonoBehaviour
 
     public ParticleSystem DustParticles;
     public ParticleSystem PillParticles;
+    public ParticleSystem EnergyArmParticles;
 
     private void Awake()
     {
@@ -27,5 +28,11 @@ public class ParticleEmitter : MonoBehaviour
     {
         PillParticles.transform.position = pos;
         PillParticles.Emit(count);
+    }
+
+    public void EmitEnergyArm(Vector3 pos, int count)
+    {
+        EnergyArmParticles.transform.position = pos;
+        EnergyArmParticles.Emit(count);
     }
 }

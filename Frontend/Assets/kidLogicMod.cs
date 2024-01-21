@@ -114,6 +114,11 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         }
     }
 
+    public void OnArmedEnergyHit()
+    {
+        Kill();
+    }
+
     public void Kill()
     {
         if (s.deathScheduled || !s.Alive)

@@ -246,6 +246,11 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         }
     }
 
+    public void OnArmedEnergyHit()
+    {
+        Kill();
+    }
+
     public void Kill()
     {
         if (deathScheduled || !Alive)
