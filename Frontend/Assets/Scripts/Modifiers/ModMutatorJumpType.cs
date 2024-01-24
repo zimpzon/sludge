@@ -11,9 +11,15 @@ public class ModMutatorJumpType : SludgeModifier
 
     public MutatorJumpType JumpType = MutatorJumpType.DoubleJump;
 
+
     private void Awake()
     {
         basePos = transform.position;
+    }
+
+    public override void OnLoaded()
+    {
+        Awake();
     }
 
     public override void Reset()

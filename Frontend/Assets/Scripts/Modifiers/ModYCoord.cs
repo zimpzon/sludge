@@ -12,6 +12,7 @@ namespace Sludge.Modifiers
         public double TimeMultiplier = 1.0;
         public bool PingPong = true;
         public Easings Easing = Easings.Linear;
+        public float GizmoTime = 0.0f;
 
         Transform trans;
         Vector3 startPos;
@@ -29,6 +30,10 @@ namespace Sludge.Modifiers
             Gizmos.DrawCube(T0(transform.position), Vector3.one * 0.75f);
             Gizmos.DrawCube(T1(transform.position), Vector3.one * 0.75f);
             Gizmos.DrawLine(T0(transform.position), T1(transform.position));
+
+            float t = GetT(GizmoTime);
+            float gizmoY = Mathf.Lerp(T0(transform.position).y, T1(transform.position).y, t);
+            Gizmos.DrawCube(transform.position - Vector3.up * gizmoY, Vector3.one * 0.75f);
         }
 
         private void OnValidate()
@@ -49,16 +54,21 @@ namespace Sludge.Modifiers
             _rigidbody = GetComponent<Rigidbody2D>();
         }
 
+        float GetT(float time)
+        {
+            double t = time * TimeMultiplier + CurrentlyAt;
+            t = SludgeUtil.TimeMod(t, PingPong);
+
+            t = Ease.Apply(Easing, t);
+            return (float)t;
+        }
+
         public override void EngineTick()
         {
             if (!Active)
                 return;
 
-            double t = GameManager.I.EngineTime * TimeMultiplier + CurrentlyAt;
-            t = SludgeUtil.TimeMod(t, PingPong);
-
-            t = Ease.Apply(Easing, t);
-
+            float t = GetT((float)GameManager.I.EngineTime);
             bool hasRigidbody = _rigidbody != null;
 
             Vector3 pos = hasRigidbody ? _rigidbody.position : trans.position;

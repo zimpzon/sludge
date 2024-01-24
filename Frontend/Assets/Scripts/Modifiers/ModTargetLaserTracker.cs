@@ -9,7 +9,7 @@ public class ModTargetLaserTracker : SludgeModifier
     const float WidthMax = 0.08f;
     const float KillTime = 1f;
     const float BulletSpeed = 5;
-    const float BulletDelay = 1.0f;
+    const float BulletDelay = 2.0f;
 
     public Transform Body;
 

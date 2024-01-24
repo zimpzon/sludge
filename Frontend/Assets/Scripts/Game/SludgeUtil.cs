@@ -23,13 +23,14 @@ namespace Sludge.Utility
 
         public static double TimeMod(double t, bool pingPong)
         {
+            float sign = Mathf.Sign((float)t);
+
             // Take the absolute value of t to handle negative numbers
-            double absT = Math.Abs(t);
+            t = Math.Abs(t);
             double frac = t % 1;
             double result = pingPong ? PingPong(frac) : frac;
 
-            // Return the result with the original sign of t
-            return t >= 0 ? result : -result;
+            return sign > 0 ? result : 1.0f - result;
         }
 
         private static double PingPong(double t) => t <= 0.5 ? t * 2 : 1 - ((t - 0.5) * 2);

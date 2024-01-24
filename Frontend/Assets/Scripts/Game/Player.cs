@@ -46,7 +46,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public static Vector3 Position;
 
     public bool ShowDebug = false;
-    public bool DisableConveoyrs = false;
+    public bool DisableConveyors = false;
 
     public AnimationClip AnimMoveLeft;
     public AnimationClip AnimMoveRight;
@@ -108,6 +108,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     CircleCollider2D playerCollider;
     CircleCollider2D playerSquashedCollider; // a smaller collider used to detect player is squashed between moving walls
     ClampedCircleDrawer circleDrawer;
+    EnergyPillDetectorScript energyDetector;
+    PillCollectorScript pillCollector;
 
     void Awake()
     {
@@ -126,6 +128,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         childSprites = GetComponentsInChildren<SpriteRenderer>();
         allColliders = GetComponentsInChildren<Collider2D>();
+        energyDetector = GetComponentInChildren<EnergyPillDetectorScript>();
+        pillCollector = GetComponentInChildren<PillCollectorScript>();
         animator = GetComponentInChildren<Animator>();
     }
 
@@ -144,7 +148,10 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         circleDrawer.Reset();
         eyesTransform.localScale = eyesBaseScale;
 
-        GetComponentInChildren<EnergyPillDetectorScript>().Reset();
+        pillCollector.enabled = true;
+        energyDetector.enabled = true;
+        energyDetector.Reset();
+
         bodyRoot.SetActive(true);
         PlayAnim(AnimIdle.name);
         SetAlpha(1.0f);
@@ -154,6 +161,9 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     public void DisableCollisions(bool disable)
     {
+        pillCollector.enabled = !disable;
+        energyDetector.enabled = !disable;
+
         circleDrawer.disableCollisions = disable;
 
         foreach (var col in allColliders)
@@ -172,7 +182,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     public void OnConveyorBeltEnter(Vector2 beltDirection)
     {
-        if (DisableConveoyrs)
+        if (DisableConveyors)
             return;
 
         onConveyorBeltCount++;
@@ -180,7 +190,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     public void OnConveyorBeltExit(Vector2 beltDirection)
     {
-        if (DisableConveoyrs)
+        if (DisableConveyors)
             return;
 
         onConveyorBeltCount--;
@@ -199,7 +209,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     public void AddConveyorPulse(Vector2 pulse)
     {
-        if (DisableConveoyrs)
+        if (DisableConveyors)
             return;
 
         StateParam.impulse += pulse;

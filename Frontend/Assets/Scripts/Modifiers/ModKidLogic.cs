@@ -14,6 +14,8 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         public double deathScheduleTime;
         public bool deathScheduled;
         public bool Alive = true;
+        public float eyeScale = 1.0f;
+        public float eyeScaleTarget = 1.0f;
     }
 
     public Transform TargetTransform;
@@ -73,6 +75,27 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
 
         s.impulse = Vector2.zero;
         _rigidbody.velocity = beltDirection.normalized * maxVelocity;
+    }
+
+    void UpdateEyes()
+    {
+        var playerDir = Player.Position - trans.position;
+        float sqrPlayerDist = playerDir.sqrMagnitude;
+        playerDir.Normalize();
+
+        const float SqrLookRange = 8 * 8;
+        const float MaxScale = 0.9f;
+
+        s.eyeScaleTarget = sqrPlayerDist < SqrLookRange ? MaxScale : MaxScale * 0.9f;
+
+        s.eyeScale += (float)((s.eyeScaleTarget > s.eyeScale) ? GameManager.TickSize * 4.0f : -GameManager.TickSize * 4.0f);
+        s.eyeScale = Mathf.Clamp(s.eyeScale, 0, MaxScale);
+
+        bool doBlink = Random.value < (1 / 200.0);
+        if (doBlink)
+            s.eyeScale = 0;
+
+        //pupil.localPosition = eyeScale < 0.2f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.1f, playerDir.y * 0.08f * MaxScale);
     }
 
     public override void EngineTick()
