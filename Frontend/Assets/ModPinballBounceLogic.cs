@@ -1,18 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
+using Sludge.Modifiers;
+using Sludge.Utility;
 using UnityEngine;
 
-public class ModPinballBounceLogic : MonoBehaviour
+public class ModPinballBounceLogic : SludgeModifier
 {
-    // Start is called before the first frame update
-    void Start()
+    Transform trans;
+    Transform bodyTrans;
+    Vector3 baseScale;
+
+    public override void OnLoaded()
     {
-        
+        trans = transform;
+        baseScale = trans.localScale;
+        bodyTrans = SludgeUtil.FindByName(trans, "Body").transform;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+        if (entity == EntityType.Player || entity == EntityType.Friend)
+        {
+            collision.rigidbody.AddForce(-collision.contacts[0].normal * 2000f, ForceMode2D.Force);
+            bodyTrans.DORewind();
+            bodyTrans.DOPunchScale(Vector3.one * 0.2f, 0.2f);
+        }
+    }
+
+    public override void Reset()
+    {
+    }
+
+    public override void EngineTick()
+    {
     }
 }

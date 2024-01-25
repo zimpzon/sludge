@@ -7,8 +7,8 @@ namespace Sludge.Shared
     {
         public double PosX;
         public double PosY;
-        public double ScaleX = 0.5f;
-        public double ScaleY = 0.5f;
+        public double ScaleX = 1.0f;
+        public double ScaleY = 1.0f;
         public double RotZ;
         public double? Width;
         public double? Height;

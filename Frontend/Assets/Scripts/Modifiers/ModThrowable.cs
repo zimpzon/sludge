@@ -75,7 +75,7 @@ public class ModThrowable : SludgeModifier
         //    GameManager.I.Player.ThrowablePickedUp(null);
 
         SoundManager.Play(FxList.Instance.ThrownBombExplode);
-        GameManager.I.CameraRoot.DOShakePosition(0.1f, 0.2f);
+        GameManager.I.ShakeCamera(duration: 0.1f, strength: 0.2f);
 
         body.SetActive(false);
         isExploding = true;

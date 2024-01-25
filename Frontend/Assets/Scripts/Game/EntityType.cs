@@ -22,5 +22,6 @@
         PillBallCollector,
         Energy,
         Friend,
+        PinballBounce,
     };
 }

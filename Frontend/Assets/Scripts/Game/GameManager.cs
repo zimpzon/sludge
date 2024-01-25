@@ -219,8 +219,6 @@ public class GameManager : MonoBehaviour
 
         while (true)
         {
-            GC.Collect();
-
             SetMenuButtonActive(ButtonStartRound, true);
 
             var selectedButton = ButtonStartRound;
@@ -292,7 +290,7 @@ public class GameManager : MonoBehaviour
         if (landing)
         {
             SoundManager.Play(FxList.Instance.PlayerLanding);
-            CameraRoot.DOShakePosition(PlayerLandDuration, 0.1f);
+            ShakeCamera(PlayerLandDuration, strength: 0.5f);
 
             while (t >= 0)
             {
@@ -306,8 +304,7 @@ public class GameManager : MonoBehaviour
             }
 
             SoundManager.Play(FxList.Instance.PlayerLanded);
-            CameraRoot.DOKill();
-            CameraRoot.DOShakePosition(0.5f, 0.5f);
+            ShakeCamera(duration: 0.5f, strength: 0.5f);
         }
         else
         {
@@ -320,6 +317,12 @@ public class GameManager : MonoBehaviour
         Player.transform.rotation = baseRotation;
 
         Player.DisableCollisions(false);
+    }
+
+    public void ShakeCamera(float duration, float strength)
+    {
+        CameraRoot.DORewind();
+        CameraRoot.DOShakePosition(duration, strength);
     }
 
     public void OnPillEaten()

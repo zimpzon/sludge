@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Sludge.SludgeObjects;
+using Sludge.Utility;
 
-public class PinballBounce : MonoBehaviour
+public class PinballBounce : SludgeObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public override EntityType EntityType => EntityType.PinballBounce;
 }

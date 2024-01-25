@@ -1,4 +1,3 @@
-using DG.Tweening;
 using Sludge.Colors;
 using Sludge.Modifiers;
 using Sludge.Utility;
@@ -24,6 +23,11 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     public float EyeScaleSurprised = 1.5f;
     float DeathMiniDelay = 0.1f;
 
+    public float nudgeForce = 1f;     // Adjust this value to control the nudge strength
+    public float attemptInterval = 1f; // Time interval in seconds between attempts to upright itself
+    private Rigidbody2D rb;
+    private float nextAttemptTime = 0f;
+
     S s = new S();
     Transform trans;
     Vector3 basePos;
@@ -37,6 +41,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     public override void OnLoaded()
     {
         trans = transform;
+        rb = GetComponent<Rigidbody2D>();
         _rigidbody = GetComponent<Rigidbody2D>();
         squashedCollider = SludgeUtil.FindByName(trans, "SquashedCollider").GetComponent<CircleCollider2D>();
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
@@ -75,6 +80,24 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
 
         s.impulse = Vector2.zero;
         _rigidbody.velocity = beltDirection.normalized * maxVelocity;
+    }
+
+    private void AttemptToUpright()
+    {
+        // Calculate the angle difference from upright position
+        float angle = Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.z, 0));
+
+        // Check if the square is on its side or worse
+        if (angle > 45f)
+        {
+            // Determine the side of the square to apply the force
+            Vector2 forceDirection = angle > 0 ? Vector2.right : Vector2.left;
+            Vector2 forcePoint = rb.position + (forceDirection * (rb.GetComponent<Collider2D>().bounds.extents.x));
+
+            float force = angle > 120f ? nudgeForce * 2.0f : nudgeForce;
+            // Apply an upward force at the determined side of the square
+            rb.AddForceAtPosition(Vector2.up * force, forcePoint, ForceMode2D.Impulse);
+        }
     }
 
     void UpdateEyes()
@@ -125,6 +148,14 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
 
         s.impulse = Vector2.zero;
         CheckSquashed();
+
+        // Check if it's time to try to upright itself
+        bool isStill = rb.velocity.magnitude < 0.1f && Mathf.Abs(rb.angularVelocity) < 0.1f;
+        if (Time.time >= nextAttemptTime && isStill)
+        {
+            AttemptToUpright();
+            nextAttemptTime = Time.time + attemptInterval;
+        }
     }
 
     private void CheckSquashed()
@@ -159,8 +190,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     {
         SoundManager.Play(FxList.Instance.PlayerDie);
         ParticleEmitter.I.EmitDust(trans.position, 4);
-        GameManager.I.CameraRoot.DOKill();
-        GameManager.I.CameraRoot.DOShakePosition(1.0f, 0.4f);
+        GameManager.I.ShakeCamera(duration: 1.0f, strength: 0.4f);
 
         Player.I.EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Player), scale: 0.5f);
 
