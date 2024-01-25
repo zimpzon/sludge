@@ -15,6 +15,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         public bool Alive = true;
         public float eyeScale = 1.0f;
         public float eyeScaleTarget = 1.0f;
+        public int uprightAttempts;
     }
 
     public Transform TargetTransform;
@@ -26,6 +27,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     public float nudgeForce = 1f;     // Adjust this value to control the nudge strength
     public float attemptInterval = 1f; // Time interval in seconds between attempts to upright itself
     private Rigidbody2D rb;
+    private Collider2D collider;
     private float nextAttemptTime = 0f;
 
     S s = new S();
@@ -42,6 +44,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     {
         trans = transform;
         rb = GetComponent<Rigidbody2D>();
+        collider = GetComponent<Collider2D>();
         _rigidbody = GetComponent<Rigidbody2D>();
         squashedCollider = SludgeUtil.FindByName(trans, "SquashedCollider").GetComponent<CircleCollider2D>();
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
@@ -92,11 +95,20 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         {
             // Determine the side of the square to apply the force
             Vector2 forceDirection = angle > 0 ? Vector2.right : Vector2.left;
-            Vector2 forcePoint = rb.position + (forceDirection * (rb.GetComponent<Collider2D>().bounds.extents.x));
+            Vector2 forcePoint = rb.position + (forceDirection * collider.bounds.extents.x);
 
             float force = angle > 120f ? nudgeForce * 2.0f : nudgeForce;
-            // Apply an upward force at the determined side of the square
+            force *= 1.0f + Mathf.Min(s.uprightAttempts * 0.1f, 1.3f);
+
             rb.AddForceAtPosition(Vector2.up * force, forcePoint, ForceMode2D.Impulse);
+            if (s.uprightAttempts++ > 4)
+            {
+                s.uprightAttempts = 0;
+            }
+        }
+        else
+        {
+            s.uprightAttempts = 0;
         }
     }
 

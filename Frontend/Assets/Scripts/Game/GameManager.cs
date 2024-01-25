@@ -321,7 +321,7 @@ public class GameManager : MonoBehaviour
 
     public void ShakeCamera(float duration, float strength)
     {
-        CameraRoot.DORewind();
+        CameraRoot.DOKill(complete: true);
         CameraRoot.DOShakePosition(duration, strength);
     }
 
