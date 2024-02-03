@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sludge.Colors;
 using Sludge.Modifiers;
 using Sludge.Utility;
@@ -16,6 +17,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         public float eyeScale = 1.0f;
         public float eyeScaleTarget = 1.0f;
         public int uprightAttempts;
+        public float idleTime;
     }
 
     public Transform TargetTransform;
@@ -24,11 +26,12 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     public float EyeScaleSurprised = 1.5f;
     float DeathMiniDelay = 0.1f;
 
+    Transform _speechTrans;
     public float nudgeForce = 1f;     // Adjust this value to control the nudge strength
     public float attemptInterval = 1f; // Time interval in seconds between attempts to upright itself
     private Rigidbody2D rb;
-    private Collider2D collider;
-    private float nextAttemptTime = 0f;
+    private Collider2D _collider;
+    private float nextUprightAttemptTime = 0f;
 
     S s = new S();
     Transform trans;
@@ -44,12 +47,12 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     {
         trans = transform;
         rb = GetComponent<Rigidbody2D>();
-        collider = GetComponent<Collider2D>();
+        _collider = GetComponent<Collider2D>();
         _rigidbody = GetComponent<Rigidbody2D>();
         squashedCollider = SludgeUtil.FindByName(trans, "SquashedCollider").GetComponent<CircleCollider2D>();
         eyesTransform = SludgeUtil.FindByName(trans, "Body/Eyes");
         eyesBaseScale = eyesTransform.localScale;
-
+        _speechTrans = SludgeUtil.FindByName(trans, "Speech");
         basePos = transform.position;
         baseRotation = transform.rotation;
     }
@@ -61,8 +64,18 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         transform.position = basePos;
         transform.rotation = baseRotation;
         eyesTransform.localScale = eyesBaseScale;
+        _speechTrans.gameObject.SetActive(false);
 
         base.Reset();
+        ShowSpeech();
+    }
+
+    void ShowSpeech()
+    {
+        _speechTrans.gameObject.SetActive(true);
+        _speechTrans.gameObject.transform.localScale = Vector3.zero;
+        _speechTrans.DOScale(1.0f, 0.25f).SetEase(Ease.InCubic);
+        _speechTrans.DOScale(0.0f, 0.25f).SetEase(Ease.InCubic).SetDelay(3.0f);
     }
 
     public void AddConveyorPulse(Vector2 pulse)
@@ -88,25 +101,17 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     private void AttemptToUpright()
     {
         // Calculate the angle difference from upright position
-        float angle = Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.z, 0));
+        float angle = Mathf.DeltaAngle(transform.eulerAngles.z, 0);
+        float absAngle = Mathf.Abs(angle);
 
-        // Check if the square is on its side or worse
-        if (angle > 45f)
-        {
-            // Determine the side of the square to apply the force
-            Vector2 forceDirection = angle > 0 ? Vector2.right : Vector2.left;
-            Vector2 forcePoint = rb.position + (forceDirection * collider.bounds.extents.x);
+        // Determine the side of the square to apply the force
+        Vector2 forceDirection = angle > 0 ? Vector2.right : Vector2.left;
+        Vector2 forcePoint = rb.position + (forceDirection * _collider.bounds.extents.x);
 
-            float force = angle > 120f ? nudgeForce * 2.0f : nudgeForce;
-            force *= 1.0f + Mathf.Min(s.uprightAttempts * 0.1f, 1.3f);
-
-            rb.AddForceAtPosition(Vector2.up * force, forcePoint, ForceMode2D.Impulse);
-            if (s.uprightAttempts++ > 4)
-            {
-                s.uprightAttempts = 0;
-            }
-        }
-        else
+        float force = absAngle > 120f ? nudgeForce * 2.0f : nudgeForce;
+        force *= 1.0f + Mathf.Min(s.uprightAttempts * 0.1f, 1.3f);
+        rb.AddForceAtPosition(Vector2.up * force, forcePoint, ForceMode2D.Impulse);
+        if (s.uprightAttempts++ > 4)
         {
             s.uprightAttempts = 0;
         }
@@ -161,13 +166,28 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         s.impulse = Vector2.zero;
         CheckSquashed();
 
-        // Check if it's time to try to upright itself
-        bool isStill = rb.velocity.magnitude < 0.1f && Mathf.Abs(rb.angularVelocity) < 0.1f;
-        if (Time.time >= nextAttemptTime && isStill)
-        {
-            AttemptToUpright();
-            nextAttemptTime = Time.time + attemptInterval;
-        }
+        //bool isStill = rb.velocity.magnitude < 0.2f;
+        //bool isNearGround = Physics2D.Raycast(rb.position, Vector2.down, SludgeUtil.ScanForWallsLayerMask);
+        //Debug.DrawLine(rb.position, rb.position + Vector2.down, isNearGround ? Color.green : Color.yellow, 0.2f);
+
+        //float absAngle = Mathf.Abs(Mathf.DeltaAngle(transform.eulerAngles.z, 0));
+        //bool isVertical = absAngle < 2;
+        //bool isUpright = absAngle < 45;
+
+        //_speechTrans.gameObject.SetActive(isNearGround && isStill && isVertical);
+
+        //s.idleTime += isStill && isUpright ? (float)GameManager.TickSize : 0;
+        //DebugLinesScript.Show("IdleTime", s.idleTime);
+
+        //if (isUpright)
+        //    s.uprightAttempts = 0;
+
+        //if (!isUpright && isStill && Time.time >= nextUprightAttemptTime)
+        //{
+        //    s.idleTime = 0;
+        //    AttemptToUpright();
+        //    nextUprightAttemptTime = Time.time + attemptInterval;
+        //}
     }
 
     private void CheckSquashed()

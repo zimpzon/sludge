@@ -15,7 +15,6 @@ public class ModPinballBounceLogic : SludgeModifier
         baseScale = trans.localScale;
         bodyTrans = SludgeUtil.FindByName(trans, "Body").transform;
     }
-    static int count = 0;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -25,7 +24,6 @@ public class ModPinballBounceLogic : SludgeModifier
             collision.rigidbody.AddForce(-collision.contacts[0].normal * 2000f, ForceMode2D.Force);
             bodyTrans.DOKill(complete: true);
             bodyTrans.DOPunchScale(Vector3.one * 0.2f, 0.2f);
-            DebugLinesScript.Show("tween", count++);
         }
     }
 
