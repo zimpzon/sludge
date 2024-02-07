@@ -74,7 +74,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     {
         _speechTrans.gameObject.SetActive(true);
         _speechTrans.gameObject.transform.localScale = Vector3.zero;
-        _speechTrans.DOScale(1.0f, 0.25f).SetEase(Ease.InCubic);
+        _speechTrans.DOScale(1.0f, 0.25f).SetEase(Ease.InBounce);
         _speechTrans.DOScale(0.0f, 0.25f).SetEase(Ease.InCubic).SetDelay(3.0f);
     }
 

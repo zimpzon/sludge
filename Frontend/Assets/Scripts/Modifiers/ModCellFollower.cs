@@ -73,31 +73,39 @@ public class ModCellFollower : SludgeModifier
         if (GameManager.I.FrameCounter == 0) // Oopsie, GameManager calls Reset, EngineTick, then Reset again. Avoid nasty cell claiming.
             return;
 
-        double animSpeed = 2;
-        float fAnimIdx = (float)(GameManager.I.EngineTime * animSpeed * Anim.Sprites.Length);
-        fAnimIdx += animOffset;
-        int animIdx = ((int) Mathf.Abs(fAnimIdx)) % Anim.Sprites.Length;
-        spriteRenderer.sprite = Anim.Sprites[animIdx];
+        //double animSpeed = 2;
+        //float fAnimIdx = (float)(GameManager.I.EngineTime * animSpeed * Anim.Sprites.Length);
+        //fAnimIdx += animOffset;
+        //int animIdx = ((int) Mathf.Abs(fAnimIdx)) % Anim.Sprites.Length;
+        //spriteRenderer.sprite = Anim.Sprites[animIdx];
 
         double t = Mathf.Clamp01((float)((timeMoveThisCell - moveTimeLeft) / timeMoveThisCell));
         moveTimeLeft -= GameManager.TickSize;
         double x = startX + (targetX - startX) * t;
         double y = startY + (targetY - startY) * t;
 
+        targetRotZ = Mathf.Atan2((float)(targetX - startX), (float)(startY - targetY)) * Mathf.Rad2Deg;
+        if (Mathf.Abs(targetRotZ - currentRotZ) > 90)
+        {
+            currentRotZ = targetRotZ;
+        }
+        else
+        {
+            currentRotZ += Mathf.DeltaAngle(currentRotZ, targetRotZ) > 0 ? Time.deltaTime * 1000 : Time.deltaTime * -1000;
+        }
+
+        //trans.rotation = Quaternion.Euler(0, 0, currentRotZ);
+
+        float scaleY = Mathf.Sin(Time.time * 20.0f + trans.position.x + trans.position.y);
+        scaleY = (scaleY + 1) * 0.5f * 0.15f;
+
+        float scaleX = Mathf.Sin(Mathf.PI + Time.time * 20.0f + trans.position.x + trans.position.y);
+        scaleX = (scaleX + 1) * 0.5f * 0.075f;
+
+        trans.localScale = new Vector3(1.0f + scaleX, 1.0f + scaleY, 1);
+
         if (moveTimeLeft > 0)
         {
-            targetRotZ = Mathf.Atan2((float)(targetX - startX), (float)(startY - targetY)) * Mathf.Rad2Deg;
-            if (Mathf.Abs(targetRotZ - currentRotZ) > 90)
-            {
-                currentRotZ = targetRotZ;
-            }
-            else
-            {
-                currentRotZ += Mathf.DeltaAngle(currentRotZ, targetRotZ) > 0 ? Time.deltaTime * 1000 : Time.deltaTime * -1000;
-            }
-
-            trans.rotation = Quaternion.Euler(0, 0, currentRotZ);
-
             // Move from one cell to another. We only occupy the target cell.
             trans.position = new Vector2((float)x, (float)y);
         }
