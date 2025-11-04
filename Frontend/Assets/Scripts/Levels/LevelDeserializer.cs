@@ -43,7 +43,7 @@ public static class LevelDeserializer
 
         ClearTilemap(elements.WallTilemap);
         ClearTilemap(elements.PillTilemap);
-        ClearTilemap(elements.EnergyTilemap);
+        //ClearTilemap(elements.EnergyTilemap);
 
         // Place player
         data.PlayerTransform.Set(elements.Player.transform);
@@ -86,7 +86,7 @@ public static class LevelDeserializer
 
         PlaceTiles(elements.WallTilemap, data.WallTilemap);
         PlaceTiles(elements.PillTilemap, data.PillTilemap);
-        PlaceTiles(elements.EnergyTilemap, data.EnergyTilemap);
+        //PlaceTiles(elements.EnergyTilemap, data.EnergyTilemap);
 
         // Place new Objects
         for (int i = 0; i < data.Objects.Count; ++i)

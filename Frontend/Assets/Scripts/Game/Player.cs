@@ -1,5 +1,4 @@
 using Assets.Scripts.Game;
-using DG.Tweening;
 using Sludge.Colors;
 using Sludge.Utility;
 using System;
@@ -14,7 +13,7 @@ public class StateParam
 {
     public JumpState jumpState = JumpState.Gravity;
 
-    public MutatorJumpType jumpType = MutatorJumpType.SingleJump;
+    public MutatorJumpType jumpType = MutatorJumpType.WallJump;
     public MutatorTypePlayerSize playerSize = MutatorTypePlayerSize.DefaultMe;
 
     public Vector2 force;
@@ -33,6 +32,7 @@ public class StateParam
     public bool isHuggingRightWall;
     public bool isDescending;
     public bool isWallSliding;
+    public bool hasWallJumpEnabled = true;  // NEW: separate wall jump flag
 }
 
 public class Player : MonoBehaviour, IConveyorBeltPassenger
@@ -53,21 +53,21 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public AnimationClip AnimIdle;
     string currentAnim;
 
-    public float JumpHeight = 1.25f;
-    public float JumpTimeToPeak = 0.3f;
-    public float JumpTimeToDescend = 0.25f;
+    public float JumpHeight = 2.0f;
+    public float JumpTimeToPeak = 0.1f;
+    public float JumpTimeToDescend = 0.1f;
     public float JumpMaxHoldTime = 0.2f;
-    public float MaxVelocity = 15.0f;
-    public float WallSlideMaxFall = 4.0f;
-    public int WallJumpDisableHorizontalBreakingMs = 100;
-    public float AirControl = 0.25f;
+    public float MaxVelocity = 25.0f;
+    public float WallSlideMaxFall = 1.0f;
+    public int WallJumpDisableHorizontalBreakingMs = 100; // no effect?
+    public float AirControl = 5.0f;
     public int CoyoteJumpMs = 200;
-    public int QueuedJumpMs = 200;
-    public int timeBeforeIdleMs = 1000;
+    public int QueuedJumpMs = 300;
+    public int timeBeforeIdleMs = 3000;
 
-    public float RunPeak = 10.0f;
-    public float RunTimeToPeak = 0.15f;
-    public float RunTimeToStop = 0.25f;
+    public float RunPeak = 20.0f;
+    public float RunTimeToPeak = 0.1f;
+    public float RunTimeToStop = 0.1f;
 
     public float WallDistance = 0.02f;
 
@@ -108,7 +108,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     CircleCollider2D playerCollider;
     CircleCollider2D playerSquashedCollider; // a smaller collider used to detect player is squashed between moving walls
     ClampedCircleDrawer circleDrawer;
-    EnergyPillDetectorScript energyDetector;
     PillCollectorScript pillCollector;
 
     void Awake()
@@ -128,7 +127,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         childSprites = GetComponentsInChildren<SpriteRenderer>();
         allColliders = GetComponentsInChildren<Collider2D>();
-        energyDetector = GetComponentInChildren<EnergyPillDetectorScript>();
         pillCollector = GetComponentInChildren<PillCollectorScript>();
         animator = GetComponentInChildren<Animator>();
     }
@@ -149,8 +147,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         eyesTransform.localScale = eyesBaseScale;
 
         pillCollector.enabled = true;
-        energyDetector.enabled = true;
-        energyDetector.Reset();
 
         bodyRoot.SetActive(true);
         PlayAnim(AnimIdle.name);
@@ -162,7 +158,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public void DisableCollisions(bool disable)
     {
         pillCollector.enabled = !disable;
-        energyDetector.enabled = !disable;
 
         circleDrawer.disableCollisions = disable;
 
@@ -199,7 +194,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         if (onConveyorBeltCount < 0)
         {
             onConveyorBeltCount = 0;
-        } else if (onConveyorBeltCount == 0)
+        }
+        else if (onConveyorBeltCount == 0)
         {
             // exit force
             StateParam.impulse = Vector2.zero;
@@ -401,13 +397,15 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         else
         {
             // not touching ground
-            if (StateParam.isWallSliding)
+
+            // UPDATED: Check wall jump first if wall sliding and wall jump is enabled
+            if (StateParam.isWallSliding && StateParam.hasWallJumpEnabled)
             {
                 if (IsJumpTapped() || HasQueuedJump())
                 {
-                    // reset air jumps when wall jumping
+                    // Wall jump grants a full air jump refresh
                     ResetJumpCount(param);
-                    StateParam.force.x = StateParam.isHuggingLeftWall ? RunPeak : -RunPeak;
+                    StateParam.force.x = StateParam.isHuggingLeftWall ? RunPeak * 2 : -RunPeak * 2;
 
                     StartJump(param);
                     SetState(param, JumpState.AscendingActive);
@@ -418,6 +416,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
                 }
             }
 
+            // UPDATED: Then check coyote jump
             if (IsJumpTapped())
             {
                 if (HasCoyoteJump())
@@ -427,6 +426,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
                     return;
                 }
 
+                // UPDATED: Air jumps work independently - no longer checking wall jump type
                 if (HasAirJumpsLeft())
                 {
                     StartAirJump(param);
@@ -435,7 +435,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
                 }
             }
 
-            // check air jump after coyote jump so player won't lose an air jump if coyote jump is available
+            // UPDATED: Queued air jump (after coyote check so we don't waste an air jump)
             if (HasQueuedJump() && HasAirJumpsLeft())
             {
                 StartAirJump(param);
@@ -549,8 +549,9 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         StateParam.isHuggingRightWall = circleDrawer.hasRightContact && !HasGroundContact();
         StateParam.isDescending = StateParam.force.y < 0;
 
+        // UPDATED: Wall sliding is now independent - just needs wall contact and descending
         StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
-        StateParam.isWallSliding &= StateParam.jumpType == MutatorJumpType.WallJump;
+        StateParam.isWallSliding &= StateParam.hasWallJumpEnabled; // Only slide if wall jump is enabled
 
         // update simulation
         // do not apply gravity while holding jump on a new jump (state = ascending active)
@@ -686,12 +687,12 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             var prevPos = GameManager.PlayerSamples[PositionSampleIdx - 1].Pos;
             var dist = (trans.position - prevPos).magnitude;
-            if (dist< 0.08f)
+            if (dist < 0.08f)
                 return;
         }
 
         if (!init)
-           PositionSampleIdx++;
+            PositionSampleIdx++;
 
         GameManager.PlayerSamples[PositionSampleIdx].Pos = trans.position;
     }

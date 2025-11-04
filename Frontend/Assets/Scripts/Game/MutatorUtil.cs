@@ -19,22 +19,7 @@ namespace Assets.Scripts.Game
 
         public static int GetJumpCount(MutatorJumpType m)
         {
-            switch (m)
-            {
-                case MutatorJumpType.SingleJump:
-                case MutatorJumpType.WallJump:
-                    return 0;
-                case MutatorJumpType.DoubleJump:
-                    return 1;
-                case MutatorJumpType.TripleJump:
-                    return 2;
-                case MutatorJumpType.QuadJump:
-                    return 3;
-                case MutatorJumpType.ForeverJump:
-                    return -1;
-                default:
-                    return 0;
-            }
+            return 1; // double jump
         }
     }
 }

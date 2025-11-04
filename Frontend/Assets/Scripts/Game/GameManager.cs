@@ -7,7 +7,6 @@ using Sludge.Shared;
 using Sludge.SludgeObjects;
 using Sludge.UI;
 using Sludge.Utility;
-using System;
 using System.Collections;
 using System.Linq;
 using TMPro;
@@ -25,8 +24,8 @@ public class GameManager : MonoBehaviour
 
     public static readonly string Version = "0.1b";
 
-    public const double TickSize = 0.016;
-    public const int TickSizeMs = 16;
+    public const double TickSize = 0.008;
+    public const int TickSizeMs = 8;
     public const double TicksPerSecond = 1000.0 / TickSizeMs;
 
     public Vector3 PlayerLandStartOffset = new Vector3(25, -16);
@@ -37,7 +36,6 @@ public class GameManager : MonoBehaviour
     public Transform CameraRoot;
     public Tilemap Tilemap;
     public Tilemap PillTilemap;
-    public Tilemap EnergyTilemap;
     public ColorSchemeScriptableObject CurrentColorScheme;
     public ColorSchemeScriptableObject CurrentUiColorScheme;
     public ColorSchemeListScriptableObject ColorSchemeList;
@@ -89,7 +87,7 @@ public class GameManager : MonoBehaviour
         PlayerInput = new PlayerInput();
         levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
-        Player = FindObjectOfType<Player>();
+        Player = FindFirstObjectByType<Player>();
 
         OnValidate();
     }
@@ -188,7 +186,6 @@ public class GameManager : MonoBehaviour
         SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 
         PillTilemap.gameObject.GetComponent<PillSnapshot>().Push();
-        EnergyTilemap.gameObject.GetComponent<PillSnapshot>().Push();
 
         ResetLevel();
 
@@ -358,7 +355,6 @@ public class GameManager : MonoBehaviour
         LevelCells.Instance.UpdateFrom(Tilemap);
 
         PillTilemap.gameObject.GetComponent<PillSnapshot>().Pop();
-        EnergyTilemap.gameObject.GetComponent<PillSnapshot>().Pop();
 
         for (int i = 0; i < SludgeObjects.Length; ++i)
             SludgeUtil.SetActiveRecursive(SludgeObjects[i].gameObject, true);
