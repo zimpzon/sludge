@@ -21,6 +21,7 @@ public class StateParam
     public bool isHoldingJump;
     public int airJumpsLeft = 0;
 
+    public int wallCoyoteJumpEndTime = int.MinValue;
     public int jumpHoldStartTime = int.MaxValue;
     public int coyoteJumpEndTime = int.MinValue;
     public int queuedJumpEndTime = int.MinValue;
@@ -60,10 +61,10 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public float MaxVelocity = 25.0f;
     public float WallSlideMaxFall = 1.0f;
     public int WallJumpDisableHorizontalBreakingMs = 100; // no effect?
-    public float AirControl = 5.0f;
-    public int CoyoteJumpMs = 200;
-    public int QueuedJumpMs = 300;
-    public int timeBeforeIdleMs = 3000;
+    public float AirControl = 1.0f;
+    public int CoyoteJumpMs = 100;
+    public int QueuedJumpMs = 100;
+    public int timeBeforeIdleMs = 5000;
 
     public float RunPeak = 20.0f;
     public float RunTimeToPeak = 0.1f;
@@ -215,6 +216,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     {
         StateParam.coyoteJumpEndTime = int.MinValue;
         StateParam.queuedJumpEndTime = int.MinValue;
+        StateParam.wallCoyoteJumpEndTime = int.MinValue;
     }
 
     public void Teleport(Vector3 newPos)
@@ -315,6 +317,13 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         BodyDeathParticles.Emit(particleCount / 20);
     }
 
+    public bool Debug_HasWallCoyoteJump;
+    public bool Debug_IsJumpTapped;
+    public bool Debug_HasQueuedJump;
+    public bool Debug_HasCoyoteJump;
+    public bool Debug_HasGroundContact;
+
+    bool HasWallCoyoteJump() => StateParam.wallCoyoteJumpEndTime >= GameManager.I.EngineTimeMs;
     bool IsJumpTapped() => GameManager.PlayerInput.IsTapped(Sludge.PlayerInputs.PlayerInput.InputType.Jump);
     bool HasQueuedJump() => StateParam.queuedJumpEndTime >= GameManager.I.EngineTimeMs;
     bool HasCoyoteJump() => StateParam.coyoteJumpEndTime >= GameManager.I.EngineTimeMs;
@@ -398,25 +407,35 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             // not touching ground
 
-            // UPDATED: Check wall jump first if wall sliding and wall jump is enabled
-            if (StateParam.isWallSliding && StateParam.hasWallJumpEnabled)
+            // UPDATED: Check wall jump (including coyote time) if wall jump is enabled
+            if (StateParam.hasWallJumpEnabled)
             {
-                if (IsJumpTapped() || HasQueuedJump())
+                bool isCurrentlyWallSliding = StateParam.isWallSliding;
+                bool hasRecentWallContact = HasWallCoyoteJump();
+
+                if ((isCurrentlyWallSliding || hasRecentWallContact) && (IsJumpTapped() || HasQueuedJump()))
                 {
+                    // Determine which direction to jump based on current or recent wall contact
+                    bool jumpRight = StateParam.isHuggingLeftWall ||
+                                    (hasRecentWallContact && StateParam.disabledHorizontalDirection < 0);
+
                     // Wall jump grants a full air jump refresh
                     ResetJumpCount(param);
-                    StateParam.force.x = StateParam.isHuggingLeftWall ? RunPeak * 2 : -RunPeak * 2;
+                    StateParam.force.x = jumpRight ? RunPeak * 2 : -RunPeak * 2;
 
                     StartJump(param);
                     SetState(param, JumpState.AscendingActive);
 
                     StateParam.disableHorizontalDirectionEndTime = GameManager.I.EngineTimeMs + WallJumpDisableHorizontalBreakingMs;
-                    StateParam.disabledHorizontalDirection = StateParam.isHuggingLeftWall ? -1 : 1;
+                    StateParam.disabledHorizontalDirection = jumpRight ? 1 : -1;
+
+                    // Clear wall coyote time after using it
+                    StateParam.wallCoyoteJumpEndTime = int.MinValue;
                     return;
                 }
             }
 
-            // UPDATED: Then check coyote jump
+            // Then check coyote jump
             if (IsJumpTapped())
             {
                 if (HasCoyoteJump())
@@ -426,7 +445,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
                     return;
                 }
 
-                // UPDATED: Air jumps work independently - no longer checking wall jump type
+                // Air jumps work independently
                 if (HasAirJumpsLeft())
                 {
                     StartAirJump(param);
@@ -435,7 +454,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
                 }
             }
 
-            // UPDATED: Queued air jump (after coyote check so we don't waste an air jump)
+            // Queued air jump
             if (HasQueuedJump() && HasAirJumpsLeft())
             {
                 StartAirJump(param);
@@ -545,9 +564,24 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             }
         }
 
+        bool wasWallSliding = StateParam.isWallSliding;
+        bool wasHuggingLeftWall = StateParam.isHuggingLeftWall;
+
         StateParam.isHuggingLeftWall = circleDrawer.hasLeftContact && !HasGroundContact();
         StateParam.isHuggingRightWall = circleDrawer.hasRightContact && !HasGroundContact();
         StateParam.isDescending = StateParam.force.y < 0;
+
+        // Wall sliding is now independent - just needs wall contact and descending
+        StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
+        StateParam.isWallSliding &= StateParam.hasWallJumpEnabled; // Only slide if wall jump is enabled
+
+        // NEW: Set wall coyote time when leaving a wall
+        if (wasWallSliding && !StateParam.isWallSliding && !HasGroundContact())
+        {
+            StateParam.wallCoyoteJumpEndTime = GameManager.I.EngineTimeMs + CoyoteJumpMs;
+            // Remember which wall we were on for the jump direction
+            StateParam.disabledHorizontalDirection = wasHuggingLeftWall ? -1 : 1;
+        }
 
         // UPDATED: Wall sliding is now independent - just needs wall contact and descending
         StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
@@ -609,9 +643,15 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         physicsBody.MovePosition(physicsBody.position + moveStep);
         CheckSquashed();
-    }
 
-    float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;
+        Debug_HasWallCoyoteJump = HasWallCoyoteJump();
+        Debug_IsJumpTapped = IsJumpTapped();
+        Debug_HasQueuedJump = HasQueuedJump();
+        Debug_HasCoyoteJump = HasCoyoteJump();
+        Debug_HasGroundContact = HasGroundContact();
+}
+
+float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;
 
     Vector2 CheckSlope(Vector2 step, Vector2 from)
     {

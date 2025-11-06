@@ -29,7 +29,7 @@ public class BallCollector : SludgeObject
     {
         trans.position = basePos;
         trans.localScale = baseScale;
-        rigidBody.velocity = Vector3.one * speed;
+        rigidBody.linearVelocity = Vector3.one * speed;
         frameLastWallHit = 0;
         squashCounter = 0;
 
@@ -44,7 +44,7 @@ public class BallCollector : SludgeObject
             rigidBody.simulated = false;
             rigidBody.constraints |= RigidbodyConstraints2D.FreezePositionX;
             rigidBody.constraints |= RigidbodyConstraints2D.FreezePositionY;
-            rigidBody.velocity = Vector3.zero;
+            rigidBody.linearVelocity = Vector3.zero;
         }
         else
         {
@@ -52,7 +52,7 @@ public class BallCollector : SludgeObject
             rigidBody.simulated = true;
             rigidBody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
             rigidBody.constraints &= ~RigidbodyConstraints2D.FreezePositionY;
-            rigidBody.velocity = Vector3.one;
+            rigidBody.linearVelocity = Vector3.one;
         }
     }
 

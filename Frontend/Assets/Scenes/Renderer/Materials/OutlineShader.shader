@@ -1,86 +1,64 @@
-Shader "Sludge/OutlineShader"
+Shader "Hidden/Custom/CustomEffect"
 {
-    Properties
-    {
-        _MainTex ("Texture", 2D) = "white" {}
-    }
-
-    SubShader
-    {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
-
-        Pass
-        {
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
-
-            #include "UnityCG.cginc"
-
-            struct appdata
+	Properties 
+	{
+	    _MainTex ("Main Texture", 2D) = "white" {}
+	}
+	SubShader 
+	{
+		Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline" }
+		
+		Pass
+		{
+            HLSLPROGRAM
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
+            
+			#pragma vertex vert
+			#pragma fragment frag
+			
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+            
+			float _Intensity;
+            float4 _OverlayColor;
+            
+            struct Attributes
             {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
+                float4 positionOS       : POSITION;
+                float2 uv               : TEXCOORD0;
             };
 
-            struct v2f
+            struct Varyings
             {
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
+                float2 uv        : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                UNITY_VERTEX_OUTPUT_STEREO
             };
-
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
-            uniform half4 _EdgeColor;
-            uniform half4 _WallColor;
-
-            v2f vert (appdata v)
+            
+            
+            Varyings vert(Attributes input)
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                return o;
+                Varyings output = (Varyings)0;
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
+
+                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+                output.vertex = vertexInput.positionCS;
+                output.uv = input.uv;
+                
+                return output;
             }
-
-            float4 _MainTex_TexelSize;
-
-            fixed4 frag(v2f i) : SV_Target
+            
+            float4 frag (Varyings input) : SV_Target 
             {
-                half4 col0 = tex2D(_MainTex, i.uv);
-                half4 colL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, 0));
-                half4 colR = tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, 0));
-                half4 colU = tex2D(_MainTex, i.uv + float2(0, -_MainTex_TexelSize.y));
-                half4 colD = tex2D(_MainTex, i.uv + float2(0, _MainTex_TexelSize.y));
-                // Sampling diagonal neighbors
-                half4 colUL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, -_MainTex_TexelSize.y));
-                half4 colUR = tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, -_MainTex_TexelSize.y));
-                half4 colDL = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x, _MainTex_TexelSize.y));
-                half4 colDR = tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x, _MainTex_TexelSize.y));
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                half col0Sum = col0.r + col0.g + col0.b;
-                half isBackground = step(0.01, col0Sum);
-
-                // Enhanced edge detection with diagonals
-                half4 diff = abs(col0.g - colL.g) + abs(col0.g - colR.g) +
-                             abs(col0.g - colU.g) + abs(col0.g - colD.g) +
-                             abs(col0.g - colUL.g) + abs(col0.g - colUR.g) +
-                             abs(col0.g - colDL.g) + abs(col0.g - colDR.g);
-                half edgeStrength = smoothstep(0.0, 0.4, diff); // Adjust range as needed
-
-                half4 color = (col0 * isBackground) + (_WallColor * (1 - isBackground));
-
-                // Smooth blending of edge color
-                half4 edgeColor = _EdgeColor * edgeStrength * 3;
-                half4 result = lerp(color, edgeColor, edgeStrength); // Linear interpolation for smooth transition
-
-                return result;
+				float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
+				return lerp(color, _OverlayColor, _Intensity);
+            	
             }
-
-            ENDCG
-        }
-    }
+            
+			ENDHLSL
+		}
+	} 
+	FallBack "Diffuse"
 }

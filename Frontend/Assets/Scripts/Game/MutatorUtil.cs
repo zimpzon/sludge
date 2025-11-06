@@ -19,7 +19,7 @@ namespace Assets.Scripts.Game
 
         public static int GetJumpCount(MutatorJumpType m)
         {
-            return 1; // double jump
+            return 0; // double jump
         }
     }
 }

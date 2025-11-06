@@ -95,7 +95,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         _rigidbody.gravityScale = 1;
 
         s.impulse = Vector2.zero;
-        _rigidbody.velocity = beltDirection.normalized * maxVelocity;
+        _rigidbody.linearVelocity = beltDirection.normalized * maxVelocity;
     }
 
     private void AttemptToUpright()

@@ -41,7 +41,7 @@ public class ModStalkerLogic : SludgeModifier
         trans.position = basePos;
         trans.rotation = baseRot;
         rigidBody.simulated = false;
-        rigidBody.velocity = Vector2.zero;
+        rigidBody.linearVelocity = Vector2.zero;
         rigidBody.angularVelocity = 0;
         timeRightInFront = 0;
         burstReadyAt = 0;
@@ -76,7 +76,7 @@ public class ModStalkerLogic : SludgeModifier
         float desiredAngle = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg - 90;
 
         // turnspeed is inversely proportional to speed
-        float speedPct = Mathf.Clamp01(rigidBody.velocity.magnitude / MaxSpeed);
+        float speedPct = Mathf.Clamp01(rigidBody.linearVelocity.magnitude / MaxSpeed);
         float scaledTurnSpeed = RotationSpeed * (1 - Mathf.Clamp(speedPct, 0.0f, 0.75f));
 
         var targetRot = Quaternion.Euler(0, 0, desiredAngle);
@@ -119,6 +119,6 @@ public class ModStalkerLogic : SludgeModifier
             }
         }
 
-        rigidBody.velocity = Vector3.ClampMagnitude(rigidBody.velocity, MaxSpeed);
+        rigidBody.linearVelocity = Vector3.ClampMagnitude(rigidBody.linearVelocity, MaxSpeed);
     }
 }
