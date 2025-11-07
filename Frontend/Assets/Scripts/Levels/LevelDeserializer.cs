@@ -107,7 +107,7 @@ public static class LevelDeserializer
             {
                 if (j >= storedObj.Modifiers.Count)
                 {
-                    Debug.Log($"Object ({instance.name}) stored in json has fewer modifiers than in the current code. Maybe new modifiers were added in the editor after level was saved?");
+                    Debug.Log($"Object ({instance.name}) stored in json has fewer modifiers than in the current code. Maybe new modifiers were added in the editor after level was saved? Save again to fix.");
                     continue;
                 }
                 JsonUtility.FromJsonOverwrite(storedObj.Modifiers[j], modifiers[j]);

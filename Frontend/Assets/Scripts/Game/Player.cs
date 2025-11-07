@@ -34,6 +34,7 @@ public class StateParam
     public bool isDescending;
     public bool isWallSliding;
     public bool hasWallJumpEnabled = true;  // NEW: separate wall jump flag
+    public int LatestDirection = 1;
 }
 
 public class Player : MonoBehaviour, IConveyorBeltPassenger
@@ -236,19 +237,25 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+        var entityType = SludgeUtil.GetEntityType(collision.gameObject);
 
-        bool harmlessHit = entity == EntityType.PlayerBullet ||
-            entity == EntityType.Player ||
-            entity == EntityType.Pickup ||
-            entity == EntityType.BallCollector;
+        if (entityType == EntityType.Energy)
+        {
+            Kill();
+            return;
+        }
+
+        bool harmlessHit = entityType == EntityType.PlayerBullet ||
+        entityType == EntityType.Player ||
+        entityType == EntityType.Pickup ||
+        entityType == EntityType.BallCollector;
 
         if (harmlessHit)
         {
             return;
         }
 
-        bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
+        bool wallHit = entityType == EntityType.FakeWall || entityType == EntityType.StaticLevel;
         if (wallHit)
         {
             return;
@@ -419,6 +426,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
                     bool jumpRight = StateParam.isHuggingLeftWall ||
                                     (hasRecentWallContact && StateParam.disabledHorizontalDirection < 0);
 
+                    StateParam.LatestDirection = jumpRight ? 1 : -1;
+
                     // Wall jump grants a full air jump refresh
                     ResetJumpCount(param);
                     StateParam.force.x = jumpRight ? RunPeak * 2 : -RunPeak * 2;
@@ -517,12 +526,25 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             PlayAnim(AnimMoveLeft.name);
             direction = -1;
+            StateParam.LatestDirection = direction;
         }
         else if (GameManager.PlayerInput.Right != 0 && !moveRightDisabled)
         {
             PlayAnim(AnimMoveRight.name);
             direction = 1;
+            StateParam.LatestDirection = direction;
         }
+
+        // Look left or right
+        var lookDir = 0;
+        if (StateParam.isHuggingLeftWall || StateParam.LatestDirection == -1)
+            lookDir = -1;
+        else
+            lookDir = 1;
+
+        var scale = transform.localScale;
+        scale.x = lookDir;
+        transform.localScale = scale;
 
         bool isHorizontallyStill = Mathf.Abs(StateParam.force.x) < 0.001f;
         if (!isHorizontallyStill)

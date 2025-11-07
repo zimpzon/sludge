@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ModBulletMovement : SludgeModifier
 {
+    public bool Static = false;
     public double DX;
     public double DY;
     public double X;
@@ -12,8 +13,6 @@ public class ModBulletMovement : SludgeModifier
     public SchemeColor SchemeColor1;
     public SchemeColor SchemeColor2;
 
-    Color color1;
-    Color color2;
     SpriteRenderer spriteRenderer;
 
     Transform trans;
@@ -22,16 +21,6 @@ public class ModBulletMovement : SludgeModifier
     {
         trans = transform;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        Reset();
-    }
-
-    public override void Reset()
-    {
-        if (GameManager.I == null)
-            return;
-
-        color1 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor1);
-        color2 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor2);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -44,7 +33,11 @@ public class ModBulletMovement : SludgeModifier
             GameManager.I.Player.Kill();
             destroyBullet = true;
         }
-        else if (entity == EntityType.Enemy)
+
+        if (Static)
+            return;
+
+        if (entity == EntityType.Enemy)
         {
             GameManager.I.KillEnemy(collision.gameObject);
             destroyBullet = true;
@@ -68,15 +61,27 @@ public class ModBulletMovement : SludgeModifier
         }
     }
 
+    private void Update()
+    {
+        var color1 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor1);
+        var color2 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor2);
+
+        // Offset flash by position so bullets don't flash in sync
+        float flashX = trans.position.x;
+        float flashY = trans.position.y;
+
+        int offset = (int)(flashX * 20) + (int)(flashY * 20);
+        var color = (Mathf.Abs(Time.time * 100 + offset) % 50) > 25 ? color1 : color2;
+        spriteRenderer.color = color;
+    }
+
     public override void EngineTick()
     {
+        if (Static)
+            return;
+
         X = SludgeUtil.Stabilize(X + DX * GameManager.TickSize);
         Y = SludgeUtil.Stabilize(Y + DY * GameManager.TickSize);
         trans.position = new Vector3((float)X, (float)Y);
-
-        // Offset flash by position so bullets don't flash in sync
-        int offset = (int)(X * 20) + (int)(Y * 20);
-        var color = ((GameManager.I.EngineTimeMs + offset) % 200) > 100 ? color1 : color2;
-        spriteRenderer.color = color;
     }
 }

@@ -31,7 +31,9 @@ public class ModKeyToggle : SludgeModifier
 
         doorCollider.enabled = StartEnabled;
         spriteRenderer.enabled = StartEnabled;
-        mat.SetFloat("_Visibility", StartEnabled ? 1 : 0);
+
+        if (Active)
+            mat.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
 
         spriteRenderer.color = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Walls);
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
@@ -90,15 +92,16 @@ public class ModKeyToggle : SludgeModifier
         while (true)
         {
             float t = (float)(GameManager.I.EngineTime - startTime) / AnimTime;
-            mat.SetFloat("_Visibility", 1 - t);
-
-            if (t >= 1.0f)
+            if (t >= 0.70f)
                 break;
+
+            mat.SetFloat("_Visibility", 0.7f - t);
 
             yield return null;
         }
+        mat.SetFloat("_Visibility", 0.1f);
 
-        spriteRenderer.enabled = false;
+//        spriteRenderer.enabled = false;
     }
 
     IEnumerator EnableMe()
@@ -114,12 +117,12 @@ public class ModKeyToggle : SludgeModifier
         while (true)
         {
             float t = (float)(GameManager.I.EngineTime - startTime) / AnimTime;
-            mat.SetFloat("_Visibility", t);
-
-            if (t >= 1.0f)
+            if (t >= 0.7f)
                 break;
 
+            mat.SetFloat("_Visibility", t);
             yield return null;
         }
+        mat.SetFloat("_Visibility", 0.7f);
     }
 }
