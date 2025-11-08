@@ -50,6 +50,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public bool ShowDebug = false;
     public bool DisableConveyors = false;
 
+    public GameObject Eyes;
     public AnimationClip AnimMoveLeft;
     public AnimationClip AnimMoveRight;
     public AnimationClip AnimIdle;
@@ -102,7 +103,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     Rigidbody2D physicsBody;
     int onConveyorBeltCount;
     Transform eyesTransform;
-    Vector2 eyesBaseScale;
     SpriteRenderer[] childSprites;
     GameObject bodyRoot;
     Collider2D[] allColliders;
@@ -120,10 +120,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         physicsBody = GetComponent<Rigidbody2D>();
 
         playerBaseScale = trans.localScale.x; // just assuming uniform scale
-        eyesTransform = SludgeUtil.FindByName(trans, "Body/Face/Eyes");
         bodyRoot = SludgeUtil.FindByName(trans, "Body").gameObject;
         circleDrawer = SludgeUtil.FindByName(trans, "Body/SoftBody").GetComponent<ClampedCircleDrawer>();
-        eyesBaseScale = eyesTransform.localScale;
         playerCollider = GetComponent<CircleCollider2D>();
         playerSquashedCollider = SludgeUtil.FindByName(trans, "SquashedCollider").GetComponent<CircleCollider2D>();
 
@@ -146,7 +144,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         SetSize(PlayerSize.Normal);
         StateParam = new StateParam();
         circleDrawer.Reset();
-        eyesTransform.localScale = eyesBaseScale;
+        Eyes.SetActive(false);
 
         pillCollector.enabled = true;
 
@@ -272,7 +270,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         if (deathScheduled || !Alive)
             return;
 
-        eyesTransform.localScale = eyesBaseScale * EyeScaleSurprised;
+        Eyes.SetActive(true);
         deathScheduleTime = GameManager.I.EngineTime + DeathMiniDelay;
         deathScheduled = true;
 
@@ -282,6 +280,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     void ExecuteDelayedKill()
     {
+        Eyes.SetActive(false);
         SoundManager.Play(FxList.Instance.PlayerDie);
         ParticleEmitter.I.EmitDust(trans.position, 8);
         GameManager.I.ShakeCamera(duration: 1.0f, strength: 0.7f);

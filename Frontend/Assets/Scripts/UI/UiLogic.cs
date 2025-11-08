@@ -42,10 +42,7 @@ namespace Sludge.UI
 			Instance = this;
 			UiSelectionMarker.gameObject.SetActive(true);
 
-			if (Application.platform == RuntimePlatform.WebGLPlayer)
-            {
-				ButtonExit.SetActive(false);
-            }
+            ButtonExit.SetActive(Application.platform != RuntimePlatform.WebGLPlayer);
 
 			LevelLayoutCasual.CreateLevelsSelection(LevelList.CasualLevels, PlayerProgress.LevelNamespace.Casual);
 			LevelLayoutHard.CreateLevelsSelection(LevelList.HardLevels, PlayerProgress.LevelNamespace.Hard);

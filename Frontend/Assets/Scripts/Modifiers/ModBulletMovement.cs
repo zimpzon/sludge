@@ -13,6 +13,8 @@ public class ModBulletMovement : SludgeModifier
     public SchemeColor SchemeColor1;
     public SchemeColor SchemeColor2;
 
+    float startTime;
+
     SpriteRenderer spriteRenderer;
 
     Transform trans;
@@ -21,6 +23,7 @@ public class ModBulletMovement : SludgeModifier
     {
         trans = transform;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        startTime = Time.time;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -70,9 +73,17 @@ public class ModBulletMovement : SludgeModifier
         float flashX = trans.position.x;
         float flashY = trans.position.y;
 
-        int offset = (int)(flashX * 20) + (int)(flashY * 20);
-        var color = (Mathf.Abs(Time.time * 100 + offset) % 50) > 25 ? color1 : color2;
-        spriteRenderer.color = color;
+        if (Static)
+        {
+            int offset = (int)(flashX * 10) + (int)(flashY * 10);
+            var color = (Mathf.Abs(Time.time * 100 + offset) % 10) > 5 ? color1 : color2;
+            spriteRenderer.color = color;
+        }
+        else
+        {
+            var color = (Mathf.Abs(Time.time * 100 + startTime) % 20) > 10 ? color1 : color2;
+            spriteRenderer.color = color;
+        }
     }
 
     public override void EngineTick()

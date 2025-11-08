@@ -21,7 +21,7 @@ public class ModLineGun : SludgeModifier
 
     public override void Reset()
     {
-        countdown = Delay;
+        countdown = 0;
         firstBulletCountdown = DelayBeforeFirstBullet;
     }
 
