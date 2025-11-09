@@ -45,6 +45,10 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     public enum PlayerSize { Small, Normal, Large };
 
+    public Sprite SpriteIdle;
+    public Sprite SpriteJump;
+    public Sprite[] SpriteRun;
+
     public static Vector3 Position;
 
     public bool ShowDebug = false;
@@ -102,8 +106,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     Vector3 homePos;
     Rigidbody2D physicsBody;
     int onConveyorBeltCount;
-    Transform eyesTransform;
     SpriteRenderer[] childSprites;
+    SpriteRenderer earlSpritesRenderer;
     GameObject bodyRoot;
     Collider2D[] allColliders;
     float playerBaseScale;
@@ -124,6 +128,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         circleDrawer = SludgeUtil.FindByName(trans, "Body/SoftBody").GetComponent<ClampedCircleDrawer>();
         playerCollider = GetComponent<CircleCollider2D>();
         playerSquashedCollider = SludgeUtil.FindByName(trans, "SquashedCollider").GetComponent<CircleCollider2D>();
+        earlSpritesRenderer = SludgeUtil.FindByName(trans, "Body/EarlSprite").GetComponent<SpriteRenderer>();
 
         childSprites = GetComponentsInChildren<SpriteRenderer>();
         allColliders = GetComponentsInChildren<Collider2D>();
@@ -151,6 +156,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         bodyRoot.SetActive(true);
         PlayAnim(AnimIdle.name);
         SetAlpha(1.0f);
+
+        earlSpritesRenderer.sprite = SpriteIdle;
 
         Alive = true;
     }
@@ -261,7 +268,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         if (entityType == EntityType.Enemy)
         {
-            Kill();
+            // Let enemy kill player instead, had some problems with stuck bullet after hitting enemy.
+            //Kill();
         }
     }
 
@@ -577,6 +585,18 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             DebugLinesScript.Show("force", StateParam.force);
             DebugLinesScript.Show("HasGroundContact", HasGroundContact());
             Debug.DrawRay(trans.position, trans.position + (Vector3)StateParam.force.normalized, Color.white, 1);
+        }
+
+        // if No input || airboirne = sprite idle
+        // if Running = cycle run sprites
+        if (HasGroundContact() && direction != 0)
+        {
+            int idx = (GameManager.I.EngineTimeMs / 50) % SpriteRun.Length;
+            earlSpritesRenderer.sprite = SpriteRun[idx];
+        }
+        else
+        {
+            earlSpritesRenderer.sprite = StateParam.force.y > 0 ? SpriteJump : SpriteIdle;
         }
 
         if (direction != 0)
