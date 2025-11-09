@@ -224,7 +224,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
+      maxColor: {r: 0.92549026, g: 0.054901965, b: 0.3019608, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4859,6 +4859,7 @@ GameObject:
   - component: {fileID: 1257187634305622132}
   - component: {fileID: 7993943995025232751}
   - component: {fileID: 4215604513641312967}
+  - component: {fileID: 9017445654202322854}
   m_Layer: 20
   m_Name: Body
   m_TagString: Untagged
@@ -4926,7 +4927,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 28364fc0b531cb5429d474bba007af2c, type: 3}
-  m_Color: {r: 0.24705884, g: 0.2784314, b: 0.23529413, a: 1}
+  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4950,6 +4951,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SchemeColor: 1
   BrightnessOffset: 0
+--- !u!58 &9017445654202322854
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4811304453939938212}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 1.0000002
 --- !u!1 &5287462854484810112
 GameObject:
   m_ObjectHideFlags: 0
@@ -5173,8 +5210,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
-      key1: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
+      key0: {r: 0.9254902, g: 0.05490196, b: 0.3019608, a: 1}
+      key1: {r: 0.9254902, g: 0.05490196, b: 0.3019608, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -5465,7 +5502,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
+      maxColor: {r: 0.92549026, g: 0.054901965, b: 0.3019608, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -10167,7 +10204,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 28364fc0b531cb5429d474bba007af2c, type: 3}
-  m_Color: {r: 0.24705884, g: 0.2784314, b: 0.23529413, a: 1}
+  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

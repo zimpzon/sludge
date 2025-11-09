@@ -61,13 +61,6 @@ public class ModStalkerLogic : SludgeModifier
         {
             GameManager.I.Player.Kill();
         }
-
-        //if (die)
-        //{
-        //    GameManager.I.DustParticles.transform.position = trans.position;
-        //    GameManager.I.DustParticles.Emit(5);
-        //    Destroy(this);
-        //}
     }
 
     public override void EngineTick()

@@ -258,6 +258,21 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             return;
         }
+
+        if (entityType == EntityType.Enemy)
+        {
+            Kill();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var entityType = SludgeUtil.GetEntityType(collision.gameObject);
+
+        if (entityType == EntityType.Enemy)
+        {
+            Kill();
+        }
     }
 
     public void OnArmedEnergyHit()
