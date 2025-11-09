@@ -52,6 +52,24 @@ public class ModStalkerLogic : SludgeModifier
     float burstReadyAt = 0;
     float currentBurstEnd = 0;
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+
+        bool die = false;
+        if (entity == EntityType.Player)
+        {
+            GameManager.I.Player.Kill();
+        }
+
+        //if (die)
+        //{
+        //    GameManager.I.DustParticles.transform.position = trans.position;
+        //    GameManager.I.DustParticles.Emit(5);
+        //    Destroy(this);
+        //}
+    }
+
     public override void EngineTick()
     {
         if (!rigidBody.simulated)
@@ -63,7 +81,7 @@ public class ModStalkerLogic : SludgeModifier
         Vector3 playerDir = Player.Position - trans.position;
 
         float distanceToPlayer = playerDir.magnitude;
-        bool wallBetweenMeAndPlayer = Physics2D.Raycast(trans.position, playerDir.normalized, distanceToPlayer, SludgeUtil.ScanForWallFilter.layerMask);
+        //bool wallBetweenMeAndPlayer = Physics2D.Raycast(trans.position, playerDir.normalized, distanceToPlayer, SludgeUtil.ScanForWallFilter.layerMask);
         //if (wallBetweenMeAndPlayer)
         //    return;
 
@@ -94,7 +112,7 @@ public class ModStalkerLogic : SludgeModifier
 
         if ((float)GameManager.I.EngineTime < currentBurstEnd)
         {
-            ExhaustParticles.Emit(2);
+            ExhaustParticles.Emit(1);
             rigidBody.AddForce(myLookDir * BurstForce * (float)GameManager.TickSize);
         }
         else

@@ -1,3 +1,4 @@
+using PlayFab.ClientModels;
 using Sludge.Easing;
 using Sludge.Modifiers;
 using Sludge.SludgeObjects;
@@ -112,12 +113,13 @@ public class ModSwarm : SludgeModifier
         }
     }
 
-    private void Update()
-    {
-        UpdateMembers(Time.time);
-    }
+    //void Update()
+    //{
+    //    UpdateMembers(Time.time);
+    //}
 
     public override void EngineTick()
     {
+        UpdateMembers(GameManager.I.EngineTime);
     }
 }

@@ -235,7 +235,7 @@ public class GameManager : MonoBehaviour
 
             yield return UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
 
-            yield return RevealPlayer(landing: !lastRoundCancelled);
+            yield return RevealPlayer(landing: false);
 
             while (startRound == false)
             {

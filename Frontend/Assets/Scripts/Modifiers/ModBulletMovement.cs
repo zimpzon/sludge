@@ -76,7 +76,7 @@ public class ModBulletMovement : SludgeModifier
         if (Static)
         {
             int offset = (int)(flashX * 10) + (int)(flashY * 10);
-            var color = (Mathf.Abs(Time.time * 100 + offset) % 10) > 5 ? color1 : color2;
+            var color = (Mathf.Abs(Time.time * 100 + offset) % 50) > 25 ? color1 : color2;
             spriteRenderer.color = color;
         }
         else
