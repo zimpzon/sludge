@@ -376,6 +376,7 @@ public class GameManager : MonoBehaviour
     IEnumerator Playing()
     {
         SoundManager.Play(FxList.Instance.StartRound);
+        Player.RoundStartTime = Time.time;
 
         while (Player.Alive)
         {

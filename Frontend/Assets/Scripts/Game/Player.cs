@@ -95,6 +95,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     float currentScale;
     float wallSlidePendingParticles;
 
+    public float RoundStartTime;
     public bool Alive = false;
     public int ExplodeParticleCount = 200;
     public float EyeScaleSurprised = 1.5f;
@@ -497,6 +498,10 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     private void CheckSquashed()
     {
+        // Player may slightly overlap a collider when loading a new map, causing a death on first round. Wait for it to "slide" out.
+        if (Time.time < RoundStartTime + 100)
+            return;
+
         int hits = Physics2D.OverlapCollider(playerSquashedCollider, SludgeUtil.ScanForWallFilter, SludgeUtil.colliderHits);
         bool playerWasSquished = hits > 0;
         if (playerWasSquished)
@@ -705,9 +710,9 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         Debug_HasQueuedJump = HasQueuedJump();
         Debug_HasCoyoteJump = HasCoyoteJump();
         Debug_HasGroundContact = HasGroundContact();
-}
+    }
 
-float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;
+    float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;
 
     Vector2 CheckSlope(Vector2 step, Vector2 from)
     {

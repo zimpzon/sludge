@@ -1,20 +1,24 @@
-Can stand on objects: BehindLevelDanger, Danger
++ Can stand on objects: BehindLevelDanger, Danger
 
-Static bullet behind walls / plain gun kill player
++ Static bullet behind walls / plain gun kill player
 
-Earl Run/jump
++ 2/3 slopes (use dynamic walls)
+
++ Swarm: save bullet (and other?)
+
++ "lost" bullet is left active in bulletmanager. Probably released too late? (let enemies kill player, player ignore enemies)
+
++ Earl Run/jump
+
+- Try cow (skipped for now)
+
+- Dash? More dynamic. (cannot handle more keys for player)
+
+dying when switching level
 
 Next - move
 Retry - r
 Level Select - q
 
-Dash? More dynamic
-
-Swarm: save bullet (and other?)
-
 Timer: gold, silver, bronze
-
-Try cow
-
-
 
