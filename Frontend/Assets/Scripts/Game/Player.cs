@@ -712,12 +712,11 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         Debug_HasGroundContact = HasGroundContact();
     }
 
-    float GetPlayerColliderRadius() => playerCollider.radius * trans.localScale.x;
+    float GetPlayerColliderRadius() => Math.Abs(playerCollider.radius * trans.localScale.x);
 
     Vector2 CheckSlope(Vector2 step, Vector2 from)
     {
         float len = step.magnitude;
-
         int hitsFullMove = Physics2D.CircleCast(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.ScanForWallFilter, SludgeUtil.scanHits, len);
         if (hitsFullMove == 0)
         {
@@ -726,7 +725,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         Vector2 normal = SludgeUtil.scanHits[0].normal;
         float angle = Vector2.Angle(normal, Vector2.up);
-        if (angle > 45.5f)
+        if (Math.Abs(angle) > 45.5f)
         {
             return Vector2.zero;
         }
