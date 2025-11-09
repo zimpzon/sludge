@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2193028589078610486}
   - component: {fileID: 5105457816952257837}
-  m_Layer: 16
+  m_Layer: 20
   m_Name: EyeLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -52,6 +52,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -73,8 +74,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -715668635
-  m_SortingLayer: 3
+  m_SortingLayerID: 1145421365
+  m_SortingLayer: 6
   m_SortingOrder: 45
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 36.651127, g: 78.8931, b: 100.63529, a: 1}
@@ -100,7 +101,7 @@ GameObject:
   - component: {fileID: 2005602706348247794}
   - component: {fileID: 7737138576031971790}
   - component: {fileID: 7315295390004490541}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: Walker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +139,7 @@ MonoBehaviour:
   Anim: {fileID: 0}
 --- !u!50 &2005602706348247794
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -149,8 +150,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -222,7 +223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3221363699676230181}
   - component: {fileID: 6459853576083408374}
-  m_Layer: 16
+  m_Layer: 20
   m_Name: PupilRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,6 +264,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -284,8 +286,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -715668635
-  m_SortingLayer: 3
+  m_SortingLayerID: 1145421365
+  m_SortingLayer: 6
   m_SortingOrder: 46
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -308,7 +310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6735977712884029917}
   - component: {fileID: 342378922032629974}
-  m_Layer: 16
+  m_Layer: 20
   m_Name: PupilLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,6 +351,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -370,8 +373,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -715668635
-  m_SortingLayer: 3
+  m_SortingLayerID: 1145421365
+  m_SortingLayer: 6
   m_SortingOrder: 46
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
@@ -395,7 +398,7 @@ GameObject:
   - component: {fileID: 8794144713379787561}
   - component: {fileID: 1013811196514874278}
   - component: {fileID: 5700626074953169671}
-  m_Layer: 16
+  m_Layer: 20
   m_Name: EyeRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -437,6 +440,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -458,8 +462,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -715668635
-  m_SortingLayer: 3
+  m_SortingLayerID: 1145421365
+  m_SortingLayer: 6
   m_SortingOrder: 45
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 88.979454, g: 100.278435, b: 84.74234, a: 1}
@@ -497,7 +501,7 @@ GameObject:
   - component: {fileID: 8114555864623928791}
   - component: {fileID: 8987929457852499467}
   - component: {fileID: 6671096143485099696}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -539,6 +543,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -560,8 +565,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1145421365
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 8c011c44ea1cdf44793bf39c3ee9fddd, type: 3}
   m_Color: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
@@ -597,7 +602,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7701024866102040421}
-  m_Layer: 16
+  m_Layer: 20
   m_Name: Eyes
   m_TagString: Untagged
   m_Icon: {fileID: 0}

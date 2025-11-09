@@ -25,8 +25,8 @@ TagManager:
   - PlayerInner
   - Energy
   - Pills
-  - 
-  - 
+  - Enemy
+  - EnemyBehindStaticLevel
   - 
   - 
   - 
@@ -41,14 +41,23 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: BehindStaticLevel
+    uniqueID: 2329853097
+    locked: 0
   - name: StaticLevel
     uniqueID: 2654869251
+    locked: 0
+  - name: ToggleLevel
+    uniqueID: 3528757787
     locked: 0
   - name: StaticLevelOverlay
     uniqueID: 2429680789
     locked: 0
   - name: Objects
     uniqueID: 3579298661
+    locked: 0
+  - name: Enemy
+    uniqueID: 1145421365
     locked: 0
   - name: Player
     uniqueID: 1078348351

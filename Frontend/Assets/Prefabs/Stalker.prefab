@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6763693638552090092}
   - component: {fileID: 8491247980404449923}
   - component: {fileID: 1372297269}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: Stalker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 7715410534965845418}
   - component: {fileID: 1935668298345435237}
   - component: {fileID: 141020441}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: ExhaustParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
+      maxColor: {r: 0.24705884, g: 0.2784314, b: 0.23529413, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4988,7 +4988,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6667958344270092535}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5019,6 +5019,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6667958344270092535}
     m_Modifications:
+    - target: {fileID: 7559058070678355111, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058070678355111, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058070937016566, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058070937016566, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
     - target: {fileID: 7559058071454838915, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
       propertyPath: m_Name
       value: AnimatedAnt
@@ -5070,6 +5086,38 @@ PrefabInstance:
     - target: {fileID: 7559058071454838917, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
       propertyPath: Type
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071771586046, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071771586046, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071840515530, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071840515530, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071881111570, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071881111570, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058072574531675, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058072574531675, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7559058071454838918, guid: e8f39e33c938ab745936eab7c575424f, type: 3}

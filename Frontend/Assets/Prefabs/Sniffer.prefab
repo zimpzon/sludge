@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7945868061838934279}
   - component: {fileID: 7945868061838934276}
   - component: {fileID: 7945868061838934277}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: DeadAnt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7945868061838934278}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7945868062974577792}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7945868061838934276
 SpriteRenderer:
@@ -50,6 +50,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -72,10 +75,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -715668635
-  m_SortingLayer: 3
+  m_SortingLayer: 5
   m_SortingOrder: 32
   m_Sprite: {fileID: 21300000, guid: 0872b1f5782615744ad60d77794946f0, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -112,7 +115,7 @@ GameObject:
   - component: {fileID: 7945868062974577799}
   - component: {fileID: 138204267}
   - component: {fileID: 3460572327345288935}
-  m_Layer: 7
+  m_Layer: 20
   m_Name: Sniffer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,6 +129,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7945868062974577795}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.5, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -134,7 +138,6 @@ Transform:
   - {fileID: 478032072627837396}
   - {fileID: 7945868061838934279}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7945868062974577793
 MonoBehaviour:
@@ -156,17 +159,37 @@ CircleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7945868062974577795}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
   m_Radius: 3
 --- !u!50 &138204267
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -177,10 +200,16 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -203,8 +232,25 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 7945868062974577792}
     m_Modifications:
+    - target: {fileID: 7559058070678355111, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058070678355111, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058070937016566, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058070937016566, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
     - target: {fileID: 7559058071454838915, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
       propertyPath: m_Name
       value: AnimatedAnt
@@ -265,7 +311,42 @@ PrefabInstance:
       propertyPath: Type
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 7559058071771586046, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071771586046, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071840515530, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071840515530, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071881111570, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058071881111570, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058072574531675, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7559058072574531675, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 1145421365
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8f39e33c938ab745936eab7c575424f, type: 3}
 --- !u!4 &478032072627837396 stripped
 Transform:
