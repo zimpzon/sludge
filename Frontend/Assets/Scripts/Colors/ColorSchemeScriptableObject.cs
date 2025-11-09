@@ -102,6 +102,9 @@ namespace Sludge.Colors
 
         public static Color GetColor(ColorSchemeScriptableObject scheme, SchemeColor name)
         {
+            if (scheme == null)
+                return Color.magenta;
+
             var color = name switch
             {
                 SchemeColor.Background => scheme.Background,

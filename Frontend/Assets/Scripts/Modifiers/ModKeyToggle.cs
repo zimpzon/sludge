@@ -36,7 +36,7 @@ public class ModKeyToggle : SludgeModifier
         if (Active)
             mat.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
 
-        spriteRenderer.color = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Walls);
+        spriteRenderer.color = ColorScheme.GetColor(GameManager.I?.CurrentColorScheme, SchemeColor.Walls);
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
 
         flipAtLastPillCollectedExecuted = false;
