@@ -280,7 +280,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         if (entityType == EntityType.Enemy)
         {
-            Kill();
+            // Let enemy kill player instead, had some problems with stuck bullet after hitting enemy.
+            //Kill();
         }
     }
 
@@ -739,6 +740,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         //Debug.DrawLine(from, from + normal, Color.yellow, 0.05f);
         //Debug.DrawLine(from, from + cross, Color.red, 0.05f);
 
+        DebugLinesScript.Instance.SetLine("angle", angle);
         float scaledBySteepness = (100 - angle) / 100;
         cross = cross.normalized * scaledBySteepness; // 45 degrees = 0.5 power, 0 degrees = 1 power
         return cross;

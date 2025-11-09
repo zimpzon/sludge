@@ -76,12 +76,12 @@ SpriteRenderer:
   m_SortingLayerID: -1965114199
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0d862e91bf0848c45a163402e3a93be8, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.28, y: 1.28}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -136,12 +136,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Static: 1
+  UseArming: 1
   DX: 0
   DY: 0
   X: 0
   Y: 0
   SchemeColor1: 25
   SchemeColor2: 26
+  NotArmedSprite: {fileID: 21300000, guid: 0d862e91bf0848c45a163402e3a93be8, type: 3}
+  PendingArmedSprite: {fileID: 21300000, guid: fcd2122257305054d8e092329fa810f4, type: 3}
+  ArmedSprite: {fileID: 21300000, guid: 9e891a68ae334154eb2c931648f9a2a9, type: 3}
 --- !u!58 &2180690740409253438
 CircleCollider2D:
   m_ObjectHideFlags: 0
