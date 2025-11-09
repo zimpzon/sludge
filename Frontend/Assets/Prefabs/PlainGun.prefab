@@ -143,6 +143,7 @@ GameObject:
   - component: {fileID: 787391110328024900}
   - component: {fileID: 4832934764206911107}
   - component: {fileID: 1395317646}
+  - component: {fileID: 5771213653114527031}
   m_Layer: 20
   m_Name: Body
   m_TagString: Untagged
@@ -210,7 +211,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f6c417bec13b0254ba24cd42d9eb6cc5, type: 3}
-  m_Color: {r: 0.24705884, g: 0.2784314, b: 0.23529413, a: 1}
+  m_Color: {r: 0.206, g: 0.206, b: 0.206, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -234,3 +235,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SchemeColor: 1
   BrightnessOffset: 0
+--- !u!68 &5771213653114527031
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3453969439030570023}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -1}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -1, y: 0}
+  - {x: 1, y: 0}
+  - {x: 0, y: 2}
+  - {x: -1, y: 0}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: -0.1, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
