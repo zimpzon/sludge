@@ -394,7 +394,6 @@ public class GameManager : MonoBehaviour
             if (PlayerInput.BackActive() || PlayerInput.RestartKey())
             {
                 latestRoundResult.Cancelled = true;
-                FeelTools.SpawnGameEventFloatingText("restart", Vector3.zero);
                 yield break;
             }
 
@@ -406,7 +405,6 @@ public class GameManager : MonoBehaviour
         if (latestRoundResult.Completed)
         {
             SoundManager.Play(FxList.Instance.LevelComplete);
-            FeelTools.SpawnGameEventFloatingText("Completed!", Vector3.zero);
             PlayerProgress.UpdateProgress(latestRoundResult);
         }
         else
