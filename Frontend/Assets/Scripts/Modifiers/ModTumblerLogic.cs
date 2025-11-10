@@ -130,7 +130,7 @@ namespace Sludge.Modifiers
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (1 << collision.gameObject.layer != SludgeUtil.PlayerLayerMask)
+            if (1 << collision.gameObject.layer != SludgeUtil.PlayerLayerMask && !Static)
             {
                 GameManager.I.DustParticles.transform.position = trans.position;
                 GameManager.I.DustParticles.Emit(8);

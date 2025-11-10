@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -6,12 +7,14 @@ public class BulletManager : MonoBehaviour
 {
     public static BulletManager Instance;
 
+    public int ActiveCount;
+
     public GameObject BulletProto;
     ObjectPool<ModBulletMovement> pool;
     List<ModBulletMovement> activeBullets = new List<ModBulletMovement>(100);
 
-    const int DefaultItems = 50;
-    const int MaxItems = 200;
+    const int DefaultItems = 1;
+    const int StartCapacity = 200;
 
     public void Awake()
     {
@@ -23,8 +26,7 @@ public class BulletManager : MonoBehaviour
             actionOnRelease: OnRelease,
             actionOnDestroy: OnDestroyBullet,
             collectionCheck: false,
-            defaultCapacity: MaxItems,
-            maxSize: MaxItems);
+            defaultCapacity: StartCapacity);
     }
 
     private void Start()
@@ -45,7 +47,9 @@ public class BulletManager : MonoBehaviour
 
     ModBulletMovement Create()
     {
-        return Instantiate(BulletProto, Vector3.zero, Quaternion.identity, this.gameObject.transform).GetComponent<ModBulletMovement>();
+        var bullet = Instantiate(BulletProto, Vector3.zero, Quaternion.identity, this.gameObject.transform).GetComponent<ModBulletMovement>();
+        bullet.name = $"managed-bullet-id-{activeBullets.Count}";
+        return bullet;
     }
 
     void OnGet(ModBulletMovement bullet)
@@ -78,6 +82,8 @@ public class BulletManager : MonoBehaviour
 
     public void EngineTick()
     {
+        ActiveCount = activeBullets.Count;
+
         for (int i = 0; i < activeBullets.Count; ++i)
             activeBullets[i].EngineTick();
     }

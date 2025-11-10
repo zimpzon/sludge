@@ -13,7 +13,6 @@ namespace Assets.Scripts.Game
             GameManager.I.Player.StateParam.jumpType = m.JumpType;
             ParticleEmitter.I.EmitDust(m.transform.position, 10);
             ParticleEmitter.I.EmitPills(m.transform.position, 4);
-            FeelTools.SpawnMutatorFloatingText(m.DisplayText, m.transform.position + Vector3.up * 0.5f);
             SoundManager.Play(FxList.Instance.KeyPickup);
         }
 
