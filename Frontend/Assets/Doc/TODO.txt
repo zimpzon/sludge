@@ -1,3 +1,14 @@
+First input is ignored if jumping
+
+Next - move
+Retry - r
+Level Select - q
+
+Timer: gold, silver, bronze
+
+
+
+
 + Can stand on objects: BehindLevelDanger, Danger
 
 + Static bullet behind walls / plain gun kill player
@@ -15,9 +26,3 @@
 - Dash? More dynamic. (cannot handle more keys for player)
 
 + dying when switching level (starting slightly inside collider at load, give time to adjust)
-
-Next - move
-Retry - r
-Level Select - q
-
-Timer: gold, silver, bronze

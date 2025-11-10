@@ -1101,7 +1101,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
+      maxColor: {r: 0, g: 0, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}
@@ -5900,7 +5900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.51113826, g: 0.49508238, b: 0.62352943, a: 1}
+  m_Color: {r: 0.638, g: 0.4017037, b: 0.6143703, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6203,7 +6203,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 40
   m_Sprite: {fileID: 21300000, guid: 28364fc0b531cb5429d474bba007af2c, type: 3}
-  m_Color: {r: 0.9254902, g: 0.054901984, b: 0.30178156, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6305,7 +6305,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 42
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: -36.188385, g: -77.897026, b: -99.36471, a: 1}
+  m_Color: {r: -100, g: -100, b: -100, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -11318,7 +11318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -27571,7 +27571,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_Origin: {x: -30, y: -17, z: 0}
   m_Size: {x: 61, y: 34, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -27919,8 +27919,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -28764,6 +28764,18 @@ PrefabInstance:
       propertyPath: BulletSpeed
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28843,15 +28855,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Settings
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
+  m_sharedMaterial: {fileID: 8997945079433574995, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -29299,7 +29311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b774435ab2bbad046a40eb5cd9d3ff29, type: 2}
-  m_Color: {r: 0.25466388, g: 0.24428235, b: 0.34117648, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -29471,34 +29483,41 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<B>Controls</B>
+  m_text: 'The aliens stole his cows. Big mistake.
 
+    
 
-    Select\t\tE, Space, Enter
+    <B>Controls</B>
 
-    Back\t\tQ, Backspace,
-    Escape
+    
 
+    Select\t\tE,
+    Space, Enter
 
-    Move left\tA, Left Arrow
+    Back\t\tQ, Backspace, Escape
+
+    
+
+    Move left\t\tA,
+    Left Arrow
 
     Move right\tD, Right Arrow
 
-    Jump
-    \tW, Up Arrow
+    Jump \t\tW, Up Arrow
 
 
-'
+    Color
+    theme\tZ, X'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
+  m_sharedMaterial: {fileID: 8997945079433574995, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -29631,6 +29650,18 @@ PrefabInstance:
       propertyPath: DelayBeforeFirstBullet
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -29710,22 +29741,24 @@ MonoBehaviour:
       m_Calls: []
   m_text: '<B>Controls</B>
 
+    
 
     Select\t\tE, Space, Enter
 
-    Back\t\tQ, Backspace,
-    Escape
+    Back\t\tQ,
+    Backspace, Escape
+
+    
+
+    Move left\t\tA, Left Arrow
+
+    Move right\tD,
+    Right Arrow
+
+    Jump \t\tW, Up Arrow
 
 
-    Move left\tA, Left Arrow
-
-    Move right\tD, Right Arrow
-
-    Jump
-    \tW, Up Arrow
-
-
-'
+    Color theme\tZ, X'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -29735,7 +29768,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -30105,7 +30138,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.92549026, g: 0.054901965, b: 0.3019608, a: 1}
+      maxColor: {r: 0, g: 0.16529441, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}
@@ -34791,7 +34824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.51113826, g: 0.49508238, b: 0.62352943, a: 1}
+  m_Color: {r: 0.638, g: 0.4017037, b: 0.6143703, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -35422,15 +35455,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Exit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
+  m_sharedMaterial: {fileID: 8997945079433574995, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -35606,7 +35639,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 41
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 36.651127, g: 78.8931, b: 100.63529, a: 1}
+  m_Color: {r: 100, g: 100, b: 100, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -35679,6 +35712,18 @@ PrefabInstance:
     - target: {fileID: 844793564864156255, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
       propertyPath: DelayBeforeFirstBullet
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4832934764206911107, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -35893,7 +35938,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GO!
+  m_text: Next
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -35903,7 +35948,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1.0117648, g: 1.0117648, b: 1.0117648, a: 1}
+  m_fontColor: {r: 1.0352942, g: 1.0352942, b: 1.0352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -36023,7 +36068,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9294118, g: 0.69803923, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -36122,15 +36167,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Earl In Space
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b0cfc25454e546342a03c0f529f438dc, type: 2}
+  m_sharedMaterial: {fileID: 9136048119156262631, guid: b0cfc25454e546342a03c0f529f438dc, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -36280,8 +36325,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -36532,7 +36577,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.51113826, g: 0.49508238, b: 0.62352943, a: 1}
+  m_Color: {r: 0.638, g: 0.4017037, b: 0.6143703, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -38530,7 +38575,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.96470594, g: 1, b: 0.003921569, a: 1}
+  m_Color: {r: 0.85400003, g: 0.48330772, b: 0, a: 1}
   m_Origin: {x: -45, y: -19, z: 0}
   m_Size: {x: 36, y: 5, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 0}
@@ -38658,7 +38703,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.3529412, g: 0.7803922, b: 0.7568628, a: 1}
+  m_BackGroundColor: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -38863,7 +38908,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 41
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 36.651127, g: 78.8931, b: 100.63529, a: 1}
+  m_Color: {r: 100, g: 100, b: 100, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -39188,7 +39233,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9254902, g: 0.054901984, b: 0.30178156, a: 0.60784316}
+      maxColor: {r: 0, g: 0, b: 0, a: 0.60784316}
       maxGradient:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}
@@ -43976,7 +44021,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9294118, g: 0.69803923, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -44066,7 +44111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9294118, g: 0.69803923, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -44179,15 +44224,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Hard
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
+  m_sharedMaterial: {fileID: 8997945079433574995, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -44390,15 +44435,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 22262311518988371, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: m_Color.b
-      value: 0.63529414
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22262311518988371, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: m_Color.g
-      value: 0.49803925
+      value: 0.55379033
       objectReference: {fileID: 0}
     - target: {fileID: 22262311518988371, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: m_Color.r
-      value: 0.23137257
+      value: 0.981
       objectReference: {fileID: 0}
     - target: {fileID: 651267841038012198, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: Easing
@@ -44406,15 +44451,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2263636949516051566, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b
-      value: 0.63529414
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2263636949516051566, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: InitialModule.startColor.maxColor.g
-      value: 0.49803925
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2263636949516051566, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: InitialModule.startColor.maxColor.r
-      value: 0.23137257
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4761125003896187734, guid: b49e1ecf4ec120848864b464e81be75a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -44942,7 +44987,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9254902, g: 0.054901984, b: 0.30178156, a: 1}
+      maxColor: {r: 0, g: 0, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -49864,7 +49909,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9294118, g: 0.69803923, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -50151,15 +50196,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Casual
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
+  m_sharedMaterial: {fileID: 8997945079433574995, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -50309,8 +50354,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -50499,7 +50544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.51113826, g: 0.49508238, b: 0.62352943, a: 1}
+  m_Color: {r: 0.638, g: 0.4017037, b: 0.6143703, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -51446,7 +51491,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 42
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: -36.188385, g: -77.897026, b: -99.36471, a: 1}
+  m_Color: {r: -100, g: -100, b: -100, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -51509,41 +51554,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 844793564864156254, guid: 4db9d603e34e1204d942c4f7ddcd3c75, type: 3}
   m_PrefabInstance: {fileID: 720050002}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1597604186
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1597604187}
-  m_Layer: 5
-  m_Name: MainMenuButtonSelect
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1597604187
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1597604186}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1998727826}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1669594691
 GameObject:
   m_ObjectHideFlags: 0
@@ -51656,8 +51666,8 @@ MonoBehaviour:
   CameraRoot: {fileID: 1067746680}
   Tilemap: {fileID: 270485058}
   PillTilemap: {fileID: 891096378}
-  CurrentColorScheme: {fileID: 11400000, guid: 1e1c7bf6cb0c20c4db185d68fa7eec03, type: 2}
-  CurrentUiColorScheme: {fileID: 11400000, guid: 833daf02ebcd0ac4f86f598e341664bc, type: 2}
+  CurrentColorScheme: {fileID: 11400000, guid: 4f9d104149ca50a4fbc1711f870e090a, type: 2}
+  CurrentUiColorScheme: {fileID: 11400000, guid: b5d3a2a228cd5d5458bd3d88c51ad364, type: 2}
   ColorSchemeList: {fileID: 11400000, guid: 6babe157935730d40b8babeb8b65b40b, type: 2}
   ButtonStartRound: {fileID: 1826603376}
   DustParticles: {fileID: 2086196026}
@@ -51805,7 +51815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.51113826, g: 0.49508238, b: 0.62352943, a: 1}
+  m_Color: {r: 0.638, g: 0.4017037, b: 0.6143703, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -52373,6 +52383,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: FakeWallRectangle
       objectReference: {fileID: 0}
+    - target: {fileID: 7502035862330199755, guid: e18b44bb3a269fe419110dcbef2bf106, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7502035862330199755, guid: e18b44bb3a269fe419110dcbef2bf106, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7502035862330199755, guid: e18b44bb3a269fe419110dcbef2bf106, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7502035862330199760, guid: e18b44bb3a269fe419110dcbef2bf106, type: 3}
       propertyPath: Active
       value: 1
@@ -52486,15 +52508,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3269533143323628422, guid: 805122371e8bcbe438eb7f309773b421, type: 3}
       propertyPath: m_Color.b
-      value: 0.003921569
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3269533143323628422, guid: 805122371e8bcbe438eb7f309773b421, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0.48330772
       objectReference: {fileID: 0}
     - target: {fileID: 3269533143323628422, guid: 805122371e8bcbe438eb7f309773b421, type: 3}
       propertyPath: m_Color.r
-      value: 0.96470594
+      value: 0.85400003
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -52639,7 +52661,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6750882, g: 0.6538824, b: 0.8235294, a: 1}
+  m_Color: {r: 0.838, g: 0.5276296, b: 0.80696285, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -53218,8 +53240,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291809231
-  m_fontColor: {r: 0.8117648, g: 0.8117648, b: 0.8117648, a: 1}
+    rgba: 4292203989
+  m_fontColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -53389,165 +53411,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1998727825
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1998727826}
-  - component: {fileID: 1998727827}
-  m_Layer: 5
-  m_Name: Feedbacks
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1998727826
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1998727825}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1597604187}
-  m_Father: {fileID: 2057802205}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1998727827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1998727825}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Feedbacks: []
-  InitializationMode: 2
-  AutoInitialization: 1
-  SafeMode: 3
-  Direction: 0
-  AutoChangeDirectionOnEnd: 0
-  AutoPlayOnStart: 0
-  AutoPlayOnEnable: 0
-  ForceTimescaleMode: 0
-  ForcedTimescaleMode: 1
-  DurationMultiplier: 1
-  RandomizeDuration: 0
-  RandomDurationMultiplier: {x: 0.5, y: 1.5}
-  DisplayFullDurationDetails: 0
-  PlayerTimescaleMode: 1
-  OnlyPlayIfWithinRange: 0
-  RangeCenter: {fileID: 0}
-  RangeDistance: 5
-  UseRangeFalloff: 0
-  RangeFalloff:
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  RemapRangeFalloff: {x: 0, y: 1}
-  IgnoreRangeEvents: 0
-  CooldownDuration: 0
-  InitialDelay: 0
-  CanPlay: 1
-  CanPlayWhileAlreadyPlaying: 1
-  ChanceToPlay: 100
-  FeedbacksIntensity: 1
-  Events:
-    TriggerMMFeedbacksEvents: 0
-    TriggerUnityEvents: 1
-    OnPlay:
-      m_PersistentCalls:
-        m_Calls: []
-      m_CallsDirty: 1
-    OnPause:
-      m_PersistentCalls:
-        m_Calls: []
-      m_CallsDirty: 1
-    OnResume:
-      m_PersistentCalls:
-        m_Calls: []
-      m_CallsDirty: 1
-    OnRevert:
-      m_PersistentCalls:
-        m_Calls: []
-      m_CallsDirty: 1
-    OnComplete:
-      m_PersistentCalls:
-        m_Calls: []
-      m_CallsDirty: 1
-    OnRestoreInitialValues:
-      m_PersistentCalls:
-        m_Calls: []
-      m_CallsDirty: 1
-    OnSkipToTheEnd:
-      m_PersistentCalls:
-        m_Calls: []
-      m_CallsDirty: 1
-    <OnPlayIsNull>k__BackingField: 0
-    <OnPauseIsNull>k__BackingField: 0
-    <OnResumeIsNull>k__BackingField: 0
-    <OnRevertIsNull>k__BackingField: 0
-    <OnCompleteIsNull>k__BackingField: 0
-    <OnRestoreInitialValuesIsNull>k__BackingField: 0
-    <OnSkipToTheEndIsNull>k__BackingField: 0
-  DebugActive: 0
-  <IsPlaying>k__BackingField: 0
-  <TimesPlayed>k__BackingField: 0
-  <InScriptDrivenPause>k__BackingField: 0
-  <ContainsLoop>k__BackingField: 0
-  <ShouldRevertOnNextPlay>k__BackingField: 0
-  _startTime: 0
-  _holdingMax: 0
-  _lastStartAt: -3.4028235e+38
-  _lastStartFrame: -1
-  _pauseFound: 0
-  _totalDuration: 0
-  _shouldStop: 0
-  _randomDurationMultiplier: 1
-  _lastOnEnableFrame: -1
-  FeedbacksList:
-  - rid: 3737336320775159809
-  KeepPlayModeChanges: 0
-  PerformanceMode: 0
-  StopFeedbacksOnDisable: 0
-  PlayCount: 0
-  <SkippingToTheEnd>k__BackingField: 0
-  _cachedTotalDuration: 0.2
-  _initialized: 0
 --- !u!1 &2020317656
 GameObject:
   m_ObjectHideFlags: 0
@@ -53865,7 +53728,6 @@ RectTransform:
   - {fileID: 340891973}
   - {fileID: 2037007297}
   - {fileID: 1841380837}
-  - {fileID: 1998727826}
   m_Father: {fileID: 1870505752}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -59142,7 +59004,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
-      maxColor: {r: 0.96470594, g: 1, b: 0.003921569, a: 1}
+      maxColor: {r: 0.85400003, g: 0.48330772, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}

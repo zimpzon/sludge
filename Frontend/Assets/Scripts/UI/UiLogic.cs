@@ -167,7 +167,7 @@ namespace Sludge.UI
 		}
 
 		IEnumerator PlayLoop(UiLevel uiLevel)
-		{
+		{ 
             ActiveNavigationGroup = UiNavigationGroup.InGame;
 
             GameManager.I.LoadLevel(uiLevel);

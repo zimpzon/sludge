@@ -15,17 +15,17 @@ public static class LevelSerializer
         data.LevelName = levelSettings.LevelName;
 
 #if UNITY_EDITOR
-        if (levelSettings.ColorScheme != null)
-        {
-            // Just save name of colorscheme.
-            data.ColorSchemeName = levelSettings.ColorScheme.name;
-        }
-        else
-        {
-            // No colorscheme object set in LevelSettings. Maybe level was loaded in editor and saved again - without running it (scheme is located and set in GameManager LoadLevel()).
-            // Just save the name that was loaded.
-            data.ColorSchemeName = levelSettings.ColorSchemeName;
-        }
+        //if (levelSettings.ColorScheme != null)
+        //{
+        //    // Just save name of colorscheme.
+        //    data.ColorSchemeName = levelSettings.ColorScheme.name;
+        //}
+        //else
+        //{
+        //    // No colorscheme object set in LevelSettings. Maybe level was loaded in editor and saved again - without running it (scheme is located and set in GameManager LoadLevel()).
+        //    // Just save the name that was loaded.
+        //    data.ColorSchemeName = levelSettings.ColorSchemeName;
+        //}
 
         // Player
         data.PlayerTransform = LevelDataTransform.Get(elements.Player.transform);
