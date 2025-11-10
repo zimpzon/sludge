@@ -5,9 +5,9 @@ using UnityEngine;
 public class ModSnifferLogic : SludgeModifier
 {
     static double FollowDelay = 3;
-    const double followDelayIncrease = 0.25;
+    const double followDelayIncrease = 0.15;
     double myFollowDelay;
-    double speed = 1.0;
+    double speed = 1.0; // Speed < 1 will cause jitter in the angle since it flips between no change and actual change when idx changes.
     SpriteRenderer deadAntRenderer;
     double activationTime = -1;
     AnimatedAnt ant;
@@ -20,6 +20,7 @@ public class ModSnifferLogic : SludgeModifier
     double posX;
     double posY;
     double angle;
+    double playerAngle;
     double triggerX;
     double triggerY;
     double triggerAngle;
@@ -60,6 +61,7 @@ public class ModSnifferLogic : SludgeModifier
         deadAntRenderer.color = col;
 
         angle = 180;
+        playerAngle = 0;
         posX = baseX;
         posY = baseY;
         UpdateTransform();
@@ -68,7 +70,14 @@ public class ModSnifferLogic : SludgeModifier
     void UpdateTransform()
     {
         trans.position = new Vector2((float)posX, (float)posY);
-        trans.rotation = Quaternion.Euler(0, 0, (float)angle + 180);
+        if (activationTime > 0)
+        {
+            trans.rotation = Quaternion.Euler(0, 0, (float)playerAngle + 90.0f);
+        }
+        else
+        {
+            trans.rotation = Quaternion.Euler(0, 0, (float)angle + 180);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -107,6 +116,9 @@ public class ModSnifferLogic : SludgeModifier
             GameManager.I.DustParticles.transform.position = new Vector2((float)newX, (float)newY);
             GameManager.I.DustParticles.Emit(2);
         }
+
+        playerAngle = Mathf.Atan2((float)(newY - posY), (float)(newX - posX)) * Mathf.Rad2Deg;
+        //DebugLinesScript.Instance.SetLine("playerAngle", playerAngle);
 
         posX = newX;
         posY = newY;

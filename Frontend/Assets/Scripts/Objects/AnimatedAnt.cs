@@ -34,6 +34,16 @@ public class AnimatedAnt : MonoBehaviour
         StartCoroutine(Loop());
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+
+        if (entity == EntityType.Player)
+        {
+            GameManager.I.Player.Kill();
+        }
+    }
+
     IEnumerator Loop()
     {
         while (true)
