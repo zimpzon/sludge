@@ -15,6 +15,7 @@ public class ModLaser : SludgeModifier
     Transform lineTrans;
     Vector3 bodyBaseScale;
     Vector3 lineBaseScale;
+    bool isFirstTick;
 
     private void Awake()
     {
@@ -39,6 +40,8 @@ public class ModLaser : SludgeModifier
         line.enabled = false;
         particlesWorldSpace.gameObject.SetActive(false);
         particlesLocalSpace.gameObject.SetActive(false);
+
+        isFirstTick = true;
     }
 
     //private void OnTriggerEnter2D(Collider2D collision)
@@ -58,12 +61,18 @@ public class ModLaser : SludgeModifier
     //    }
     //}
 
-    public override void EngineTick()
+    private void Update()
     {
     }
 
-    private void Update()
+    public override void EngineTick()
     {
+        if (isFirstTick)
+        {
+            isFirstTick = false;
+            return;
+        }
+
         if (timeToggle.Active && !timeToggle.IsOn())
         {
             bodyTrans.localScale = bodyBaseScale;

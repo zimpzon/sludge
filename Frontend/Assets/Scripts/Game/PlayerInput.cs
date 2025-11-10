@@ -6,7 +6,7 @@ namespace Sludge.PlayerInputs
 {
     public class PlayerInput
     {
-        public enum InputType { Up, Down, Left, Right, Jump, Select, Back, ColorNext, ColorPrev };
+        public enum InputType { Up, Down, Left, Right, Jump, Select, Back };
 
         Dictionary<InputType, InputState> inputs = new Dictionary<InputType, InputState>();
 
@@ -19,8 +19,6 @@ namespace Sludge.PlayerInputs
             inputs[InputType.Jump] = new InputState { IsActivated = JumpActive };
             inputs[InputType.Back] = new InputState { IsActivated = BackActive };
             inputs[InputType.Select] = new InputState { IsActivated = SelectActive };
-            inputs[InputType.ColorNext] = new InputState { IsActivated = ColorNextActive };
-            inputs[InputType.ColorPrev] = new InputState { IsActivated = ColorPrevActive };
         }
 
         private class InputState
@@ -51,8 +49,7 @@ namespace Sludge.PlayerInputs
         public bool BackActive() => Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Backspace);
         public bool SelectActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter);
         public bool ShootActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.LeftShift);
-        public bool ColorNextActive() => Input.GetKey(KeyCode.X);
-        public bool ColorPrevActive() => Input.GetKey(KeyCode.Z);
+
 
         public bool IsTapped(InputType inputType, bool claimEvent = false)
         {

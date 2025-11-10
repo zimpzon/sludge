@@ -418,11 +418,12 @@ public class GameManager : MonoBehaviour
 
     private void CheckChangeColorScheme(PlayerInput input)
     {
-        if (input.IsTapped(PlayerInput.InputType.ColorNext))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             ColorScheme.ApplyColors(GameManager.I.ColorSchemeList.GetNext());
         }
-        if (input.IsTapped(PlayerInput.InputType.ColorPrev))
+
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             ColorScheme.ApplyColors(GameManager.I.ColorSchemeList.GetPrev());
         }
