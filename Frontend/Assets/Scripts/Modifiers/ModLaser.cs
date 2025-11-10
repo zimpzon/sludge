@@ -98,8 +98,9 @@ public class ModLaser : SludgeModifier
         }
 
         var direction = (line.transform.rotation * Vector2.right).normalized;
-
-        RaycastHit2D hit = Physics2D.Raycast(trans.position, direction, 1000, SludgeUtil.ScanForWallsLayerMask);
+        // Offset ray a little from the center to not hit colliders (would hit if there were multiple colliders on top of it)
+        var rayStart = trans.position + direction;
+        RaycastHit2D hit = Physics2D.Raycast(rayStart, direction, 1000, SludgeUtil.ScanForWallsLayerMask);
         if (hit.collider == null)
             return;
 

@@ -9,7 +9,9 @@ namespace Sludge.Modifiers
         public double OnFrom = 0.5;
         public double OnTo = 1.0;
         public double TimeMultiplier = 1.0;
-        public bool UseUnityTime = true;
+        
+        // Removed this from public. Is it ever needed?
+        bool UseUnityTime = false;
 
         public bool IsOn()
         {
