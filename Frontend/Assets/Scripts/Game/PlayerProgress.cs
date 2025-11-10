@@ -9,9 +9,9 @@ namespace Sludge.Utility
         public static string NamespaceDisplayName(LevelNamespace ns)
         {
             if (ns == LevelNamespace.Casual)
-                return "Dream";
+                return "Casual";
             else if (ns == LevelNamespace.Hard)
-                return "Nightmare";
+                return "Hard";
 
             return $"Unknown ns: {ns}";
         }

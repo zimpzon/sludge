@@ -63,7 +63,7 @@ namespace Sludge.UI
 			}
 			else
 			{
-				UpdateWorldWideAttempts();
+				//UpdateWorldWideAttempts();
 				StartCoroutine(MainMenuLoop());
 			}
 		}

@@ -53,13 +53,14 @@ public class UiNavigation : MonoBehaviour
 				else
 				{
 					// Select
-					ChangeSelection(UiSelectionMarker.Instance, gameObject);
-				}
-			}
+					ChangeSelection(UiSelectionMarker.Instance, gameObject, activate: true);
+                    OnNavigationSelected(gameObject);
+                }
+            }
 		}
 	}
 
-	static void ChangeSelection(UiSelectionMarker selectionMarker, GameObject newSelection)
+	static void ChangeSelection(UiSelectionMarker selectionMarker, GameObject newSelection, bool activate)
 	{
         SoundManager.Play(FxList.Instance.UiChangeSelection);
 
@@ -103,7 +104,7 @@ public class UiNavigation : MonoBehaviour
 	{
 		if (moveTarget != null && moveTarget.activeSelf)
 		{
-            ChangeSelection(selectionMarker, moveTarget);
+            ChangeSelection(selectionMarker, moveTarget, activate: false);
 		}
 	}
 }
