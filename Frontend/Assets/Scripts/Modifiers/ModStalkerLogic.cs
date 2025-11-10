@@ -56,7 +56,6 @@ public class ModStalkerLogic : SludgeModifier
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
 
-        bool die = false;
         if (entity == EntityType.Player)
         {
             GameManager.I.Player.Kill();

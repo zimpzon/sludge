@@ -55,7 +55,11 @@ public class ModBulletMovement : SludgeModifier
             spriteRenderer.sprite = PendingArmedSprite;
 
         if (GameManager.I?.CurrentColorScheme is not null)
+        {
             spriteRenderer.color = IsArmed ? ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor1) : ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor2);
+            if (pendingArm)
+                spriteRenderer.color = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor1);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -100,11 +104,10 @@ public class ModBulletMovement : SludgeModifier
         float flashX = trans.position.x;
         float flashY = trans.position.y;
 
-        // Hacky solution to changing color scheme but color applier only works with a single color (I think). Should just be an event.
-        SetVisual();
-
         if (Static)
         {
+            // Hacky solution to changing color scheme but color applier only works with a single color (I think). Should just be an event.
+            SetVisual();
         }
         else
         {

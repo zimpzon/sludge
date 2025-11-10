@@ -11,16 +11,6 @@ public class SchemeColorApplier : MonoBehaviour
 
     Material material; // If applicable
 
-    void Start()
-    {
-        ApplyColor(GameManager.I?.CurrentColorScheme);
-    }
-
-    void OnValidate()
-    {
-        ApplyColor(GameManager.I?.CurrentColorScheme);
-    }
-
     Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)
     {
         var schemeColor = ColorScheme.GetColor(scheme, SchemeColor);

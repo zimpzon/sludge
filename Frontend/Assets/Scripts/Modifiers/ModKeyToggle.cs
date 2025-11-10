@@ -31,7 +31,6 @@ public class ModKeyToggle : SludgeModifier
         StopAllCoroutines();
 
         doorCollider.enabled = StartEnabled;
-        spriteRenderer.enabled = StartEnabled;
 
         if (Active)
             mat.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
@@ -43,7 +42,7 @@ public class ModKeyToggle : SludgeModifier
 
         if (StartEnabled)
         {
-            LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
+            //LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
         }
     }
 
@@ -88,7 +87,7 @@ public class ModKeyToggle : SludgeModifier
         doorCollider.enabled = false;
         SoundManager.Play(FxList.Instance.FakeWallDisappear);
 
-        LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: false);
+        //LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: false);
 
         while (true)
         {
@@ -101,19 +100,16 @@ public class ModKeyToggle : SludgeModifier
             yield return null;
         }
         mat.SetFloat("_Visibility", 0.1f);
-
-//        spriteRenderer.enabled = false;
     }
 
     IEnumerator EnableMe()
     {
         const float AnimTime = 0.5f;
         double startTime = GameManager.I.EngineTime;
-        spriteRenderer.enabled = true;
         doorCollider.enabled = true;
         SoundManager.Play(FxList.Instance.FakeWallShowUp);
 
-        LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
+        //LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 
         while (true)
         {

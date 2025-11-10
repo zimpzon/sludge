@@ -17,7 +17,7 @@ public class ModPortal : SludgeModifier
 
     private void FindSibling()
     {
-        var portals = FindObjectsOfType<ModPortal>();
+        var portals = FindObjectsByType<ModPortal>(FindObjectsSortMode.None);
         for (int i = 0; i < portals.Length; ++i)
         {
             var other = portals[i];

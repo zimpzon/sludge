@@ -13,6 +13,7 @@ public class ModLineGun : SludgeModifier
     double countdown;
     double firstBulletCountdown;
     Tween childTransTween;
+    bool isFirstTick;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class ModLineGun : SludgeModifier
 
     public override void Reset()
     {
+        isFirstTick = true;
         countdown = 0;
         firstBulletCountdown = DelayBeforeFirstBullet;
     }
@@ -34,7 +36,7 @@ public class ModLineGun : SludgeModifier
         }
 
         countdown -= GameManager.TickSize;
-        if (countdown <= 0)
+        if (countdown <= 0 && !isFirstTick)
         {
             countdown = Delay;
             var bullet = BulletManager.Instance.Get();
@@ -57,5 +59,7 @@ public class ModLineGun : SludgeModifier
                 SoundManager.Play(FxList.Instance.EnemyShoot);
             }
         }
+
+        isFirstTick = false;
     }
 }

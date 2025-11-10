@@ -39,7 +39,6 @@ public class ClampedCircleDrawer : MonoBehaviour
     [NonSerialized] public bool hasFlatSurfaceToTheRight;
 
     private Transform trans;
-    private Mesh mesh;
     private Vector3[] vertices;
     private int[] triangles;
     private float[] lengths;
@@ -49,20 +48,13 @@ public class ClampedCircleDrawer : MonoBehaviour
     private void Awake()
     {
         trans = transform;
-        mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
 
         CheckSizes();
         Reset();
 
-        // triangle indices never change
-        CreateTriangles();
-
         // calc vertices for normals
         Update();
-        
-        // normals never change after this
-        mesh.RecalculateNormals();
+       
     }
 
     void SetSortingLayer()
@@ -127,25 +119,7 @@ public class ClampedCircleDrawer : MonoBehaviour
 
             vertices = new Vector3[vertexCount];
             vertices[0] = Vector3.zero; // center of the circle
-
-            triangles = new int[rayCount * 3];
-
-            mesh?.SetVertices(vertices);
-            mesh?.SetIndices(triangles, MeshTopology.Triangles, 0);
         }
-    }
-
-    void CreateTriangles()
-    {
-        for (int i = 0; i < rayCount; i++)
-        {
-            int triangleNo = i * 3;
-            triangles[triangleNo + 0] = 0;
-            triangles[triangleNo + 1] = ((i + 1) % rayCount) + 1;
-            triangles[triangleNo + 2] = (i % rayCount) + 1;
-        }
-
-        mesh.SetIndices(triangles,  MeshTopology.Triangles, 0);
     }
 
     void Update()
@@ -226,7 +200,5 @@ public class ClampedCircleDrawer : MonoBehaviour
 
         hasDropToTheLeft = !rayWasBlocked[idxRayDownLeft] && rayWasBlocked[idxRayDownRight];
         hasDropToTheRight = !rayWasBlocked[idxRayDownRight] && rayWasBlocked[idxRayDownLeft];
-
-        mesh.SetVertices(vertices);
     }
 }

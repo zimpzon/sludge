@@ -72,11 +72,6 @@ public class GameManager : MonoBehaviour
     bool levelComplete;
     RoundResult latestRoundResult;
 
-    private void OnValidate()
-    {
-        ColorScheme.ApplyColors(CurrentColorScheme);
-    }
-
     void Awake()
     {
         I = this;
@@ -87,8 +82,6 @@ public class GameManager : MonoBehaviour
         levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
         Player = FindFirstObjectByType<Player>();
- 
-        OnValidate();
     }
 
     public void KillEnemy(GameObject goEnemy)
@@ -132,7 +125,7 @@ public class GameManager : MonoBehaviour
             // Starting game from current scene in editor
             TextLevelName.text = "(started from editor)";
 
-            SludgeObjects = FindObjectsOfType<SludgeObject>();
+            SludgeObjects = FindObjectsByType<SludgeObject>(FindObjectsSortMode.None);
 
             // Simulate level load when starting directly from editor
             foreach (var obj in SludgeObjects)
@@ -144,7 +137,7 @@ public class GameManager : MonoBehaviour
 
         Player.SetHomePosition();
 
-        SludgeObjects = FindObjectsOfType<SludgeObject>();
+        SludgeObjects = FindObjectsByType<SludgeObject>(FindObjectsSortMode.None);
         SlimeBombs = SludgeObjects.Where(o => o is SlimeBomb).Cast<SlimeBomb>().ToArray();
         SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 

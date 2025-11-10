@@ -127,8 +127,8 @@ public class ModThrowable : SludgeModifier
             }
         }
 
-        const float ActivationPlayerDistance = 0.7f * 0.7f;
-        const float SqrActivationPlayerDistance = ActivationPlayerDistance * ActivationPlayerDistance;
+        //const float ActivationPlayerDistance = 0.7f * 0.7f;
+        //const float SqrActivationPlayerDistance = ActivationPlayerDistance * ActivationPlayerDistance;
 
         //var playerDir = Player.Position - trans.position;
         //if (!ownedByPlayer && GameManager.I.Player.currentThrowable == null)

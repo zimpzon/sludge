@@ -31,7 +31,6 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
     public float attemptInterval = 1f; // Time interval in seconds between attempts to upright itself
     private Rigidbody2D rb;
     private Collider2D _collider;
-    private float nextUprightAttemptTime = 0f;
 
     S s = new S();
     Transform trans;

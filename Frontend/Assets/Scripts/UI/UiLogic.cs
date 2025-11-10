@@ -48,7 +48,6 @@ namespace Sludge.UI
 			LevelLayoutHard.CreateLevelsSelection(LevelList.HardLevels, PlayerProgress.LevelNamespace.Hard);
 
 			UiPanels.Instance.Init();
-			ColorScheme.ApplyColors(GameManager.I.CurrentUiColorScheme);
 			UiPanels.Instance.SetAllActive(false);
 		}
 
