@@ -82,7 +82,6 @@ public class UiLevelsLayout : MonoBehaviour
                 textColor = isUnlocked ? SchemeColor.UiTextDefault : SchemeColor.UiTextDimmed;
             }
 
-            levelItem.colorApplier.SetColor(backgroundColor);
             levelItem.levelScript.TextLevelNumber.color = ColorScheme.GetColor(GameManager.I.CurrentUiColorScheme, textColor);
         }
     }

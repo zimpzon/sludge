@@ -9,7 +9,6 @@ public class LevelSettings : MonoBehaviour
 
     private void OnValidate()
     {
-        GameManager.ApplyColorScheme(ColorScheme);
         ColorSchemeName = ColorScheme.name;
     }
 }

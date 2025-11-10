@@ -41,7 +41,6 @@ namespace Sludge.Colors
         public void OnValidate()
         {
             ColorScheme.ApplyColors(this);
-            ColorScheme.ApplyUiColors(this);
         }
     }
 
@@ -91,9 +90,11 @@ namespace Sludge.Colors
 
             Shader.SetGlobalColor("_EdgeColor", scheme.Edges);
             Shader.SetGlobalColor("_WallColor", scheme.Walls);
+
+            ApplyUiColors(scheme);
         }
 
-        public static void ApplyUiColors(ColorSchemeScriptableObject scheme)
+        private static void ApplyUiColors(ColorSchemeScriptableObject scheme)
         {
             var allUiColorAppliers = GameObject.FindObjectsOfType<UiSchemeColorApplier>(includeInactive: true);
             foreach (var applier in allUiColorAppliers)

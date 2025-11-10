@@ -48,7 +48,7 @@ namespace Sludge.UI
 			LevelLayoutHard.CreateLevelsSelection(LevelList.HardLevels, PlayerProgress.LevelNamespace.Hard);
 
 			UiPanels.Instance.Init();
-			ColorScheme.ApplyUiColors(GameManager.I.CurrentUiColorScheme);
+			ColorScheme.ApplyColors(GameManager.I.CurrentUiColorScheme);
 			UiPanels.Instance.SetAllActive(false);
 		}
 
@@ -68,7 +68,7 @@ namespace Sludge.UI
 			}
 		}
 
-		public void SetSelectionMarker(GameObject uiObject)
+        public void SetSelectionMarker(GameObject uiObject)
         {
 			UiSelectionMarker.SetTarget(uiObject);
 			UiSelectionMarker.gameObject.SetActive(uiObject == null ? false : true);
@@ -156,7 +156,6 @@ namespace Sludge.UI
 			while (true)
 			{
 				GameManager.PlayerInput.GetHumanInput();
-				CheckChangeColorScheme(GameManager.PlayerInput);
 				DoUiNavigation(GameManager.PlayerInput);
 
 				if (Input.GetKeyDown(KeyCode.P) && Input.GetKey(KeyCode.RightShift) && Input.GetKey(KeyCode.RightControl))
@@ -194,25 +193,11 @@ namespace Sludge.UI
 			LevelLayoutCasual.UpdateVisualHints();
 			LevelLayoutHard.UpdateVisualHints();
 
-			ColorScheme.ApplyUiColors(GameManager.I.CurrentUiColorScheme);
-
 			UiPanels.Instance.HidePanel(UiPanel.Game);
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 			UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
 			UiPanels.Instance.ShowBackground();
 			StartCoroutine(LevelSelectLoop(latestSelectedLevelNamespace));
-		}
-
-		public static void CheckChangeColorScheme(PlayerInput input)
-        {
-			if (input.IsTapped(PlayerInput.InputType.ColorNext))
-			{
-				GameManager.I.SetColorScheme(GameManager.I.ColorSchemeList.GetNext());
-			}
-			if (input.IsTapped(PlayerInput.InputType.ColorPrev))
-			{
-				GameManager.I.SetColorScheme(GameManager.I.ColorSchemeList.GetPrev());
-			}
 		}
 
 		IEnumerator ControlsLoop()
@@ -229,7 +214,6 @@ namespace Sludge.UI
             while (true)
 			{
 				GameManager.PlayerInput.GetHumanInput();
-				CheckChangeColorScheme(GameManager.PlayerInput);
 
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
 				{
@@ -324,7 +308,6 @@ namespace Sludge.UI
 			while (true)
             {
 				GameManager.PlayerInput.GetHumanInput();
-				CheckChangeColorScheme(GameManager.PlayerInput);
 				DoUiNavigation(GameManager.PlayerInput);
 
 				int intCharsShown = (int)charsShown;

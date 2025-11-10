@@ -74,21 +74,20 @@ public class GameManager : MonoBehaviour
 
     private void OnValidate()
     {
-        if (Application.isPlaying)
-            return;
-
-        SetColorScheme(CurrentColorScheme);
+        ColorScheme.ApplyColors(CurrentColorScheme);
     }
 
     void Awake()
     {
         I = this;
+        SetDefaultColorScheme();
+
         Startup.StaticInit();
         PlayerInput = new PlayerInput();
         levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
         Player = FindFirstObjectByType<Player>();
-
+ 
         OnValidate();
     }
 
@@ -107,18 +106,6 @@ public class GameManager : MonoBehaviour
         }
 
         SludgeUtil.SetActiveRecursive(goEnemy, false);
-    }
-
-    public void SetColorScheme(ColorSchemeScriptableObject scheme)
-    {
-        CurrentColorScheme = scheme;
-        ApplyColorScheme(scheme);
-    }
-
-    public static void ApplyColorScheme(ColorSchemeScriptableObject scheme)
-    {
-        ColorScheme.ApplyColors(scheme);
-        ColorScheme.ApplyUiColors(scheme);
     }
 
     public void StartLevel()
@@ -145,9 +132,6 @@ public class GameManager : MonoBehaviour
             // Starting game from current scene in editor
             TextLevelName.text = "(started from editor)";
 
-            levelSettings.ColorSchemeName = levelSettings.ColorScheme.name;
-            currentLevelData.ColorSchemeName = levelSettings.ColorSchemeName;
-
             SludgeObjects = FindObjectsOfType<SludgeObject>();
 
             // Simulate level load when starting directly from editor
@@ -156,27 +140,6 @@ public class GameManager : MonoBehaviour
                 foreach (var modifier in obj.Modifiers)
                     modifier.OnLoaded();
             }
-        }
-        
-        if (!string.IsNullOrWhiteSpace(levelSettings.ColorSchemeName))
-        {
-            var colorScheme = ColorSchemeList.ColorSchemes.Where(s => s.name == levelSettings.ColorSchemeName).FirstOrDefault();
-            if (colorScheme != null)
-            {
-                SetColorScheme(colorScheme);
-                levelSettings.ColorScheme = colorScheme;
-            }
-            else
-            {
-                Debug.LogError($"Colorscheme saved in level not found: {levelSettings.ColorSchemeName}");
-            }
-        }
-        else
-        {
-            // No color scheme selected, use default
-            var defaultColorScheme = ColorSchemeList.ColorSchemes.Where(s => s?.name == "Default").FirstOrDefault();
-            if (defaultColorScheme != null)
-                SetColorScheme(defaultColorScheme);
         }
 
         Player.SetHomePosition();
@@ -241,8 +204,6 @@ public class GameManager : MonoBehaviour
             {
                 PlayerInput.GetHumanInput();
                 UiLogic.Instance.DoUiNavigation(PlayerInput);
-
-                UiLogic.CheckChangeColorScheme(PlayerInput);
 
                 if (PlayerInput.Up > 0 || PlayerInput.Down > 0 || PlayerInput.Left > 0 || PlayerInput.Right > 0)
                 {
@@ -455,6 +416,28 @@ public class GameManager : MonoBehaviour
     void UpdatePlayer()
     {
         Player.EngineTick();
+    }
+
+    private void SetDefaultColorScheme()
+    {
+        ColorScheme.ApplyColors(ColorSchemeList.ColorSchemes.Where(s => s?.name == "Default").FirstOrDefault());
+    }
+
+    private void CheckChangeColorScheme(PlayerInput input)
+    {
+        if (input.IsTapped(PlayerInput.InputType.ColorNext))
+        {
+            ColorScheme.ApplyColors(GameManager.I.ColorSchemeList.GetNext());
+        }
+        if (input.IsTapped(PlayerInput.InputType.ColorPrev))
+        {
+            ColorScheme.ApplyColors(GameManager.I.ColorSchemeList.GetPrev());
+        }
+    }
+
+    private void Update()
+    {
+        CheckChangeColorScheme(PlayerInput);
     }
 
     void DoTick()

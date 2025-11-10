@@ -10,12 +10,6 @@ public class UiSchemeColorApplier : MonoBehaviour
 
     ColorSchemeScriptableObject myColorScheme;
 
-    public void SetColor(SchemeColor schemeColor)
-    {
-        SchemeColor = schemeColor;
-        EditorApplyColor();
-    }
-
     public void SetBrightnessOffset(float brightnessOffset)
     {
         BrightnessOffset = brightnessOffset;
@@ -24,7 +18,6 @@ public class UiSchemeColorApplier : MonoBehaviour
 
     void OnValidate()
     {
-        EditorApplyColor();
     }
 
     Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)
@@ -39,14 +32,6 @@ public class UiSchemeColorApplier : MonoBehaviour
             schemeColor = Color.HSVToRGB(h, s, v + offset);
         }
         return schemeColor;
-    }
-
-    public void EditorApplyColor()
-    {
-        if (Application.isPlaying)
-            return;
-
-        ApplyColor(GameManager.I?.CurrentUiColorScheme);
     }
 
     public void ApplyColor(ColorSchemeScriptableObject scheme)
