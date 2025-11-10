@@ -40,6 +40,8 @@ public class ModLineGun : SludgeModifier
             var bullet = BulletManager.Instance.Get();
             if (bullet != null)
             {
+                bullet.transform.position = trans.position;
+
                 var look = SludgeUtil.LookAngle(trans.rotation.eulerAngles.z);
                 bullet.DX = SludgeUtil.Stabilize(look.x * BulletSpeed);
                 bullet.DY = SludgeUtil.Stabilize(look.y * BulletSpeed);
