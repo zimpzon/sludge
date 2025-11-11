@@ -18,8 +18,9 @@ Would be nice for cell ghosts, opening a big wall: LevelCells.Instance.SetDynami
 
 Bug: static bullets keep losing sprites
 Bug: can move next with 'e' even if locked
-Bug: best shows as -1 the first time
 ------------------------------
+
++ Bug: best shows as -1 the first time (fixed)
 
 + First input is ignored if jumping (now clearing input)
 

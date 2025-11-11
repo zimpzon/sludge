@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEditor;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -217,7 +218,7 @@ public class GameManager : MonoBehaviour
                     PlayerInput.ClearState(); // Make sure starting round with a tap jump will "eat" the tap when round stars. Eg. we want to start with a jump in that case.
                 }
 
-                if (PlayerInput.IsTapped(PlayerInput.InputType.Select))
+                if (PlayerInput.IsTapped(PlayerInput.InputType.Select) && CanGoToNextLevel())
                 {
                     GoToNextLevel();
                     abort = true;
