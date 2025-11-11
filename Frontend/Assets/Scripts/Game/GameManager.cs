@@ -9,7 +9,9 @@ using Sludge.UI;
 using Sludge.Utility;
 using System.Collections;
 using System.Linq;
+using System.Text;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -40,13 +42,14 @@ public class GameManager : MonoBehaviour
     public ColorSchemeScriptableObject CurrentUiColorScheme;
     public ColorSchemeListScriptableObject ColorSchemeList;
 
-    public GameObject ButtonStartRound;
+    public GameObject RoundsActionPanel;
+    public TextMeshProUGUI TextRoundsAction;
 
     public ParticleSystem DustParticles;
     public ParticleSystem CompletedParticles;
     public ParticleSystem MarkerParticles;
 
-    public TMP_Text TextPillsLeft;
+    public TMP_Text TextTimer;
     public TMP_Text TextLevelName;
 
     public Material OutlineMaterial;
@@ -149,16 +152,6 @@ public class GameManager : MonoBehaviour
         Tilemap.gameObject.SetActive(true);
     }
 
-    void SetMenuButtonActive(GameObject go, bool active)
-    {
-        // Button face
-        go.GetComponent<UiSchemeColorApplier>().SetBrightnessOffset(active ? 0 : -0.25f);
-        // Button text
-        go.GetComponentInChildren<TMP_Text>().gameObject.GetComponent<UiSchemeColorApplier>().SetBrightnessOffset(active ? 0 : -0.5f);
-
-        go.GetComponent<UiNavigation>().Enabled = active;
-    }
-
     void GoToNextLevel()
     {
         StopAllCoroutines();
@@ -166,57 +159,77 @@ public class GameManager : MonoBehaviour
         StartLevel();
     }
 
+    bool CanGoToNextLevel()
+    {
+        bool wasStartedFromEditor = currentLevelData.Namespace == PlayerProgress.LevelNamespace.NotSet;
+        return wasStartedFromEditor ? false : PlayerProgress.LevelIsCompleted(currentLevelData.Namespace, currentLevelData.LevelId);
+    }
+
+    StringBuilder betweenRoundsSb = new StringBuilder();
+    void ShowBetweenRoundsActionsText(bool show)
+    {
+        RoundsActionPanel.SetActive(show);
+        if (!show)
+            return;
+
+        bool canGoToNextLevel = CanGoToNextLevel();
+
+        betweenRoundsSb.Clear();
+        betweenRoundsSb.AppendLine("Retry\tMove");
+        betweenRoundsSb.AppendLine($"Next\t{(canGoToNextLevel ? "Select button" : "<locked>")}");
+        betweenRoundsSb.AppendLine("Menu\tBack button");
+        betweenRoundsSb.AppendLine();
+        betweenRoundsSb.AppendLine("<size=-3>Press Back button while playing to reset level");
+        TextRoundsAction.SetText(betweenRoundsSb);
+    }
+
     IEnumerator BetweenRoundsLoop(string replayId = null)
     {
         int attempts = 0;
         bool lastRoundCancelled = false;
+        bool abort = false;
 
+        UpdateTimer(-1);
         while (true)
         {
-            SetMenuButtonActive(ButtonStartRound, true);
-
-            var selectedButton = ButtonStartRound;
-            UiLogic.Instance.SetSelectionMarker(selectedButton);
-
             bool startRound = false;
 
-            UiNavigation.OnNavigationSelected = (go) =>
-            {
-                if (go == ButtonStartRound)
-                {
-                    startRound = true;
-                }
-            };
-
             ResetLevel();
-
-            yield return UiPanels.Instance.ShowPanel(UiPanel.BetweenRoundsMenu);
+            ShowBetweenRoundsActionsText(show: attempts > 0);
 
             yield return RevealPlayer(landing: false);
 
             while (startRound == false)
             {
                 PlayerInput.GetHumanInput();
-                UiLogic.Instance.DoUiNavigation(PlayerInput);
 
-                if (PlayerInput.Up > 0 || PlayerInput.Down > 0 || PlayerInput.Left > 0 || PlayerInput.Right > 0)
+                bool startPlaying = PlayerInput.Up > 0 || PlayerInput.Down > 0 || PlayerInput.Left > 0 || PlayerInput.Right > 0 || PlayerInput.JumpActive();
+                if (startPlaying)
                 {
                     startRound = true;
                     PlayerInput.ClearState(); // Make sure starting round with a tap jump will "eat" the tap when round stars. Eg. we want to start with a jump in that case.
                 }
 
+                if (PlayerInput.IsTapped(PlayerInput.InputType.Select))
+                {
+                    GoToNextLevel();
+                    abort = true;
+                    break;
+                }
+
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
-                    yield return UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
+                    ShowBetweenRoundsActionsText(show: false);
                     UiLogic.Instance.BackFromGame();
                     StopAllCoroutines();
                 }
 
                 yield return null;
             }
+            if (abort)
+                break;
 
-            UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
-            UiLogic.Instance.SetSelectionMarker(null);
+            ShowBetweenRoundsActionsText(false);
 
             yield return Playing();
             attempts++;
@@ -280,12 +293,16 @@ public class GameManager : MonoBehaviour
 
     public void OnPillEaten()
     {
-        UpdatePillsLeft();
     }
 
-    public void UpdatePillsLeft()
+    public void UpdateTimer(float timeMs)
     {
-        TextPillsLeft.text = $"{PillManager.PillsLeft}/{PillManager.TotalPills}";
+        timeMs /= 1000.0f;
+
+        if (timeMs < 0)
+            TextTimer.SetText("0.00 sec", timeMs);
+        else
+            TextTimer.SetText("{0:0.00} sec", timeMs);
     }
 
     void ResetLevel()
@@ -300,7 +317,6 @@ public class GameManager : MonoBehaviour
         Keys = 0;
 
         PillManager.Reset(PillTilemap.gameObject.GetComponent<PillSnapshot>().TotalPills);
-        UpdatePillsLeft();
 
         var pickupSequences = SludgeObjects.Where(o => o is PickupSequence).Cast<PickupSequence>().ToList();
         PickupSequenceManager.Reset(pickupSequences);
@@ -416,6 +432,10 @@ public class GameManager : MonoBehaviour
         Player.EngineTick();
     }
 
+    private void OnValidate()
+    {
+        SetDefaultColorScheme();
+    }
     private void SetDefaultColorScheme()
     {
         ColorScheme.ApplyColors(ColorSchemeList.ColorSchemes.Where(s => s?.name == "Default").FirstOrDefault());
@@ -450,6 +470,7 @@ public class GameManager : MonoBehaviour
         EngineTime = EngineTimeMs * 0.001;
 
         UpdateAll();
+        UpdateTimer(EngineTimeMs);
 
         FrameCounter++;
 

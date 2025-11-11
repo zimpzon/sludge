@@ -128,7 +128,6 @@ namespace Sludge.UI
 			UiPanels.Instance.ShowBackground();
 			yield return UiPanels.Instance.HidePanel(UiPanel.Game);
 			yield return UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
-			yield return UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
 			yield return UiPanels.Instance.HidePanel(UiPanel.Settings);
 
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
@@ -171,7 +170,7 @@ namespace Sludge.UI
             GameManager.I.LoadLevel(uiLevel);
 			UiPanels.Instance.HideBackground();
 
-			yield return UiPanels.Instance.ShowPanel(UiPanel.Game);
+            yield return UiPanels.Instance.ShowPanel(UiPanel.Game);
 			yield return UiPanels.Instance.HidePanel(UiPanel.MainMenu);
 
 			SetSelectionMarker(null);
@@ -179,7 +178,7 @@ namespace Sludge.UI
 
 			while (true)
 			{
-                // Wait for game sequence to end. StopAllCoroutines() will break this loop.
+                // Wait for game sequence to end. When does this exit? The rest runs in coroutines. So StopAllCoroutines?
 				// Important: Only game loop calls GetHumanInput since coroutine ticks and engine ticks are not synced.
                 yield return null;
 			}

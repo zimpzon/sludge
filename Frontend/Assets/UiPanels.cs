@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Sludge.UI
 {
-    public enum UiPanel { MainMenu, LevelSelect, Game, BetweenRoundsMenu, Settings }
+    public enum UiPanel { MainMenu, LevelSelect, Game, Settings }
 
     public class UiPanels : MonoBehaviour
     {
@@ -77,11 +77,6 @@ namespace Sludge.UI
                     hidePos = panelGameHidePos;
                     showPos = panelGameShowPos;
                     return PanelGame;
-
-                case UiPanel.BetweenRoundsMenu:
-                    hidePos = panelBetweenRoundsHidePos;
-                    showPos = panelBetweenRoundsShowPos;
-                    return PanelBetweenRoundsMenu;
 
                 case UiPanel.Settings:
                     hidePos = panelSettingsHidePos;
