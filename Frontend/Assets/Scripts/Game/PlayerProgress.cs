@@ -54,8 +54,11 @@ namespace Sludge.Utility
             if (ns == LevelNamespace.NotSet)
                 return new LevelStats();
 
-            var levelStats = ns == LevelNamespace.Casual ? saveGame.CasualLevelsCompleted[levelId] : saveGame.HardLevelsCompleted[levelId];
-            return levelStats;
+            var dict = ns == LevelNamespace.Casual ? saveGame.CasualLevelsCompleted : saveGame.HardLevelsCompleted;
+            if (!dict.TryGetValue(levelId, out var stats))
+                stats = new LevelStats();
+
+            return stats;
         }
 
         static void UpdateSavedStats(RoundResult roundResult, Dictionary<int, LevelStats> levelsCompleted)

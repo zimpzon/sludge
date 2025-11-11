@@ -1,10 +1,9 @@
-next: right align time
-
 level ideas-->
 
 Indiana Jones, wall coming from some direction, avoid squished.
 
 <--
+
 
 
 Door/tile I cant pass through but lasers, bullets, etc, can.
@@ -17,6 +16,9 @@ Timer: gold, silver, bronze
 
 Would be nice for cell ghosts, opening a big wall: LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 
+Bug: static bullets keep losing sprites
+Bug: can move next with 'e' even if locked
+Bug: best shows as -1 the first time
 ------------------------------
 
 + First input is ignored if jumping (now clearing input)

@@ -175,10 +175,11 @@ public class GameManager : MonoBehaviour
         var savedStats = PlayerProgress.GetSavedStats(currentLevelData.Namespace, currentLevelData.LevelId);
         bool canGoToNextLevel = CanGoToNextLevel();
 
-        string timePart  = latestRoundResult.Completed ? $"{latestRoundResult.Time,6:0.00}" : "     -";
+        string timePart = latestRoundResult.Completed ? $"{latestRoundResult.Time,6:0.00}" : "     -";
+        string bestPart = savedStats.BestTime >= 0 ? $"{savedStats.BestTime,6:0.00}" : "     -";
         betweenRoundsSb.Clear();
         betweenRoundsSb.AppendLine($"Time\t{timePart}");
-        betweenRoundsSb.AppendLine($"Best\t{savedStats.BestTime,6:0.00}");
+        betweenRoundsSb.AppendLine($"Best\t{bestPart}");
         betweenRoundsSb.AppendLine($"Gold\t{currentLevelData.TargetTime,6:0.00}");
         betweenRoundsSb.AppendLine();
         betweenRoundsSb.AppendLine("Retry\tMove");
