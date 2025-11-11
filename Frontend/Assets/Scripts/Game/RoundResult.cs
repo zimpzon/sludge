@@ -8,5 +8,6 @@ namespace Sludge
         public int LevelId;
         public bool Cancelled;
         public bool Completed;
+        public float Time = -1;
     }
 }

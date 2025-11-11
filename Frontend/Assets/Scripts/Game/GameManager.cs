@@ -172,14 +172,19 @@ public class GameManager : MonoBehaviour
         if (!show)
             return;
 
+        var savedStats = PlayerProgress.GetSavedStats(currentLevelData.Namespace, currentLevelData.LevelId);
         bool canGoToNextLevel = CanGoToNextLevel();
 
+        string timePart  = latestRoundResult.Completed ? $"{latestRoundResult.Time,6:0.00}" : "     -";
         betweenRoundsSb.Clear();
+        betweenRoundsSb.AppendLine($"Time\t{timePart}");
+        betweenRoundsSb.AppendLine($"Master\t{currentLevelData.TargetTime,6:0.00}");
+        betweenRoundsSb.AppendLine($"Best\t{savedStats.BestTime,6:0.00}");
+        betweenRoundsSb.AppendLine();
         betweenRoundsSb.AppendLine("Retry\tMove");
         betweenRoundsSb.AppendLine($"Next\t{(canGoToNextLevel ? "Select button" : "<locked>")}");
         betweenRoundsSb.AppendLine("Menu\tBack button");
-        betweenRoundsSb.AppendLine();
-        betweenRoundsSb.AppendLine("<size=-3>Press Back button while playing to reset level");
+        betweenRoundsSb.AppendLine("Reset\tBack button");
         TextRoundsAction.SetText(betweenRoundsSb);
     }
 
@@ -189,13 +194,14 @@ public class GameManager : MonoBehaviour
         bool lastRoundCancelled = false;
         bool abort = false;
 
+        ShowBetweenRoundsActionsText(false);
         UpdateTimer(-1);
+
         while (true)
         {
             bool startRound = false;
 
             ResetLevel();
-            ShowBetweenRoundsActionsText(show: attempts > 0);
 
             yield return RevealPlayer(landing: false);
 
@@ -226,14 +232,16 @@ public class GameManager : MonoBehaviour
 
                 yield return null;
             }
+            ShowBetweenRoundsActionsText(false);
+
             if (abort)
                 break;
-
-            ShowBetweenRoundsActionsText(false);
 
             yield return Playing();
             attempts++;
             lastRoundCancelled = latestRoundResult.Cancelled;
+
+            ShowBetweenRoundsActionsText(show: true);
 
             if (!lastRoundCancelled)
             {
@@ -372,6 +380,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        latestRoundResult.Time = Time.time - Player.RoundStartTime;
         latestRoundResult.Completed = levelComplete;
         latestRoundResult.LevelNamespace = UiLogic.Instance.latestSelectedLevelNamespace;
         latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?

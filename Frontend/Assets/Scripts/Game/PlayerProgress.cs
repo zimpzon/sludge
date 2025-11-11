@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Sludge.UI;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Sludge.Utility
 {
@@ -23,8 +25,8 @@ namespace Sludge.Utility
 
         public class LevelStats
         {
-            // Add bronze, etc. here.
             public int LevelId = -1;
+            public float BestTime = -1;
         }
 
         public class SaveGame
@@ -47,39 +49,51 @@ namespace Sludge.Utility
             return true;
         }
 
+        public static LevelStats GetSavedStats(LevelNamespace ns, int levelId)
+        {
+            if (ns == LevelNamespace.NotSet)
+                return new LevelStats();
+
+            var levelStats = ns == LevelNamespace.Casual ? saveGame.CasualLevelsCompleted[levelId] : saveGame.HardLevelsCompleted[levelId];
+            return levelStats;
+        }
+
+        static void UpdateSavedStats(RoundResult roundResult, Dictionary<int, LevelStats> levelsCompleted)
+        {
+            if (!levelsCompleted.ContainsKey(roundResult.LevelId))
+            {
+                // New level completed
+                Debug.Log($"New {roundResult.LevelNamespace} levelId completed: {roundResult.LevelId}");
+                var newLevelStats = new LevelStats { LevelId = roundResult.LevelId, BestTime = roundResult.Time };
+                levelsCompleted.Add(roundResult.LevelId, newLevelStats);
+                Save();
+            }
+            else
+            {
+                // Already completed
+                var existingLevelStats = levelsCompleted[roundResult.LevelId];
+                if (roundResult.Time < existingLevelStats.BestTime)
+                {
+                    Debug.Log($"New best time for {roundResult.LevelNamespace}, levelId: {roundResult.LevelId}: {existingLevelStats.BestTime} -> {roundResult.Time}");
+                    existingLevelStats = levelsCompleted[roundResult.LevelId];
+                    existingLevelStats.BestTime = roundResult.Time;
+                    Save();
+                }
+            }
+        }
+
         public static void UpdateProgress(RoundResult roundResult)
         {
-            if (!roundResult.Completed || UiLogic.Instance.StartCurrentScene)
+            if (!roundResult.Completed || UiLogic.Instance.StartCurrentScene) // We don't have a namespace if started from editor
                 return;
 
             if (roundResult.LevelNamespace == LevelNamespace.Casual)
             {
-                if (!saveGame.CasualLevelsCompleted.ContainsKey(roundResult.LevelId))
-                {
-                    // New Casual level completed
-                    Debug.Log($"New {roundResult.LevelNamespace} levelId completed: {roundResult.LevelId}");
-                    saveGame.CasualLevelsCompleted.Add(roundResult.LevelId, new LevelStats { LevelId = roundResult.LevelId });
-                    Save();
-                }
-                else
-                {
-                    // Level was already completed
-                    Debug.Log($"Level was already completed: {roundResult.LevelNamespace}, levelId: {roundResult.LevelId}");
-                }
+                UpdateSavedStats(roundResult, saveGame.CasualLevelsCompleted);
             }
             else if (roundResult.LevelNamespace == LevelNamespace.Hard)
             {
-                if (!saveGame.HardLevelsCompleted.ContainsKey(roundResult.LevelId))
-                {
-                    // New Hard level completed
-                    Debug.Log($"New {roundResult.LevelNamespace} levelId completed: {roundResult.LevelId}");
-                    saveGame.HardLevelsCompleted.Add(roundResult.LevelId, new LevelStats { LevelId = roundResult.LevelId });
-                    Save();
-                }
-                else
-                {
-                    // Level was already completed
-                }
+                UpdateSavedStats(roundResult, saveGame.HardLevelsCompleted);
             }
         }
 
