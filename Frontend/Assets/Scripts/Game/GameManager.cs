@@ -178,8 +178,8 @@ public class GameManager : MonoBehaviour
         string timePart  = latestRoundResult.Completed ? $"{latestRoundResult.Time,6:0.00}" : "     -";
         betweenRoundsSb.Clear();
         betweenRoundsSb.AppendLine($"Time\t{timePart}");
-        betweenRoundsSb.AppendLine($"Master\t{currentLevelData.TargetTime,6:0.00}");
         betweenRoundsSb.AppendLine($"Best\t{savedStats.BestTime,6:0.00}");
+        betweenRoundsSb.AppendLine($"Gold\t{currentLevelData.TargetTime,6:0.00}");
         betweenRoundsSb.AppendLine();
         betweenRoundsSb.AppendLine("Retry\tMove");
         betweenRoundsSb.AppendLine($"Next\t{(canGoToNextLevel ? "Select button" : "<locked>")}");
@@ -303,14 +303,12 @@ public class GameManager : MonoBehaviour
     {
     }
 
-    public void UpdateTimer(float timeMs)
+    public void UpdateTimer(float time)
     {
-        timeMs /= 1000.0f;
-
-        if (timeMs < 0)
-            TextTimer.SetText("0.00 sec", timeMs);
+        if (time < 0)
+            TextTimer.SetText("0.00 sec", time);
         else
-            TextTimer.SetText("{0:0.00} sec", timeMs);
+            TextTimer.SetText("{0:0.00} sec", time);
     }
 
     void ResetLevel()
@@ -368,6 +366,8 @@ public class GameManager : MonoBehaviour
                 DoTick();
             }
 
+            UpdateTimer((float)EngineTime);
+
             if (levelComplete)
                 break;
 
@@ -380,7 +380,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        latestRoundResult.Time = Time.time - Player.RoundStartTime;
+        latestRoundResult.Time = (float)EngineTime;
         latestRoundResult.Completed = levelComplete;
         latestRoundResult.LevelNamespace = UiLogic.Instance.latestSelectedLevelNamespace;
         latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
@@ -479,7 +479,6 @@ public class GameManager : MonoBehaviour
         EngineTime = EngineTimeMs * 0.001;
 
         UpdateAll();
-        UpdateTimer(EngineTimeMs);
 
         FrameCounter++;
 
