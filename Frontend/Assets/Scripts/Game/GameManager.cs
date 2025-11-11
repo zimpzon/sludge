@@ -156,7 +156,23 @@ public class GameManager : MonoBehaviour
     void GoToNextLevel()
     {
         StopAllCoroutines();
-        LoadLevel(currentUiLevel.Next);
+
+        currentUiLevel = currentUiLevel.Next;
+        if (currentUiLevel.LevelData.Namespace == PlayerProgress.LevelNamespace.Casual)
+        {
+            UiLogic.Instance.lastSelectedCasualLevelId = currentUiLevel.LevelData.LevelId;
+        }
+        else if (currentUiLevel.LevelData.Namespace == PlayerProgress.LevelNamespace.Hard)
+        {
+            UiLogic.Instance.lastSelectedHardLevelId = currentUiLevel.LevelData.LevelId;
+        }
+        else
+        {
+            Debug.LogError("cannot change level without a namespace");
+            return;
+        }
+
+        LoadLevel(currentUiLevel);
         StartLevel();
     }
 
@@ -467,6 +483,10 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        DebugLinesScript.Instance.SetLine("currentLevelData.Namespace", currentLevelData.Namespace);
+        DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedCasualLevelId", UiLogic.Instance.lastSelectedCasualLevelId);
+        DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedHardLevelId", UiLogic.Instance.lastSelectedHardLevelId);
+
         CheckChangeColorScheme(PlayerInput);
 
         // Out of Tweens: search for TODO TWEEN to eventually replace later.

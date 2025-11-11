@@ -12,13 +12,12 @@ Next - move
 Retry - r
 Level Select - q
 
-Timer: gold, silver, bronze
-
 Would be nice for cell ghosts, opening a big wall: LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 
 Bug: static bullets keep losing sprites
-Bug: can move next with 'e' even if locked
 ------------------------------
+
++ Bug: can move next with 'e' even if locked
 
 + Bug: best shows as -1 the first time (fixed)
 
