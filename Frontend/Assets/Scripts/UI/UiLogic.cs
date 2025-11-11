@@ -126,17 +126,17 @@ namespace Sludge.UI
 			SetSelectionMarker(selection);
 
 			UiPanels.Instance.ShowBackground();
-			UiPanels.Instance.HidePanel(UiPanel.Game);
-			UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
-			UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
-			UiPanels.Instance.HidePanel(UiPanel.Settings);
+			yield return UiPanels.Instance.HidePanel(UiPanel.Game);
+			yield return UiPanels.Instance.HidePanel(UiPanel.LevelSelect);
+			yield return UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
+			yield return UiPanels.Instance.HidePanel(UiPanel.Settings);
 
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 
 			UiNavigation.OnNavigationChanged = (go) =>
 			{
-				go.transform.DOPunchScale(Vector3.one * 0.05f, 0.3f);
-			};
+				//go.transform.DOPunchScale(Vector3.one * 0.05f, 0.3f); // TODO TWEEN
+            };
 
 			UiNavigation.OnNavigationSelected = (go) =>
 			{
@@ -171,15 +171,16 @@ namespace Sludge.UI
             GameManager.I.LoadLevel(uiLevel);
 			UiPanels.Instance.HideBackground();
 
-			UiPanels.Instance.ShowPanel(UiPanel.Game);
-			UiPanels.Instance.HidePanel(UiPanel.MainMenu);
+			yield return UiPanels.Instance.ShowPanel(UiPanel.Game);
+			yield return UiPanels.Instance.HidePanel(UiPanel.MainMenu);
 
 			SetSelectionMarker(null);
 			GameManager.I.StartLevel();
 
 			while (true)
 			{
-                // Wait for game sequence to end. Important: Only game loop calls GetHumanInput since coroutine ticks and engine ticks are not synced.
+                // Wait for game sequence to end. StopAllCoroutines() will break this loop.
+				// Important: Only game loop calls GetHumanInput since coroutine ticks and engine ticks are not synced.
                 yield return null;
 			}
 		}
@@ -209,7 +210,7 @@ namespace Sludge.UI
             
 			SoundManager.Play(FxList.Instance.UiShowMenu);
             yield return UiPanels.Instance.ShowPanel(UiPanel.Settings);
-            UiPanels.Instance.PanelSettings.transform.DOPunchPosition(Vector3.up * 4, 0.3f);
+            //UiPanels.Instance.PanelSettings.transform.DOPunchPosition(Vector3.up * 4, 0.3f); // TODO TWEEN
 
             while (true)
 			{
@@ -242,7 +243,7 @@ namespace Sludge.UI
 
             SoundManager.Play(FxList.Instance.UiShowMenu);
             yield return UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
-			UiPanels.Instance.PanelLevelSelect.transform.DOPunchPosition(Vector3.left * 4, 0.3f);
+			//UiPanels.Instance.PanelLevelSelect.transform.DOPunchPosition(Vector3.left * 4, 0.3f); // TODO TWEEN
 
             double charsShown = 0;
 			double charRevealSpeed = 150;
@@ -265,7 +266,7 @@ namespace Sludge.UI
 
 			void OnNavigationChanged(GameObject go)
             {
-                go.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f);
+                //go.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f); // TODO TWEEN
 
                 var uiLevel = go.GetComponent<UiLevel>();
                 if (latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual)

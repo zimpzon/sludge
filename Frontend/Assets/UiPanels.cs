@@ -103,7 +103,12 @@ namespace Sludge.UI
             if (show)
                 go.SetActive(true);
 
-            return go.GetComponent<RectTransform>().DOAnchorPos(show ? showPos : hidePos, time).
+            var rectTransform = go.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = show ? showPos : hidePos;
+            go.SetActive(show);
+            return null;
+
+            return go.GetComponent<RectTransform>().DOAnchorPos(show ? showPos : hidePos, time). // TODO TWEEN
                 SetEase(Ease.InOutCubic).OnComplete(() => go.SetActive(show)).
                 WaitForCompletion();
         }

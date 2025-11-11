@@ -1,3 +1,4 @@
+
 Door/tile I cant pass through but lasers, bullets, etc, can.
 
 Next - move
@@ -10,7 +11,7 @@ Would be nice for cell ghosts, opening a big wall: LevelCells.Instance.SetDynami
 
 ------------------------------
 
-+ First input is ignored if jumping (not a bug, see top botton)
++ First input is ignored if jumping (now clearing input)
 
 + Can stand on objects: BehindLevelDanger, Danger
 

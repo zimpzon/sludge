@@ -202,6 +202,7 @@ public class GameManager : MonoBehaviour
                 if (PlayerInput.Up > 0 || PlayerInput.Down > 0 || PlayerInput.Left > 0 || PlayerInput.Right > 0)
                 {
                     startRound = true;
+                    PlayerInput.ClearState(); // Make sure starting round with a tap jump will "eat" the tap when round stars. Eg. we want to start with a jump in that case.
                 }
 
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
@@ -436,6 +437,8 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         CheckChangeColorScheme(PlayerInput);
+
+        // Out of Tweens: search for TODO TWEEN to eventually replace later.
         //DebugLinesScript.Instance.SetLine("TotalPlayingTweens", DOTween.TotalPlayingTweens());
     }
 
