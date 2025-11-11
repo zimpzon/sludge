@@ -25,7 +25,7 @@ namespace Sludge.Utility
         {
             public int LevelId = -1;
             public float BestTime = -1;
-            public int Attempts = 0;
+            public int Attempts = -1;
         }
 
         public class SaveGame
@@ -36,7 +36,7 @@ namespace Sludge.Utility
 
         private const string PrefsName = "earl-in-space-savegame-v1";
 
-        public static bool LevelIsCompleted(LevelNamespace ns, int levelId)
+        public static bool IsLevelCompleted(LevelNamespace ns, int levelId)
         {
             if (ns == LevelNamespace.Casual)
                 return saveGame.CasualLevelsCompleted.ContainsKey(levelId);
@@ -65,28 +65,29 @@ namespace Sludge.Utility
             if (!levelsCompleted.ContainsKey(roundResult.LevelId))
             {
                 // New level completed
-                Debug.Log($"New {roundResult.LevelNamespace} levelId completed: {roundResult.LevelId}");
-                var newLevelStats = new LevelStats { LevelId = roundResult.LevelId, BestTime = roundResult.Time };
+                Debug.Log($"New stats for {roundResult.LevelNamespace} levelId: {roundResult.LevelId}");
+                var newLevelStats = new LevelStats { LevelId = roundResult.LevelId, BestTime = roundResult.Time, Attempts = 1 };
                 levelsCompleted.Add(roundResult.LevelId, newLevelStats);
-                Save();
             }
             else
             {
                 // Already completed
                 var existingLevelStats = levelsCompleted[roundResult.LevelId];
-                if (roundResult.Time < existingLevelStats.BestTime)
+                existingLevelStats.Attempts++;
+
+                if (roundResult.Completed && roundResult.Time < existingLevelStats.BestTime)
                 {
                     Debug.Log($"New best time for {roundResult.LevelNamespace}, levelId: {roundResult.LevelId}: {existingLevelStats.BestTime} -> {roundResult.Time}");
                     existingLevelStats = levelsCompleted[roundResult.LevelId];
                     existingLevelStats.BestTime = roundResult.Time;
-                    Save();
                 }
             }
+            Save();
         }
 
-        public static void UpdateProgress(RoundResult roundResult)
+        public static void UpdateWithRoundResult(RoundResult roundResult)
         {
-            if (!roundResult.Completed || UiLogic.Instance.StartCurrentScene) // We don't have a namespace if started from editor
+            if (UiLogic.Instance.StartCurrentScene) // We don't have a namespace if started from editor
                 return;
 
             if (roundResult.LevelNamespace == LevelNamespace.Casual)

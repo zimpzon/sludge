@@ -33,7 +33,7 @@ public class ModKeyToggle : SludgeModifier
         if (!Application.isPlaying && Active)
         {
             var sr = GetComponent<SpriteRenderer>();
-            if (sr != null && sr.material != null)
+            if (sr != null && sr.sharedMaterial != null)
             {
                 sr.sharedMaterial.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
             }

@@ -63,7 +63,7 @@ public class UiLevelsLayout : MonoBehaviour
             var levelItem = LevelItems[i];
             int levelId = levelItem.levelScript.LevelData.LevelId;
 
-            bool isCompleted = PlayerProgress.LevelIsCompleted(_levelNamespace, levelItem.levelScript.LevelData.LevelId);
+            bool isCompleted = PlayerProgress.IsLevelCompleted(_levelNamespace, levelItem.levelScript.LevelData.LevelId);
             bool isFirstLevel = levelId == 1;
             bool isUnlocked = false;
 

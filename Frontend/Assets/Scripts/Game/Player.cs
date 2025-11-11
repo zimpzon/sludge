@@ -308,7 +308,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         Eyes.SetActive(false);
         SoundManager.Play(FxList.Instance.PlayerDie);
         ParticleEmitter.I.EmitDust(trans.position, 8);
-        GameManager.I.ShakeCamera(duration: 1.0f, strength: 0.7f);
+        GameManager.I.ShakeCamera(duration: 0.2f, strength: 0.7f);
 
         EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Player));
 

@@ -77,10 +77,10 @@ public class ModTargetLaserTracker : SludgeModifier
                     bullet.X = SludgeUtil.Stabilize(trans.position.x + playerDir.x * StartOffset);
                     bullet.Y = SludgeUtil.Stabilize(trans.position.y + playerDir.y * StartOffset);
 
-                    if (bodyTween == null)
-                        bodyTween = Body.DOPunchScale(Vector3.one * 0.25f, 0.2f);
-                    else
-                        bodyTween.Restart();
+                    //if (bodyTween == null)
+                    //    bodyTween = Body.DOPunchScale(Vector3.one * 0.25f, 0.2f);
+                    //else
+                    //    bodyTween.Restart();
                 }
             }
         }

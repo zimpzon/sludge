@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEditor;
-using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -179,7 +178,7 @@ public class GameManager : MonoBehaviour
     bool CanGoToNextLevel()
     {
         bool wasStartedFromEditor = currentLevelData.Namespace == PlayerProgress.LevelNamespace.NotSet;
-        return wasStartedFromEditor ? false : PlayerProgress.LevelIsCompleted(currentLevelData.Namespace, currentLevelData.LevelId);
+        return wasStartedFromEditor ? false : PlayerProgress.IsLevelCompleted(currentLevelData.Namespace, currentLevelData.LevelId);
     }
 
     StringBuilder betweenRoundsSb = new StringBuilder();
@@ -198,11 +197,12 @@ public class GameManager : MonoBehaviour
         betweenRoundsSb.AppendLine($"Time\t{timePart}");
         betweenRoundsSb.AppendLine($"Best\t{bestPart}");
         betweenRoundsSb.AppendLine($"Gold\t{currentLevelData.TargetTime,6:0.00}");
+        betweenRoundsSb.AppendLine($"Attempts\t{savedStats.Attempts,6}");
         betweenRoundsSb.AppendLine();
         betweenRoundsSb.AppendLine("Retry\tMove");
-        betweenRoundsSb.AppendLine($"Next\t{(canGoToNextLevel ? "Select button" : "<locked>")}");
-        betweenRoundsSb.AppendLine("Menu\tBack button");
-        betweenRoundsSb.AppendLine("Reset\tBack button");
+        betweenRoundsSb.AppendLine($"Next\t{(canGoToNextLevel ? "Select btn" : "<locked>")}");
+        betweenRoundsSb.AppendLine("Menu\tBack btn");
+        betweenRoundsSb.AppendLine("Reset\tBack btn");
         TextRoundsAction.SetText(betweenRoundsSb);
     }
 
@@ -311,10 +311,13 @@ public class GameManager : MonoBehaviour
         Player.DisableCollisions(false);
     }
 
+    Tweener cameraTweener;
     public void ShakeCamera(float duration, float strength)
     {
-        CameraRoot.DOKill(complete: true);
-        CameraRoot.DOShakePosition(duration, strength);
+        if (cameraTweener != null)
+            cameraTweener.Kill(complete: true);
+
+        cameraTweener = CameraRoot.DOShakePosition(duration, strength);
     }
 
     public void OnPillEaten()
@@ -404,10 +407,11 @@ public class GameManager : MonoBehaviour
         latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
             UiLogic.Instance.lastSelectedCasualLevelId : UiLogic.Instance.lastSelectedHardLevelId;
 
+        PlayerProgress.UpdateWithRoundResult(latestRoundResult);
+
         if (latestRoundResult.Completed)
         {
             SoundManager.Play(FxList.Instance.LevelComplete);
-            PlayerProgress.UpdateProgress(latestRoundResult);
         }
         else
         {
