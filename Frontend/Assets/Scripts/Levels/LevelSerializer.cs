@@ -13,6 +13,7 @@ public static class LevelSerializer
     {
         var data = new LevelData();
         data.LevelName = levelSettings.LevelName;
+        data.TargetTime = levelSettings.TargetTime;
 
 #if UNITY_EDITOR
         //if (levelSettings.ColorScheme != null)

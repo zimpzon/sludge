@@ -12,6 +12,7 @@ public static class LevelDeserializer
     {
         // Level settings
         levelSettings.LevelName = data.LevelName;
+        levelSettings.TargetTime = data.TargetTime;
         //levelSettings.ColorSchemeName = data.ColorSchemeName;
 
         // Clear existing bullets

@@ -16,6 +16,7 @@ namespace Sludge.Shared
     public class LevelData
     {
         public string LevelName;
+        public float TargetTime;
         public PlayerProgress.LevelNamespace Namespace;
         public int LevelId = 0;
 
