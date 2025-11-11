@@ -10,8 +10,8 @@ namespace Sludge.Modifiers
         public bool DisableSuction = false;
 
         // it is important to keep these values consistent between levels so not public
-        float SuctionPower = 30.0f;
-        float ConveyorSpeed = 25.0f;
+        float SuctionPower = 0.0f;
+        float ConveyorSpeed = 20.0f;
 
         SpriteRenderer spriteRenderer;
         Vector2 beltDirection;

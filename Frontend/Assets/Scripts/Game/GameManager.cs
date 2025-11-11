@@ -463,8 +463,12 @@ public class GameManager : MonoBehaviour
     {
         SetDefaultColorScheme();
     }
+
     private void SetDefaultColorScheme()
     {
+        if (I is null)
+            return;
+
         ColorScheme.ApplyColors(ColorSchemeList.ColorSchemes.Where(s => s?.name == "Default").FirstOrDefault());
     }
 
@@ -483,9 +487,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        DebugLinesScript.Instance.SetLine("currentLevelData.Namespace", currentLevelData.Namespace);
-        DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedCasualLevelId", UiLogic.Instance.lastSelectedCasualLevelId);
-        DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedHardLevelId", UiLogic.Instance.lastSelectedHardLevelId);
+        //DebugLinesScript.Instance.SetLine("currentLevelData.Namespace", currentLevelData.Namespace);
+        //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedCasualLevelId", UiLogic.Instance.lastSelectedCasualLevelId);
+        //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedHardLevelId", UiLogic.Instance.lastSelectedHardLevelId);
 
         CheckChangeColorScheme(PlayerInput);
 

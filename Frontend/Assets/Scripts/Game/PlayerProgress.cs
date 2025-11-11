@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Sludge.UI;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 namespace Sludge.Utility
 {
@@ -27,6 +25,7 @@ namespace Sludge.Utility
         {
             public int LevelId = -1;
             public float BestTime = -1;
+            public int Attempts = 0;
         }
 
         public class SaveGame

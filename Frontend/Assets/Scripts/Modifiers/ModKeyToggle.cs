@@ -5,6 +5,7 @@ using Sludge.Utility;
 using System.Collections;
 using UnityEngine;
 
+[ExecuteAlways]
 public class ModKeyToggle : SludgeModifier
 {
     public bool Active = true;
@@ -24,6 +25,19 @@ public class ModKeyToggle : SludgeModifier
         spriteRenderer = GetComponent<SpriteRenderer>();
         mat = spriteRenderer.material;
         Reset();
+    }
+
+    private void OnValidate()
+    {
+        // Update shader visibility in editor when values change
+        if (!Application.isPlaying && Active)
+        {
+            var sr = GetComponent<SpriteRenderer>();
+            if (sr != null && sr.material != null)
+            {
+                sr.sharedMaterial.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
+            }
+        }
     }
 
     public override void Reset()
