@@ -34,8 +34,8 @@ namespace Sludge.UI
         [NonSerialized] public int LevelsEliteCount;
         [NonSerialized] public double GameProgressPct = -1;
 		[NonSerialized] public PlayerProgress.LevelNamespace latestSelectedLevelNamespace;
-        private int lastSelectedCasualLevelId = -1;
-        private int lastSelectedHardLevelId = -1;
+        [NonSerialized] public int lastSelectedCasualLevelId = -1;
+        [NonSerialized] public int lastSelectedHardLevelId = -1;
 
         private void Awake()
         {
@@ -186,8 +186,7 @@ namespace Sludge.UI
 
 		public void BackFromGame()
         {
-			StopAllCoroutines();
-			UpdateWorldWideAttempts();
+			//UpdateWorldWideAttempts();
 
 			LevelLayoutCasual.UpdateVisualHints();
 			LevelLayoutHard.UpdateVisualHints();
@@ -196,7 +195,9 @@ namespace Sludge.UI
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 			UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
 			UiPanels.Instance.ShowBackground();
-			StartCoroutine(LevelSelectLoop(latestSelectedLevelNamespace));
+            
+			StopAllCoroutines();
+            StartCoroutine(LevelSelectLoop(latestSelectedLevelNamespace));
 		}
 
 		IEnumerator ControlsLoop()
@@ -269,11 +270,11 @@ namespace Sludge.UI
                 var uiLevel = go.GetComponent<UiLevel>();
                 if (latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual)
 				{
-                    lastSelectedCasualLevelId = uiLevel.LevelIndex;
+                    lastSelectedCasualLevelId = uiLevel.LevelIndex + 1;
                 }
                 else if (latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Hard)
                 {
-                    lastSelectedHardLevelId = uiLevel.LevelIndex;
+                    lastSelectedHardLevelId = uiLevel.LevelIndex + 1;
                 }
 
                 var levelData = uiLevel.LevelData;

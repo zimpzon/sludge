@@ -1,34 +1,34 @@
-using Newtonsoft.Json;
-using Sludge;
-using System.Collections;
-using System.Text;
-using UnityEngine;
-using UnityEngine.Networking;
+//using Newtonsoft.Json;
+//using Sludge;
+//using System.Collections;
+//using System.Text;
+//using UnityEngine;
+//using UnityEngine.Networking;
 
-public class Analytics : MonoBehaviour
-{
-    public static Analytics Instance;
+//public class Analytics : MonoBehaviour
+//{
+//    public static Analytics Instance;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+//    private void Awake()
+//    {
+//        Instance = this;
+//    }
 
-    public void SaveStats(RoundResult roundResult)
-    {
-        if (Application.platform == RuntimePlatform.WindowsEditor)
-            return;
+//    public void SaveStats(RoundResult roundResult)
+//    {
+//        if (Application.platform == RuntimePlatform.WindowsEditor)
+//            return;
 
-        string json = JsonConvert.SerializeObject(roundResult);
-        StartCoroutine(StoreEvents(json));
-    }
+//        string json = JsonConvert.SerializeObject(roundResult);
+//        StartCoroutine(StoreEvents(json));
+//    }
 
-    IEnumerator StoreEvents(string json)
-    {
-        using var request = new UnityWebRequest("https://sludgefunctions.azurewebsites.net/api/store-events");
-        request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.method = UnityWebRequest.kHttpVerbPOST;
-        yield return request.SendWebRequest();
-    }
-}
+//    IEnumerator StoreEvents(string json)
+//    {
+//        using var request = new UnityWebRequest("https://sludgefunctions.azurewebsites.net/api/store-events");
+//        request.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
+//        request.downloadHandler = new DownloadHandlerBuffer();
+//        request.method = UnityWebRequest.kHttpVerbPOST;
+//        yield return request.SendWebRequest();
+//    }
+//}

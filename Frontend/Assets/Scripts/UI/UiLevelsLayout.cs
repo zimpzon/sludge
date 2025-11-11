@@ -43,25 +43,55 @@ public class UiLevelsLayout : MonoBehaviour
 
     public LevelItem GetLevelFromId(int id)
     {
+        int levelIdx = id - 1;
         if (LevelItems.Count == 0)
             Debug.LogError($"add at least one level in each namespace!");
 
-        bool defaultToFirstItem = id <= 0 || id >= LevelItems.Count;
+        bool defaultToFirstItem = levelIdx <= 0 || levelIdx >= LevelItems.Count;
         if (defaultToFirstItem)
             return LevelItems[0];
 
-        return LevelItems[id];
+        return LevelItems[levelIdx];
     }
 
     public void UpdateVisualHints()
     {
+        bool prevWasCompleted = false;
+
         for (int i = 0; i < LevelItems.Count; ++i)
         {
             var levelItem = LevelItems[i];
-            bool isUnlocked = true; // TODO: always unlocked for now
+            int levelId = levelItem.levelScript.LevelData.LevelId;
 
-            string levelText = isUnlocked ? $"{i + 1}" : "?";
+            bool isCompleted = PlayerProgress.LevelIsCompleted(_levelNamespace, levelItem.levelScript.LevelData.LevelId);
+            bool isFirstLevel = levelId == 1;
+            bool isUnlocked = false;
 
+            if (isCompleted)
+            {
+                isUnlocked = true;
+                prevWasCompleted = true;
+                Debug.Log($"-----------> {_levelNamespace} LevelId {levelItem.levelScript.LevelData.LevelId} unlocked = {isUnlocked} (levelCompleted)");
+            }
+            else if (prevWasCompleted)
+            {
+                isUnlocked = true;
+                prevWasCompleted = false;
+                Debug.Log($"-----------> {_levelNamespace} LevelId {levelItem.levelScript.LevelData.LevelId} unlocked = {isUnlocked} (PrevWasCompleted)");
+            }
+            else if (isFirstLevel)
+            {
+                isUnlocked = true;
+                prevWasCompleted = false;
+                Debug.Log($"-----------> {_levelNamespace} LevelId {levelItem.levelScript.LevelData.LevelId} unlocked = {isUnlocked} (isFirstLevel)");
+            }
+            else
+            {
+                // One of the remaining unclocked levels
+                prevWasCompleted = false;
+            }
+
+            string levelText = isUnlocked ? $"{i + 1}" : "-";
             levelItem.levelScript.TextLevelNumber.text = levelText;
             levelItem.levelScript.IsUnlocked = isUnlocked;
             levelItem.levelScript.LevelIndex = i;
@@ -71,7 +101,7 @@ public class UiLevelsLayout : MonoBehaviour
             SchemeColor backgroundColor;
             SchemeColor textColor;
 
-            if (PlayerProgress.LevelIsCompleted(_levelNamespace, levelItem.levelScript.LevelData.LevelId))
+            if (isUnlocked)
             {
                 backgroundColor = SchemeColor.UiLevelMastered;
                 textColor = SchemeColor.UiTextDefault;

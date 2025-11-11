@@ -106,9 +106,10 @@ public class GameManager : MonoBehaviour
         StartCoroutine(BetweenRoundsLoop());
     }
 
-    public void LoadLevel(UiLevel uiLevel)
+    // levelSelectedFromLevelSelect is NULL when starting a level directly in editor, else the level selected in menus.
+    public void LoadLevel(UiLevel levelSelectedFromLevelSelect)
     {
-        var levelData = uiLevel?.LevelData;
+        var levelData = levelSelectedFromLevelSelect?.LevelData;
 
         // Total hack: The player dies if the new level has a collider at his OLD start position. The same thing could happen to other objects sensitive to collision!
         Tilemap.gameObject.SetActive(false);
@@ -117,7 +118,7 @@ public class GameManager : MonoBehaviour
         {
             LevelDeserializer.Run(levelData, levelElements, levelSettings);
             currentLevelData = levelData;
-            currentUiLevel = uiLevel;
+            currentUiLevel = levelSelectedFromLevelSelect;
             TextLevelName.text = levelData.LevelName;
         }
         else
@@ -205,9 +206,9 @@ public class GameManager : MonoBehaviour
 
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
-                    StopAllCoroutines();
-                    UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
+                    yield return UiPanels.Instance.HidePanel(UiPanel.BetweenRoundsMenu);
                     UiLogic.Instance.BackFromGame();
+                    StopAllCoroutines();
                 }
 
                 yield return null;
@@ -355,6 +356,9 @@ public class GameManager : MonoBehaviour
         }
 
         latestRoundResult.Completed = levelComplete;
+        latestRoundResult.LevelNamespace = UiLogic.Instance.latestSelectedLevelNamespace;
+        latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
+            UiLogic.Instance.lastSelectedCasualLevelId : UiLogic.Instance.lastSelectedHardLevelId;
 
         if (latestRoundResult.Completed)
         {
@@ -366,7 +370,7 @@ public class GameManager : MonoBehaviour
             // dead, did not complete level
         }
 
-        Analytics.Instance.SaveStats(latestRoundResult);
+        // TODO: (pwe) update playfab here?
     }
 
     public void LevelCompleted()
@@ -432,6 +436,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         CheckChangeColorScheme(PlayerInput);
+        //DebugLinesScript.Instance.SetLine("TotalPlayingTweens", DOTween.TotalPlayingTweens());
     }
 
     void DoTick()

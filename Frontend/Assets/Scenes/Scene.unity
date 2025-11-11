@@ -39023,7 +39023,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &876352129
 RectTransform:
   m_ObjectHideFlags: 0
@@ -53114,7 +53114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381e1a9f1ab4188458fbad610fac8769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartCurrentScene: 1
+  StartCurrentScene: 0
   LevelLayoutCasual: {fileID: 74663400}
   LevelLayoutHard: {fileID: 639610381}
   ButtonPlayCasual: {fileID: 169547720}
