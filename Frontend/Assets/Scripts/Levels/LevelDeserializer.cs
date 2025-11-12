@@ -1,4 +1,5 @@
 using Assets.Scripts.Levels;
+using DG.Tweening;
 using Sludge.Modifiers;
 using Sludge.Shared;
 using System.Linq;
@@ -44,7 +45,11 @@ public static class LevelDeserializer
 
         ClearTilemap(elements.WallTilemap);
         ClearTilemap(elements.PillTilemap);
-        //ClearTilemap(elements.EnergyTilemap);
+
+        if (elements.KillerTilemap == null) // is missing in saved levels before it was added
+            elements.KillerTilemap = new Tilemap();
+
+        ClearTilemap(elements.KillerTilemap);
 
         // Place player
         data.PlayerTransform.Set(elements.Player.transform);
@@ -87,7 +92,7 @@ public static class LevelDeserializer
 
         PlaceTiles(elements.WallTilemap, data.WallTilemap);
         PlaceTiles(elements.PillTilemap, data.PillTilemap);
-        //PlaceTiles(elements.EnergyTilemap, data.EnergyTilemap);
+        PlaceTiles(elements.KillerTilemap, data.KillerTilemap);
 
         // Place new Objects
         for (int i = 0; i < data.Objects.Count; ++i)
