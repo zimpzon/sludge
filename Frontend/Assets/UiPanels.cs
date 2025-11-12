@@ -16,7 +16,6 @@ namespace Sludge.UI
         public GameObject PanelMainMenu;
         public GameObject PanelLevelSelect;
         public GameObject PanelGame;
-        public GameObject PanelBetweenRoundsMenu;
         public GameObject PanelSettings;
 
         Vector2 panelLevelSelectHidePos;
@@ -25,8 +24,6 @@ namespace Sludge.UI
         Vector2 panelMainMenuShowPos;
         Vector2 panelGameHidePos = new Vector2(0, 40);
         Vector2 panelGameShowPos = new Vector2(0, 0);
-        Vector2 panelBetweenRoundsHidePos = new Vector2(0, 15);
-        Vector2 panelBetweenRoundsShowPos = new Vector2(0, -15);
         Vector2 panelSettingsHidePos;
         Vector2 panelSettingsShowPos = new Vector3(110, -46);
 
