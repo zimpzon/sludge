@@ -63,7 +63,7 @@ public class UiLevelsLayout : MonoBehaviour
             var levelItem = LevelItems[i];
             int levelId = levelItem.levelScript.LevelData.LevelId;
             var savedStats = PlayerProgress.GetSavedStats(_levelNamespace, levelId);
-            bool hasGoldTime = savedStats.BestTime <= levelItem.levelScript.LevelData.TargetTime;
+            bool hasGoldTime = PlayerProgress.HasGoldTime(savedStats,levelItem.levelScript.LevelData.TargetTime);
 
             bool isCompleted = PlayerProgress.IsLevelCompleted(_levelNamespace, levelItem.levelScript.LevelData.LevelId);
             bool isFirstLevel = levelId == 1;

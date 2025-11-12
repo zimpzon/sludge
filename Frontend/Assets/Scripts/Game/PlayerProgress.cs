@@ -24,8 +24,9 @@ namespace Sludge.Utility
         public class LevelStats
         {
             public int LevelId = -1;
-            public float BestTime = -1;
-            public int Attempts = -1;
+            public float? BestTime;
+            public int Attempts = 0;
+            public bool IsCompleted;
         }
 
         public class SaveGame
@@ -38,14 +39,13 @@ namespace Sludge.Utility
         
         public static bool IsLevelCompleted(LevelNamespace ns, int levelId)
         {
-            if (ns == LevelNamespace.Casual)
-                return saveGame.CasualLevelsCompleted.ContainsKey(levelId);
-            else if (ns == LevelNamespace.Hard)
-                return saveGame.HardLevelsCompleted.ContainsKey(levelId);
+            var stats = GetSavedStats(ns, levelId);
+            return stats.IsCompleted;
+        }
 
-            Debug.LogError($"unknown level namespace: {ns}");
-
-            return true;
+        public static bool HasGoldTime(LevelStats stats, float target)
+        {
+            return stats.BestTime > 0 && stats.BestTime <= target;
         }
 
         public static LevelStats GetSavedStats(LevelNamespace ns, int levelId)
@@ -60,44 +60,56 @@ namespace Sludge.Utility
             return stats;
         }
 
-        static void UpdateSavedStats(RoundResult roundResult, Dictionary<int, LevelStats> levelsCompleted)
+        static LevelStats UpdateSavedStats(RoundResult roundResult, Dictionary<int, LevelStats> levelsCompleted, out bool newBestTime)
         {
+            newBestTime = false;
             if (!levelsCompleted.ContainsKey(roundResult.LevelId))
             {
                 // New level completed
                 Debug.Log($"New stats for {roundResult.LevelNamespace} levelId: {roundResult.LevelId}");
-                var newLevelStats = new LevelStats { LevelId = roundResult.LevelId, BestTime = roundResult.Time, Attempts = 1 };
+                float? bestTime = roundResult.Completed ? roundResult.Time : null;
+                newBestTime = roundResult.Completed; // first round and completed - always best time
+                var newLevelStats = new LevelStats { LevelId = roundResult.LevelId, BestTime = bestTime, Attempts = 1, IsCompleted = roundResult.Completed };
                 levelsCompleted.Add(roundResult.LevelId, newLevelStats);
+                Save();
+                return newLevelStats;
             }
             else
             {
                 // Already completed
                 var existingLevelStats = levelsCompleted[roundResult.LevelId];
                 existingLevelStats.Attempts++;
+                existingLevelStats.IsCompleted |= roundResult.Completed;
 
-                if (roundResult.Completed && roundResult.Time < existingLevelStats.BestTime)
+                // New best if completed + faster then previous OR no existing best
+                if (roundResult.Completed && (roundResult.Time < existingLevelStats.BestTime || !existingLevelStats.BestTime.HasValue))
                 {
+                    newBestTime = true;
                     Debug.Log($"New best time for {roundResult.LevelNamespace}, levelId: {roundResult.LevelId}: {existingLevelStats.BestTime} -> {roundResult.Time}");
                     existingLevelStats = levelsCompleted[roundResult.LevelId];
                     existingLevelStats.BestTime = roundResult.Time;
                 }
+                Save();
+                return existingLevelStats;
             }
-            Save();
         }
 
-        public static void UpdateWithRoundResult(RoundResult roundResult)
+        public static LevelStats UpdateWithRoundResult(RoundResult roundResult, out bool newBestTime)
         {
+            newBestTime = false;
+
             if (UiLogic.Instance.StartCurrentScene) // We don't have a namespace if started from editor
-                return;
+                return new LevelStats();
 
             if (roundResult.LevelNamespace == LevelNamespace.Casual)
             {
-                UpdateSavedStats(roundResult, saveGame.CasualLevelsCompleted);
+                return UpdateSavedStats(roundResult, saveGame.CasualLevelsCompleted, out newBestTime);
             }
             else if (roundResult.LevelNamespace == LevelNamespace.Hard)
             {
-                UpdateSavedStats(roundResult, saveGame.HardLevelsCompleted);
+                return UpdateSavedStats(roundResult, saveGame.HardLevelsCompleted, out newBestTime);
             }
+            return new LevelStats();
         }
 
         public static void Save()

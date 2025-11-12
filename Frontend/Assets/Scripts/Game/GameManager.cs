@@ -14,6 +14,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 // First script to run
 public class GameManager : MonoBehaviour
@@ -44,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject RoundsActionPanel;
     public TextMeshProUGUI TextRoundsAction;
+    public Image GoldScoreRoundsAction;
 
     public ParticleSystem DustParticles;
     public ParticleSystem CompletedParticles;
@@ -204,6 +206,7 @@ public class GameManager : MonoBehaviour
         betweenRoundsSb.AppendLine("Menu\tBack btn");
         betweenRoundsSb.AppendLine("Reset\tBack btn");
         TextRoundsAction.SetText(betweenRoundsSb);
+        GoldScoreRoundsAction.enabled = currentUiLevel.HasGoldTime;
     }
 
     IEnumerator BetweenRoundsLoop(string replayId = null)
@@ -407,7 +410,30 @@ public class GameManager : MonoBehaviour
         latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
             UiLogic.Instance.lastSelectedCasualLevelId : UiLogic.Instance.lastSelectedHardLevelId;
 
-        PlayerProgress.UpdateWithRoundResult(latestRoundResult);
+        // Check for new best and new gold score
+        var savedStats = PlayerProgress.GetSavedStats(currentLevelData.Namespace, currentLevelData.LevelId);
+        bool hadGoldScoreBefore = currentUiLevel.HasGoldTime;
+        savedStats = PlayerProgress.UpdateWithRoundResult(latestRoundResult, out bool newBestTime);
+
+        bool gotGoldScore = latestRoundResult.Completed && latestRoundResult.Time <= currentLevelData.TargetTime;
+        bool gotFirstGoldScore = gotGoldScore && !hadGoldScoreBefore;
+
+        if (gotFirstGoldScore)
+        {
+            // First gold for this level
+            currentUiLevel.HasGoldTime = true;
+            Debug.Log("First gold for this level");
+        } else if (gotGoldScore)
+        {
+            // Gold score but not for the first time on this level
+            Debug.Log("Gold, but not first");
+        }
+
+        if (newBestTime)
+        {
+            // New personal best for this level
+            Debug.Log("New personal best time");
+        }
 
         if (latestRoundResult.Completed)
         {
