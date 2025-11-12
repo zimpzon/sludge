@@ -1,88 +1,77 @@
 using Sludge.Easing;
 using Sludge.Utility;
+using System.Net;
 using UnityEngine;
 
 namespace Sludge.Modifiers
 {
     public class ModYCoord : SludgeModifier
     {
+        [Header("Movement Settings")]
         public bool Active = true;
-        [Range(0, 100)] public float Range = 5;
-        [Range(0, 1)] public float CurrentlyAt = 0.5f;
-        public double TimeMultiplier = 1.0;
+
+        [Tooltip("Starting normalized position (0-1) along movement range")]
+        [Range(0f, 1f)]
+        public float StartT = 0f;
+
+        [Tooltip("Half-range of Y movement from baseY")]
+        public float ScaleT = 5f;
+
+        [Tooltip("Time multiplier for movement speed")]
+        public float TimeMultiplier = 1f;
+
         public bool PingPong = true;
         public Easings Easing = Easings.Linear;
-        public float GizmoTime = 0.0f;
 
-        Transform trans;
-        Vector3 startPos;
-        Rigidbody2D _rigidbody;
-
-        Vector3 T0(Vector3 from) => from + Vector3.up * Range * CurrentlyAt;
-        Vector3 T1(Vector3 from) => from + Vector3.down * Range * (1 - CurrentlyAt);
-
-        private void OnDrawGizmos()
-        {
-            if (!Active)
-                return;
-
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawCube(T0(transform.position), Vector3.one * 0.75f);
-            Gizmos.DrawCube(T1(transform.position), Vector3.one * 0.75f);
-            Gizmos.DrawLine(T0(transform.position), T1(transform.position));
-
-            float t = GetT(GizmoTime);
-            float gizmoY = Mathf.Lerp(T0(transform.position).y, T1(transform.position).y, t);
-            Gizmos.DrawCube(transform.position - Vector3.up * gizmoY, Vector3.one * 0.75f);
-        }
-
-        private void OnValidate()
-        {
-            startPos = transform.position;
-        }
-
-        public override void Reset()
-        {
-            trans = transform;
-            trans.position = startPos;
-        }
+        private Transform trans;
+        private bool hasRigidbody;
+        private Vector3 basePos;
 
         public override void OnLoaded()
         {
+            if (!Active) return;
+
             trans = transform;
-            startPos = trans.position;
-            _rigidbody = GetComponent<Rigidbody2D>();
+            basePos = trans.position;
+
+            SetPosition();
         }
 
-        float GetT(float time)
+        private float GetT()
         {
-            double t = time * TimeMultiplier + CurrentlyAt;
+            if (!Active) return 0f;
+
+            // Start at StartT, apply time multiplier
+            double t = GameManager.I.EngineTime * TimeMultiplier + StartT;
+
+            // Apply pingpong wrap
             t = SludgeUtil.TimeMod(t, PingPong);
 
+            // Apply easing
             t = Ease.Apply(Easing, t);
+
             return (float)t;
+        }
+
+        private Vector3 GetTargetPosition(float t)
+        {
+            // Map t=0..1 to -ScaleT..+ScaleT around baseY
+            float newY = basePos.y + (t - 0.5f) * 2f * ScaleT;
+            return new Vector3(basePos.x, newY, basePos.z);
+        }
+
+        private void SetPosition()
+        {
+            float t = GetT();
+            Vector3 newPos = GetTargetPosition(t);
+
+            trans.position = newPos;
         }
 
         public override void EngineTick()
         {
-            if (!Active)
-                return;
-
-            float t = GetT((float)GameManager.I.EngineTime);
-            bool hasRigidbody = _rigidbody != null;
-
-            Vector3 pos = hasRigidbody ? _rigidbody.position : trans.position;
-            float newY = Mathf.Lerp(T0(startPos).y, T1(startPos).y, (float)t);
-
-            Vector3 newPos = new Vector3(pos.x, newY, pos.z);
-
-            if (!hasRigidbody)
-            {
-                transform.position = newPos;
-                return;
-            }
-
-            _rigidbody.MovePosition(newPos);
+            if (!Active) return;
+            SetPosition();
         }
     }
 }

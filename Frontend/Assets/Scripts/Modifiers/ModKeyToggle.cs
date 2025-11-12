@@ -5,7 +5,6 @@ using Sludge.Utility;
 using System.Collections;
 using UnityEngine;
 
-[ExecuteAlways]
 public class ModKeyToggle : SludgeModifier
 {
     public bool Active = true;
@@ -23,22 +22,22 @@ public class ModKeyToggle : SludgeModifier
     {
         doorCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        mat = spriteRenderer.sharedMaterial;
+        mat = spriteRenderer.material;
         Reset();
     }
 
-    private void OnValidate()
-    {
-        // Update shader visibility in editor when values change
-        if (!Application.isPlaying && Active)
-        {
-            var sr = GetComponent<SpriteRenderer>();
-            if (sr != null && sr.sharedMaterial != null)
-            {
-                sr.sharedMaterial.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
-            }
-        }
-    }
+    //private void OnValidate()
+    //{
+    //    // Update shader visibility in editor when values change
+    //    if (!Application.isPlaying && Active)
+    //    {
+    //        var sr = GetComponent<SpriteRenderer>();
+    //        if (sr != null && sr.sharedMaterial != null)
+    //        {
+    //            sr.sharedMaterial.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
+    //        }
+    //    }
+    //}
 
     public override void Reset()
     {
@@ -48,6 +47,8 @@ public class ModKeyToggle : SludgeModifier
 
         if (Active)
             mat.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
+        else
+            mat.SetFloat("_Visibility", 1.0f);
 
         spriteRenderer.color = ColorScheme.GetColor(GameManager.I?.CurrentColorScheme, SchemeColor.Walls);
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;

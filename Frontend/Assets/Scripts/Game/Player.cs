@@ -14,7 +14,6 @@ public class StateParam
     public JumpState jumpState = JumpState.Gravity;
 
     public MutatorJumpType jumpType = MutatorJumpType.WallJump;
-    public MutatorTypePlayerSize playerSize = MutatorTypePlayerSize.DefaultMe;
 
     public Vector2 force;
     public Vector2 impulse;
@@ -467,7 +466,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     private void CheckSquashed()
     {
         // Player may slightly overlap a collider when loading a new map, causing a death on first round. Wait for it to "slide" out.
-        if (Time.time < RoundStartTime + 100)
+        if (Time.time < RoundStartTime + 0.1f)
             return;
 
         int hits = Physics2D.OverlapCollider(playerSquashedCollider, SludgeUtil.ScanForWallFilter, SludgeUtil.colliderHits);
@@ -745,8 +744,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             SetSize(PlayerSize.Large);
         }
 
-        trans.localScale = Vector3.one * currentScale;
-        currentScale = Mathf.Lerp(currentScale, targetScale, Time.deltaTime * 10);
+        DebugLinesScript.Instance.SetLine("look", transform.localScale);
     }
 
     void SetPositionSample(bool init = false)

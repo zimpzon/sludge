@@ -495,6 +495,8 @@ public class GameManager : MonoBehaviour
         //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedCasualLevelId", UiLogic.Instance.lastSelectedCasualLevelId);
         //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedHardLevelId", UiLogic.Instance.lastSelectedHardLevelId);
 
+        DebugLinesScript.Instance.SetLine("engineTimeMs", EngineTimeMs);
+        DebugLinesScript.Instance.SetLine("unity", Time.time);
         CheckChangeColorScheme(PlayerInput);
 
         // Out of Tweens: search for TODO TWEEN to eventually replace later.
