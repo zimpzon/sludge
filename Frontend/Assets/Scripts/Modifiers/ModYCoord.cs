@@ -1,6 +1,5 @@
 using Sludge.Easing;
 using Sludge.Utility;
-using System.Net;
 using UnityEngine;
 
 namespace Sludge.Modifiers
@@ -24,7 +23,6 @@ namespace Sludge.Modifiers
         public Easings Easing = Easings.Linear;
 
         private Transform trans;
-        private bool hasRigidbody;
         private Vector3 basePos;
 
         public override void OnLoaded()
@@ -39,8 +37,6 @@ namespace Sludge.Modifiers
 
         private float GetT()
         {
-            if (!Active) return 0f;
-
             // Start at StartT, apply time multiplier
             double t = GameManager.I.EngineTime * TimeMultiplier + StartT;
 

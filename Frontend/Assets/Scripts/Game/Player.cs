@@ -743,8 +743,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             SetSize(PlayerSize.Large);
         }
-
-        DebugLinesScript.Instance.SetLine("look", transform.localScale);
     }
 
     void SetPositionSample(bool init = false)

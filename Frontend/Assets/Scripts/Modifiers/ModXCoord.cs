@@ -1,6 +1,5 @@
 using Sludge.Easing;
 using Sludge.Utility;
-using System.Net;
 using UnityEngine;
 namespace Sludge.Modifiers
 {
