@@ -1,4 +1,3 @@
-Add attempts
 Move up with one-way platforms really needed
 
 --- level ideas -->
@@ -7,14 +6,9 @@ Indiana Jones, wall coming from some direction, avoid squished.
 
 <-- ---
 
-
 Ghost flying walls?
 
 Door/tile I cant pass through but lasers, bullets, etc, can.
-
-Next - move
-Retry - r
-Level Select - q
 
 Would be nice for cell ghosts, opening a big wall: LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 

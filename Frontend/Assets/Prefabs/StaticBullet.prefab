@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2180690740361687058}
   - component: {fileID: 2180690740361687056}
-  m_Layer: 21
+  m_Layer: 22
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 9e891a68ae334154eb2c931648f9a2a9, type: 3}
-  m_Color: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
+  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -100,7 +100,8 @@ GameObject:
   - component: {fileID: 2180690740409253438}
   - component: {fileID: 8702809811098687153}
   - component: {fileID: -4694314905995879640}
-  m_Layer: 21
+  - component: {fileID: 1857650986921717588}
+  m_Layer: 22
   m_Name: StaticBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,9 +145,6 @@ MonoBehaviour:
   Y: 0
   SchemeColor1: 25
   SchemeColor2: 26
-  NotArmedSprite: {fileID: 21300000, guid: 0d862e91bf0848c45a163402e3a93be8, type: 3}
-  PendingArmedSprite: {fileID: 21300000, guid: fcd2122257305054d8e092329fa810f4, type: 3}
-  ArmedSprite: {fileID: 21300000, guid: 9e891a68ae334154eb2c931648f9a2a9, type: 3}
 --- !u!58 &2180690740409253438
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -223,3 +221,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Modifiers: []
+--- !u!114 &1857650986921717588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2180690740409253427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 146bca38f896b934b8f573b9750eac72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NotArmedSprite: {fileID: 21300000, guid: 0d862e91bf0848c45a163402e3a93be8, type: 3}
+  PendingArmedSprite: {fileID: 21300000, guid: fcd2122257305054d8e092329fa810f4, type: 3}
+  ArmedSprite: {fileID: 21300000, guid: 9e891a68ae334154eb2c931648f9a2a9, type: 3}

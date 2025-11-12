@@ -14,9 +14,6 @@ public class ModBulletMovement : SludgeModifier
     public double Y;
     public SchemeColor SchemeColor1;
     public SchemeColor SchemeColor2;
-    public Sprite NotArmedSprite;
-    public Sprite PendingArmedSprite;
-    public Sprite ArmedSprite;
 
     const float ArmDelayMs = 1000;
     float armTime = 0;
@@ -25,11 +22,13 @@ public class ModBulletMovement : SludgeModifier
 
     SpriteRenderer spriteRenderer;
     Transform trans;
+    BulletSprites bulletSprites;
 
     private void Awake()
     {
         trans = transform;
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        bulletSprites = GetComponent<BulletSprites>();
         startTime = Time.time;
         Reset();
     }
@@ -37,6 +36,7 @@ public class ModBulletMovement : SludgeModifier
     private void OnValidate()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        bulletSprites = GetComponent<BulletSprites>();
         SetVisual();
     }
 
@@ -50,9 +50,9 @@ public class ModBulletMovement : SludgeModifier
 
     void SetVisual()
     {
-        spriteRenderer.sprite = IsArmed ? ArmedSprite : NotArmedSprite;
+        spriteRenderer.sprite = IsArmed ? bulletSprites.ArmedSprite : bulletSprites.NotArmedSprite;
         if (pendingArm)
-            spriteRenderer.sprite = PendingArmedSprite;
+            spriteRenderer.sprite = bulletSprites.PendingArmedSprite;
 
         if (GameManager.I?.CurrentColorScheme is not null)
         {
@@ -124,7 +124,7 @@ public class ModBulletMovement : SludgeModifier
         {
             IsArmed = true;
             pendingArm = false;
-            spriteRenderer.sprite = ArmedSprite;
+            spriteRenderer.sprite = bulletSprites.ArmedSprite;
             SetVisual();
         }
 

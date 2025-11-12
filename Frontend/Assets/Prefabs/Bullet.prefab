@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 2180690740409253425}
   - component: {fileID: 2180690740409253438}
   - component: {fileID: 8702809811098687153}
+  - component: {fileID: 1258405296366632036}
   m_Layer: 20
   m_Name: Bullet
   m_TagString: Untagged
@@ -135,6 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Static: 0
+  StartArmed: 1
   IsArmed: 1
   DX: 0
   DY: 0
@@ -142,9 +144,6 @@ MonoBehaviour:
   Y: 0
   SchemeColor1: 25
   SchemeColor2: 26
-  NotArmedSprite: {fileID: 21300000, guid: 0d862e91bf0848c45a163402e3a93be8, type: 3}
-  PendingArmedSprite: {fileID: 21300000, guid: fcd2122257305054d8e092329fa810f4, type: 3}
-  ArmedSprite: {fileID: 21300000, guid: 52f70743d62348e409ad56804f598b61, type: 3}
 --- !u!58 &2180690740409253438
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -208,3 +207,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &1258405296366632036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2180690740409253427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 146bca38f896b934b8f573b9750eac72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NotArmedSprite: {fileID: 0}
+  PendingArmedSprite: {fileID: 0}
+  ArmedSprite: {fileID: 21300000, guid: 52f70743d62348e409ad56804f598b61, type: 3}
