@@ -212,7 +212,7 @@ public class GameManager : MonoBehaviour
         bool lastRoundCancelled = false;
         bool abort = false;
 
-        ShowBetweenRoundsActionsText(false);
+        ShowBetweenRoundsActionsText(true);
         UpdateTimer(-1);
 
         while (true)

@@ -62,6 +62,8 @@ public class UiLevelsLayout : MonoBehaviour
         {
             var levelItem = LevelItems[i];
             int levelId = levelItem.levelScript.LevelData.LevelId;
+            var savedStats = PlayerProgress.GetSavedStats(_levelNamespace, levelId);
+            bool hasGoldTime = savedStats.BestTime <= levelItem.levelScript.LevelData.TargetTime;
 
             bool isCompleted = PlayerProgress.IsLevelCompleted(_levelNamespace, levelItem.levelScript.LevelData.LevelId);
             bool isFirstLevel = levelId == 1;
@@ -93,7 +95,9 @@ public class UiLevelsLayout : MonoBehaviour
 
             string levelText = isUnlocked ? $"{i + 1}" : "-";
             levelItem.levelScript.TextLevelNumber.text = levelText;
+            levelItem.levelScript.GoldImage.enabled = hasGoldTime;
             levelItem.levelScript.IsUnlocked = isUnlocked;
+            levelItem.levelScript.HasGoldTime = hasGoldTime;
             levelItem.levelScript.LevelIndex = i;
             if (i < LevelItems.Count - 1)
                 levelItem.levelScript.Next = LevelItems[i + 1].levelScript;

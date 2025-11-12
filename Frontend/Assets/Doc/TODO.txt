@@ -1,4 +1,13 @@
-Move up with one-way platforms really needed
+Bug: immediate death on level two at continuation from level one.
+
+Advertise gold score on completion. Static text? - > text over exit?
+Advertise new best.
+
+Mark gold score in level select. Also mark it in level info text. small cow?
+
+pinball bouncer to reach higher?
+
+Move up with one-way platforms really wanted (jump from one conveyor to the next?)
 
 --- level ideas -->
 
@@ -12,8 +21,9 @@ Door/tile I cant pass through but lasers, bullets, etc, can.
 
 Would be nice for cell ghosts, opening a big wall: LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 
-Bug: static bullets keep losing sprites
 ------------------------------
+
++ Bug: static bullets keep losing sprites (serialized instance id was not perserved on Unity restart)
 
 + Bug: can move next with 'e' even if locked
 
