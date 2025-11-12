@@ -23,5 +23,6 @@
         Energy,
         Friend,
         PinballBounce,
+        EnemyBehindStaticLevel,
     };
 }

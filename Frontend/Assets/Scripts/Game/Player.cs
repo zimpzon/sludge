@@ -241,47 +241,14 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         homePos = transform.position;
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        var entityType = SludgeUtil.GetEntityType(collision.gameObject);
-
-        if (entityType == EntityType.Energy)
-        {
-            Kill();
-            return;
-        }
-
-        bool harmlessHit = entityType == EntityType.PlayerBullet ||
-        entityType == EntityType.Player ||
-        entityType == EntityType.Pickup ||
-        entityType == EntityType.BallCollector;
-
-        if (harmlessHit)
-        {
-            return;
-        }
-
-        bool wallHit = entityType == EntityType.FakeWall || entityType == EntityType.StaticLevel;
-        if (wallHit)
-        {
-            return;
-        }
-
-        if (entityType == EntityType.Enemy)
-        {
-            // Let enemy kill player instead, had some problems with stuck bullet after hitting enemy.
-            //Kill();
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Let enemy kill player instead, had some problems with stuck bullet after hitting enemy. TileMap can kill player.
         var entityType = SludgeUtil.GetEntityType(collision.gameObject);
 
-        if (entityType == EntityType.Enemy)
+        if (entityType == EntityType.EnemyBehindStaticLevel)
         {
-            // Let enemy kill player instead, had some problems with stuck bullet after hitting enemy.
-            //Kill();
+            Kill();
         }
     }
 

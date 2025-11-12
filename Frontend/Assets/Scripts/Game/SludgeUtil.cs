@@ -98,6 +98,9 @@ namespace Sludge.Utility
             if (1 << goLayer == EnemyLayerMask)
                 return EntityType.Enemy;
 
+            if (1 << goLayer == EnemyBehindStaticLevelLayerMask)
+                return EntityType.EnemyBehindStaticLevel;
+
             var sludgeObject = go.GetComponent<SludgeObject>();
             if (sludgeObject != null)
                 return sludgeObject.EntityType;
@@ -137,6 +140,7 @@ namespace Sludge.Utility
         public static int EnergyLayerMask = LayerMask.GetMask("Energy");
         public static int FriendLayerMask = LayerMask.GetMask("Friend");
         public static int EnemyLayerMask = LayerMask.GetMask("Enemy");
+        public static int EnemyBehindStaticLevelLayerMask = LayerMask.GetMask("EnemyBehindStaticLevel");
         public static int WallsAndObjectsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Objects");
 
         public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");
