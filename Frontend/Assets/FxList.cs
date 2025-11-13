@@ -15,6 +15,8 @@ public class FxList : MonoBehaviour
     public SoundItem PlayerShoot;
     public SoundItem PlayerLanding;
     public SoundItem PlayerLanded;
+    public SoundItem PlayerJump;
+    public SoundItem PlayerJumpJumpPad;
     public SoundItem LevelComplete;
     public SoundItem SlimeBombExplode;
     public SoundItem EnemyShoot;

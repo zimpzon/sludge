@@ -23,6 +23,7 @@ public class ModPinballBounceLogic : SludgeModifier
             Player.I.AddForceDirection(-direction);
             bodyTrans.DOKill(complete: true);
             bodyTrans.DOPunchScale(Vector3.one * 0.2f, 0.2f);
+            SoundManager.Play(FxList.Instance.PlayerJumpJumpPad);
         }
     }
 

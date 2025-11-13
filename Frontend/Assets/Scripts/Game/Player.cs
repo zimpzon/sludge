@@ -354,6 +354,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         param.jumpHoldStartTime = GameManager.I.EngineTimeMs;
         ResetJumpHandicaps();
 
+        SoundManager.Play(FxList.Instance.PlayerJump);
         ParticleEmitter.I.EmitDust(trans.position, 3);
     }
 

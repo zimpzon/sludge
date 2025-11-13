@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 896364198868817772}
   - component: {fileID: 1371626410651018327}
   - component: {fileID: 229340709421838422}
-  m_Layer: 7
+  m_Layer: 22
   m_Name: PinballBounce
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ CircleCollider2D:
   m_Radius: 1
 --- !u!50 &896364198868817772
 Rigidbody2D:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -85,8 +85,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 8668785419750667383}
   - component: {fileID: 8151404570254016853}
   - component: {fileID: 5987413677027567197}
-  m_Layer: 7
+  m_Layer: 22
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,6 +176,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

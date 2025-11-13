@@ -32,7 +32,10 @@ public class SoundManager : MonoBehaviour
         item.audioSource.pitch = pitch;
         item.audioSource.volume = volume;
         item.audioSource.clip = clip;
+
+        item.audioSource.Stop();
         item.audioSource.Play();
+
         item.timeLastPlayed = Time.time;
     }
 
