@@ -419,22 +419,37 @@ public class GameManager : MonoBehaviour
         bool gotGoldScore = latestRoundResult.Completed && latestRoundResult.Time <= currentLevelData.TargetTime;
         bool gotFirstGoldScore = gotGoldScore && !hadGoldScoreBefore;
 
+        var scoreDisplaySb = new StringBuilder();
         if (gotFirstGoldScore)
         {
             // First gold for this level
             if (currentUiLevel != null)
                 currentUiLevel.HasGoldTime = true;
             Debug.Log("First gold for this level");
+            scoreDisplaySb.AppendLine("Gold score!");
         } else if (gotGoldScore)
         {
             // Gold score but not for the first time on this level
             Debug.Log("Gold, but not first");
+            scoreDisplaySb.AppendLine("Gold score!");
         }
 
         if (newBestTime)
         {
             // New personal best for this level
             Debug.Log("New personal best time");
+            scoreDisplaySb.AppendLine("New personal best!");
+        }
+
+        if (scoreDisplaySb.Length > 0)
+        {
+            var exitLogic = FindFirstObjectByType<ModExitLogic>();
+            exitLogic.SetScoreText(scoreDisplaySb.ToString());
+        }
+        else
+        {
+            var exitLogic = FindFirstObjectByType<ModExitLogic>();
+            exitLogic.SetScoreText("testing");
         }
 
         if (latestRoundResult.Completed)

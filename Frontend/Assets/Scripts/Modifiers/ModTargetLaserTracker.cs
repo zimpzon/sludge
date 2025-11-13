@@ -35,7 +35,7 @@ public class ModTargetLaserTracker : SludgeModifier
     public override void EngineTick()
     {
         var playerDir = (Player.Position - trans.position);
-        const float radius = 0.5f;
+        const float radius = 0.01f;
         int hit = Physics2D.CircleCast(trans.position, radius, playerDir, SludgeUtil.ScanForPlayerFilter, SludgeUtil.scanHits);
         if (hit == 0)
             return;

@@ -1,10 +1,12 @@
 using Assets.Scripts.Game;
 using Sludge.Modifiers;
 using Sludge.Utility;
+using TMPro;
 using UnityEngine;
 
 public class ModExitLogic : SludgeModifier
 {
+    public TextMeshPro TextScore;
     SpriteRenderer[] childSprites;
     ParticleSystem particles;
     bool isActive;
@@ -17,8 +19,13 @@ public class ModExitLogic : SludgeModifier
 
     public override void Reset()
     {
-        base.Reset();
+        TextScore.text = "";
         SetActive(false);
+    }
+
+    public void SetScoreText(string text)
+    {
+        TextScore.text = text;
     }
 
     void SetAlpha(float alpha)
