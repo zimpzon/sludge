@@ -10,8 +10,6 @@ Advertise gold score on completion. Static text? - > text over exit? ----> textb
 Advertise new best.
 
 
-pinball bouncer to reach higher?
-
 Move up with one-way platforms really wanted (jump from one conveyor to the next?)
 
 --- level ideas -->
@@ -26,6 +24,8 @@ Indiana Jones, wall coming from some direction, avoid squished.
 Would be nice for cell ghosts, opening a big wall: LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 
 ------------------------------
+
++ pinball bouncer to reach higher?
 
 + Between rounds stats should flash or something, it can look like game froze.
 
