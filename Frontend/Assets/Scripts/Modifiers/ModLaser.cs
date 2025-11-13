@@ -121,7 +121,7 @@ public class ModLaser : SludgeModifier
             var entity = SludgeUtil.GetEntityType(killableTarget.transform.gameObject);
             if (entity == EntityType.Player)
             {
-                GameManager.I.Player.Kill();
+                GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.Laser);
             }
             else if (entity == EntityType.Friend)
             {

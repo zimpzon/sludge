@@ -80,7 +80,7 @@ public class ModSlimeBombLogic : SludgeModifier
         var entity = SludgeUtil.GetEntityType(go);
         if (entity == EntityType.Player)
         {
-            GameManager.I.Player.Kill();
+            GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.PoisonCloud);
         }
         else if (entity == EntityType.Enemy)
         {

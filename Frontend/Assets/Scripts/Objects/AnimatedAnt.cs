@@ -40,7 +40,7 @@ public class AnimatedAnt : MonoBehaviour
 
         if (entity == EntityType.Player)
         {
-            GameManager.I.Player.Kill();
+            GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.Follower);
         }
     }
 

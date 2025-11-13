@@ -141,7 +141,7 @@ namespace Sludge.Modifiers
 
             if (entity == EntityType.Player)
             {
-                Player.I.Kill();
+                Player.I.Kill(Assets.Scripts.PlayerDeathType.Tumbler);
             }
         }
 

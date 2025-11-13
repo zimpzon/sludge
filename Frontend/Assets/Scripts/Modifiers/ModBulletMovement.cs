@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using Sludge.Colors;
 using Sludge.Modifiers;
 using Sludge.Utility;
@@ -71,7 +72,7 @@ public class ModBulletMovement : SludgeModifier
         {
             if (IsArmed)
             {
-                GameManager.I.Player.Kill();
+                GameManager.I.Player.Kill(PlayerDeathType.Bullet);
                 destroyBullet = true;
             }
             else if (!pendingArm)

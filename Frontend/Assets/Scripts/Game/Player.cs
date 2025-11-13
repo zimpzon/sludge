@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using Assets.Scripts.Game;
 using Sludge.Colors;
 using Sludge.Utility;
@@ -98,6 +99,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public float EyeScaleSurprised = 1.5f;
     public float DeathMiniDelay = 0.5f;
     [NonSerialized] public PlayerSize Size = PlayerSize.Normal;
+    public PlayerDeathType LastDeathType;
 
     Animator animator;
     Transform trans;
@@ -218,7 +220,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     void Update()
     {
-        DebugLinesScript.Show("force", StateParam.force);
     }
 
     public void AddConveyorPulse(Vector2 pulse)
@@ -258,19 +259,16 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         if (entityType == EntityType.EnemyBehindStaticLevel)
         {
-            Kill();
+            Kill(PlayerDeathType.Mine);
         }
     }
 
-    public void OnArmedEnergyHit()
-    {
-        Kill();
-    }
-
-    public void Kill()
+    public void Kill(PlayerDeathType deathType)
     {
         if (deathScheduled || !Alive)
             return;
+
+        LastDeathType = deathType;
 
         Eyes.SetActive(true);
         deathScheduleTime = GameManager.I.EngineTime + DeathMiniDelay;
@@ -484,7 +482,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         bool playerWasSquished = hits > 0;
         if (playerWasSquished)
         {
-            Kill();
+            Kill(PlayerDeathType.Squished);
             return;
         }
     }
