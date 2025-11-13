@@ -190,15 +190,20 @@ public class GameManager : MonoBehaviour
         if (!show)
             return;
 
+        RectTransform panel = RoundsActionPanel.GetComponent<RectTransform>();
+        panel.DOKill(complete: true);
+        panel.anchoredPosition = new Vector2(-125f, panel.anchoredPosition.y); // Start slightly off-screen to the left
+        panel.DOAnchorPosX(1f, 0.1f).SetEase(Ease.InSine); // Animate to visible position with a bounce
+
         var savedStats = PlayerProgress.GetSavedStats(currentLevelData.Namespace, currentLevelData.LevelId);
         bool canGoToNextLevel = CanGoToNextLevel();
 
-        string timePart = latestRoundResult.Completed ? $"{latestRoundResult.Time,6:0.00}" : "     -";
-        string bestPart = savedStats.BestTime >= 0 ? $"{savedStats.BestTime,6:0.00}" : "     -";
+        string timePart = latestRoundResult.Completed ? $"{latestRoundResult.Time,6:0.000}" : "     -";
+        string bestPart = savedStats.BestTime >= 0 ? $"{savedStats.BestTime,6:0.000}" : "     -";
         betweenRoundsSb.Clear();
         betweenRoundsSb.AppendLine($"Time\t{timePart}");
         betweenRoundsSb.AppendLine($"Best\t{bestPart}");
-        betweenRoundsSb.AppendLine($"Gold\t{currentLevelData.TargetTime,6:0.00}");
+        betweenRoundsSb.AppendLine($"Gold\t{currentLevelData.TargetTime,6:0.000}");
         betweenRoundsSb.AppendLine($"Attempts\t{savedStats.Attempts,6}");
         betweenRoundsSb.AppendLine();
         betweenRoundsSb.AppendLine("Retry\tMove");
@@ -448,8 +453,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            var exitLogic = FindFirstObjectByType<ModExitLogic>();
-            exitLogic.SetScoreText("testing");
+            // Completed, but nothing special happened
+            //var exitLogic = FindFirstObjectByType<ModExitLogic>();
+            //exitLogic.SetScoreText("testing");
         }
 
         if (latestRoundResult.Completed)

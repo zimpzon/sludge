@@ -7,12 +7,10 @@ public class ModPinballBounceLogic : SludgeModifier
 {
     Transform trans;
     Transform bodyTrans;
-    Vector3 baseScale;
 
     public override void OnLoaded()
     {
         trans = transform;
-        baseScale = trans.localScale;
         bodyTrans = SludgeUtil.FindByName(trans, "Body").transform;
     }
 
