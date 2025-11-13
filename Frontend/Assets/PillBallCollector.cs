@@ -14,7 +14,7 @@ public class PillBallCollector : SludgeObject
         TrappedBallCollector.transform.SetParent(transform);
 
         TrappedBallCollector.Reset();
-        TrappedBallCollector.HoldPosition(hold: true);
+        //TrappedBallCollector.HoldPosition(hold: true);
 
         base.Reset();
     }
@@ -26,7 +26,7 @@ public class PillBallCollector : SludgeObject
         {
             SoundManager.Play(FxList.Instance.BallCollectorSpawn);
             TrappedBallCollector.transform.SetParent(null);
-            TrappedBallCollector.HoldPosition(hold: false);
+            //TrappedBallCollector.HoldPosition(hold: false);
             gameObject.SetActive(false);
         }
     }

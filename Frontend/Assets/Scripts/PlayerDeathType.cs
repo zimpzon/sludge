@@ -11,5 +11,6 @@
         PoisonCloud,
         Tumbler,
         Follower,
+        Bouncer,
     }
 }
