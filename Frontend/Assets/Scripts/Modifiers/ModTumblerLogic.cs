@@ -9,6 +9,7 @@ namespace Sludge.Modifiers
         enum State { LookForPlayer, WarmUp, Move };
 
         public bool Static;
+        public bool NeverHide;
 
         SpriteRenderer spikeRenderer;
         Transform eye;
@@ -24,7 +25,7 @@ namespace Sludge.Modifiers
         double y;
         double rotation;
         double rotationSpeed;
-        double speed = 15.0;
+        double speed = 25.0;
         State state;
         float eyeScale;
         float eyeScaleTarget;
@@ -51,7 +52,7 @@ namespace Sludge.Modifiers
             y = SludgeUtil.Stabilize(homePos.y);
             rotation = 0;
             rotationSpeed = 0;
-            spikeRenderer.enabled = false;
+            spikeRenderer.enabled = NeverHide;
             moveDir = Vector3.zero;
             state = State.LookForPlayer;
 
@@ -115,8 +116,8 @@ namespace Sludge.Modifiers
         {
             spikeRenderer.enabled = true;
 
-            int iterations = 40;
-            double step = 15;
+            int iterations = 20;
+            double step = 30;
             while (state == State.WarmUp && iterations-- > 0)
             {
                 rotation += rotationSpeed * GameManager.TickSize;
@@ -130,11 +131,17 @@ namespace Sludge.Modifiers
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (1 << collision.gameObject.layer != SludgeUtil.PlayerLayerMask && !Static)
+            var entity = SludgeUtil.GetEntityType(collision.gameObject);
+            if (entity == EntityType.StaticLevel || entity == EntityType.FakeWall)
             {
                 GameManager.I.DustParticles.transform.position = trans.position;
                 GameManager.I.DustParticles.Emit(8);
                 Reset();
+            }
+
+            if (entity == EntityType.Player)
+            {
+                Player.I.Kill();
             }
         }
 
