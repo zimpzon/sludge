@@ -7,11 +7,7 @@ public class ModStalkerLogic : SludgeModifier
     public float ChaseForce = 1000.0f;
     public float RotationSpeed = 300.0f;
     public float MaxSpeed = 15.0f;
-    public float ApproxBurstDuration = 0.5f;
-    public float ApproxBurstCooldown = 4.0f;
-    public float BurstForce = 5000;
 
-    ParticleSystem ExhaustParticles;
     Transform trans;
     Rigidbody2D rigidBody;
     AnimatedAnt ant;
@@ -25,7 +21,6 @@ public class ModStalkerLogic : SludgeModifier
         ant = GetComponentInChildren<AnimatedAnt>();
         ant.animationOffset = Mathf.Clamp01((float)(basePos.x * 0.117 + basePos.y * 0.3311));
         ant.animationSpeedScale = 1;
-        ExhaustParticles = SludgeUtil.FindByName(transform, "ExhaustParticles").GetComponentInChildren<ParticleSystem>();
     }
 
     public override void OnLoaded()
@@ -102,31 +97,14 @@ public class ModStalkerLogic : SludgeModifier
         float force = ChaseForce * Mathf.Clamp01(dot) * (float)GameManager.TickSize;
         rigidBody.AddForce(myLookDir * force);
 
-        if ((float)GameManager.I.EngineTime < currentBurstEnd)
+        bool isRightInFront = dot > 0.99f;
+        if (isRightInFront)
         {
-            ExhaustParticles.Emit(1);
-            rigidBody.AddForce(myLookDir * BurstForce * (float)GameManager.TickSize);
+            timeRightInFront += (float)GameManager.TickSize;
         }
         else
         {
-            bool isRightInFront = dot > 0.99f;
-            if (isRightInFront)
-            {
-                timeRightInFront += (float)GameManager.TickSize;
-            }
-            else
-            {
-                timeRightInFront = 0;
-            }
-
-            bool beginBurst = timeRightInFront > 1 && (float)GameManager.I.EngineTime > burstReadyAt;
-            if (beginBurst)
-            {
-                SoundManager.Play(FxList.Instance.RocketBurst);
-
-                currentBurstEnd = (float)GameManager.I.EngineTime + ApproxBurstDuration + Random.value * 0.25f;
-                burstReadyAt = currentBurstEnd + ApproxBurstCooldown + Random.value;
-            }
+            timeRightInFront = 0;
         }
 
         rigidBody.linearVelocity = Vector3.ClampMagnitude(rigidBody.linearVelocity, MaxSpeed);
