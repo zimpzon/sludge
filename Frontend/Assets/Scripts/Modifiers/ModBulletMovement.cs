@@ -79,6 +79,7 @@ public class ModBulletMovement : SludgeModifier
             {
                 armTime = GameManager.I.EngineTimeMs + ArmDelayMs;
                 pendingArm = true;
+                SoundManager.Play(FxList.Instance.MineArm);
                 SetVisual();
             }
         }
