@@ -90,8 +90,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     double deathScheduleTime;
     bool deathScheduled;
-    float targetScale;
-    float currentScale;
     float wallSlidePendingParticles;
 
     public float RoundStartTime;
@@ -145,8 +143,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         trans.localScale = Vector3.one * playerBaseScale;
         trans.position = homePos;
-        currentScale = playerBaseScale;
-        SetSize(PlayerSize.Normal);
         StateParam = new StateParam();
         circleDrawer.Reset();
         Eyes.SetActive(false);
@@ -466,7 +462,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     private void CheckSquashed()
     {
         // Player may slightly overlap a collider when loading a new map, causing a death on first round. Wait for it to "slide" out.
-        if (Time.time < RoundStartTime + 0.1f)
+        if (GameManager.I.EngineTime < 0.5f)
             return;
 
         int hits = Physics2D.OverlapCollider(playerSquashedCollider, SludgeUtil.ScanForWallFilter, SludgeUtil.colliderHits);
@@ -709,40 +705,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         float scaledBySteepness = (100 - angle) / 100;
         cross = cross.normalized * scaledBySteepness; // 45 degrees = 0.5 power, 0 degrees = 1 power
         return cross;
-    }
-
-    void SetSize(PlayerSize size)
-    {
-        Size = size;
-
-        if (size == PlayerSize.Small)
-        {
-            targetScale = playerBaseScale * 0.75f;
-        }
-        else if (size == PlayerSize.Normal)
-        {
-            targetScale = playerBaseScale;
-        }
-        else if (size == PlayerSize.Large)
-        {
-            targetScale = playerBaseScale * 2.0f;
-        }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            SetSize(PlayerSize.Small);
-        }
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            SetSize(PlayerSize.Normal);
-        }
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            SetSize(PlayerSize.Large);
-        }
     }
 
     void SetPositionSample(bool init = false)

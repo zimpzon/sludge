@@ -18,11 +18,12 @@ Indiana Jones, wall coming from some direction, avoid squished.
 
 Ghost flying walls?
 
-Door/tile I cant pass through but lasers, bullets, etc, can.
 
 Would be nice for cell ghosts, opening a big wall: LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 
 ------------------------------
+
++ Door/tile I cant pass through but lasers, bullets, etc, can.
 
 + Bug: static bullets keep losing sprites (serialized instance id was not perserved on Unity restart)
 
