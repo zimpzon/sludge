@@ -45,11 +45,7 @@ public static class LevelDeserializer
 
         ClearTilemap(elements.WallTilemap);
         ClearTilemap(elements.PillTilemap);
-
-        if (elements.KillerTilemap == null) elements.KillerTilemap = new Tilemap();
         ClearTilemap(elements.KillerTilemap);
-
-        if (elements.GlassTilemap == null) elements.GlassTilemap = new Tilemap();
         ClearTilemap(elements.GlassTilemap);
 
         // Place player

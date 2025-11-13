@@ -34,11 +34,7 @@ public static class LevelSerializer
         // Tilemaps
         data.WallTilemap = SerializeTilemap(elements.WallTilemap, elements.TileList);
         data.PillTilemap = SerializeTilemap(elements.PillTilemap, elements.TileList);
-
-        if (elements.KillerTilemap == null) elements.KillerTilemap = new Tilemap();
         data.KillerTilemap = SerializeTilemap(elements.KillerTilemap, elements.TileList);
-
-        if (elements.GlassTilemap == null) elements.GlassTilemap = new Tilemap();
         data.GlassTilemap = SerializeTilemap(elements.GlassTilemap, elements.TileList);
 
         // Objects
