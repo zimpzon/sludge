@@ -46,10 +46,11 @@ public static class LevelDeserializer
         ClearTilemap(elements.WallTilemap);
         ClearTilemap(elements.PillTilemap);
 
-        if (elements.KillerTilemap == null) // is missing in saved levels before it was added
-            elements.KillerTilemap = new Tilemap();
-
+        if (elements.KillerTilemap == null) elements.KillerTilemap = new Tilemap();
         ClearTilemap(elements.KillerTilemap);
+
+        if (elements.GlassTilemap == null) elements.GlassTilemap = new Tilemap();
+        ClearTilemap(elements.GlassTilemap);
 
         // Place player
         data.PlayerTransform.Set(elements.Player.transform);
@@ -93,6 +94,7 @@ public static class LevelDeserializer
         PlaceTiles(elements.WallTilemap, data.WallTilemap);
         PlaceTiles(elements.PillTilemap, data.PillTilemap);
         PlaceTiles(elements.KillerTilemap, data.KillerTilemap);
+        PlaceTiles(elements.GlassTilemap, data.GlassTilemap);
 
         // Place new Objects
         for (int i = 0; i < data.Objects.Count; ++i)

@@ -8,6 +8,7 @@ public class LevelElements : MonoBehaviour
     public Tilemap WallTilemap;
     public Tilemap PillTilemap;
     public Tilemap KillerTilemap;
+    public Tilemap GlassTilemap;
     public GameObject ObjectsRoot;
     public TileListScriptableObject TileList;
     public ObjectListScriptableObject ObjectPrefabList;

@@ -24,7 +24,7 @@ namespace Sludge.Shared
         public LevelTilemapData WallTilemap = new LevelTilemapData();
         public LevelTilemapData PillTilemap = new LevelTilemapData();
         public LevelTilemapData KillerTilemap = new LevelTilemapData();
-        public LevelTilemapData EnergyTilemap = new LevelTilemapData();
+        public LevelTilemapData GlassTilemap = new LevelTilemapData();
         public List<LevelDataObject> Objects = new List<LevelDataObject>();
 
         public string FileNameFromNamespaceAndId() => $"{Namespace}-{LevelId:000}";
