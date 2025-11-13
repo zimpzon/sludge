@@ -206,7 +206,8 @@ public class GameManager : MonoBehaviour
         betweenRoundsSb.AppendLine("Menu\tBack btn");
         betweenRoundsSb.AppendLine("Reset\tBack btn");
         TextRoundsAction.SetText(betweenRoundsSb);
-        GoldScoreRoundsAction.enabled = currentUiLevel.HasGoldTime;
+        if (currentUiLevel != null)
+            GoldScoreRoundsAction.enabled = currentUiLevel.HasGoldTime;
     }
 
     IEnumerator BetweenRoundsLoop(string replayId = null)
@@ -412,7 +413,7 @@ public class GameManager : MonoBehaviour
 
         // Check for new best and new gold score
         var savedStats = PlayerProgress.GetSavedStats(currentLevelData.Namespace, currentLevelData.LevelId);
-        bool hadGoldScoreBefore = currentUiLevel.HasGoldTime;
+        bool hadGoldScoreBefore = currentUiLevel?.HasGoldTime ?? false; // If started from editor
         savedStats = PlayerProgress.UpdateWithRoundResult(latestRoundResult, out bool newBestTime);
 
         bool gotGoldScore = latestRoundResult.Completed && latestRoundResult.Time <= currentLevelData.TargetTime;
@@ -421,7 +422,8 @@ public class GameManager : MonoBehaviour
         if (gotFirstGoldScore)
         {
             // First gold for this level
-            currentUiLevel.HasGoldTime = true;
+            if (currentUiLevel != null)
+                currentUiLevel.HasGoldTime = true;
             Debug.Log("First gold for this level");
         } else if (gotGoldScore)
         {
