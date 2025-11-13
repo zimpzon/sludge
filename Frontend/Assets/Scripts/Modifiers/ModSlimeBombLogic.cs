@@ -18,8 +18,8 @@ public class ModSlimeBombLogic : SludgeModifier
     bool expanding;
     double timeLeft;
     int currentSecond = -1;
-    const double slimeSpeedStart = 80;
-    const double slimeSpeedMin = 4;
+    const double slimeSpeedStart = 20;
+    const double slimeSpeedMin = 1.5;
     const double slimeSpeedDampen = 0.93;
     double slimeSpeed;
     double slimeScale = 1;
@@ -78,15 +78,14 @@ public class ModSlimeBombLogic : SludgeModifier
 
         var go = collision.gameObject;
         var entity = SludgeUtil.GetEntityType(go);
-        // Kill stuff
-        //if (entity == EntityType.Player)
-        //{
-        //    GameManager.I.Player.InSlimeCloud();
-        //}
-        //else if (entity == EntityType.Enemy)
-        //{
-        //    GameManager.I.KillEnemy(go);
-        //}
+        if (entity == EntityType.Player)
+        {
+            GameManager.I.Player.Kill();
+        }
+        else if (entity == EntityType.Enemy)
+        {
+            GameManager.I.KillEnemy(go);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
