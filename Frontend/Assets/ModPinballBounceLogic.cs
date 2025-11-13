@@ -19,9 +19,10 @@ public class ModPinballBounceLogic : SludgeModifier
     private void OnCollisionEnter2D(Collision2D collision)
     {
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
-        if (entity == EntityType.Player || entity == EntityType.Friend)
+        if (entity == EntityType.Player)
         {
-            collision.rigidbody.AddForce(-collision.contacts[0].normal * 2000f, ForceMode2D.Force);
+            var direction = collision.contacts[0].normal;
+            Player.I.AddForceDirection(-direction);
             bodyTrans.DOKill(complete: true);
             bodyTrans.DOPunchScale(Vector3.one * 0.2f, 0.2f);
         }

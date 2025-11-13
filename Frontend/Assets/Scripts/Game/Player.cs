@@ -63,7 +63,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public float JumpTimeToPeak = 0.1f;
     public float JumpTimeToDescend = 0.1f;
     public float JumpMaxHoldTime = 0.2f;
-    public float MaxVelocity = 25.0f;
+    public float MaxFallVelocity = 15.0f;
     public float WallSlideMaxFall = 1.0f;
     public int WallJumpDisableHorizontalBreakingMs = 100; // no effect?
     public float AirControl = 1.0f;
@@ -202,8 +202,23 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             // exit force
             StateParam.impulse = Vector2.zero;
-            StateParam.force = beltDirection.normalized * MaxVelocity;
+            StateParam.force = beltDirection.normalized * 15;
         }
+    }
+
+    public void AddForceDirection(Vector2 force)
+    {
+        StateParam.impulse = Vector2.zero;
+        //StateParam.force = Vector2.up * MaxVelocity;
+
+        force.Normalize();
+        //Debug.DrawRay(trans.position, force * 5, Color.red);
+        StateParam.force = force * 45;
+    }
+
+    void Update()
+    {
+        DebugLinesScript.Show("force", StateParam.force);
     }
 
     public void AddConveyorPulse(Vector2 pulse)
@@ -621,7 +636,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             StateParam.force.y += gravity * (float)GameManager.TickSize;
         }
 
-        StateParam.force.y = Mathf.Max(StateParam.force.y, -MaxVelocity);
+        StateParam.force.y = Mathf.Max(StateParam.force.y, -MaxFallVelocity);
         if (StateParam.isWallSliding)
         {
             wallSlidePendingParticles += (float)GameManager.TickSize * 15;

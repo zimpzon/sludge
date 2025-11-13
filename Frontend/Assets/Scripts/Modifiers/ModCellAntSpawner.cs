@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ModCellAntSpawner : SludgeModifier
 {
-    double Cooldown = 0.25f;
+    public double Cooldown = 2.0f;
     const int MaxSpawns = 1000;
     int spawnsLeft;
     double timeNextSpawn;
