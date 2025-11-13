@@ -1,17 +1,15 @@
 using Sludge.Modifiers;
 using Sludge.Tiles;
+using Sludge.Utility;
 using UnityEngine;
 
 public class ModCellFollower : SludgeModifier
 {
     public AntAnimScriptableObject Anim;
 
-    static float AnimOffset = 0;
-
-    SpriteRenderer spriteRenderer;
     Vector2Int myCell;
     Transform trans;
-    double timeMoveOneCell = 0.5;
+    double timeMoveOneCell = 0.25;
     double timeMoveThisCell;
     double startX;
     double startY;
@@ -22,15 +20,11 @@ public class ModCellFollower : SludgeModifier
     double homeY;
     float targetRotZ;
     float currentRotZ;
-    float animOffset;
 
     private void Awake()
     {
         homeX = transform.position.x;
         homeY = transform.position.y;
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        animOffset = AnimOffset;
-        AnimOffset += 0.371f;
     }
 
     public override void OnLoaded()
@@ -49,6 +43,16 @@ public class ModCellFollower : SludgeModifier
         myCell = LevelCells.Instance.ClaimCell(trans.position);
         SetTarget(myCell);
         moveTimeLeft = 0;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        var entity = SludgeUtil.GetEntityType(collision.gameObject);
+
+        if (entity == EntityType.Player)
+        {
+            GameManager.I.Player.Kill();
+        }
     }
 
     void SetTarget(Vector2Int targetCell)

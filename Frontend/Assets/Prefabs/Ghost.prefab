@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 7737138576031971790}
   - component: {fileID: 7315295390004490541}
   m_Layer: 20
-  m_Name: Walker
+  m_Name: Ghost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -199,7 +199,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.53
 --- !u!114 &7315295390004490541
 MonoBehaviour:
   m_ObjectHideFlags: 0
