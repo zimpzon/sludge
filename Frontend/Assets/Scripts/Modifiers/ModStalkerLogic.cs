@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ModStalkerLogic : SludgeModifier
 {
-    public float ChaseForce = 1000.0f;
-    public float RotationSpeed = 300.0f;
-    public float MaxSpeed = 15.0f;
+    float ChaseForce = 500.0f;
+    float RotationSpeed = 100.0f;
+    float MaxSpeed = 8.0f;
 
     Transform trans;
     Rigidbody2D rigidBody;

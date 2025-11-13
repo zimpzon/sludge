@@ -57,7 +57,7 @@ public class ModKeyToggle : SludgeModifier
 
         if (StartEnabled)
         {
-            //LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
+            LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
         }
     }
 
@@ -102,7 +102,7 @@ public class ModKeyToggle : SludgeModifier
         doorCollider.enabled = false;
         SoundManager.Play(FxList.Instance.FakeWallDisappear);
 
-        //LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: false);
+        LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: false);
 
         while (true)
         {

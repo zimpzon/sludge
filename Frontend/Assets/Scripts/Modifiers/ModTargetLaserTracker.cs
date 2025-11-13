@@ -7,7 +7,7 @@ public class ModTargetLaserTracker : SludgeModifier
 {
     const float WidthMin = 0.05f;
     const float WidthMax = 0.08f;
-    const float KillTime = 0.5f;
+    const float KillTime = 0.1f;
     public float BulletSpeed = 5;
     public float BulletDelay = 2.0f;
 
@@ -17,10 +17,11 @@ public class ModTargetLaserTracker : SludgeModifier
     Transform trans;
     double timeInSight;
     double bulletCountdown;
-    Tweener bodyTween;
+    ModTimeToggle timeToggle;
 
     private void Awake()
     {
+        timeToggle = GetComponent<ModTimeToggle>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         trans = transform;
@@ -60,6 +61,9 @@ public class ModTargetLaserTracker : SludgeModifier
         lineRenderer.SetPosition(0, trans.position);
         lineRenderer.SetPosition(1, SludgeUtil.scanHits[0].point);
 
+        if (timeToggle != null && !timeToggle.IsOn())
+            return;
+
         if (timeInSight >= KillTime)
         {
             bulletCountdown = SludgeUtil.Stabilize(bulletCountdown - GameManager.TickSize);
@@ -77,10 +81,8 @@ public class ModTargetLaserTracker : SludgeModifier
                     bullet.X = SludgeUtil.Stabilize(trans.position.x + playerDir.x * StartOffset);
                     bullet.Y = SludgeUtil.Stabilize(trans.position.y + playerDir.y * StartOffset);
 
-                    //if (bodyTween == null)
-                    //    bodyTween = Body.DOPunchScale(Vector3.one * 0.25f, 0.2f);
-                    //else
-                    //    bodyTween.Restart();
+                    Body.DOKill();
+                    Body.DOPunchScale(Vector3.one * 0.25f, 0.2f);
                 }
             }
         }

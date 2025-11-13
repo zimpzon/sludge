@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 4734473128102470297}
   - component: {fileID: 3896768316370732178}
   - component: {fileID: 753621984789833065}
+  - component: {fileID: 8695454139233139996}
   m_Layer: 7
   m_Name: TargetLaser
   m_TagString: Untagged
@@ -186,8 +187,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Active: 0
-  Range: 1
-  CurrentlyAt: 0.5
+  StartT: 0
+  ScaleT: 5
   TimeMultiplier: 1
   PingPong: 1
   Easing: 0
@@ -204,12 +205,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Active: 0
-  Range: 1
-  CurrentlyAt: 0.5
+  StartT: 0
+  ScaleT: 5
   TimeMultiplier: 1
   PingPong: 1
   Easing: 0
-  GizmoTime: 0
 --- !u!50 &4734473128102470297
 Rigidbody2D:
   serializedVersion: 5
@@ -286,6 +286,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Modifiers: []
+--- !u!114 &8695454139233139996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121944031299064275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e220f1eb05008a64fa908f35610d6268, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 0
+  OnFrom: 0.5
+  OnTo: 1
+  TimeMultiplier: 1
 --- !u!1 &9121944031736377775
 GameObject:
   m_ObjectHideFlags: 0

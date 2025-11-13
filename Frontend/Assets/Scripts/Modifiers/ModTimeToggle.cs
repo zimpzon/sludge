@@ -10,7 +10,7 @@ namespace Sludge.Modifiers
         public double OnTo = 1.0;
         public double TimeMultiplier = 1.0;
         
-        // Removed this from public. Is it ever needed?
+        // Removed this from public. Is it ever needed? I guess it we want to keep going when waiting between rounds.
         bool UseUnityTime = false;
 
         public bool IsOn()
