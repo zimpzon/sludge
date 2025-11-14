@@ -3,6 +3,9 @@ using Sludge.Modifiers;
 using Sludge.Utility;
 using UnityEngine;
 
+
+// NB! We can cheat to move all the way back and forth without staying on platform. Just give the opposite rotation.
+
 // This enemy will move back and forth on a platform, using raycasts to check when to turn around. If rotated in the inspector
 // (only per 90 degrees) movement and raycasts will rotate accordingly, so it can both be on top of platform, below, and on vertical surfaces.
 // Uses transform.position for placement.

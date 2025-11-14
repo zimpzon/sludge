@@ -25,5 +25,6 @@
         PinballBounce,
         EnemyBehindStaticLevel,
         Sticker,
+        WallFollower,
     };
 }
