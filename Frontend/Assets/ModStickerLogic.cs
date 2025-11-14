@@ -31,8 +31,11 @@ public class ModStickerLogic : SludgeModifier
         // Set initial movement direction
         movingLeft = StartLeft;
 
+        // Offset raycast origin away from the ground/platform direction
+        Vector2 offsetOrigin = (Vector2)transform.position - groundDirection * 0.25f;
+
         // Perform initial raycast to platform to establish baseline distance
-        RaycastHit2D platformHit = Physics2D.Raycast(transform.position, groundDirection, Mathf.Infinity, PlatformLayer);
+        RaycastHit2D platformHit = Physics2D.Raycast(offsetOrigin, groundDirection, Mathf.Infinity, PlatformLayer);
         if (platformHit.collider != null)
         {
             initialGroundDistance = platformHit.distance;
@@ -102,7 +105,7 @@ public class ModStickerLogic : SludgeModifier
 
         if (entity == EntityType.Player)
         {
-            GameManager.I.Player.Kill(PlayerDeathType.Bullet);
+            GameManager.I.Player.Kill(PlayerDeathType.Sticker);
         }
     }
 

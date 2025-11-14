@@ -12,5 +12,6 @@
         Tumbler,
         Follower,
         Bouncer,
+        Sticker,
     }
 }
