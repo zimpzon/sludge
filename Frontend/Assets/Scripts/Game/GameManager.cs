@@ -336,9 +336,9 @@ public class GameManager : MonoBehaviour
     public void UpdateTimer(float time)
     {
         if (time < 0)
-            TextTimer.SetText("0.00 sec", time);
+            TextTimer.SetText("0.000 sec", time);
         else
-            TextTimer.SetText("{0:0.00} sec", time);
+            TextTimer.SetText("{0:0.000} sec", time);
     }
 
     void ResetLevel()
@@ -411,6 +411,7 @@ public class GameManager : MonoBehaviour
         }
 
         latestRoundResult.Time = (float)EngineTime;
+        UpdateTimer(latestRoundResult.Time);
         latestRoundResult.Completed = levelComplete;
         latestRoundResult.LevelNamespace = UiLogic.Instance.latestSelectedLevelNamespace;
         latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?

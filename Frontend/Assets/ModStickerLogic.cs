@@ -16,7 +16,6 @@ public class ModStickerLogic : SludgeModifier
     [Header("Detection")]
     public LayerMask PlatformLayer;
     public float RaycastDistanceMultiplier = 1.1f;
-    public float WallDetectionDistance = 0.5f;
 
     private Vector2 basePos;
     private Vector2 moveDirection;
@@ -27,13 +26,14 @@ public class ModStickerLogic : SludgeModifier
 
     private CircleCollider2D col;
     private float colRadius;
+    float wallDetectionDistance;
 
     private void Awake()
     {
         basePos = transform.position;
         col = GetComponent<CircleCollider2D>();
-        if (col != null)
-            colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);   // world space radius
+        colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);   // world space radius
+        wallDetectionDistance = colRadius;
     }
 
     private void Start()
@@ -45,7 +45,7 @@ public class ModStickerLogic : SludgeModifier
         movingLeft = StartLeft;
 
         // Offset raycast origin away from the ground/platform direction
-        Vector2 offsetOrigin = (Vector2)transform.position - groundDirection * 0.25f;
+        Vector2 offsetOrigin = (Vector2)transform.position - groundDirection * colRadius * 0.5f;
 
         // Perform initial raycast to platform to establish baseline distance
         RaycastHit2D platformHit = Physics2D.Raycast(offsetOrigin, groundDirection, Mathf.Infinity, PlatformLayer);
@@ -172,7 +172,7 @@ public class ModStickerLogic : SludgeModifier
         RaycastHit2D wallHit = Physics2D.Raycast(
             offsetOrigin,
             forwardDir,
-            WallDetectionDistance,
+            wallDetectionDistance * 0.25f, // TODO: why 0.25? It seems to match the wall pretty precisely..
             PlatformLayer
         );
 
@@ -188,7 +188,7 @@ public class ModStickerLogic : SludgeModifier
         {
             SetupDirections();
 
-            Vector2 offsetOrigin = (Vector2)transform.position - groundDirection * 0.25f;
+            Vector2 offsetOrigin = (Vector2)transform.position - groundDirection * colRadius * 0.5f;
 
             // Ground raycast
             Gizmos.color = Color.green;
@@ -199,7 +199,7 @@ public class ModStickerLogic : SludgeModifier
             // Forward wall detection raycast
             Gizmos.color = Color.red;
             Vector2 forwardDir = StartLeft ? -moveDirection : moveDirection;
-            Vector2 forwardEnd = offsetOrigin + forwardDir * WallDetectionDistance;
+            Vector2 forwardEnd = offsetOrigin + forwardDir * wallDetectionDistance;
             Gizmos.DrawLine(offsetOrigin, forwardEnd);
 
             // Show offset origin
@@ -209,7 +209,7 @@ public class ModStickerLogic : SludgeModifier
         }
 
         // Calculate offset origin during play
-        Vector2 playOffsetOrigin = (Vector2)transform.position - groundDirection * 0.25f;
+        Vector2 playOffsetOrigin = (Vector2)transform.position - groundDirection * colRadius * 0.5f;
 
         // Draw platform raycast during play
         Gizmos.color = Color.cyan;
@@ -224,7 +224,7 @@ public class ModStickerLogic : SludgeModifier
         // Draw wall detection raycast
         Gizmos.color = Color.red;
         Vector2 forwardDirection = movingLeft ? -moveDirection : moveDirection;
-        Vector2 wallRayEnd = playOffsetOrigin + forwardDirection * WallDetectionDistance;
+        Vector2 wallRayEnd = playOffsetOrigin + forwardDirection * wallDetectionDistance;
         Gizmos.DrawLine(playOffsetOrigin, wallRayEnd);
 
         // Show offset origin

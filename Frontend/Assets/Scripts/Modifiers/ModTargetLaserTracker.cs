@@ -83,6 +83,8 @@ public class ModTargetLaserTracker : SludgeModifier
 
                     Body.DOKill();
                     Body.DOPunchScale(Vector3.one * 0.25f, 0.2f);
+
+                    SoundManager.Play(FxList.Instance.EnemyShoot);
                 }
             }
         }
