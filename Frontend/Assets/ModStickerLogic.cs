@@ -24,9 +24,15 @@ public class ModStickerLogic : SludgeModifier
     private float initialGroundDistance;
     private bool movingLeft;
 
+    private CircleCollider2D col;
+    private float colRadius;
+
     private void Awake()
     {
-        basePos = transform.position;    
+        basePos = transform.position;
+        col = GetComponent<CircleCollider2D>();
+        if (col != null)
+            colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);   // world space radius
     }
 
     private void Start()
@@ -102,6 +108,21 @@ public class ModStickerLogic : SludgeModifier
         }
     }
 
+    private Vector2 GetSideOffset()
+    {
+        // +moveDirection = right/up depending on rotation.
+        // movingLeft flips direction.
+        Vector2 sideDir = movingLeft ? -moveDirection : moveDirection;
+
+        // Circle edge
+        return (Vector2)transform.position + sideDir * colRadius;
+    }
+
+    private Vector2 GetGroundAdjustedOffset(Vector2 sideOffset)
+    {
+        return sideOffset - groundDirection * 0.05f; // tiny push to avoid inside-collider issues
+    }
+
     public override void EngineTick()
     {
         // Move the enemy
@@ -124,28 +145,35 @@ public class ModStickerLogic : SludgeModifier
 
     private void CheckEdge()
     {
-        // Offset raycast origin away from the ground/platform direction
-        Vector2 offsetOrigin = (Vector2)transform.position - groundDirection * 0.25f;
+        Vector2 sideOffset = GetSideOffset();
+        Vector2 offsetOrigin = GetGroundAdjustedOffset(sideOffset);
 
-        // Raycast to platform from offset position to check for edge
-        RaycastHit2D groundHit = Physics2D.Raycast(offsetOrigin, groundDirection, Mathf.Infinity, PlatformLayer);
+        // ----- EDGE CHECK -----
+        RaycastHit2D groundHit = Physics2D.Raycast(
+            offsetOrigin,
+            groundDirection,
+            Mathf.Infinity,
+            PlatformLayer
+        );
 
-        // If distance to platform exceeds threshold, we've reached an edge - turn around
         if (groundHit.collider == null || groundHit.distance > initialGroundDistance * RaycastDistanceMultiplier)
         {
             movingLeft = !movingLeft;
             return;
         }
 
-        // Raycast forward in movement direction to check for walls, from offset origin
-        Vector2 forwardDirection = movingLeft ? -moveDirection : moveDirection;
-        RaycastHit2D wallHit = Physics2D.Raycast(offsetOrigin, forwardDirection, WallDetectionDistance, PlatformLayer);
+        // ----- WALL CHECK -----
+        Vector2 forwardDir = movingLeft ? -moveDirection : moveDirection;
 
-        // If we hit a wall, turn around
+        RaycastHit2D wallHit = Physics2D.Raycast(
+            offsetOrigin,
+            forwardDir,
+            WallDetectionDistance,
+            PlatformLayer
+        );
+
         if (wallHit.collider != null)
-        {
             movingLeft = !movingLeft;
-        }
     }
 
     // Debug visualization
