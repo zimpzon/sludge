@@ -24,5 +24,6 @@
         Friend,
         PinballBounce,
         EnemyBehindStaticLevel,
+        Sticker,
     };
 }
