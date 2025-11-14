@@ -475,10 +475,10 @@ public class GameManager : MonoBehaviour
     {
         var pos = Player.transform.position;
         CompletedParticles.transform.position = pos;
-        CompletedParticles.Emit(11);
+        CompletedParticles.Emit(30);
 
         MarkerParticles.transform.position = pos;
-        MarkerParticles.Emit(1);
+        MarkerParticles.Emit(30);
 
         levelComplete = true;
     }
