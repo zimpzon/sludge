@@ -18,6 +18,7 @@ public class ModWallFollowerLogic : SludgeModifier
     private CircleCollider2D col;
     private float colRadius;
     private float wallDetectionDistance;
+    private Rigidbody2D rb;
 
     private void Awake()
     {
@@ -25,6 +26,15 @@ public class ModWallFollowerLogic : SludgeModifier
         col = GetComponent<CircleCollider2D>();
         colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);
         wallDetectionDistance = colRadius * 1.0f;
+
+        // Setup Rigidbody2D for physics movement
+        rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody2D>();
+        }
+        rb.gravityScale = 0;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     private void Start()
@@ -34,19 +44,25 @@ public class ModWallFollowerLogic : SludgeModifier
 
     public override void Reset()
     {
-        transform.position = basePos;
+        rb.position = basePos;
         forwardDirection = StartDirection.normalized;
+        rb.linearVelocity = Vector2.zero;
     }
 
     public override void EngineTick()
     {
         if (IsStatic) return;
 
-        Vector2 currentPos = transform.position;
+        Vector2 currentPos = rb.position;
 
         // Check for wall ahead
-        if (CheckForWall(currentPos, forwardDirection))
+        RaycastHit2D wallHit = Physics2D.Raycast(currentPos, forwardDirection, wallDetectionDistance, PlatformLayer);
+        if (wallHit.collider != null)
         {
+            // Snap to exact position outside the wall
+            Vector2 snapPosition = wallHit.point - forwardDirection * (colRadius + 0.01f);
+            rb.MovePosition(snapPosition);
+
             // Hit a wall, try to turn
             if (!TryTurn())
             {
@@ -56,8 +72,9 @@ public class ModWallFollowerLogic : SludgeModifier
         }
         else
         {
-            // Path clear, move forward
-            transform.position += (Vector3)(forwardDirection * MoveSpeed * Time.deltaTime);
+            // Path clear, move forward using physics
+            Vector2 newPosition = rb.position + forwardDirection * MoveSpeed * (float)GameManager.TickSize;
+            rb.MovePosition(newPosition);
         }
     }
 
@@ -69,7 +86,7 @@ public class ModWallFollowerLogic : SludgeModifier
 
     private bool TryTurn()
     {
-        Vector2 currentPos = transform.position;
+        Vector2 currentPos = rb.position;
         Vector2 rightDir = new Vector2(-forwardDirection.y, forwardDirection.x);
         Vector2 leftDir = new Vector2(forwardDirection.y, -forwardDirection.x);
 
@@ -101,7 +118,7 @@ public class ModWallFollowerLogic : SludgeModifier
 
     private void OnDrawGizmos()
     {
-        Vector2 currentPos = transform.position;
+        Vector2 currentPos = rb.position;
 
         // Show current position
         Gizmos.color = Color.white;
