@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9e891a68ae334154eb2c931648f9a2a9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1ff70f04b4a685e438b5f81b0c4609ee, type: 3}
   m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Active: 1
-  RoundsPerSecond: 4
+  RoundsPerSecond: 2
   StartDegrees: 0
   UseRealTime: 1
 --- !u!1 &2480648689199343186
@@ -209,7 +209,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8388672
   RaycastDistanceMultiplier: 1.1
-  WallDetectionDistance: 0.5
 --- !u!114 &521858791632362155
 MonoBehaviour:
   m_ObjectHideFlags: 0
