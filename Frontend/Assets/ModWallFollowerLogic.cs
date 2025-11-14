@@ -45,6 +45,7 @@ public class ModWallFollowerLogic : SludgeModifier
     public override void Reset()
     {
         rb.position = basePos;
+        transform.position = basePos;
         forwardDirection = StartDirection.normalized;
         rb.linearVelocity = Vector2.zero;
     }
