@@ -37,6 +37,11 @@ namespace Sludge.Colors
         public Color UiButtonFace;
         public Color UiButtonOutline;
         public Color UiBackground;
+
+        public void OnValidate()
+        {
+            ColorScheme.ApplyColors(this);
+        }
     }
 
     public enum SchemeColor
@@ -79,8 +84,11 @@ namespace Sludge.Colors
     {
         public static void ApplyColors(ColorSchemeScriptableObject scheme)
         {
-            GameManager.I.CurrentColorScheme = scheme;
-            Debug.Log($"Applying color scheme: [{GameManager.I.CurrentColorScheme?.name}]");
+            if (GameManager.I != null)
+            {
+                GameManager.I.CurrentColorScheme = scheme;
+                Debug.Log($"Applying color scheme: [{GameManager.I.CurrentColorScheme?.name}]");
+            }
 
             var allColorAppliers = GameObject.FindObjectsByType<SchemeColorApplier>(FindObjectsInactive.Include, FindObjectsSortMode.None);
             foreach (var applier in allColorAppliers)

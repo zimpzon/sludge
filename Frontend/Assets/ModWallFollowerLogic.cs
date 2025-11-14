@@ -118,6 +118,9 @@ public class ModWallFollowerLogic : SludgeModifier
 
     private void OnDrawGizmos()
     {
+        if (rb == null)
+            return;
+
         Vector2 currentPos = rb.position;
 
         // Show current position
