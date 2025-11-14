@@ -24,7 +24,7 @@ public class ModWallFollowerLogic : SludgeModifier
         basePos = transform.position;
         col = GetComponent<CircleCollider2D>();
         colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);
-        wallDetectionDistance = colRadius * 1.2f;
+        wallDetectionDistance = colRadius * 1.0f;
     }
 
     private void Start()
