@@ -17,11 +17,17 @@ public class ModStickerLogic : SludgeModifier
     public float RaycastDistanceMultiplier = 1.1f;
     public float WallDetectionDistance = 0.5f;
 
+    private Vector2 basePos;
     private Vector2 moveDirection;
     private Vector2 raycastDirection;
     private Vector2 groundDirection;
     private float initialGroundDistance;
     private bool movingLeft;
+
+    private void Awake()
+    {
+        basePos = transform.position;    
+    }
 
     private void Start()
     {
@@ -45,6 +51,13 @@ public class ModStickerLogic : SludgeModifier
             Debug.LogWarning($"ModStickerLogic on {gameObject.name}: No platform detected at start!");
             initialGroundDistance = 1f; // Fallback value
         }
+    }
+
+    public override void Reset()
+    {
+        transform.position = basePos;
+        movingLeft = StartLeft;
+        SetupDirections();
     }
 
     private void SetupDirections()
