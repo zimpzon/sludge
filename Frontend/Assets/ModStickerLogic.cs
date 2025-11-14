@@ -11,6 +11,7 @@ public class ModStickerLogic : SludgeModifier
     [Header("Movement")]
     public float MoveSpeed = 2f;
     public bool StartLeft = false;
+    public bool IsStatic = false;
 
     [Header("Detection")]
     public LayerMask PlatformLayer;
@@ -125,6 +126,9 @@ public class ModStickerLogic : SludgeModifier
 
     public override void EngineTick()
     {
+        if (IsStatic)
+            return;
+
         // Move the enemy
         Vector2 movement = (movingLeft ? -moveDirection : moveDirection) * MoveSpeed * Time.deltaTime;
         transform.position += (Vector3)movement;

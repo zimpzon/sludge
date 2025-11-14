@@ -8,6 +8,7 @@ namespace Sludge.Modifiers
         public bool Active = true;
         public double RoundsPerSecond = 0.5;
         public double StartDegrees;
+        public bool UseRealTime = false;
 
         Transform trans;
 
@@ -22,12 +23,23 @@ namespace Sludge.Modifiers
                 trans.rotation = Quaternion.AngleAxis((float)StartDegrees, Vector3.back);
         }
 
-        public override void EngineTick()
+        private void Update()
         {
-            if (!Active)
+            if (!Active || !UseRealTime)
                 return;
 
-            float rotation = (float)SludgeUtil.Stabilize((GameManager.I.EngineTime * RoundsPerSecond * 360) + StartDegrees);
+            double time = Time.realtimeSinceStartup;
+            float rotation = (float)SludgeUtil.Stabilize((time * RoundsPerSecond * 360) + StartDegrees);
+            trans.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
+        }
+
+        public override void EngineTick()
+        {
+            if (!Active || UseRealTime)
+                return;
+
+            double time = GameManager.I.EngineTime;
+            float rotation = (float)SludgeUtil.Stabilize((time * RoundsPerSecond * 360) + StartDegrees);
             trans.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
         }
     }
