@@ -609,8 +609,10 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         StateParam.isHuggingRightWall = circleDrawer.hasRightContact && !HasGroundContact();
         StateParam.isDescending = StateParam.force.y < 0;
 
-        // Wall sliding is now independent - just needs wall contact and descending
-        StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
+        // Wall sliding requires input toward the wall
+        bool pressingTowardLeftWall = StateParam.isHuggingLeftWall && direction == -1;
+        bool pressingTowardRightWall = StateParam.isHuggingRightWall && direction == 1;
+        StateParam.isWallSliding = (pressingTowardLeftWall || pressingTowardRightWall) && StateParam.isDescending;
         StateParam.isWallSliding &= StateParam.hasWallJumpEnabled; // Only slide if wall jump is enabled
 
         // NEW: Set wall coyote time when leaving a wall
@@ -621,9 +623,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             StateParam.disabledHorizontalDirection = wasHuggingLeftWall ? -1 : 1;
         }
 
-        // UPDATED: Wall sliding is now independent - just needs wall contact and descending
-        StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
-        StateParam.isWallSliding &= StateParam.hasWallJumpEnabled; // Only slide if wall jump is enabled
 
         // update simulation
         // do not apply gravity while holding jump on a new jump (state = ascending active)
