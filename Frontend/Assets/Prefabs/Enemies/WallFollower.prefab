@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1ff70f04b4a685e438b5f81b0c4609ee, type: 3}
-  m_Color: {r: 0.6039216, g: 0.14901961, b: 0.3254902, a: 1}
+  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 25
+  SchemeColor: 12
   BrightnessOffset: 0
 --- !u!114 &7496888845534523051
 MonoBehaviour:
@@ -129,10 +129,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4274608561547712135}
   - component: {fileID: 721875519797631889}
-  - component: {fileID: 4702531724267739185}
-  - component: {fileID: 521858791632362155}
+  - component: {fileID: -7300726600960606785}
+  - component: {fileID: -6134273874051834699}
   m_Layer: 21
-  m_Name: Sticker
+  m_Name: WallFollower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -190,7 +190,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.65
---- !u!114 &4702531724267739185
+--- !u!114 &-7300726600960606785
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,26 +199,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 2480648689199343186}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cc742f4e1611be4eac2c7248f56cf57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MoveSpeed: 3
-  StartLeft: 1
-  IsStatic: 0
-  PlatformLayer:
-    serializedVersion: 2
-    m_Bits: 8388672
-  RaycastDistanceMultiplier: 1.1
---- !u!114 &521858791632362155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2480648689199343186}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49adce1bacef07349ba45c93395259d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e9de5ff862b4e747b1e8a2b4ccfba3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Modifiers: []
+--- !u!114 &-6134273874051834699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480648689199343186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70d656780f2fc1c478d3282637118ebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MoveSpeed: 8
+  IsStatic: 0
+  StartDirection: {x: 0, y: 1}
+  PlatformLayer:
+    serializedVersion: 2
+    m_Bits: 8389184

@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SchemeColor: 5
+  SchemeColor: 7
   BrightnessOffset: 0
 --- !u!1 &543213165200603187
 GameObject:
@@ -244,6 +244,7 @@ MonoBehaviour:
   Active: 1
   RoundsPerSecond: 0.1
   StartDegrees: 0
+  UseRealTime: 0
 --- !u!1 &3021709802631932174
 GameObject:
   m_ObjectHideFlags: 0

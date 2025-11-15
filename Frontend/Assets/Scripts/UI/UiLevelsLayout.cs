@@ -101,22 +101,6 @@ public class UiLevelsLayout : MonoBehaviour
             levelItem.levelScript.LevelIndex = i;
             if (i < LevelItems.Count - 1)
                 levelItem.levelScript.Next = LevelItems[i + 1].levelScript;
-
-            SchemeColor backgroundColor;
-            SchemeColor textColor;
-
-            if (isUnlocked)
-            {
-                backgroundColor = SchemeColor.UiLevelMastered;
-                textColor = SchemeColor.UiTextDefault;
-            }
-            else
-            {
-                backgroundColor = isUnlocked ? SchemeColor.UiLevelUnlocked : SchemeColor.UiLevelLocked;
-                textColor = isUnlocked ? SchemeColor.UiTextDefault : SchemeColor.UiTextDimmed;
-            }
-
-            levelItem.levelScript.TextLevelNumber.color = ColorScheme.GetColor(GameManager.I.CurrentUiColorScheme, textColor);
         }
     }
 

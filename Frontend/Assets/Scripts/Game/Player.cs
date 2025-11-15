@@ -285,7 +285,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         ParticleEmitter.I.EmitDust(trans.position, 8);
         GameManager.I.ShakeCamera(duration: 0.2f, strength: 0.7f);
 
-        EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Player));
+        EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.PlayerTint));
 
         bodyRoot.SetActive(false);
         trans.position = Vector3.one * 5544; // move out of the way

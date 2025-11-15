@@ -223,7 +223,7 @@ public class KidLogicMod : SludgeModifier, IConveyorBeltPassenger
         ParticleEmitter.I.EmitDust(trans.position, 4);
         GameManager.I.ShakeCamera(duration: 1.0f, strength: 0.4f);
 
-        Player.I.EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.Player), scale: 0.5f);
+        Player.I.EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.PlayerTint), scale: 0.5f);
 
         gameObject.SetActive(false);
         trans.position = Vector3.one * 4432; // move out of the way

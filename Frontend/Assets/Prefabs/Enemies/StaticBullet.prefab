@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2180690740361687058}
   - component: {fileID: 2180690740361687056}
-  m_Layer: 20
+  m_Layer: 22
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,15 +73,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -715668635
-  m_SortingLayer: 5
-  m_SortingOrder: 35
-  m_Sprite: {fileID: 21300000, guid: 52f70743d62348e409ad56804f598b61, type: 3}
-  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
+  m_SortingLayerID: -1965114199
+  m_SortingLayer: 1
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 0d862e91bf0848c45a163402e3a93be8, type: 3}
+  m_Color: {r: 0, g: 0.16470589, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.28, y: 1.28}
+  m_Size: {x: 1.4857143, y: 1.4571428}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -99,9 +99,10 @@ GameObject:
   - component: {fileID: 2180690740409253425}
   - component: {fileID: 2180690740409253438}
   - component: {fileID: 8702809811098687153}
-  - component: {fileID: 1258405296366632036}
-  m_Layer: 20
-  m_Name: Bullet
+  - component: {fileID: -4694314905995879640}
+  - component: {fileID: 1857650986921717588}
+  m_Layer: 22
+  m_Name: StaticBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,15 +136,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57be4e9b97af73b4a9af9be71df96af9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Static: 0
-  StartArmed: 1
-  IsArmed: 1
+  Static: 1
+  StartArmed: 0
+  IsArmed: 0
   DX: 0
   DY: 0
   X: 0
   Y: 0
-  SchemeColor1: 25
-  SchemeColor2: 26
+  SchemeColor1: 12
+  SchemeColor2: 13
 --- !u!58 &2180690740409253438
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -207,7 +208,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
---- !u!114 &1258405296366632036
+--- !u!114 &-4694314905995879640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2180690740409253427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a468e416abf835c4db9609fa69d1a1ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Modifiers: []
+--- !u!114 &1857650986921717588
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -219,6 +233,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 146bca38f896b934b8f573b9750eac72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NotArmedSprite: {fileID: 0}
-  PendingArmedSprite: {fileID: 0}
-  ArmedSprite: {fileID: 21300000, guid: 52f70743d62348e409ad56804f598b61, type: 3}
+  NotArmedSprite: {fileID: 21300000, guid: 0d862e91bf0848c45a163402e3a93be8, type: 3}
+  PendingArmedSprite: {fileID: 21300000, guid: fcd2122257305054d8e092329fa810f4, type: 3}
+  ArmedSprite: {fileID: 21300000, guid: 9e891a68ae334154eb2c931648f9a2a9, type: 3}

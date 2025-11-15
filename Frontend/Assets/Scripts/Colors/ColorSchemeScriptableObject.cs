@@ -9,36 +9,35 @@ namespace Sludge.Colors
         public bool IsDefault;
 
         public Color[] Palette;
+
+        public Color Black;
         public Color Background;
         public Color Walls;
-        public Color Edges;
-        public Color Player;
-        public Color Exit1;
-        public Color Exit2;
-        public Color Key1;
-        public Color Key2;
-        public Color TimePill1;
-        public Color TimePill2;
-        public Color Conveyor1;
-        public Color Conveyor2;
-        public Color LaserColor;
-        public Color BulletFlash1;
-        public Color BulletFlash2;
-        public Color Enemy1;
+        public Color PlayerTint;
+        public Color Exit;
+        public Color Key;
+        public Color Conveyor;
 
-        public Color UiTimerBarFront;
-        public Color UiTimerBarBack;
-        public Color UiTextDefault;
+        public Color PlayerScheme_A1;
+        public Color PlayerScheme_A2;
+        public Color PlayerScheme_B1;
+        public Color PlayerScheme_B2;
+
+        public Color TimePill;
+        public Color EnemyScheme_A1;
+        public Color EnemyScheme_A2;
+        public Color EnemyScheme_B1;
+        public Color EnemyScheme_B2;
+
+        public Color UiTextTitle;
         public Color UiTextHighlighted;
-        public Color UiTextDimmed;
-        public Color UiLevelLocked;
-        public Color UiLevelUnlocked;
-        public Color UiLevelCompleted;
-        public Color UiLevelMastered;
+        public Color UiTextDefault;
+
         public Color UiSelectionMarker;
-        public Color UiButtonFace;
-        public Color UiButtonOutline;
-        public Color UiBackground;
+        public Color UiButtonFaceDark;
+        public Color UiButtonFaceLight;
+        public Color UiMenuBackground;
+        public Color UiTitleBackground;
 
         public void OnValidate()
         {
@@ -52,36 +51,33 @@ namespace Sludge.Colors
     public enum SchemeColor
     {
         // ---> NB: New members must be added at bottom since enum as serialized as strings. Adding in the middle will skew all values coming after
+        Black,
         Background,
         Walls,
-        Edges,
-        Player,
-        Exit1,
-        Exit2,
-        Key1,
-        Key2,
-        TimePill1,
-        TimePill2,
-        Conveyor1,
-        Conveyor2,
-        UiTimerBarFront,
-        UiTimerBarBack,
-        UiTextDefault,
+        PlayerTint,
+        Exit,
+        Key,
+        Conveyor,
+        PlayerScheme_A1,
+        PlayerScheme_A2,
+        PlayerScheme_B1,
+        PlayerScheme_B2,
+        TimePill,
+
+        EnemyScheme_A1,
+        EnemyScheme_A2,
+        EnemyScheme_B1,
+        EnemyScheme_B2,
+
+        UiTextTitle,
         UiTextHighlighted,
-        UiTextDimmed,
-        UiLevelLocked,
-        UiLevelCompleted,
-        UiLevelMastered,
+        UiTextDefault,
+
         UiSelectionMarker,
-        UiButtonFace,
-        UiButtonOutline,
-        UiBackground,
-        LaserColor,
-        BulletFlash1,
-        BulletFlash2,
-        UiLevelUnlocked,
-        Enemy1,
-        Kid,
+        UiButtonFaceDark,
+        UiButtonFaceLight,
+        UiMenuBackground,
+        UiTitleBackground,
         // <--- NB: New members must be added at bottom since enum as serialized as strings. Adding in the middle will skew all values coming after.
     }
 
@@ -109,7 +105,7 @@ namespace Sludge.Colors
             foreach (var applier in allColorAppliers)
                 applier.ApplyColor(scheme);
 
-            Shader.SetGlobalColor("_EdgeColor", scheme.Edges);
+            Shader.SetGlobalColor("_EdgeColor", scheme.Walls);
             Shader.SetGlobalColor("_WallColor", scheme.Walls);
 
             ApplyUiColors(scheme);
@@ -129,35 +125,30 @@ namespace Sludge.Colors
 
             var color = name switch
             {
+                SchemeColor.Black => scheme.Black,
                 SchemeColor.Background => scheme.Background,
                 SchemeColor.Walls => scheme.Walls,
-                SchemeColor.Edges => scheme.Edges,
-                SchemeColor.Player => scheme.Player,
-                SchemeColor.Exit1 => scheme.Exit1,
-                SchemeColor.Exit2 => scheme.Exit2,
-                SchemeColor.Key1 => scheme.Key1,
-                SchemeColor.Key2 => scheme.Key2,
-                SchemeColor.TimePill1 => scheme.TimePill1,
-                SchemeColor.TimePill2 => scheme.TimePill2,
-                SchemeColor.Conveyor1 => scheme.Conveyor2,
-                SchemeColor.LaserColor => scheme.LaserColor,
-                SchemeColor.BulletFlash1 => scheme.BulletFlash1,
-                SchemeColor.BulletFlash2 => scheme.BulletFlash2,
-                SchemeColor.Enemy1 => scheme.Enemy1,
-
-                SchemeColor.UiTimerBarFront => scheme.UiTimerBarFront,
-                SchemeColor.UiTimerBarBack => scheme.UiTimerBarBack,
-                SchemeColor.UiTextDefault => scheme.UiTextDefault,
+                SchemeColor.PlayerTint => scheme.PlayerTint,
+                SchemeColor.Exit => scheme.Exit,
+                SchemeColor.Key => scheme.Key,
+                SchemeColor.Conveyor => scheme.Conveyor,
+                SchemeColor.PlayerScheme_A1 => scheme.PlayerScheme_A1,
+                SchemeColor.PlayerScheme_A2 => scheme.PlayerScheme_A2,
+                SchemeColor.PlayerScheme_B1 => scheme.PlayerScheme_B1,
+                SchemeColor.PlayerScheme_B2 => scheme.PlayerScheme_B2,
+                SchemeColor.TimePill => scheme.TimePill,
+                SchemeColor.EnemyScheme_A1 => scheme.EnemyScheme_A1,
+                SchemeColor.EnemyScheme_A2 => scheme.EnemyScheme_A2,
+                SchemeColor.EnemyScheme_B1 => scheme.EnemyScheme_B1,
+                SchemeColor.EnemyScheme_B2 => scheme.EnemyScheme_B2,
+                SchemeColor.UiTextTitle => scheme.UiTextTitle,
                 SchemeColor.UiTextHighlighted => scheme.UiTextHighlighted,
-                SchemeColor.UiTextDimmed => scheme.UiTextDimmed,
-                SchemeColor.UiLevelLocked => scheme.UiLevelLocked,
-                SchemeColor.UiLevelUnlocked => scheme.UiLevelUnlocked,
-                SchemeColor.UiLevelCompleted => scheme.UiLevelCompleted,
-                SchemeColor.UiLevelMastered => scheme.UiLevelMastered,
+                SchemeColor.UiTextDefault => scheme.UiTextDefault,
                 SchemeColor.UiSelectionMarker => scheme.UiSelectionMarker,
-                SchemeColor.UiButtonFace => scheme.UiButtonFace,
-                SchemeColor.UiButtonOutline => scheme.UiButtonOutline,
-                SchemeColor.UiBackground => scheme.UiBackground,
+                SchemeColor.UiButtonFaceDark => scheme.UiButtonFaceDark,
+                SchemeColor.UiButtonFaceLight => scheme.UiButtonFaceLight,
+                SchemeColor.UiMenuBackground => scheme.UiMenuBackground,
+                SchemeColor.UiTitleBackground => scheme.UiTitleBackground,
                 _ => Color.red,
             };
 
