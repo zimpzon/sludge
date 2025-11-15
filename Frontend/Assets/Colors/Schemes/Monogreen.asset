@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b59a7e3ce81504cb41ef646da45b30, type: 3}
+  m_Name: Monogreen
+  m_EditorClassIdentifier: 
+  schemeName: Purple-green
+  IsDefault: 0
+  Palette:
+  - {r: 0.18431373, g: 1, b: 0.34509805, a: 0}
+  - {r: 0.007843138, g: 0.23529413, b: 0.043137256, a: 0}
+  - {r: 0.21568629, g: 0.14117648, b: 0.16862746, a: 0}
+  - {r: 0.3921569, g: 0.7176471, b: 0.14509805, a: 0}
+  - {r: 0.14509805, g: 0.40784317, b: 0, a: 0}
+  - {r: 0.8742138, g: 0.8699374, b: 0.8549701, a: 0}
+  Black: {r: 0, g: 0, b: 0, a: 0}
+  Background: {r: 0.09835292, g: 0.528, b: 0.1811765, a: 0}
+  Walls: {r: 0.012166672, g: 0.292, b: 0.05475003, a: 0}
+  PlayerTint: {r: 0.007843138, g: 0.11764707, b: 0.023529414, a: 0}
+  Exit: {r: 0.007843138, g: 0.11764707, b: 0.023529414, a: 0}
+  Key: {r: 0.007843138, g: 0.11764707, b: 0.023529414, a: 0}
+  Conveyor: {r: 0, g: 0, b: 0, a: 0}
+  PlayerScheme_A1: {r: 0.007843138, g: 0.14901961, b: 0.027450982, a: 0}
+  PlayerScheme_A2: {r: 0.007843138, g: 0.14901961, b: 0.027450982, a: 0}
+  PlayerScheme_B1: {r: 0.007843138, g: 0.14901961, b: 0.027450982, a: 0}
+  PlayerScheme_B2: {r: 0.007843138, g: 0.14901961, b: 0.027450982, a: 0}
+  TimePill: {r: 0.007843138, g: 0.11764707, b: 0.023529414, a: 0}
+  EnemyScheme_A1: {r: 0.007843138, g: 0.18823531, b: 0.03529412, a: 0}
+  EnemyScheme_A2: {r: 0.007843138, g: 0.18823531, b: 0.03529412, a: 0}
+  EnemyScheme_B1: {r: 0.007843138, g: 0.18823531, b: 0.03529412, a: 0}
+  EnemyScheme_B2: {r: 0.007843138, g: 0.14901961, b: 0.027450982, a: 0}
+  UiTextTitle: {r: 0.11764707, g: 0.6392157, b: 0.21960786, a: 0}
+  UiTextHighlighted: {r: 0.3137255, g: 0.57254905, b: 0.11764707, a: 0}
+  UiTextDefault: {r: 0.5470086, g: 1, b: 0.2051282, a: 0}
+  UiSelectionMarker: {r: 0.3137255, g: 0.57254905, b: 0.11764707, a: 0}
+  UiButtonFaceDark: {r: 0.023789478, g: 0.22600001, b: 0.047578976, a: 0}
+  UiButtonFaceLight: {r: 0.11764707, g: 0.6392157, b: 0.21960786, a: 0}
+  UiMenuBackground: {r: 0.09411766, g: 0.50980395, b: 0.1764706, a: 0}
+  UiTitleBackground: {r: 0.020083329, g: 0.241, b: 0.050208353, a: 0}
