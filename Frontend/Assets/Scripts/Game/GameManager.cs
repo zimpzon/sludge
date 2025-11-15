@@ -523,7 +523,7 @@ public class GameManager : MonoBehaviour
         if (I is null)
             return;
 
-        var defaultScheme = ColorSchemeList.ColorSchemes.Where(s => s.IsDefault).First();
+        var defaultScheme = ColorSchemeList.ColorSchemes.Where(s => s.IsDefault).FirstOrDefault();
         if (defaultScheme == null)
         {
             Debug.LogError("No default color scheme found, missing one with Default = true");

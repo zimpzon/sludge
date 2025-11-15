@@ -42,6 +42,9 @@ namespace Sludge.Colors
 
         public void OnValidate()
         {
+            if (Application.isPlaying)
+                return;
+
             ColorScheme.ApplyColors(this);
             // Force Unity to repaint the editor (Scene/Game view UI)
             UnityEditor.SceneView.RepaintAll();
@@ -98,11 +101,11 @@ namespace Sludge.Colors
             if (GameManager.I != null)
             {
                 GameManager.I.CurrentColorScheme = scheme;
-                Debug.Log($"Applying RUNTIME color scheme: [{GameManager.I.CurrentColorScheme?.name}]");
+                Debug.Log($"Applying color scheme (GameManager is initialized): [{scheme.name}]");
             }
             else
             {
-                Debug.Log($"Applying DESIGN TIME color scheme: [{GameManager.I.CurrentColorScheme?.name}]");
+                Debug.Log($"Applying color scheme with GameManager not initialized: [{scheme.name}]");
             }
 
             var allColorAppliers = GameObject.FindObjectsByType<SchemeColorApplier>(FindObjectsInactive.Include, FindObjectsSortMode.None);

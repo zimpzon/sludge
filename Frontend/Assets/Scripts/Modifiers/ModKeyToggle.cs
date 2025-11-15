@@ -23,6 +23,10 @@ public class ModKeyToggle : SludgeModifier
         doorCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         mat = spriteRenderer.material;
+    }
+
+    private void Start()
+    {
         Reset();
     }
 
