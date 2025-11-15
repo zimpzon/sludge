@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class ModExitLogic : SludgeModifier
 {
-    TextMeshPro TextScore;
     SpriteRenderer[] childSprites;
     ParticleSystem particles;
     bool isActive;
@@ -14,19 +13,12 @@ public class ModExitLogic : SludgeModifier
     private void Awake()
     {
         childSprites = GetComponentsInChildren<SpriteRenderer>();
-        TextScore = SludgeUtil.FindByName(transform, "TextScore").GetComponentInChildren<TextMeshPro>();
         particles = SludgeUtil.FindByName(transform, "HighlightParticles").GetComponentInChildren<ParticleSystem>();
     }
 
     public override void Reset()
     {
-        TextScore.text = "";
         SetActive(false);
-    }
-
-    public void SetScoreText(string text)
-    {
-        TextScore.text = text;
     }
 
     void SetAlpha(float alpha)

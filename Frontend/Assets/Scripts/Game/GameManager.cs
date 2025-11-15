@@ -1,5 +1,6 @@
 using Assets.Scripts.Game;
 using DG.Tweening;
+using NUnit.Framework.Internal;
 using Sludge;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text TextTimer;
     public TMP_Text TextLevelName;
+    public TMP_Text TextBetweenRoundsHint;
 
     public Material OutlineMaterial;
 
@@ -91,6 +93,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         SetDefaultColorScheme();
+        ShowBetweenRoundsActionsText(false);
     }
 
     public void KillEnemy(GameObject goEnemy)
@@ -192,6 +195,7 @@ public class GameManager : MonoBehaviour
     void ShowBetweenRoundsActionsText(bool show)
     {
         RoundsActionPanel.SetActive(show);
+        TextBetweenRoundsHint.enabled = show;
         if (!show)
             return;
 
@@ -205,19 +209,42 @@ public class GameManager : MonoBehaviour
 
         string timePart = latestRoundResult.Completed ? $"{latestRoundResult.Time,6:0.000}" : "     -";
         string bestPart = savedStats.BestTime >= 0 ? $"{savedStats.BestTime,6:0.000}" : "     -";
+        string timeTotargetPart = latestRoundResult.Completed ? $"{latestRoundResult.TimeToTarget,6:0.000}" : "     -";
+        string timeToBest = latestRoundResult.Completed ? $"{latestRoundResult.TimeToPersonalBest,6:0.000}" : "     -";
+
         betweenRoundsSb.Clear();
         betweenRoundsSb.AppendLine($"Time\t{timePart}");
         betweenRoundsSb.AppendLine($"Best\t{bestPart}");
+        betweenRoundsSb.AppendLine($"To best\t{timeToBest}");
         betweenRoundsSb.AppendLine($"Gold\t{currentLevelData.TargetTime,6:0.000}");
+        betweenRoundsSb.AppendLine($"To gold\t{timeTotargetPart}");
         betweenRoundsSb.AppendLine($"Attempts\t{savedStats.Attempts,6}");
         betweenRoundsSb.AppendLine();
-        betweenRoundsSb.AppendLine("Retry\tMove");
-        betweenRoundsSb.AppendLine($"Next\t{(canGoToNextLevel ? "Select btn" : "<locked>")}");
-        betweenRoundsSb.AppendLine("Menu\tBack btn");
-        betweenRoundsSb.AppendLine("Reset\tBack btn");
         TextRoundsAction.SetText(betweenRoundsSb);
         if (currentUiLevel != null)
             GoldScoreRoundsAction.enabled = currentUiLevel.HasGoldTime;
+
+        // large centered text
+        betweenRoundsSb.Clear();
+        if (latestRoundResult.Completed || CanGoToNextLevel())
+        {
+            betweenRoundsSb.AppendLine("space to continue");
+            betweenRoundsSb.AppendLine("<size=-10>move to play");
+        }
+        else
+        {
+            betweenRoundsSb.AppendLine("<size=-10>move to play");
+        }
+
+        if (latestRoundResult.Completed)
+        {
+            if (latestRoundResult.GotFirstTarget)
+                betweenRoundsSb.AppendLine("<size=-5>Gold score unlocked!</size>");
+            if (latestRoundResult.GotPersonalBest)
+                betweenRoundsSb.AppendLine("<size=-5>New personal best!</size>");
+
+        }
+        TextBetweenRoundsHint.text = betweenRoundsSb.ToString();
     }
 
     IEnumerator BetweenRoundsLoop(string replayId = null)
@@ -264,6 +291,7 @@ public class GameManager : MonoBehaviour
 
                 yield return null;
             }
+
             ShowBetweenRoundsActionsText(false);
 
             if (abort)
@@ -406,6 +434,13 @@ public class GameManager : MonoBehaviour
             if (PlayerInput.BackActive() || PlayerInput.RestartKey())
             {
                 latestRoundResult.Cancelled = true;
+
+                // Copied from below, what a mess. Just to update attempts on retry.
+                latestRoundResult.LevelNamespace = UiLogic.Instance.latestSelectedLevelNamespace;
+                latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
+                    UiLogic.Instance.lastSelectedCasualLevelId : UiLogic.Instance.lastSelectedHardLevelId;
+
+                PlayerProgress.UpdateWithRoundResult(latestRoundResult, out bool _);
                 yield break;
             }
 
@@ -424,41 +459,32 @@ public class GameManager : MonoBehaviour
         bool hadGoldScoreBefore = currentUiLevel?.HasGoldTime ?? false; // If started from editor
         savedStats = PlayerProgress.UpdateWithRoundResult(latestRoundResult, out bool newBestTime);
 
+        latestRoundResult.TimeToPersonalBest = latestRoundResult.Time - (savedStats.BestTime ?? 0);
+        latestRoundResult.TimeToTarget = latestRoundResult.Time - (currentUiLevel?.LevelData.TargetTime ?? 0);
+
         bool gotGoldScore = latestRoundResult.Completed && latestRoundResult.Time <= currentLevelData.TargetTime;
         bool gotFirstGoldScore = gotGoldScore && !hadGoldScoreBefore;
 
-        var scoreDisplaySb = new StringBuilder();
         if (gotFirstGoldScore)
         {
             // First gold for this level
             if (currentUiLevel != null)
                 currentUiLevel.HasGoldTime = true;
+
+            latestRoundResult.GotFirstTarget = true;
             Debug.Log("First gold for this level");
-            scoreDisplaySb.AppendLine("Gold score!");
         } else if (gotGoldScore)
         {
             // Gold score but not for the first time on this level
             Debug.Log("Gold, but not first");
-            scoreDisplaySb.AppendLine("Gold score!");
+            latestRoundResult.GotTarget = true;
         }
 
         if (newBestTime)
         {
             // New personal best for this level
             Debug.Log("New personal best time");
-            scoreDisplaySb.AppendLine("New personal best!");
-        }
-
-        if (scoreDisplaySb.Length > 0)
-        {
-            var exitLogic = FindFirstObjectByType<ModExitLogic>();
-            exitLogic.SetScoreText(scoreDisplaySb.ToString());
-        }
-        else
-        {
-            // Completed, but nothing special happened
-            //var exitLogic = FindFirstObjectByType<ModExitLogic>();
-            //exitLogic.SetScoreText("testing");
+            latestRoundResult.GotPersonalBest = true;
         }
 
         if (latestRoundResult.Completed)
