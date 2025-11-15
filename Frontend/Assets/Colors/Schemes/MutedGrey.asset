@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07b59a7e3ce81504cb41ef646da45b30, type: 3}
-  m_Name: Dark_Orange_Purple
+  m_Name: MutedGrey
   m_EditorClassIdentifier: 
-  schemeName: 
+  schemeName: Default
   Palette:
   - {r: 0.073981486, g: 0, b: 0.085, a: 0}
   - {r: 0.60784316, g: 0.3803922, b: 0.58431375, a: 0}
   - {r: 1, g: 1, b: 1, a: 0}
   - {r: 0.518, g: 0.518, b: 0.518, a: 0}
   - {r: 0.9294118, g: 0.69803923, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.74509805, g: 0, b: 0.03137255, a: 0}
+  - {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 0}
+  - {r: 0.16470589, g: 0.16470589, b: 0.16470589, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   Background: {r: 0.31132078, g: 0.31132078, b: 0.31132078, a: 0}
   Walls: {r: 0.206, g: 0.206, b: 0.206, a: 0}
@@ -37,18 +37,18 @@ MonoBehaviour:
   Conveyor2: {r: 0, g: 0, b: 0, a: 0}
   LaserColor: {r: 0.7411765, g: 0.4666667, b: 0.7137255, a: 0}
   BulletFlash1: {r: 0.9294118, g: 0.69803923, b: 0, a: 0}
-  BulletFlash2: {r: 0, g: 0, b: 0, a: 0}
-  Enemy1: {r: 1, g: 0.16078432, b: 0, a: 0}
+  BulletFlash2: {r: 0.5921569, g: 0.37254903, b: 0.57254905, a: 0}
+  Enemy1: {r: 0.59607846, g: 0, b: 0.023529414, a: 0}
   UiTimerBarFront: {r: 0.7411765, g: 0.4666667, b: 0.7137255, a: 0}
   UiTimerBarBack: {r: 0.42352945, g: 0.26666668, b: 0.40784317, a: 0}
-  UiTextDefault: {r: 1, g: 1, b: 1, a: 0}
+  UiTextDefault: {r: 0.6392157, g: 0.6392157, b: 0.6392157, a: 0}
   UiTextHighlighted: {r: 1, g: 0.9389058, b: 0.5235849, a: 0}
   UiTextDimmed: {r: 0.461, g: 0.461, b: 0.461, a: 0}
-  UiLevelLocked: {r: 0, g: 0, b: 0, a: 0}
+  UiLevelLocked: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 0}
   UiLevelUnlocked: {r: 0, g: 0, b: 0, a: 0}
   UiLevelCompleted: {r: 0, g: 0, b: 0, a: 0}
   UiLevelMastered: {r: 0, g: 0, b: 0, a: 0}
-  UiSelectionMarker: {r: 0.9294118, g: 0.69803923, b: 0, a: 0}
-  UiButtonFace: {r: 0.638, g: 0.4017037, b: 0.6143703, a: 0}
+  UiSelectionMarker: {r: 0.8000001, g: 0.8000001, b: 0.8000001, a: 0}
+  UiButtonFace: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 0}
   UiButtonOutline: {r: 0.42352945, g: 0.26666668, b: 0.40784317, a: 0}
-  UiBackground: {r: 0, g: 0, b: 0, a: 0}
+  UiBackground: {r: 0.16470589, g: 0.16470589, b: 0.16470589, a: 0}

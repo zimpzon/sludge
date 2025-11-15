@@ -87,10 +87,20 @@ namespace Sludge.Colors
     {
         public static void ApplyColors(ColorSchemeScriptableObject scheme)
         {
+            if (scheme == null)
+            {
+                Debug.LogError("Setting NULL color scheme");
+                return;
+            }
+
             if (GameManager.I != null)
             {
                 GameManager.I.CurrentColorScheme = scheme;
-                Debug.Log($"Applying color scheme: [{GameManager.I.CurrentColorScheme?.name}]");
+                Debug.Log($"Applying RUNTIME color scheme: [{GameManager.I.CurrentColorScheme?.name}]");
+            }
+            else
+            {
+                Debug.Log($"Applying DESIGN TIME color scheme: [{GameManager.I.CurrentColorScheme?.name}]");
             }
 
             var allColorAppliers = GameObject.FindObjectsByType<SchemeColorApplier>(FindObjectsInactive.Include, FindObjectsSortMode.None);
