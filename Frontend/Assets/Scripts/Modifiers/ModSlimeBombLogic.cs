@@ -60,17 +60,6 @@ public class ModSlimeBombLogic : SludgeModifier
         trans.localScale = Vector3.one * (float)slimeScale;
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (!expanding)
-            return;
-
-        var go = collision.gameObject;
-        var entity = SludgeUtil.GetEntityType(go);
-        //if (entity == EntityType.Player)
-        //    GameManager.I.Player.ExitSlimeCloud();
-    }
-
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (!expanding)
@@ -81,10 +70,6 @@ public class ModSlimeBombLogic : SludgeModifier
         if (entity == EntityType.Player)
         {
             GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.PoisonCloud);
-        }
-        else if (entity == EntityType.Enemy)
-        {
-            GameManager.I.KillEnemy(go);
         }
     }
 

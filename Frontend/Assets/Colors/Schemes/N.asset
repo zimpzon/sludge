@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: N
   m_EditorClassIdentifier: 
   schemeName: 
+  IsDefault: 0
   Palette:
   - {r: 0.24705884, g: 0.2784314, b: 0.23529413, a: 0}
   - {r: 0.5294118, g: 0.57254905, b: 0.50980395, a: 0}
@@ -45,7 +46,7 @@ MonoBehaviour:
   UiTextDefault: {r: 1, g: 1, b: 1, a: 0}
   UiTextHighlighted: {r: 0.93725497, g: 0.8745099, b: 0.26666668, a: 0}
   UiTextDimmed: {r: 0.12941177, g: 0.12941177, b: 0.08235294, a: 0}
-  UiLevelLocked: {r: 0.7137255, g: 0.48235297, b: 0.15294118, a: 0}
+  UiLevelLocked: {r: 0.42352945, g: 0.45882356, b: 0.40784317, a: 0}
   UiLevelUnlocked: {r: 0, g: 0, b: 0, a: 0}
   UiLevelCompleted: {r: 0, g: 0, b: 0, a: 0}
   UiLevelMastered: {r: 0, g: 0, b: 0, a: 0}

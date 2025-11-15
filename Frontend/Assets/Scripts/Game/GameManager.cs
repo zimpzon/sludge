@@ -63,7 +63,6 @@ public class GameManager : MonoBehaviour
     public Player Player;
     public SludgeObject[] SludgeObjects;
     public SlimeBomb[] SlimeBombs;
-    public ParticleSystem[] SlimeBombsHighlight;
 
     public double UnityTime;
     public double EngineTime;
@@ -145,7 +144,6 @@ public class GameManager : MonoBehaviour
 
         SludgeObjects = FindObjectsByType<SludgeObject>(FindObjectsSortMode.None);
         SlimeBombs = SludgeObjects.Where(o => o is SlimeBomb).Cast<SlimeBomb>().ToArray();
-        SlimeBombsHighlight = SlimeBombs.Select(b => b.transform.Find("HighlightParticles").GetComponent<ParticleSystem>()).ToArray();
 
         PillTilemap.gameObject.GetComponent<PillSnapshot>().Push();
 
@@ -320,13 +318,10 @@ public class GameManager : MonoBehaviour
         Player.DisableCollisions(false);
     }
 
-    Tweener cameraTweener;
     public void ShakeCamera(float duration, float strength)
     {
-        if (cameraTweener != null)
-            cameraTweener.Kill(complete: true);
-
-        cameraTweener = CameraRoot.DOShakePosition(duration, strength);
+        CameraRoot.DOKill();
+        CameraRoot.DOShakePosition(duration, strength);
     }
 
     public void OnPillEaten()
