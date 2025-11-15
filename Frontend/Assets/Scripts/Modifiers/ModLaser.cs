@@ -123,14 +123,6 @@ public class ModLaser : SludgeModifier
             {
                 GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.Laser);
             }
-            else if (entity == EntityType.Friend)
-            {
-                killableTarget.collider.gameObject.GetComponent<KidLogicMod>()?.Kill();
-            }
-            else if (entity == EntityType.Enemy)
-            {
-                GameManager.I.KillEnemy(killableTarget.transform.gameObject);
-            }
         }
     }
 }

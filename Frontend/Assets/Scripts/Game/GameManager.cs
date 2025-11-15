@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     public ColorSchemeScriptableObject CurrentColorScheme;
     public ColorSchemeScriptableObject CurrentUiColorScheme;
     public ColorSchemeListScriptableObject ColorSchemeList;
+    public int IdxCurrentColorScheme;
 
     public GameObject RoundsActionPanel;
     public TextMeshProUGUI TextRoundsAction;
@@ -528,7 +529,9 @@ public class GameManager : MonoBehaviour
         if (defaultScheme == null)
         {
             Debug.LogError("No default color scheme found, missing one with Default = true");
+            return;
         }
+
         SetColorScheme(defaultScheme);
     }
 
@@ -540,20 +543,39 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        CurrentColorScheme = colorScheme;
+        IdxCurrentColorScheme = ColorSchemeList.ColorSchemes.ToList().IndexOf(colorScheme);
+
         Debug.Log($"Setting color scheme: [{colorScheme.name}]");
         ColorScheme.ApplyColors(colorScheme);
+    }
+
+    public void SetNextColorScheme()
+    {
+        if (++IdxCurrentColorScheme >= ColorSchemeList.ColorSchemes.Length)
+            IdxCurrentColorScheme = 0;
+
+        SetColorScheme(ColorSchemeList.ColorSchemes[IdxCurrentColorScheme]);
+    }
+
+    public void SetPrevColorScheme()
+    {
+        if (--IdxCurrentColorScheme < 0)
+            IdxCurrentColorScheme = ColorSchemeList.ColorSchemes.Length - 1;
+
+        SetColorScheme(ColorSchemeList.ColorSchemes[IdxCurrentColorScheme]);
     }
 
     private void CheckChangeColorScheme(PlayerInput input)
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
-            SetColorScheme(ColorSchemeList.GetNext());
+            SetNextColorScheme();
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            SetColorScheme(ColorSchemeList.GetPrev());
+            SetPrevColorScheme();
         }
     }
 
