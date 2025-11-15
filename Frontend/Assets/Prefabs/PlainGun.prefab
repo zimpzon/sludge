@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 844793564864156243}
   - component: {fileID: 844793564864156242}
   - component: {fileID: 844793564864156241}
-  - component: {fileID: 1405655509061499054}
   m_Layer: 20
   m_Name: PlainGun
   m_TagString: Untagged
@@ -79,8 +78,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Active: 0
-  Range: 5
-  CurrentlyAt: 0.5
+  StartT: 0
+  ScaleT: 5
   TimeMultiplier: 1
   PingPong: 1
   Easing: 0
@@ -97,12 +96,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Active: 0
-  Range: 0
-  CurrentlyAt: 0.5
+  StartT: 0
+  ScaleT: 5
   TimeMultiplier: 0.25
   PingPong: 1
   Easing: 0
-  GizmoTime: 0
 --- !u!114 &844793564864156241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,20 +116,7 @@ MonoBehaviour:
   Active: 0
   RoundsPerSecond: 0.2
   StartDegrees: 0
---- !u!114 &1405655509061499054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 844793564864156253}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e891d144bd168448bbd2aca11289a5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SchemeColor: 2
-  BrightnessOffset: 0
+  UseRealTime: 0
 --- !u!1 &3453969439030570023
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +196,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f6c417bec13b0254ba24cd42d9eb6cc5, type: 3}
-  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
+  m_Color: {r: 1, g: 0, b: 0.9240179, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

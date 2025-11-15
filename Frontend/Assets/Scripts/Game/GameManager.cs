@@ -11,7 +11,6 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -88,6 +87,11 @@ public class GameManager : MonoBehaviour
         Player = FindFirstObjectByType<Player>();
     }
 
+    private void Start()
+    {
+        SetDefaultColorScheme();
+    }
+
     public void KillEnemy(GameObject goEnemy)
     {
         SoundManager.Play(FxList.Instance.EnemyDie);
@@ -150,6 +154,8 @@ public class GameManager : MonoBehaviour
         ResetLevel();
 
         Tilemap.gameObject.SetActive(true);
+
+        SetColorScheme(CurrentColorScheme);
     }
 
     void GoToNextLevel()

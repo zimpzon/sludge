@@ -16,10 +16,6 @@ public class UiSchemeColorApplier : MonoBehaviour
         ApplyColor(myColorScheme);
     }
 
-    void OnValidate()
-    {
-    }
-
     Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)
     {
         var schemeColor = ColorScheme.GetColor(scheme, SchemeColor);
@@ -59,7 +55,6 @@ public class UiSchemeColorApplier : MonoBehaviour
         if (text != null)
         {
             text.color = GetColor(text.color, scheme);
-            return;
         }
     }
 }

@@ -42,9 +42,6 @@ namespace Sludge.Colors
 
         public void OnValidate()
         {
-            if (Application.isPlaying)
-                return;
-
             ColorScheme.ApplyColors(this);
             // Force Unity to repaint the editor (Scene/Game view UI)
             UnityEditor.SceneView.RepaintAll();
