@@ -609,10 +609,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         StateParam.isHuggingRightWall = circleDrawer.hasRightContact && !HasGroundContact();
         StateParam.isDescending = StateParam.force.y < 0;
 
-        // Wall sliding requires input toward the wall
-        bool pressingTowardLeftWall = StateParam.isHuggingLeftWall && direction == -1;
-        bool pressingTowardRightWall = StateParam.isHuggingRightWall && direction == 1;
-        StateParam.isWallSliding = (pressingTowardLeftWall || pressingTowardRightWall) && StateParam.isDescending;
+        // Wall sliding - automatic when touching wall and descending
+        StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
         StateParam.isWallSliding &= StateParam.hasWallJumpEnabled; // Only slide if wall jump is enabled
 
         // NEW: Set wall coyote time when leaving a wall
