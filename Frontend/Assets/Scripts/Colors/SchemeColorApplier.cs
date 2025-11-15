@@ -70,6 +70,8 @@ public class SchemeColorApplier : MonoBehaviour
         if (text != null)
         {
             text.color = GetColor(text.color, scheme);
+            text.ForceMeshUpdate();
+            text.faceColor = Color.white;
             return;
         }
 
@@ -77,6 +79,8 @@ public class SchemeColorApplier : MonoBehaviour
         if (text2 != null)
         {
             text2.color = GetColor(text2.color, scheme);
+            text2.ForceMeshUpdate();
+            text2.faceColor = Color.white;
             return;
         }
 

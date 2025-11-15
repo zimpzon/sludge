@@ -55,6 +55,8 @@ public class UiSchemeColorApplier : MonoBehaviour
         if (text != null)
         {
             text.color = GetColor(text.color, scheme);
+            text.faceColor = Color.white;
+            text.ForceMeshUpdate();
         }
     }
 }
