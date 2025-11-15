@@ -6,6 +6,8 @@ namespace Sludge.Colors
     public class ColorSchemeScriptableObject : ScriptableObject
     {
         public string schemeName;
+        public bool IsDefault;
+
         public Color[] Palette;
         public Color Background;
         public Color Walls;

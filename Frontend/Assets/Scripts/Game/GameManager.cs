@@ -523,19 +523,36 @@ public class GameManager : MonoBehaviour
         if (I is null)
             return;
 
-        ColorScheme.ApplyColors(ColorSchemeList.ColorSchemes.Where(s => s?.name == "Default").FirstOrDefault());
+        var defaultScheme = ColorSchemeList.ColorSchemes.Where(s => s.IsDefault).First();
+        if (defaultScheme == null)
+        {
+            Debug.LogError("No default color scheme found, missing one with Default = true");
+        }
+        SetColorScheme(defaultScheme);
+    }
+
+    public void SetColorScheme(ColorSchemeScriptableObject colorScheme)
+    {
+        if (colorScheme == null)
+        {
+            Debug.LogError("Trying set set NULL color scheme");
+            return;
+        }
+
+        Debug.Log($"Setting color scheme: [{colorScheme.name}]");
+        ColorScheme.ApplyColors(colorScheme);
     }
 
     private void CheckChangeColorScheme(PlayerInput input)
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
-            ColorScheme.ApplyColors(GameManager.I.ColorSchemeList.GetNext());
+            SetColorScheme(ColorSchemeList.GetNext());
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            ColorScheme.ApplyColors(GameManager.I.ColorSchemeList.GetPrev());
+            SetColorScheme(ColorSchemeList.GetPrev());
         }
     }
 
