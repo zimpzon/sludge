@@ -10,30 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07b59a7e3ce81504cb41ef646da45b30, type: 3}
-  m_Name: Scheme4
+  m_Name: Dark
   m_EditorClassIdentifier: 
   schemeName: 
+  IsDefault: 0
   Palette:
   - {r: 0.6117647, g: 0.34901962, b: 0.019607844, a: 0}
-  - {r: 1, g: 0.5647059, b: 0, a: 0}
+  - {r: 1, g: 0.5490951, b: 0.21568626, a: 1}
   - {r: 0.83699995, g: 0.83699995, b: 0.83699995, a: 0}
   - {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 0}
+  - {r: 0.35546896, g: 0.69044846, b: 0.953, a: 0}
+  - {r: 0.27168038, g: 0.52475256, b: 0.72199994, a: 1}
+  - {r: 0.10062885, g: 0.10062885, b: 0.10062885, a: 1}
   - {r: 0, g: 0, b: 0, a: 0}
-  Background: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 0}
-  Walls: {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0.99371064, g: 0.6734627, b: 0, a: 1}
+  Background: {r: 0.20392159, g: 0.20392159, b: 0.20392159, a: 0}
+  Walls: {r: 0.08235294, g: 0.08235294, b: 0.08235294, a: 0}
   Edges: {r: 0.773, g: 0.44100642, b: 0.024775628, a: 1}
   Player: {r: 0, g: 0, b: 0, a: 0}
-  Exit1: {r: 0.981, g: 0.55379033, b: 0, a: 0}
-  Exit2: {r: 0, g: 0, b: 0, a: 0}
-  Key1: {r: 0.09999943, g: 0, b: 1, a: 0}
-  Key2: {r: 0, g: 0, b: 0, a: 0}
-  TimePill1: {r: 0.85400003, g: 0.48330772, b: 0, a: 0}
-  TimePill2: {r: 0, g: 0, b: 0, a: 0}
+  Exit1: {r: 0.8000001, g: 0.43921572, b: 0.17254902, a: 1}
+  Exit2: {r: 0.8000001, g: 0.43921572, b: 0.17254902, a: 0}
+  Key1: {r: 0.8000001, g: 0.43921572, b: 0.17254902, a: 0}
+  Key2: {r: 0.8000001, g: 0.43921572, b: 0.17254902, a: 0}
+  TimePill1: {r: 0.7960785, g: 0.5372549, b: 0, a: 0}
+  TimePill2: {r: 0.8000001, g: 0.43921572, b: 0.17254902, a: 0}
   Conveyor1: {r: 0.7725491, g: 0.43921572, b: 0.023529414, a: 0}
   Conveyor2: {r: 0, g: 0, b: 0, a: 0}
-  LaserColor: {r: 0, g: 0.16529441, b: 1, a: 1}
-  BulletFlash1: {r: 0, g: 0, b: 0, a: 0}
-  BulletFlash2: {r: 0, g: 0.16470589, b: 1, a: 0}
+  LaserColor: {r: 0.28627452, g: 0.5529412, b: 0.7607844, a: 1}
+  BulletFlash1: {r: 0.28627452, g: 0.5529412, b: 0.7607844, a: 0}
+  BulletFlash2: {r: 0.21568629, g: 0.41960788, b: 0.5764706, a: 0}
   Enemy1: {r: 0, g: 0, b: 0, a: 0}
   UiTimerBarFront: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 0}
   UiTimerBarBack: {r: 0, g: 0, b: 0, a: 0}
@@ -45,6 +50,6 @@ MonoBehaviour:
   UiLevelCompleted: {r: 0, g: 0, b: 0, a: 0}
   UiLevelMastered: {r: 0, g: 0, b: 0, a: 0}
   UiSelectionMarker: {r: 1, g: 0.5647059, b: 0, a: 0}
-  UiButtonFace: {r: 0, g: 0, b: 0, a: 0}
+  UiButtonFace: {r: 0.20392159, g: 0.20392159, b: 0.20392159, a: 0}
   UiButtonOutline: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 0}
   UiBackground: {r: 0.25490198, g: 0.25490198, b: 0.25490198, a: 0}
