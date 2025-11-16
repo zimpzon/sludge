@@ -254,7 +254,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Let enemy kill player instead, had some problems with stuck bullet after hitting enemy. TileMap can kill player.
+        // Enemy should kill player (had some problems with stuck bullet). But tilemap needs
+        // player to kill, since I cannot catch physics events on tilemap.
         var entityType = SludgeUtil.GetEntityType(collision.gameObject);
 
         if (entityType == EntityType.EnemyBehindStaticLevel)
@@ -273,7 +274,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         Eyes.SetActive(true);
         deathScheduleTime = GameManager.I.EngineTime + DeathMiniDelay;
         deathScheduled = true;
-
+        Debug.Log($"Player killed by {deathType}");
         // TODO: have to switch to idle or the eyes will be stuck at the side of the head
         PlayAnim(AnimIdle.name);
     }
