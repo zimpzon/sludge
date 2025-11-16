@@ -31,6 +31,7 @@ namespace Sludge.Utility
 
         public class SaveGame
         {
+            public int TotalAttempts = 0;
             public Dictionary<int, LevelStats> CasualLevelsCompleted = new();
             public Dictionary<int, LevelStats> HardLevelsCompleted = new();
         }
@@ -100,6 +101,8 @@ namespace Sludge.Utility
 
             if (UiLogic.Instance.StartCurrentScene) // We don't have a namespace if started from editor
                 return new LevelStats();
+
+            saveGame.TotalAttempts++;
 
             if (roundResult.LevelNamespace == LevelNamespace.Casual)
             {

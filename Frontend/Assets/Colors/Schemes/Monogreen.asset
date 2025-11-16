@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b59a7e3ce81504cb41ef646da45b30, type: 3}
   m_Name: Monogreen
   m_EditorClassIdentifier: 
-  schemeName: Purple-green
+  schemeName: Monogreen
   IsDefault: 1
   Palette:
   - {r: 0.18431373, g: 1, b: 0.34509805, a: 0}
@@ -33,10 +33,10 @@ MonoBehaviour:
   PlayerScheme_B1: {r: 0.007843138, g: 0.14901961, b: 0.027450982, a: 0}
   PlayerScheme_B2: {r: 0.007843138, g: 0.14901961, b: 0.027450982, a: 0}
   TimePill: {r: 0.007843138, g: 0.11764707, b: 0.023529414, a: 0}
-  EnemyScheme_A1: {r: 0.007843138, g: 0.18823531, b: 0.03529412, a: 0}
-  EnemyScheme_A2: {r: 0.007843138, g: 0.18823531, b: 0.03529412, a: 0}
-  EnemyScheme_B1: {r: 0.007843138, g: 0.18823531, b: 0.03529412, a: 0}
-  EnemyScheme_B2: {r: 0.007843138, g: 0.14901961, b: 0.027450982, a: 0}
+  EnemyScheme_A1: {r: 0.4213699, g: 0.769, b: 0.15801369, a: 0}
+  EnemyScheme_A2: {r: 0.3372549, g: 0.6156863, b: 0.1254902, a: 0}
+  EnemyScheme_B1: {r: 0.3372549, g: 0.6156863, b: 0.1254902, a: 0}
+  EnemyScheme_B2: {r: 0.3372549, g: 0.6156863, b: 0.1254902, a: 0}
   UiTextTitle: {r: 0.11764707, g: 0.6392157, b: 0.21960786, a: 0}
   UiTextHighlighted: {r: 0.3137255, g: 0.57254905, b: 0.11764707, a: 0}
   UiTextDefault: {r: 0.5470086, g: 1, b: 0.2051282, a: 0}
