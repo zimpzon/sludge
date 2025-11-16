@@ -7,7 +7,7 @@ public class ModSnifferLogic : SludgeModifier
 {
     static double FollowDelay = 3;
     public TMP_Text TextExclamation;
-    const double followDelayIncrease = 0.15;
+    const double followDelayIncrease = 0.2;
     double myFollowDelay;
     double speed = 0.80;
     double activationTime = -1;
@@ -77,7 +77,7 @@ public class ModSnifferLogic : SludgeModifier
             frameAtTriggerTime = Player.PositionSampleIdx;
             currentFrame = frameAtTriggerTime;
             myFollowDelay = FollowDelay;
-            //FollowDelay += followDelayIncrease; // If speed is 100%/1.0 we need a further delay or they will all end up overlapping
+            FollowDelay += followDelayIncrease; // We need a further delay or they will all end up overlapping
 
             triggerX = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.x);
             triggerY = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.y);
