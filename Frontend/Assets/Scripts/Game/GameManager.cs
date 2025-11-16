@@ -8,12 +8,14 @@ using Sludge.SludgeObjects;
 using Sludge.UI;
 using Sludge.Utility;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using static Sludge.Utility.PlayerProgress;
 
 // First script to run
 public class GameManager : MonoBehaviour
@@ -23,8 +25,6 @@ public class GameManager : MonoBehaviour
     // StartLevel() resets and starts what was loaded.
 
     public static PlayerSample[] PlayerSamples = new PlayerSample[30000];
-
-    public static readonly string Version = "0.1b";
 
     public const double TickSize = 0.008;
     public const int TickSizeMs = 8;
@@ -78,15 +78,13 @@ public class GameManager : MonoBehaviour
     bool levelComplete;
     RoundResult latestRoundResult;
 
-    int MajorVersion = 0;
-    int MinorVersion = 1;
+    public static int MajorVersion = 0;
+    public static int MinorVersion = 1;
 
     void Awake()
     {
         I = this;
         Textversion.text = $"version {MajorVersion}.{MinorVersion}";
-
-        SetDefaultColorScheme();
 
         Startup.StaticInit();
         PlayerInput = new PlayerInput();
@@ -252,6 +250,20 @@ public class GameManager : MonoBehaviour
         TextBetweenRoundsHint.text = betweenRoundsSb.ToString();
     }
 
+    float _nextSendStats;
+    void TrySendPlayfabStats()
+    {
+        if (Time.realtimeSinceStartup > _nextSendStats)
+        {
+            Debug.Log("Sending stats...");
+            var dic = new Dictionary<string, int>();
+            dic.Add("total_attempts", PlayerProgress.saveGame.TotalAttempts);
+            Playfab.PlayerStat(dic);
+
+            _nextSendStats = Time.realtimeSinceStartup + 60 * 10; // 10 min
+        }
+    }
+
     IEnumerator BetweenRoundsLoop(string replayId = null)
     {
         int attempts = 0;
@@ -266,7 +278,7 @@ public class GameManager : MonoBehaviour
             bool startRound = false;
 
             ResetLevel();
-
+            TrySendPlayfabStats();
             yield return RevealPlayer(landing: false);
 
             while (startRound == false)

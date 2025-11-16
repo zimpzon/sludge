@@ -1,5 +1,3 @@
-using DG.Tweening;
-using Sludge.Colors;
 using Sludge.PlayerInputs;
 using Sludge.Utility;
 using System;
@@ -55,7 +53,9 @@ namespace Sludge.UI
         {
 			StopAllCoroutines();
 
-			if (StartCurrentScene)
+            Playfab.Login();
+
+            if (StartCurrentScene)
 			{
 				UiPanels.Instance.ShowPanel(UiPanel.Game, instant: true);
 				StartCoroutine(PlayLoop(uiLevel: null));

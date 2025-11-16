@@ -20,6 +20,7 @@ namespace Sludge.Utility
         public enum LevelNamespace { NotSet, Casual, Hard };
 
         public static SaveGame saveGame = new SaveGame();
+        public static bool FirstLoadComplete = false;
 
         public class LevelStats
         {
@@ -118,6 +119,11 @@ namespace Sludge.Utility
         public static void Save()
         {
             Debug.Log($"Saving game...");
+            if (!FirstLoadComplete)
+            {
+                Debug.LogError("cannot save game, no load was ever done, could overwrite");
+                return;
+            }
             string json = JsonConvert.SerializeObject(saveGame);
             PlayerPrefs.SetString(PrefsName, json);
             PlayerPrefs.Save();
@@ -146,6 +152,7 @@ namespace Sludge.Utility
                 saveGame.HardLevelsCompleted = new();
 
             Debug.Log("Existing SaveGame loaded");
+            FirstLoadComplete = true;
         }
     }
 }
