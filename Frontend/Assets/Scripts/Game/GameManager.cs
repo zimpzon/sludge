@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel()
     {
+        Debug.Log($"Enter: StartLevel");
         StartCoroutine(BetweenRoundsLoop());
     }
 
@@ -167,6 +168,7 @@ public class GameManager : MonoBehaviour
 
     void GoToNextLevel()
     {
+        Debug.Log($"Enter: GoToNextLevel");
         StopAllCoroutines();
 
         currentUiLevel = currentUiLevel.Next;
@@ -197,6 +199,7 @@ public class GameManager : MonoBehaviour
     StringBuilder betweenRoundsSb = new StringBuilder();
     void ShowBetweenRoundsActionsText(bool show)
     {
+        Debug.Log($"ShowBetweenRoundsActionsText: {show}");
         RoundsActionPanel.SetActive(show);
         TextBetweenRoundsHint.enabled = show;
         if (!show)
@@ -232,11 +235,11 @@ public class GameManager : MonoBehaviour
         if (latestRoundResult.Completed || CanGoToNextLevel())
         {
             betweenRoundsSb.AppendLine("space to continue");
-            betweenRoundsSb.AppendLine("<size=-10>move to play");
+            betweenRoundsSb.AppendLine("<size=-12>move to begin");
         }
         else
         {
-            betweenRoundsSb.AppendLine("<size=-10>move to play");
+            betweenRoundsSb.AppendLine("<size=-12>move to begin");
         }
 
         if (latestRoundResult.Completed)
@@ -269,8 +272,7 @@ public class GameManager : MonoBehaviour
         int attempts = 0;
         bool lastRoundCancelled = false;
         bool abort = false;
-
-        ShowBetweenRoundsActionsText(true);
+        Debug.Log("Enter: BetweenRoundsLoop");
         UpdateTimer(-1);
 
         while (true)
@@ -279,6 +281,8 @@ public class GameManager : MonoBehaviour
 
             ResetLevel();
             TrySendPlayfabStats();
+            ShowBetweenRoundsActionsText(true);
+
             yield return RevealPlayer(landing: false);
 
             while (startRound == false)
@@ -309,16 +313,14 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
 
-            ShowBetweenRoundsActionsText(false);
-
             if (abort)
                 break;
 
+            ShowBetweenRoundsActionsText(false);
             yield return Playing();
+
             attempts++;
             lastRoundCancelled = latestRoundResult.Cancelled;
-
-            ShowBetweenRoundsActionsText(show: true);
 
             if (!lastRoundCancelled)
             {
@@ -390,6 +392,7 @@ public class GameManager : MonoBehaviour
 
     void ResetLevel()
     {
+        Debug.Log("Enter: ResetLevel");
         EngineTime = 0;
         EngineTimeMs = 0;
         FrameCounter = 0;
@@ -430,6 +433,7 @@ public class GameManager : MonoBehaviour
 
     IEnumerator Playing()
     {
+        Debug.Log("Enter: Playing");
         SoundManager.Play(FxList.Instance.StartRound);
         Player.RoundStartTime = Time.time;
 
@@ -457,6 +461,7 @@ public class GameManager : MonoBehaviour
                 latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
                     UiLogic.Instance.lastSelectedCasualLevelId : UiLogic.Instance.lastSelectedHardLevelId;
 
+                Debug.Log("Round over, cancelled");
                 PlayerProgress.UpdateWithRoundResult(latestRoundResult, out bool _);
                 yield break;
             }
@@ -470,6 +475,8 @@ public class GameManager : MonoBehaviour
         latestRoundResult.LevelNamespace = UiLogic.Instance.latestSelectedLevelNamespace;
         latestRoundResult.LevelId = UiLogic.Instance.latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual ?
             UiLogic.Instance.lastSelectedCasualLevelId : UiLogic.Instance.lastSelectedHardLevelId;
+
+        Debug.Log($"Round over, complete = {latestRoundResult.Completed}");
 
         // Check for new best and new gold score
         var savedStats = PlayerProgress.GetSavedStats(currentLevelData.Namespace, currentLevelData.LevelId);
