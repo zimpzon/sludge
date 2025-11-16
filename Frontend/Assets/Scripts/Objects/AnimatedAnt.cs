@@ -30,7 +30,8 @@ public class AnimatedAnt : MonoBehaviour
 
         if (entity == EntityType.Player)
         {
-            GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.Follower);
+            // Chaser uses AnimatedAnt even if it is a ghost
+            GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.Chaser);
         }
     }
 

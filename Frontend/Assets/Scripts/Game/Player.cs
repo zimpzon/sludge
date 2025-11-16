@@ -99,7 +99,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public float EyeScaleSurprised = 1.5f;
     public float DeathMiniDelay = 0.5f;
     [NonSerialized] public PlayerSize Size = PlayerSize.Normal;
-    public PlayerDeathType LastDeathType;
 
     Animator animator;
     Transform trans;
@@ -258,7 +257,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         // player to kill, since I cannot catch physics events on tilemap.
         var entityType = SludgeUtil.GetEntityType(collision.gameObject);
 
-        if (entityType == EntityType.EnemyBehindStaticLevel)
+        if (entityType == EntityType.KillerTilemap)
         {
             Kill(PlayerDeathType.Mine);
         }
@@ -268,8 +267,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     {
         if (deathScheduled || !Alive)
             return;
-
-        LastDeathType = deathType;
 
         // Track death statistics
         PlayerProgress.saveGame.TotalDeaths++;

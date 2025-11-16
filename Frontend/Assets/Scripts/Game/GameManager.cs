@@ -15,7 +15,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
-using static Sludge.Utility.PlayerProgress;
 
 // First script to run
 public class GameManager : MonoBehaviour

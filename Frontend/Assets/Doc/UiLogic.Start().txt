@@ -1,0 +1,18 @@
+UiLogic.Start()
+Co-MainMenuLoop
+select menu: ShowLevelSelect
+Co-LevelSelectLoop
+Co-PlayLoop
+(UiLogic end)
+
+GameManager.I.StartLevel
+Co-BetweenRoundsLoop
+  (Co-GoToNextLevel)
+  LoadLevel
+  StartLevel
+  Co-BetweenRoundsLoop
+Co-PLaying
+
+
+
+ShowBetweenRoundsActionsText

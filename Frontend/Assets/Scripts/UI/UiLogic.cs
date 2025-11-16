@@ -156,8 +156,24 @@ namespace Sludge.UI
 				GameManager.PlayerInput.GetHumanInput();
 				DoUiNavigation(GameManager.PlayerInput);
 
-				if (Input.GetKeyDown(KeyCode.P) && Input.GetKey(KeyCode.RightShift) && Input.GetKey(KeyCode.RightControl))
+				if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.RightShift) && Input.GetKey(KeyCode.RightControl))
 					PlayerPrefs.DeleteAll();
+
+                if (Input.GetKeyDown(KeyCode.U) && Input.GetKey(KeyCode.RightShift) && Input.GetKey(KeyCode.RightControl))
+				{
+					for (int i = 0; i < LevelList.CasualLevels.Count; i++)
+					{
+						var level = LevelList.CasualLevels[i];
+						PlayerProgress.saveGame.CasualLevelsCompleted[level.LevelId] = new PlayerProgress.LevelStats { IsCompleted = true };
+
+					}
+                    for (int i = 0; i < LevelList.HardLevels.Count; i++)
+                    {
+                        var level = LevelList.HardLevels[i];
+                        PlayerProgress.saveGame.HardLevelsCompleted[level.LevelId] = new PlayerProgress.LevelStats { IsCompleted = true };
+
+                    }
+                }
 
                 yield return null;
 			}

@@ -72,7 +72,7 @@ public class ModBulletMovement : SludgeModifier
         {
             if (IsArmed)
             {
-                GameManager.I.Player.Kill(PlayerDeathType.Bullet);
+                GameManager.I.Player.Kill(Static ? PlayerDeathType.Mine : PlayerDeathType.Bullet);
                 destroyBullet = true;
             }
             else if (!pendingArm)

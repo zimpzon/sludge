@@ -146,7 +146,7 @@ public class ModStickerLogic : SludgeModifier
 
         if (entity == EntityType.Player)
         {
-            GameManager.I.Player.Kill(PlayerDeathType.Sticker);
+            GameManager.I.Player.Kill(PlayerDeathType.Saw);
         }
     }
 

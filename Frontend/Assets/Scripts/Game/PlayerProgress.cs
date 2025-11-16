@@ -41,7 +41,7 @@ namespace Sludge.Utility
         }
 
         private const string PrefsName = "earl-in-space-savegame-v1";
-        
+
         public static bool IsLevelCompleted(LevelNamespace ns, int levelId)
         {
             var stats = GetSavedStats(ns, levelId);

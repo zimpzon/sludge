@@ -4,17 +4,15 @@ namespace Assets.Scripts
     public enum PlayerDeathType
     {
         None = 0,
-        Squished,
         Bullet,
         Mine,
+        Saw,
         Laser,
-        Ghost,
+        Stalker,
         Chaser,
-        PoisonCloud,
         Tumbler,
-        Follower,
-        Bouncer,
-        Sticker,
+        Squished,
+        PoisonCloud,
     }
 
     public static class PlayerDeathTypeExtensions
@@ -22,17 +20,15 @@ namespace Assets.Scripts
         public static readonly Dictionary<PlayerDeathType, string> Names = new Dictionary<PlayerDeathType, string>()
         {
             { PlayerDeathType.None, "None" },
-            { PlayerDeathType.Squished, "Squished" },
             { PlayerDeathType.Bullet, "Bullet" },
             { PlayerDeathType.Mine, "Mine" },
+            { PlayerDeathType.Saw, "Saw" },
             { PlayerDeathType.Laser, "Laser" },
-            { PlayerDeathType.Ghost, "Ghost" },
+            { PlayerDeathType.Stalker, "Stalker" },
             { PlayerDeathType.Chaser, "Chaser" },
-            { PlayerDeathType.PoisonCloud, "Poison Cloud" },
             { PlayerDeathType.Tumbler, "Tumbler" },
-            { PlayerDeathType.Follower, "Follower" },
-            { PlayerDeathType.Bouncer, "Bouncer" },
-            { PlayerDeathType.Sticker, "Sticker" },
+            { PlayerDeathType.Squished, "Squished" },
+            { PlayerDeathType.PoisonCloud, "Poison" },
         };
     }
 }

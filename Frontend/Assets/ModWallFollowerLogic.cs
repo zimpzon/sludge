@@ -113,7 +113,7 @@ public class ModWallFollowerLogic : SludgeModifier
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player)
         {
-            GameManager.I.Player.Kill(PlayerDeathType.Follower);
+            GameManager.I.Player.Kill(PlayerDeathType.Saw);
         }
     }
 

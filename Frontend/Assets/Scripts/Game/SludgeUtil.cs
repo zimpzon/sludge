@@ -101,6 +101,9 @@ namespace Sludge.Utility
             if (1 << goLayer == EnemyBehindStaticLevelLayerMask)
                 return EntityType.EnemyBehindStaticLevel;
 
+            if (1 << goLayer == KillerTilemap)
+                return EntityType.KillerTilemap;
+
             var sludgeObject = go.GetComponent<SludgeObject>();
             if (sludgeObject != null)
                 return sludgeObject.EntityType;
@@ -142,6 +145,7 @@ namespace Sludge.Utility
         public static int EnemyLayerMask = LayerMask.GetMask("Enemy");
         public static int EnemyBehindStaticLevelLayerMask = LayerMask.GetMask("EnemyBehindStaticLevel");
         public static int WallsAndObjectsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Objects");
+        public static int KillerTilemap = LayerMask.GetMask("KillerTilemap");
 
         public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");
         public static int ObjectsLayerNumber = LayerMask.NameToLayer("Objects");

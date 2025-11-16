@@ -52,7 +52,7 @@ public class ModBouncerLogic : SludgeModifier
 
         if (entity == EntityType.Player)
         {
-            Player.I.Kill(Assets.Scripts.PlayerDeathType.Bouncer);
+            Player.I.Kill(Assets.Scripts.PlayerDeathType.None);
             return;
         }
     }

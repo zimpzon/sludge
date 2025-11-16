@@ -53,7 +53,7 @@ public class ModStalkerLogic : SludgeModifier
 
         if (entity == EntityType.Player)
         {
-            GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.Chaser);
+            GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.None);
         }
     }
 
