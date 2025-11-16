@@ -43,6 +43,7 @@ public class FxList : MonoBehaviour
     public SoundItem ExitOpen;
     public SoundItem TriggerEnergy;
     public SoundItem ArmEnergy;
+    public SoundItem GhostAwake;
 
     private void Awake()
     {

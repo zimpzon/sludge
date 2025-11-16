@@ -84,6 +84,7 @@ public class ModSnifferLogic : SludgeModifier
 
             TextExclamation.enabled = true;
             transform.rotation = Quaternion.Euler(0, 0, 0);
+            SoundManager.Play(FxList.Instance.GhostAwake);
         }
     }
 
