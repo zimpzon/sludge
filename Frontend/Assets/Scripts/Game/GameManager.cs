@@ -1,6 +1,5 @@
 using Assets.Scripts.Game;
 using DG.Tweening;
-using NUnit.Framework.Internal;
 using Sludge;
 using Sludge.Colors;
 using Sludge.PlayerInputs;
@@ -55,6 +54,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text TextTimer;
     public TMP_Text TextLevelName;
     public TMP_Text TextBetweenRoundsHint;
+    public TMP_Text Textversion;
 
     public Material OutlineMaterial;
 
@@ -78,9 +78,14 @@ public class GameManager : MonoBehaviour
     bool levelComplete;
     RoundResult latestRoundResult;
 
+    int MajorVersion = 0;
+    int MinorVersion = 1;
+
     void Awake()
     {
         I = this;
+        Textversion.text = $"version {MajorVersion}.{MinorVersion}";
+
         SetDefaultColorScheme();
 
         Startup.StaticInit();
