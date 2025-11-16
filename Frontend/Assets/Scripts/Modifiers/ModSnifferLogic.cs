@@ -55,6 +55,7 @@ public class ModSnifferLogic : SludgeModifier
         TextExclamation.enabled = false;
         posX = baseX;
         posY = baseY;
+        transform.rotation = Quaternion.Euler(0, 0, -90);
         UpdateTransform();
     }
 

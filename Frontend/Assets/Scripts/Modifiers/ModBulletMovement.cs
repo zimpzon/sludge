@@ -13,8 +13,10 @@ public class ModBulletMovement : SludgeModifier
     public double DY;
     public double X;
     public double Y;
-    public SchemeColor SchemeColor1;
-    public SchemeColor SchemeColor2;
+    public SchemeColor SchemeColorArmed;
+    public SchemeColor SchemeColorUnarmed;
+    public SchemeColor SchemeBullet1;
+    public SchemeColor SchemeBullet2;
 
     const float ArmDelayMs = 1000;
     float armTime = 0;
@@ -57,9 +59,9 @@ public class ModBulletMovement : SludgeModifier
 
         if (GameManager.I?.CurrentColorScheme is not null)
         {
-            spriteRenderer.color = IsArmed ? ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor1) : ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor2);
+            spriteRenderer.color = IsArmed ? ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColorArmed) : ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColorUnarmed);
             if (pendingArm)
-                spriteRenderer.color = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor1);
+                spriteRenderer.color = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColorArmed);
         }
     }
 
@@ -113,8 +115,8 @@ public class ModBulletMovement : SludgeModifier
         }
         else
         {
-            var color1 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor1);
-            var color2 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor2);
+            var color1 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeBullet1);
+            var color2 = ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeBullet2);
             var color = (Mathf.Abs(Time.time * 100 + startTime) % 20) > 10 ? color1 : color2;
             spriteRenderer.color = color;
         }

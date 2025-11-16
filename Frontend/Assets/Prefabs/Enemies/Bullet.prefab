@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 35
   m_Sprite: {fileID: 21300000, guid: 52f70743d62348e409ad56804f598b61, type: 3}
-  m_Color: {r: 0.23137257, g: 0.49803925, b: 0.63529414, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -142,8 +142,10 @@ MonoBehaviour:
   DY: 0
   X: 0
   Y: 0
-  SchemeColor1: 12
-  SchemeColor2: 13
+  SchemeColorArmed: 0
+  SchemeColorUnarmed: 0
+  SchemeBullet1: 12
+  SchemeBullet2: 13
 --- !u!58 &2180690740409253438
 CircleCollider2D:
   m_ObjectHideFlags: 0

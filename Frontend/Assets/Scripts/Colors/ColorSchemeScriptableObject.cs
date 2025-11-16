@@ -38,13 +38,16 @@ namespace Sludge.Colors
         public Color UiButtonFaceLight;
         public Color UiMenuBackground;
         public Color UiTitleBackground;
+        public Color Mines;
 
         public void OnValidate()
         {
             ColorScheme.ApplyColors(this);
+#if UNITY_EDITOR
             // Force Unity to repaint the editor (Scene/Game view UI)
             UnityEditor.SceneView.RepaintAll();
             UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+#endif
         }
     }
 
@@ -78,6 +81,8 @@ namespace Sludge.Colors
         UiButtonFaceLight,
         UiMenuBackground,
         UiTitleBackground,
+
+        Mines,
         // <--- NB: New members must be added at bottom since enum as serialized as strings. Adding in the middle will skew all values coming after.
     }
 
@@ -137,10 +142,12 @@ namespace Sludge.Colors
                 SchemeColor.PlayerScheme_B1 => scheme.PlayerScheme_B1,
                 SchemeColor.PlayerScheme_B2 => scheme.PlayerScheme_B2,
                 SchemeColor.TimePill => scheme.TimePill,
+
                 SchemeColor.EnemyScheme_A1 => scheme.EnemyScheme_A1,
                 SchemeColor.EnemyScheme_A2 => scheme.EnemyScheme_A2,
                 SchemeColor.EnemyScheme_B1 => scheme.EnemyScheme_B1,
                 SchemeColor.EnemyScheme_B2 => scheme.EnemyScheme_B2,
+
                 SchemeColor.UiTextTitle => scheme.UiTextTitle,
                 SchemeColor.UiTextHighlighted => scheme.UiTextHighlighted,
                 SchemeColor.UiTextDefault => scheme.UiTextDefault,
@@ -149,6 +156,8 @@ namespace Sludge.Colors
                 SchemeColor.UiButtonFaceLight => scheme.UiButtonFaceLight,
                 SchemeColor.UiMenuBackground => scheme.UiMenuBackground,
                 SchemeColor.UiTitleBackground => scheme.UiTitleBackground,
+
+                SchemeColor.Mines => scheme.Mines,
                 _ => Color.red,
             };
 
