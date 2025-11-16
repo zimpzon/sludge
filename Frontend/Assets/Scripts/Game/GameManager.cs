@@ -278,9 +278,9 @@ public class GameManager : MonoBehaviour
         {
             bool startRound = false;
 
+            ShowBetweenRoundsActionsText(true);
             ResetLevel();
             TrySendPlayfabStats();
-            ShowBetweenRoundsActionsText(true);
 
             yield return RevealPlayer(landing: false);
 
