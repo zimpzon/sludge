@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text TextTimer;
     public TMP_Text TextLevelName;
     public TMP_Text TextBetweenRoundsHint;
-    public TMP_Text Textversion;
+    public TMP_Text TextVersion;
 
     public Material OutlineMaterial;
 
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         I = this;
-        Textversion.text = $"version {MajorVersion}.{MinorVersion}";
+        TextVersion.text = $"version {MajorVersion}.{MinorVersion}";
 
         Startup.StaticInit();
         PlayerInput = new PlayerInput();
