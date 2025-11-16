@@ -119,7 +119,9 @@ public class ModLaser : SludgeModifier
         {
             var killableTarget = SludgeUtil.scanHits[i];
             var entity = SludgeUtil.GetEntityType(killableTarget.transform.gameObject);
-            if (entity == EntityType.Player)
+            // Another gigantic hack :) Sometimes laser kills player at first frame, even if nowhere near (as it looks).
+            // Let's try to prevent this to just not killing player the first few frames.
+            if (entity == EntityType.Player && GameManager.I.FrameCounter > 10)
             {
                 GameManager.I.Player.Kill(Assets.Scripts.PlayerDeathType.Laser);
             }
