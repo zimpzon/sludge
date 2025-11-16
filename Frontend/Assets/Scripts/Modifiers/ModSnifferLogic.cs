@@ -7,7 +7,7 @@ public class ModSnifferLogic : SludgeModifier
     static double FollowDelay = 3;
     const double followDelayIncrease = 0.15;
     double myFollowDelay;
-    double speed = 1.0; // Speed < 1 will cause jitter in the angle since it flips between no change and actual change when idx changes.
+    double speed = 0.80;
     SpriteRenderer deadAntRenderer;
     double activationTime = -1;
     AnimatedAnt ant;
@@ -20,7 +20,6 @@ public class ModSnifferLogic : SludgeModifier
     double posX;
     double posY;
     double angle;
-    double playerAngle;
     double triggerX;
     double triggerY;
     double triggerAngle;
@@ -61,7 +60,6 @@ public class ModSnifferLogic : SludgeModifier
         deadAntRenderer.color = col;
 
         angle = 180;
-        playerAngle = 0;
         posX = baseX;
         posY = baseY;
         UpdateTransform();
@@ -70,14 +68,6 @@ public class ModSnifferLogic : SludgeModifier
     void UpdateTransform()
     {
         trans.position = new Vector2((float)posX, (float)posY);
-        if (activationTime > 0)
-        {
-            trans.rotation = Quaternion.Euler(0, 0, (float)playerAngle + 90.0f);
-        }
-        else
-        {
-            trans.rotation = Quaternion.Euler(0, 0, (float)angle + 180);
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -117,9 +107,6 @@ public class ModSnifferLogic : SludgeModifier
             GameManager.I.DustParticles.Emit(2);
         }
 
-        playerAngle = Mathf.Atan2((float)(newY - posY), (float)(newX - posX)) * Mathf.Rad2Deg;
-        //DebugLinesScript.Instance.SetLine("playerAngle", playerAngle);
-
         posX = newX;
         posY = newY;
     }
@@ -135,7 +122,6 @@ public class ModSnifferLogic : SludgeModifier
             var col = deadAntRenderer.color;
             col.a = 1 - Mathf.Clamp01((float)t);
             deadAntRenderer.color = col;
-            angle = Mathf.Lerp((float)angle, (float)triggerAngle, (float)t);
             posX = Mathf.Lerp((float)baseX, (float)triggerX, (float)t);
             posY = Mathf.Lerp((float)baseY, (float)triggerY, (float)t);
             UpdateTransform();
