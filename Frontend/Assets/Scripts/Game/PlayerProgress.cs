@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Assets.Scripts;
+using Newtonsoft.Json;
 using Sludge.UI;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,8 @@ namespace Sludge.Utility
         public class SaveGame
         {
             public int TotalAttempts = 0;
+            public int TotalDeaths = 0;
+            public Dictionary<PlayerDeathType, int> DeathsByType = new();
             public Dictionary<int, LevelStats> CasualLevelsCompleted = new();
             public Dictionary<int, LevelStats> HardLevelsCompleted = new();
         }
