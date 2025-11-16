@@ -1,14 +1,15 @@
 using Sludge.Modifiers;
 using Sludge.Utility;
+using TMPro;
 using UnityEngine;
 
 public class ModSnifferLogic : SludgeModifier
 {
     static double FollowDelay = 3;
+    public TMP_Text TextExclamation;
     const double followDelayIncrease = 0.15;
     double myFollowDelay;
     double speed = 0.80;
-    SpriteRenderer deadAntRenderer;
     double activationTime = -1;
     AnimatedAnt ant;
     CircleCollider2D triggerCollider;
@@ -19,10 +20,8 @@ public class ModSnifferLogic : SludgeModifier
     double baseY;
     double posX;
     double posY;
-    double angle;
     double triggerX;
     double triggerY;
-    double triggerAngle;
     int frameAtTriggerTime;
     double currentFrame;
     float baseTriggerRadius;
@@ -31,7 +30,6 @@ public class ModSnifferLogic : SludgeModifier
     {
         ant = GetComponentInChildren<AnimatedAnt>();
         antCollider = ant.GetComponent<CircleCollider2D>();
-        deadAntRenderer = transform.Find("DeadAnt").GetComponent<SpriteRenderer>();
         triggerCollider = GetComponent<CircleCollider2D>();
         baseTriggerRadius = triggerCollider.radius;
         trans = transform;
@@ -54,12 +52,7 @@ public class ModSnifferLogic : SludgeModifier
         ant.animationOffset = Mathf.Clamp01((float)(baseX * 0.117 + baseY * 0.3311));
         ant.animationSpeedScale = 2;
         antCollider.offset = Vector2.one * 10000; // Hacky: move ant collider so player won't die. If I disabled the collider I couldn't get slimecloud to detect it after reanabling.
-
-        var col = deadAntRenderer.color;
-        col.a = 1;
-        deadAntRenderer.color = col;
-
-        angle = 180;
+        TextExclamation.enabled = false;
         posX = baseX;
         posY = baseY;
         UpdateTransform();
@@ -84,10 +77,13 @@ public class ModSnifferLogic : SludgeModifier
             frameAtTriggerTime = Player.PositionSampleIdx;
             currentFrame = frameAtTriggerTime;
             myFollowDelay = FollowDelay;
-            FollowDelay += followDelayIncrease;
+            //FollowDelay += followDelayIncrease; // If speed is 100%/1.0 we need a further delay or they will all end up overlapping
 
             triggerX = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.x);
             triggerY = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.y);
+
+            TextExclamation.enabled = true;
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
@@ -119,9 +115,6 @@ public class ModSnifferLogic : SludgeModifier
         if (!isFollowing)
         {
             double t = (GameManager.I.EngineTime - activationTime) / myFollowDelay;
-            var col = deadAntRenderer.color;
-            col.a = 1 - Mathf.Clamp01((float)t);
-            deadAntRenderer.color = col;
             posX = Mathf.Lerp((float)baseX, (float)triggerX, (float)t);
             posY = Mathf.Lerp((float)baseY, (float)triggerY, (float)t);
             UpdateTransform();
@@ -130,6 +123,7 @@ public class ModSnifferLogic : SludgeModifier
             {
                 antCollider.offset = Vector2.zero;
                 isFollowing = true;
+                TextExclamation.enabled = false;
             }
 
             return;
