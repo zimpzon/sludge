@@ -271,6 +271,12 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         LastDeathType = deathType;
 
+        // Track death statistics
+        PlayerProgress.saveGame.TotalDeaths++;
+        if (!PlayerProgress.saveGame.DeathsByType.ContainsKey(deathType))
+            PlayerProgress.saveGame.DeathsByType[deathType] = 0;
+        PlayerProgress.saveGame.DeathsByType[deathType]++;
+
         Eyes.SetActive(true);
         deathScheduleTime = GameManager.I.EngineTime + DeathMiniDelay;
         deathScheduled = true;
