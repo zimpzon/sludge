@@ -274,7 +274,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         Eyes.SetActive(true);
         deathScheduleTime = GameManager.I.EngineTime + DeathMiniDelay;
         deathScheduled = true;
-        Debug.Log($"Player killed by {deathType}");
+        Debug.Log($"Player killed by {deathType}, framecounter: {GameManager.I.FrameCounter}");
         // TODO: have to switch to idle or the eyes will be stuck at the side of the head
         PlayAnim(AnimIdle.name);
     }
