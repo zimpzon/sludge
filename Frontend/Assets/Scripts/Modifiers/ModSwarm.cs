@@ -44,7 +44,21 @@ public class ModSwarm : SludgeModifier
             Prototype = trans.Find("SwarmElement").gameObject;
 
         CreateMembers();
+        ResetMembers();
         UpdateMembers(t: 0);
+    }
+
+    void ResetMembers()
+    {
+        for (int i = 0; i < Count; ++i)
+        {
+            var member = members[i];
+            var mod = member.GetComponent<SludgeModifier>();
+            if (mod != null)
+            {
+                mod.Reset();
+            }
+        }
     }
 
     void CreateMembers()
