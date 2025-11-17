@@ -17,6 +17,11 @@ public static class LevelList
 		for (int i = 0; i < allLevels.Length; ++i)
         {
 			LevelData levelData = JsonConvert.DeserializeObject<LevelData>(allLevels[i].text);
+			if (levelData.EditorOnly)
+			{
+				Debug.Log($"Skipping editor only level: {levelData.Namespace}/{levelData.LevelName}");
+				continue;
+			}
 			levelData.SetNamespaceAndIdFromFilename(allLevels[i].name);
 
 			if (levelData.LevelId <= 0)
