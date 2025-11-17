@@ -1,4 +1,3 @@
-using Sludge.Colors;
 using Sludge.Shared;
 using Sludge.Utility;
 using System.Collections.Generic;
@@ -9,6 +8,10 @@ public class UiLevelsLayout : MonoBehaviour
     public int ItemsPerRow = 12;
     public GameObject LevelPrefab;
     public List<LevelItem> LevelItems = new List<LevelItem>();
+
+    // How many levels will be unclocked ahead when completing a level.
+    // Need different coloring for levels not completed.
+    public const int ForwardUnlockCount = 1;
 
     PlayerProgress.LevelNamespace _levelNamespace;
 
@@ -56,7 +59,7 @@ public class UiLevelsLayout : MonoBehaviour
 
     public void UpdateVisualHints()
     {
-        bool prevWasCompleted = false;
+        int levelsToUnlock = 0;
 
         for (int i = 0; i < LevelItems.Count; ++i)
         {
@@ -72,25 +75,24 @@ public class UiLevelsLayout : MonoBehaviour
             if (isCompleted)
             {
                 isUnlocked = true;
-                prevWasCompleted = true;
+                levelsToUnlock = ForwardUnlockCount;
                 Debug.Log($"-----------> {_levelNamespace} LevelId {levelItem.levelScript.LevelData.LevelId} unlocked = {isUnlocked} (levelCompleted)");
             }
-            else if (prevWasCompleted)
+            else if (levelsToUnlock > 0)
             {
                 isUnlocked = true;
-                prevWasCompleted = false;
-                Debug.Log($"-----------> {_levelNamespace} LevelId {levelItem.levelScript.LevelData.LevelId} unlocked = {isUnlocked} (PrevWasCompleted)");
+                levelsToUnlock--;
+                Debug.Log($"-----------> {_levelNamespace} LevelId {levelItem.levelScript.LevelData.LevelId} unlocked = {isUnlocked} (ForwardUnlock, remaining: {levelsToUnlock})");
             }
             else if (isFirstLevel)
             {
                 isUnlocked = true;
-                prevWasCompleted = false;
                 Debug.Log($"-----------> {_levelNamespace} LevelId {levelItem.levelScript.LevelData.LevelId} unlocked = {isUnlocked} (isFirstLevel)");
             }
             else
             {
-                // One of the remaining unclocked levels
-                prevWasCompleted = false;
+                // One of the remaining unlocked levels
+                levelsToUnlock = 0;
             }
 
             string levelText = isUnlocked ? $"{i + 1}" : "-";
