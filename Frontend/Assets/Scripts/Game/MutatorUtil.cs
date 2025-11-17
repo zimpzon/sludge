@@ -18,7 +18,8 @@ namespace Assets.Scripts.Game
 
         public static int GetJumpCount(MutatorJumpType m)
         {
-            return 0; // double jump
+            // Return 1 for double jump if enabled, 0 otherwise
+            return GameManager.I.Player.DoubleJumpEnabled ? 1 : 0;
         }
     }
 }

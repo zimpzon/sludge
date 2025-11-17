@@ -53,6 +53,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     public bool ShowDebug = false;
     public bool DisableConveyors = false;
+    public bool DoubleJumpEnabled = true;
 
     public GameObject Eyes;
     public AnimationClip AnimMoveLeft;
@@ -344,7 +345,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         param.airJumpsLeft = MutatorUtil.GetJumpCount(param.jumpType);
     }
 
-    bool HasAirJumpsLeft() => StateParam.airJumpsLeft > 0 || StateParam.airJumpsLeft < 0;
+    bool HasAirJumpsLeft() => DoubleJumpEnabled && (StateParam.airJumpsLeft > 0 || StateParam.airJumpsLeft < 0);
 
     void StartAirJump(StateParam param)
     {
