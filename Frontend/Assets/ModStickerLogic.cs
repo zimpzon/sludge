@@ -33,10 +33,14 @@ public class ModStickerLogic : SludgeModifier
 
     private void Awake()
     {
-        basePos = transform.position;
         col = GetComponent<CircleCollider2D>();
         colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);   // world space radius
         wallDetectionDistance = colRadius;
+    }
+
+    public override void OnLoaded()
+    {
+        basePos = transform.position;
     }
 
     private void Start()

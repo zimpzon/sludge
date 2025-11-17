@@ -23,7 +23,6 @@ public class ModWallFollowerLogic : SludgeModifier
 
     private void Awake()
     {
-        basePos = transform.position;
         col = GetComponent<CircleCollider2D>();
         colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);
         wallDetectionDistance = colRadius * 1.0f;
@@ -37,6 +36,11 @@ public class ModWallFollowerLogic : SludgeModifier
         }
         rb.gravityScale = 0;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
+    public override void OnLoaded()
+    {
+        basePos = transform.position;
     }
 
     private void Start()

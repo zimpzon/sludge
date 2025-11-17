@@ -82,7 +82,7 @@ public class UiControls : MonoBehaviour
         }
         sb.AppendLine();
         sb.AppendLine();
-        sb.AppendLine($"Color scheme: {GameManager.I.CurrentColorScheme.schemeName} ({GameManager.I.IdxCurrentColorScheme + 1}/{GameManager.I.ColorSchemeList.ColorSchemes.Length})");
+        sb.AppendLine($"Color scheme: {GameManager.I?.CurrentColorScheme?.schemeName} ({GameManager.I?.IdxCurrentColorScheme + 1}/{GameManager.I?.ColorSchemeList?.ColorSchemes?.Length})");
         TextStats.text = sb.ToString();
     }
 }
