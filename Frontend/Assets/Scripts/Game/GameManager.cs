@@ -195,7 +195,9 @@ public class GameManager : MonoBehaviour
     bool CanGoToNextLevel()
     {
         bool wasStartedFromEditor = currentLevelData.Namespace == PlayerProgress.LevelNamespace.NotSet;
-        return wasStartedFromEditor ? false : PlayerProgress.IsLevelCompleted(currentLevelData.Namespace, currentLevelData.LevelId);
+        bool levelCompleted = wasStartedFromEditor ? false : PlayerProgress.IsLevelCompleted(currentLevelData.Namespace, currentLevelData.LevelId);
+        bool hasNextLevel = currentUiLevel?.Next != null;
+        return levelCompleted && hasNextLevel;
     }
 
     StringBuilder betweenRoundsSb = new StringBuilder();
@@ -236,7 +238,15 @@ public class GameManager : MonoBehaviour
         betweenRoundsSb.Clear();
         if (latestRoundResult.Completed || CanGoToNextLevel())
         {
-            betweenRoundsSb.AppendLine("space to continue");
+            if (currentUiLevel?.Next != null)
+            {
+                betweenRoundsSb.AppendLine("space to continue");
+            }
+            else
+            {
+                betweenRoundsSb.AppendLine("well done - this was the last level!");
+                betweenRoundsSb.AppendLine("<size=-5>now reach gold score for all levels");
+            }
             betweenRoundsSb.AppendLine("<size=-12>move to begin");
         }
         else
