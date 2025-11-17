@@ -33,7 +33,6 @@ public class ModBulletMovement : SludgeModifier
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         bulletSprites = GetComponent<BulletSprites>();
         startTime = Time.time;
-        Reset();
     }
 
     private void OnValidate()
@@ -41,6 +40,11 @@ public class ModBulletMovement : SludgeModifier
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         bulletSprites = GetComponent<BulletSprites>();
         SetVisual();
+    }
+
+    public override void OnLoaded()
+    {
+        Reset();
     }
 
     public override void Reset()
