@@ -58,5 +58,20 @@ public class UiSchemeColorApplier : MonoBehaviour
             text.faceColor = Color.white;
             text.ForceMeshUpdate();
         }
+
+        var slider = GetComponent<Slider>();
+        if (slider != null)
+        {
+            slider.transition = Selectable.Transition.None;
+            var colorBlock = new ColorBlock
+            {
+                normalColor = GetColor(Color.white, scheme),
+                selectedColor = GetColor(Color.white, scheme),
+                pressedColor = GetColor(Color.white, scheme),
+                highlightedColor = GetColor(Color.white, scheme),
+            };
+
+            slider.colors = colorBlock;
+        }
     }
 }

@@ -7,6 +7,7 @@ using Sludge.Shared;
 using Sludge.SludgeObjects;
 using Sludge.UI;
 using Sludge.Utility;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour
     // Level switching:
     // LoadLevel() is the only way in
     // StartLevel() resets and starts what was loaded.
+
+    public static event Action<string, int> OnColorSchemeChanged;
 
     public static PlayerSample[] PlayerSamples = new PlayerSample[30000];
 
@@ -597,6 +600,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"Setting color scheme: [{colorScheme.name}]");
         ColorScheme.ApplyColors(colorScheme);
+
+        OnColorSchemeChanged?.Invoke(colorScheme.schemeName, IdxCurrentColorScheme);
     }
 
     public void SetNextColorScheme()

@@ -23,12 +23,19 @@ public class UiControls : MonoBehaviour
 
     private void OnEnable()
     {
+        GameManager.OnColorSchemeChanged += OnColorSchemeChanged;
         FillStats();
     }
 
     private void OnDisable()
     {
+        GameManager.OnColorSchemeChanged -= OnColorSchemeChanged;
         SaveSettings();
+    }
+
+    private void OnColorSchemeChanged(string schemeName, int schemeIndex)
+    {
+        FillStats();
     }
 
     public void FxVolumeChanged()
@@ -73,8 +80,8 @@ public class UiControls : MonoBehaviour
                 sb.AppendLine($"{deathTypeName.Value}\t{0,7}");
             }
         }
-        sb.AppendLine($"Color scheme: {GameManager.I.CurrentColorScheme.name} ({GameManager.I.IdxCurrentColorScheme}/{GameManager.I.ColorSchemeList.ColorSchemes.Length})");
         sb.AppendLine();
+        sb.AppendLine($"Color scheme: {GameManager.I.CurrentColorScheme.schemeName} ({GameManager.I.IdxCurrentColorScheme + 1}/{GameManager.I.ColorSchemeList.ColorSchemes.Length})");
         TextStats.text = sb.ToString();
     }
 }
