@@ -31,6 +31,7 @@ public class ModTargetLaserTracker : SludgeModifier
     {
         timeInSight = 0;
         bulletCountdown = 0;
+        lineRenderer.enabled = false;
     }
 
     public override void EngineTick()
