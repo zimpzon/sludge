@@ -33,7 +33,7 @@ public class UiControls : MonoBehaviour
         SaveSettings();
     }
 
-    private void OnColorSchemeChanged(string schemeName, int schemeIndex)
+    private void OnColorSchemeChanged()
     {
         FillStats();
     }

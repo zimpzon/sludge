@@ -23,6 +23,12 @@ public class ModKeyToggle : SludgeModifier
         doorCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         mat = spriteRenderer.material;
+        GameManager.OnColorSchemeChanged += ColorSchemeChanged;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.OnColorSchemeChanged -= ColorSchemeChanged;
     }
 
     private void Start()
@@ -38,10 +44,20 @@ public class ModKeyToggle : SludgeModifier
     //        var sr = GetComponent<SpriteRenderer>();
     //        if (sr != null && sr.sharedMaterial != null)
     //        {
-    //            sr.sharedMaterial.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
+    //            sr.sharedMaterial.SetFloat("_Visibility", StartEnabled ? 0.8f : 0.1f);
     //        }
     //    }
     //}
+
+    void ColorSchemeChanged()
+    {
+        UpdateColor();
+    }
+
+    void UpdateColor()
+    {
+        spriteRenderer.color = ColorScheme.GetColor(GameManager.I?.CurrentColorScheme, SchemeColor.Walls);
+    }
 
     public override void Reset()
     {
@@ -50,11 +66,11 @@ public class ModKeyToggle : SludgeModifier
         doorCollider.enabled = StartEnabled;
 
         if (Active)
-            mat.SetFloat("_Visibility", StartEnabled ? 0.7f : 0.1f);
+            mat.SetFloat("_Visibility", StartEnabled ? 0.8f : 0.1f);
         else
             mat.SetFloat("_Visibility", 1.0f);
 
-        spriteRenderer.color = ColorScheme.GetColor(GameManager.I?.CurrentColorScheme, SchemeColor.Walls);
+        UpdateColor();
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
 
         flipAtLastPillCollectedExecuted = false;
@@ -111,10 +127,10 @@ public class ModKeyToggle : SludgeModifier
         while (true)
         {
             float t = (float)(GameManager.I.EngineTime - startTime) / AnimTime;
-            if (t >= 0.70f)
+            if (t >= 0.80f)
                 break;
 
-            mat.SetFloat("_Visibility", 0.7f - t);
+            mat.SetFloat("_Visibility", 0.8f - t);
 
             yield return null;
         }
@@ -128,17 +144,17 @@ public class ModKeyToggle : SludgeModifier
         doorCollider.enabled = true;
         SoundManager.Play(FxList.Instance.FakeWallShowUp);
 
-        //LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
+        LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
 
         while (true)
         {
             float t = (float)(GameManager.I.EngineTime - startTime) / AnimTime;
-            if (t >= 0.7f)
+            if (t >= 0.8f)
                 break;
 
             mat.SetFloat("_Visibility", t);
             yield return null;
         }
-        mat.SetFloat("_Visibility", 0.7f);
+        mat.SetFloat("_Visibility", 0.8f);
     }
 }
