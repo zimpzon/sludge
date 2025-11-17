@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sludge.PlayerInputs;
 using Sludge.Utility;
 using System;
@@ -134,7 +135,8 @@ namespace Sludge.UI
 
 			UiNavigation.OnNavigationChanged = (go) =>
 			{
-				//go.transform.DOPunchScale(Vector3.one * 0.05f, 0.3f); // TODO TWEEN
+				go.transform.DOKill();
+                go.transform.DOPunchScale(Vector3.one * 0.05f, 0.3f); // TODO TWEEN
             };
 
 			UiNavigation.OnNavigationSelected = (go) =>
@@ -225,7 +227,10 @@ namespace Sludge.UI
             
 			SoundManager.Play(FxList.Instance.UiShowMenu);
             yield return UiPanels.Instance.ShowPanel(UiPanel.Settings);
-            //UiPanels.Instance.PanelSettings.transform.DOPunchPosition(Vector3.up * 4, 0.3f); // TODO TWEEN
+
+
+			//UiPanels.Instance.PanelSettings.transform.DOKill();
+			//UiPanels.Instance.PanelSettings.transform.DOPunchPosition(Vector3.up * 4, 0.3f); // TODO TWEEN
 
             while (true)
 			{
@@ -258,6 +263,8 @@ namespace Sludge.UI
 
             SoundManager.Play(FxList.Instance.UiShowMenu);
             yield return UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
+
+			//UiPanels.Instance.PanelLevelSelect.transform.DOKill();
 			//UiPanels.Instance.PanelLevelSelect.transform.DOPunchPosition(Vector3.left * 4, 0.3f); // TODO TWEEN
 
             double charsShown = 0;
@@ -281,7 +288,8 @@ namespace Sludge.UI
 
 			void OnNavigationChanged(GameObject go)
             {
-                //go.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f); // TODO TWEEN
+                go.transform.DOKill();
+                go.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f); // TODO TWEEN
 
                 var uiLevel = go.GetComponent<UiLevel>();
                 if (latestSelectedLevelNamespace == PlayerProgress.LevelNamespace.Casual)

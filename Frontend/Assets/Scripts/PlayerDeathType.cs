@@ -20,9 +20,9 @@ namespace Assets.Scripts
         public static readonly Dictionary<PlayerDeathType, string> Names = new Dictionary<PlayerDeathType, string>()
         {
             { PlayerDeathType.None, "None" },
-            { PlayerDeathType.Bullet, "Bullet" },
             { PlayerDeathType.Mine, "Mine" },
             { PlayerDeathType.Saw, "Saw" },
+            { PlayerDeathType.Bullet, "Bullet" },
             { PlayerDeathType.Laser, "Laser" },
             { PlayerDeathType.Stalker, "Stalker" },
             { PlayerDeathType.Chaser, "Chaser" },

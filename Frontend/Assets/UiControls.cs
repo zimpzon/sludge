@@ -1,5 +1,6 @@
 using Assets.Scripts;
 using Sludge.Utility;
+using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -72,6 +73,8 @@ public class UiControls : MonoBehaviour
                 sb.AppendLine($"{deathTypeName.Value}\t{0,7}");
             }
         }
+        sb.AppendLine($"Color scheme: {GameManager.I.CurrentColorScheme.name} ({GameManager.I.IdxCurrentColorScheme}/{GameManager.I.ColorSchemeList.ColorSchemes.Length})");
+        sb.AppendLine();
         TextStats.text = sb.ToString();
     }
 }
