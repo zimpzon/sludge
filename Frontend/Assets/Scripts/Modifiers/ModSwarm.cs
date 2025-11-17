@@ -1,4 +1,3 @@
-using PlayFab.ClientModels;
 using Sludge.Easing;
 using Sludge.Modifiers;
 using Sludge.SludgeObjects;
@@ -9,6 +8,8 @@ using UnityEngine;
 public class ModSwarm : SludgeModifier
 {
     public int Count = 10;
+
+    public bool ArmedIfBullets = true;
 
     public double Width = 5;
     public double Height = 5;
@@ -42,6 +43,14 @@ public class ModSwarm : SludgeModifier
         trans = transform;
         if (Prototype == null)
             Prototype = trans.Find("SwarmElement").gameObject;
+
+        // There may or may not be bullets as children, set IsArmed if there is.
+        var bullets = GetComponentsInChildren<ModBulletMovement>(includeInactive: true);
+        for(int i = 0; i < bullets.Length; ++i)
+        {
+            bullets[i].StartArmed = ArmedIfBullets;
+            bullets[i].IsArmed = ArmedIfBullets;
+        }
 
         CreateMembers();
         ResetMembers();
