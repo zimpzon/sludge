@@ -10,8 +10,8 @@ public class ModLineGun : SludgeModifier
     public double BulletSpeed = 1;
 
     Transform trans;
-    double countdown;
-    double firstBulletCountdown;
+    int nextShotTimeMs;
+    int firstBulletEndTimeMs;
     Tween childTransTween;
     bool isFirstTick;
 
@@ -23,22 +23,20 @@ public class ModLineGun : SludgeModifier
     public override void Reset()
     {
         isFirstTick = true;
-        countdown = 0;
-        firstBulletCountdown = DelayBeforeFirstBullet;
+        nextShotTimeMs = 0;
+        firstBulletEndTimeMs = GameManager.I.EngineTimeMs + (int)(DelayBeforeFirstBullet * 1000);
     }
 
     public override void EngineTick()
     {
-        if (firstBulletCountdown > 0)
+        if (GameManager.I.EngineTimeMs < firstBulletEndTimeMs)
         {
-            firstBulletCountdown = SludgeUtil.Stabilize(firstBulletCountdown - GameManager.TickSize);
             return;
         }
 
-        countdown -= GameManager.TickSize;
-        if (countdown <= 0 && !isFirstTick)
+        if (GameManager.I.EngineTimeMs >= nextShotTimeMs && !isFirstTick)
         {
-            countdown = Delay;
+            nextShotTimeMs = GameManager.I.EngineTimeMs + (int)(Delay * 1000);
             var bullet = BulletManager.Instance.Get();
             if (bullet != null)
             {

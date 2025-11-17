@@ -15,7 +15,7 @@ public class ModCellFollower : SludgeModifier
     double startY;
     double targetX;
     double targetY;
-    double moveTimeLeft;
+    int moveEndTimeMs;
     double homeX;
     double homeY;
     float targetRotZ;
@@ -42,7 +42,7 @@ public class ModCellFollower : SludgeModifier
 
         myCell = LevelCells.Instance.ClaimCell(trans.position);
         SetTarget(myCell);
-        moveTimeLeft = 0;
+        moveEndTimeMs = 0;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -83,8 +83,8 @@ public class ModCellFollower : SludgeModifier
         //int animIdx = ((int) Mathf.Abs(fAnimIdx)) % Anim.Sprites.Length;
         //spriteRenderer.sprite = Anim.Sprites[animIdx];
 
+        double moveTimeLeft = (moveEndTimeMs - GameManager.I.EngineTimeMs) / 1000.0;
         double t = Mathf.Clamp01((float)((timeMoveThisCell - moveTimeLeft) / timeMoveThisCell));
-        moveTimeLeft -= GameManager.TickSize;
         double x = startX + (targetX - startX) * t;
         double y = startY + (targetY - startY) * t;
 
@@ -108,7 +108,7 @@ public class ModCellFollower : SludgeModifier
 
         trans.localScale = new Vector3(1.0f + scaleX, 1.0f + scaleY, 1);
 
-        if (moveTimeLeft > 0)
+        if (GameManager.I.EngineTimeMs < moveEndTimeMs)
         {
             // Move from one cell to another. We only occupy the target cell.
             trans.position = new Vector2((float)x, (float)y);
@@ -143,7 +143,7 @@ public class ModCellFollower : SludgeModifier
                 SetTarget(newCell);
                 myCell = newCell;
                 timeMoveThisCell = timeMoveOneCell * desiredDir.magnitude;
-                moveTimeLeft = timeMoveThisCell;
+                moveEndTimeMs = GameManager.I.EngineTimeMs + (int)(timeMoveThisCell * 1000);
             }
         }
     }

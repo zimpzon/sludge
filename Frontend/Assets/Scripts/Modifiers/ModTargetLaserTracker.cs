@@ -7,7 +7,7 @@ public class ModTargetLaserTracker : SludgeModifier
 {
     const float WidthMin = 0.05f;
     const float WidthMax = 0.08f;
-    const float KillTime = 0.1f;
+    public float KillTime = 0.5f;
     public float BulletSpeed = 5;
     public float BulletDelay = 2.0f;
 
@@ -16,7 +16,7 @@ public class ModTargetLaserTracker : SludgeModifier
     LineRenderer lineRenderer;
     Transform trans;
     double timeInSight;
-    double bulletCountdown;
+    int nextBulletTimeMs;
     ModTimeToggle timeToggle;
 
     private void Awake()
@@ -30,7 +30,7 @@ public class ModTargetLaserTracker : SludgeModifier
     public override void Reset()
     {
         timeInSight = 0;
-        bulletCountdown = 0;
+        nextBulletTimeMs = 0;
         lineRenderer.enabled = false;
     }
 
@@ -49,7 +49,7 @@ public class ModTargetLaserTracker : SludgeModifier
         if (!hasLoS)
         {
             timeInSight = 0;
-            bulletCountdown = 0;
+            nextBulletTimeMs = 0;
             return;
         }
 
@@ -67,10 +67,9 @@ public class ModTargetLaserTracker : SludgeModifier
 
         if (timeInSight >= KillTime)
         {
-            bulletCountdown = SludgeUtil.Stabilize(bulletCountdown - GameManager.TickSize);
-            if (bulletCountdown <= 0)
+            if (GameManager.I.EngineTimeMs >= nextBulletTimeMs)
             {
-                bulletCountdown = BulletDelay;
+                nextBulletTimeMs = GameManager.I.EngineTimeMs + (int)(BulletDelay * 1000);
 
                 var bullet = BulletManager.Instance.Get();
                 if (bullet != null)

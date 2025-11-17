@@ -16,7 +16,7 @@ public class ModSlimeBombLogic : SludgeModifier
     Transform trans;
     bool countingDown;
     bool expanding;
-    double timeLeft;
+    int explodeTimeMs;
     int currentSecond = -1;
     const double slimeSpeedStart = 20;
     const double slimeSpeedMin = 1.5;
@@ -88,7 +88,7 @@ public class ModSlimeBombLogic : SludgeModifier
 
             countingDown = true;
             GameManager.I.OnActivatingBomb();
-            timeLeft = Countdown;
+            explodeTimeMs = GameManager.I.EngineTimeMs + (int)(Countdown * 1000);
             countdownText.enabled = true;
         }
     }
@@ -101,6 +101,7 @@ public class ModSlimeBombLogic : SludgeModifier
         if (countingDown)
         {
             // Counting down
+            double timeLeft = (explodeTimeMs - GameManager.I.EngineTimeMs) / 1000.0;
             int second = Mathf.CeilToInt((float)timeLeft);
             if (second != currentSecond)
             {
@@ -126,9 +127,7 @@ public class ModSlimeBombLogic : SludgeModifier
                 currentSecond = second;
             }
 
-            timeLeft -= GameManager.TickSize;
-
-            if (timeLeft <= 0)
+            if (GameManager.I.EngineTimeMs >= explodeTimeMs)
             {
                 // Explode now
                 SoundManager.Play(FxList.Instance.SlimeBombExplode);
