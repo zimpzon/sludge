@@ -18,6 +18,7 @@ public class ModWallFollowerLogic : SludgeModifier
     private CircleCollider2D col;
     private float colRadius;
     private float wallDetectionDistance;
+    private float wallDetectionDistanceWhenTurning;
     private Rigidbody2D rb;
 
     private void Awake()
@@ -26,6 +27,7 @@ public class ModWallFollowerLogic : SludgeModifier
         col = GetComponent<CircleCollider2D>();
         colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);
         wallDetectionDistance = colRadius * 1.0f;
+        wallDetectionDistanceWhenTurning = colRadius * 2.0f;
 
         // Setup Rigidbody2D for physics movement
         rb = GetComponent<Rigidbody2D>();
@@ -79,26 +81,26 @@ public class ModWallFollowerLogic : SludgeModifier
         }
     }
 
-    private bool CheckForWall(Vector2 pos, Vector2 direction)
+    private bool CanMove(Vector2 pos, Vector2 direction)
     {
-        RaycastHit2D hit = Physics2D.Raycast(pos, direction, wallDetectionDistance, PlatformLayer);
+        RaycastHit2D hit = Physics2D.Raycast(pos, direction, wallDetectionDistanceWhenTurning, PlatformLayer);
         return hit.collider != null;
     }
 
     private bool TryTurn()
     {
         Vector2 currentPos = rb.position;
-        Vector2 rightDir = new Vector2(-forwardDirection.y, forwardDirection.x);
-        Vector2 leftDir = new Vector2(forwardDirection.y, -forwardDirection.x);
+        Vector2 rightDir = new Vector2(-forwardDirection.y, -forwardDirection.x);
+        Vector2 leftDir = new Vector2(forwardDirection.y, forwardDirection.x);
 
         // Check right first
-        if (!CheckForWall(currentPos, rightDir))
+        if (!CanMove(currentPos, rightDir))
         {
             forwardDirection = rightDir;
             return true;
         }
         // Then check left
-        else if (!CheckForWall(currentPos, leftDir))
+        else if (!CanMove(currentPos, leftDir))
         {
             forwardDirection = leftDir;
             return true;
