@@ -6,7 +6,6 @@ using UnityEngine;
 public class ModSnifferLogic : SludgeModifier
 {
     static double FollowDelay = 3;
-    public TMP_Text TextExclamation;
     const double followDelayIncrease = 0.2;
     double myFollowDelay;
     double speed = 0.80;
@@ -14,6 +13,7 @@ public class ModSnifferLogic : SludgeModifier
     AnimatedAnt ant;
     CircleCollider2D triggerCollider;
     CircleCollider2D antCollider;
+    GameObject textExclamation;
     bool isFollowing;
     Transform trans;
     double baseX;
@@ -31,7 +31,7 @@ public class ModSnifferLogic : SludgeModifier
         ant = GetComponentInChildren<AnimatedAnt>();
         antCollider = ant.GetComponent<CircleCollider2D>();
         triggerCollider = GetComponent<CircleCollider2D>();
-        baseTriggerRadius = triggerCollider.radius;
+        textExclamation = SludgeUtil.FindByName(transform, "TextExclamation").gameObject;
         trans = transform;
     }
 
@@ -40,6 +40,7 @@ public class ModSnifferLogic : SludgeModifier
         trans = transform;
         baseX = SludgeUtil.Stabilize(trans.position.x);
         baseY = SludgeUtil.Stabilize(trans.position.y);
+        baseTriggerRadius = triggerCollider.radius;
     }
 
     public override void Reset()
@@ -52,7 +53,7 @@ public class ModSnifferLogic : SludgeModifier
         ant.animationOffset = Mathf.Clamp01((float)(baseX * 0.117 + baseY * 0.3311));
         ant.animationSpeedScale = 2;
         antCollider.offset = Vector2.one * 10000; // Hacky: move ant collider so player won't die. If I disabled the collider I couldn't get slimecloud to detect it after reanabling.
-        TextExclamation.enabled = false;
+        textExclamation.SetActive(false);
         posX = baseX;
         posY = baseY;
         transform.rotation = Quaternion.Euler(0, 0, -90);
@@ -83,7 +84,7 @@ public class ModSnifferLogic : SludgeModifier
             triggerX = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.x);
             triggerY = SludgeUtil.Stabilize(GameManager.PlayerSamples[frameAtTriggerTime].Pos.y);
 
-            TextExclamation.enabled = true;
+            textExclamation.SetActive(true);
             transform.rotation = Quaternion.Euler(0, 0, 0);
             SoundManager.Play(FxList.Instance.GhostAwake);
         }
@@ -125,7 +126,7 @@ public class ModSnifferLogic : SludgeModifier
             {
                 antCollider.offset = Vector2.zero;
                 isFollowing = true;
-                TextExclamation.enabled = false;
+                textExclamation.SetActive(false);
             }
 
             return;
