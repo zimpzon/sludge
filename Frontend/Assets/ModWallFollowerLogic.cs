@@ -20,6 +20,7 @@ public class ModWallFollowerLogic : SludgeModifier
     private float wallDetectionDistance;
     private float wallDetectionDistanceWhenTurning;
     private Rigidbody2D rb;
+    bool isFirstFrame = true;
 
     private void Awake()
     {
@@ -54,11 +55,16 @@ public class ModWallFollowerLogic : SludgeModifier
         transform.position = basePos;
         forwardDirection = StartDirection.normalized;
         rb.linearVelocity = Vector2.zero;
+        isFirstFrame = true;
     }
 
     public override void EngineTick()
     {
-        if (IsStatic) return;
+        if (IsStatic || isFirstFrame)
+        {
+            isFirstFrame = false;
+            return;
+        }
 
         Vector2 currentPos = rb.position;
 

@@ -30,6 +30,7 @@ public class ModStickerLogic : SludgeModifier
     private CircleCollider2D col;
     private float colRadius;
     float wallDetectionDistance;
+    bool isFirstFrame = true;
 
     private void Awake()
     {
@@ -71,6 +72,7 @@ public class ModStickerLogic : SludgeModifier
     {
         transform.position = basePos;
         movingLeft = StartLeft;
+        isFirstFrame = true;
         SetupDirections();
     }
 
@@ -133,8 +135,11 @@ public class ModStickerLogic : SludgeModifier
 
     public override void EngineTick()
     {
-        if (IsStatic)
+        if (IsStatic || isFirstFrame)
+        {
+            isFirstFrame = false;
             return;
+        }
 
         // Move the enemy
         Vector2 movement = (movingLeft ? -moveDirection : moveDirection) * MoveSpeed * Time.deltaTime;

@@ -116,6 +116,9 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     ClampedCircleDrawer circleDrawer;
     PillCollectorScript pillCollector;
 
+    bool wasGrounded;
+    float runningPendingParticles;
+
     void Awake()
     {
         I = this;
@@ -403,8 +406,23 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     {
         if (param.jumpState != JumpState.Gravity) return;
 
-        if (HasGroundContact())
+        bool isGrounded = HasGroundContact();
+        if (isGrounded)
         {
+            // Check for high-speed landing effects (only on the moment of landing)
+            if (!wasGrounded) // Just landed this frame
+            {
+                float fallSpeed = -StateParam.force.y; // Make positive for easier comparison
+                float highSpeedThreshold = MaxFallVelocity * 0.8f;
+                if (fallSpeed >= highSpeedThreshold)
+                {
+                    // Play jump sound for impact
+                    SoundManager.Play(FxList.Instance.PlayerJump);
+                    // Emit a few pill particles for hard landing
+                    ParticleEmitter.I.EmitPills(trans.position, 1);
+                }
+            }
+
             ResetJumpCount(param);
             param.coyoteJumpEndTime = GameManager.I.EngineTimeMs + CoyoteJumpMs;
 
@@ -580,6 +598,14 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         {
             int idx = (GameManager.I.EngineTimeMs / 50) % SpriteRun.Length;
             earlSpritesRenderer.sprite = SpriteRun[idx];
+
+            // Emit very few running particles
+            runningPendingParticles += (float)GameManager.TickSize * 2;
+            while (runningPendingParticles > 0)
+            {
+                runningPendingParticles--;
+                ParticleEmitter.I.EmitPills(trans.position, 1);
+            }
         }
         else
         {
@@ -689,6 +715,9 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         Debug_HasQueuedJump = HasQueuedJump();
         Debug_HasCoyoteJump = HasCoyoteJump();
         Debug_HasGroundContact = HasGroundContact();
+
+        // Update ground state for next frame
+        wasGrounded = HasGroundContact();
     }
 
     float GetPlayerColliderRadius() => Math.Abs(playerCollider.radius * trans.localScale.x);
