@@ -96,7 +96,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     public float RoundStartTime;
     public bool Alive = false;
-    public int ExplodeParticleCount = 200;
+    public int ExplodeParticleCount = 400;
     public float EyeScaleSurprised = 1.5f;
     public float DeathMiniDelay = 0.5f;
     [NonSerialized] public PlayerSize Size = PlayerSize.Normal;
