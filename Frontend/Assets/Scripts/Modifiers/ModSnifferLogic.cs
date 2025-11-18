@@ -8,7 +8,7 @@ public class ModSnifferLogic : SludgeModifier
     static double FollowDelay = 3;
     const double followDelayIncrease = 0.2;
     double myFollowDelay;
-    double speed = 0.80;
+    double speed = 1.0;
     double activationTime = -1;
     AnimatedAnt ant;
     CircleCollider2D triggerCollider;
