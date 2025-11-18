@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b59a7e3ce81504cb41ef646da45b30, type: 3}
   m_Name: Dark
   m_EditorClassIdentifier: 
-  schemeName: dark
+  schemeName: high-contrast
   IsDefault: 0
   Palette:
   - {r: 0.6117647, g: 0.34901962, b: 0.019607844, a: 0}
@@ -25,27 +25,27 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0.99371064, g: 0.6734627, b: 0, a: 1}
   Black: {r: 0, g: 0, b: 0, a: 0}
-  Background: {r: 0.20392159, g: 0.20392159, b: 0.20392159, a: 0}
+  Background: {r: 1, g: 1, b: 1, a: 0}
   Walls: {r: 0, g: 0, b: 0, a: 0}
   PlayerTint: {r: 0, g: 0, b: 0, a: 0}
-  Exit: {r: 0, g: 0.59607846, b: 0.8588236, a: 0}
-  Key: {r: 0, g: 0.59607846, b: 0.8588236, a: 0}
+  Exit: {r: 0, g: 0, b: 0, a: 0}
+  Key: {r: 0, g: 0, b: 0, a: 0}
   Conveyor: {r: 0, g: 0, b: 0, a: 0}
-  PlayerScheme_A1: {r: 0.11764707, g: 0.34117648, b: 0.6117647, a: 0}
-  PlayerScheme_A2: {r: 0.11764707, g: 0.34117648, b: 0.6117647, a: 0}
-  PlayerScheme_B1: {r: 0.11764707, g: 0.34117648, b: 0.6117647, a: 0}
-  PlayerScheme_B2: {r: 0.09411766, g: 0.27450982, b: 0.4901961, a: 0}
-  TimePill: {r: 0, g: 0.4784314, b: 0.6862745, a: 0}
+  PlayerScheme_A1: {r: 0, g: 0, b: 0, a: 0}
+  PlayerScheme_A2: {r: 0, g: 0, b: 0, a: 0}
+  PlayerScheme_B1: {r: 0, g: 0, b: 0, a: 0}
+  PlayerScheme_B2: {r: 0, g: 0, b: 0, a: 0}
+  TimePill: {r: 0, g: 0, b: 0, a: 0}
   EnemyScheme_A1: {r: 0, g: 0, b: 0, a: 0}
   EnemyScheme_A2: {r: 0, g: 0, b: 0, a: 0}
-  EnemyScheme_B1: {r: 0.07450981, g: 0.21960786, b: 0.3921569, a: 0}
+  EnemyScheme_B1: {r: 0, g: 0, b: 0, a: 0}
   EnemyScheme_B2: {r: 0, g: 0, b: 0, a: 0}
-  UiTextTitle: {r: 0, g: 0.38431376, b: 0.54901963, a: 0}
-  UiTextHighlighted: {r: 0.04705883, g: 0.90196085, b: 0.9490197, a: 0}
-  UiTextDefault: {r: 0, g: 0.59607846, b: 0.8588236, a: 0}
-  UiSelectionMarker: {r: 0, g: 0.4784314, b: 0.6862745, a: 0}
-  UiButtonFaceDark: {r: 0.04705883, g: 0.04705883, b: 0.054901965, a: 0}
-  UiButtonFaceLight: {r: 0.04705883, g: 0.04705883, b: 0.054901965, a: 0}
-  UiMenuBackground: {r: 0.1764706, g: 0.1764706, b: 0.1764706, a: 0}
-  UiTitleBackground: {r: 0.22012573, g: 0.22012573, b: 0.22012573, a: 0}
+  UiTextTitle: {r: 0, g: 0, b: 0, a: 0}
+  UiTextHighlighted: {r: 0, g: 0, b: 0, a: 0}
+  UiTextDefault: {r: 1, g: 1, b: 1, a: 0}
+  UiSelectionMarker: {r: 0.519, g: 0.519, b: 0.519, a: 0}
+  UiButtonFaceDark: {r: 0, g: 0, b: 0, a: 0}
+  UiButtonFaceLight: {r: 0, g: 0, b: 0, a: 0}
+  UiMenuBackground: {r: 0, g: 0, b: 0, a: 0}
+  UiTitleBackground: {r: 1, g: 1, b: 1, a: 0}
   Mines: {r: 0, g: 0, b: 0, a: 0}
