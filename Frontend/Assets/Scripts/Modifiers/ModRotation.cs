@@ -9,18 +9,24 @@ namespace Sludge.Modifiers
         public double RoundsPerSecond = 0.5;
         public double StartDegrees;
         public bool UseRealTime = false;
+        public bool UseExistingRotation = false;
 
         Transform trans;
+        double initialRotation;
 
         void Awake()
         {
             trans = transform;
+            initialRotation = trans.eulerAngles.z;
         }
 
         public override void Reset()
         {
             if (Active)
-                trans.rotation = Quaternion.AngleAxis((float)StartDegrees, Vector3.back);
+            {
+                double startAngle = UseExistingRotation ? initialRotation : StartDegrees;
+                trans.rotation = Quaternion.AngleAxis((float)startAngle, Vector3.back);
+            }
         }
 
         private void Update()
@@ -29,7 +35,8 @@ namespace Sludge.Modifiers
                 return;
 
             double time = Time.realtimeSinceStartup;
-            float rotation = (float)SludgeUtil.Stabilize((time * RoundsPerSecond * 360) + StartDegrees);
+            double startAngle = UseExistingRotation ? initialRotation : StartDegrees;
+            float rotation = (float)SludgeUtil.Stabilize((time * RoundsPerSecond * 360) + startAngle);
             trans.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
         }
 
@@ -39,7 +46,8 @@ namespace Sludge.Modifiers
                 return;
 
             double time = GameManager.I.EngineTime;
-            float rotation = (float)SludgeUtil.Stabilize((time * RoundsPerSecond * 360) + StartDegrees);
+            double startAngle = UseExistingRotation ? initialRotation : StartDegrees;
+            float rotation = (float)SludgeUtil.Stabilize((time * RoundsPerSecond * 360) + startAngle);
             trans.rotation = Quaternion.AngleAxis((float)rotation, Vector3.back);
         }
     }
