@@ -28,12 +28,18 @@ namespace Sludge.Modifiers
         private float GetT()
         {
             if (!Active) return 0f;
+            if (GameManager.I == null)
+                return 0;
+
             // Start at StartT, apply time multiplier
             double t = GameManager.I.EngineTime * TimeMultiplier + StartT;
+
             // Apply pingpong wrap
             t = SludgeUtil.TimeMod(t, PingPong);
+
             // Apply easing
             t = Ease.Apply(Easing, t);
+
             return (float)t;
         }
         private Vector3 GetTargetPosition(float t)

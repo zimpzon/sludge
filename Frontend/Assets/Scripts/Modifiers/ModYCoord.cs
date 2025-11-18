@@ -37,6 +37,10 @@ namespace Sludge.Modifiers
 
         private float GetT()
         {
+            if (!Active) return 0f;
+            if (GameManager.I == null)
+                return 0;
+
             // Start at StartT, apply time multiplier
             double t = GameManager.I.EngineTime * TimeMultiplier + StartT;
 

@@ -28,6 +28,7 @@ public class ModSnifferLogic : SludgeModifier
 
     private void Awake()
     {
+        trans = transform;
         ant = GetComponentInChildren<AnimatedAnt>();
         antCollider = ant.GetComponent<CircleCollider2D>();
         triggerCollider = GetComponent<CircleCollider2D>();
@@ -40,6 +41,7 @@ public class ModSnifferLogic : SludgeModifier
         trans = transform;
         baseX = SludgeUtil.Stabilize(trans.position.x);
         baseY = SludgeUtil.Stabilize(trans.position.y);
+        triggerCollider = GetComponent<CircleCollider2D>();
         baseTriggerRadius = triggerCollider.radius;
     }
 
