@@ -143,6 +143,7 @@ namespace Sludge.Utility
         public static int EnergyLayerMask = LayerMask.GetMask("Energy");
         public static int FriendLayerMask = LayerMask.GetMask("Friend");
         public static int EnemyLayerMask = LayerMask.GetMask("Enemy");
+        public static int OneWayLayerMask = LayerMask.GetMask("OneWay");
         public static int EnemyBehindStaticLevelLayerMask = LayerMask.GetMask("EnemyBehindStaticLevel");
         public static int WallsAndObjectsLayerMask = LayerMask.GetMask("StaticLevel", "OutlinedObjects", "Objects");
         public static int KillerTilemap = LayerMask.GetMask("KillerTilemap");
@@ -150,6 +151,7 @@ namespace Sludge.Utility
         public static int OutlinedLayerNumber = LayerMask.NameToLayer("OutlinedObjects");
         public static int ObjectsLayerNumber = LayerMask.NameToLayer("Objects");
         public static int PlayerLayerNumber = LayerMask.NameToLayer("Player");
+        public static int OneWayLayerNumber = LayerMask.NameToLayer ("OneWay");
 
         public static readonly ContactFilter2D KillableFilter = new ContactFilter2D();
         public static readonly ContactFilter2D PlayerOnlyFilter = new ContactFilter2D();

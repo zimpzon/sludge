@@ -122,7 +122,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     void Awake()
     {
         I = this;
-
         trans = transform;
         physicsBody = GetComponent<Rigidbody2D>();
 
@@ -706,6 +705,10 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             // ONLY if flat surface
             moveStep.y = 0.0f;
         }
+
+        // Handle one-way platform collision based on movement direction
+        bool movingUp = StateParam.force.y > 0;
+        Physics2D.IgnoreLayerCollision(SludgeUtil.PlayerLayerNumber, SludgeUtil.OneWayLayerNumber, movingUp);
 
         physicsBody.MovePosition(physicsBody.position + moveStep);
         CheckSquashed();
