@@ -10,6 +10,12 @@ public class EditorLevelDeserializer : MonoBehaviour
     [MenuItem("Tools/Sludge/Load Level")]
     private static void Load()
     {
+        if (Application.isPlaying)
+        {
+            EditorUtility.DisplayDialog("Cannot Load", "Cannot load while playing. Stop play mode first.", "OK");
+            return;
+        }
+
         var levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         var levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
 
@@ -25,6 +31,12 @@ public class EditorLevelDeserializer : MonoBehaviour
     [MenuItem("Tools/Sludge/Clear Level")]
     private static void Clear()
     {
+        if (Application.isPlaying)
+        {
+            EditorUtility.DisplayDialog("Cannot Clear", "Cannot clear while playing. Stop play mode first.", "OK");
+            return;
+        }
+
         var levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         var levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
 

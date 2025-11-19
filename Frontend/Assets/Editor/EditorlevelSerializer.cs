@@ -29,6 +29,12 @@ public class EditorLevelSerializer : MonoBehaviour
     [MenuItem("Tools/Sludge/Save Level")]
     private static void Save()
     {
+        if (Application.isPlaying)
+        {
+            EditorUtility.DisplayDialog("Cannot Save", "Cannot save while playing. Stop play mode first.", "OK");
+            return;
+        }
+
         var levelElements = (LevelElements)Resources.FindObjectsOfTypeAll(typeof(LevelElements)).First();
         var levelSettings = (LevelSettings)Resources.FindObjectsOfTypeAll(typeof(LevelSettings)).First();
 
