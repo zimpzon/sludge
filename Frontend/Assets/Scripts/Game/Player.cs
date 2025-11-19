@@ -111,7 +111,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     GameObject bodyRoot;
     Collider2D[] allColliders;
     float playerBaseScale;
-    CircleCollider2D playerCollider;
+    CapsuleCollider2D playerCollider;
     CircleCollider2D playerSquashedCollider; // a smaller collider used to detect player is squashed between moving walls
     ClampedCircleDrawer circleDrawer;
     PillCollectorScript pillCollector;
@@ -129,7 +129,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         playerBaseScale = trans.localScale.x; // just assuming uniform scale
         bodyRoot = SludgeUtil.FindByName(trans, "Body").gameObject;
         circleDrawer = SludgeUtil.FindByName(trans, "Body/SoftBody").GetComponent<ClampedCircleDrawer>();
-        playerCollider = GetComponent<CircleCollider2D>();
+        playerCollider = GetComponent<CapsuleCollider2D>();
         playerSquashedCollider = SludgeUtil.FindByName(trans, "SquashedCollider").GetComponent<CircleCollider2D>();
         earlSpritesRenderer = SludgeUtil.FindByName(trans, "Body/EarlSprite").GetComponent<SpriteRenderer>();
 
@@ -720,12 +720,12 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         wasGrounded = HasGroundContact();
     }
 
-    float GetPlayerColliderRadius() => Math.Abs(playerCollider.radius * trans.localScale.x);
+    float GetPlayerColliderRadius() => Math.Abs((playerCollider.size.x * 0.5f) * trans.localScale.x);
 
     Vector2 CheckSlope(Vector2 step, Vector2 from)
     {
         float len = step.magnitude;
-        int hitsFullMove = Physics2D.CircleCast(from, GetPlayerColliderRadius(), step.normalized, SludgeUtil.ScanForWallFilter, SludgeUtil.scanHits, len);
+        int hitsFullMove = Physics2D.CapsuleCast(from, playerCollider.size, playerCollider.direction, 0f, step.normalized, SludgeUtil.ScanForWallFilter, SludgeUtil.scanHits, len);
         if (hitsFullMove == 0)
         {
             return Vector2.zero;

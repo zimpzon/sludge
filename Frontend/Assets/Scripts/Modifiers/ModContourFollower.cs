@@ -64,38 +64,85 @@ public class ModContourFollower : SludgeModifier
 
         Vector2 currentPos = rb.position;
 
-        // Find the closest surface using radial raycasting
-        SurfaceInfo surfaceInfo = FindClosestSurface(currentPos);
+        // Try to move forward in current direction first
+        Vector2 moveStep = currentDirection * MoveSpeed * (float)GameManager.TickSize;
+        Vector2 nextPos = currentPos + moveStep;
 
-        if (surfaceInfo.hasHit)
+        // Look for surface from the next position
+        SurfaceInfo nextSurfaceInfo = FindClosestSurface(nextPos);
+
+        if (nextSurfaceInfo.hasHit && nextSurfaceInfo.distance < (SurfaceDistance + colRadius) * 1.2f)
         {
-            // Calculate desired position maintaining distance from surface
-            Vector2 idealPos = surfaceInfo.point + surfaceInfo.normal * (SurfaceDistance + colRadius);
+            // Found surface at next position, move there and align to it
+            Vector2 alignedPos = nextSurfaceInfo.point + nextSurfaceInfo.normal * (SurfaceDistance + colRadius);
 
-            // Calculate tangent direction for movement
-            Vector2 tangent = Vector2.Perpendicular(surfaceInfo.normal);
+            // Update direction to be tangent to the new surface
+            Vector2 tangent = Vector2.Perpendicular(nextSurfaceInfo.normal);
             if (!ClockwiseMovement) tangent = -tangent;
 
-            // Adjust tangent to maintain current movement flow
+            // Choose the tangent direction that best continues current movement
             if (Vector2.Dot(tangent, currentDirection) < 0)
                 tangent = -tangent;
 
             currentDirection = tangent.normalized;
-            lastSurfaceNormal = surfaceInfo.normal;
+            lastSurfaceNormal = nextSurfaceInfo.normal;
 
-            // Move along the surface contour
-            Vector2 targetPos = idealPos + currentDirection * MoveSpeed * (float)GameManager.TickSize;
-
-            // Smooth movement towards target position
-            Vector2 moveVector = Vector2.Lerp(currentPos, targetPos, 0.8f) - currentPos;
-            rb.MovePosition(currentPos + moveVector);
+            rb.MovePosition(alignedPos);
         }
         else
         {
-            // No surface found - continue in current direction but slower
-            Vector2 fallbackMove = currentDirection * MoveSpeed * 0.3f * (float)GameManager.TickSize;
-            rb.MovePosition(currentPos + fallbackMove);
+            // No surface at next position, look for surfaces around current position
+            SurfaceInfo currentSurfaceInfo = FindClosestSurface(currentPos);
+
+            if (currentSurfaceInfo.hasHit)
+            {
+                // Try different directions to find a path
+                Vector2[] testDirections = {
+                    currentDirection,
+                    RotateVector(currentDirection, (ClockwiseMovement ? -45f : 45f) * Mathf.Deg2Rad),
+                    RotateVector(currentDirection, (ClockwiseMovement ? -90f : 90f) * Mathf.Deg2Rad),
+                    RotateVector(currentDirection, (ClockwiseMovement ? -135f : 135f) * Mathf.Deg2Rad)
+                };
+
+                bool foundPath = false;
+
+                foreach (Vector2 testDir in testDirections)
+                {
+                    Vector2 testPos = currentPos + testDir * MoveSpeed * (float)GameManager.TickSize;
+                    SurfaceInfo testSurface = FindClosestSurface(testPos);
+
+                    if (testSurface.hasHit && testSurface.distance < (SurfaceDistance + colRadius) * 1.2f)
+                    {
+                        // Found a good direction
+                        currentDirection = testDir;
+                        Vector2 alignedPos = testSurface.point + testSurface.normal * (SurfaceDistance + colRadius);
+                        rb.MovePosition(alignedPos);
+                        lastSurfaceNormal = testSurface.normal;
+                        foundPath = true;
+                        break;
+                    }
+                }
+
+                if (!foundPath)
+                {
+                    // Maintain distance from current surface
+                    Vector2 stayPos = currentSurfaceInfo.point + currentSurfaceInfo.normal * (SurfaceDistance + colRadius);
+                    rb.MovePosition(stayPos);
+                }
+            }
+            else
+            {
+                // No surface found anywhere, continue in current direction
+                rb.MovePosition(nextPos);
+            }
         }
+    }
+
+    private Vector2 RotateVector(Vector2 vector, float angleRadians)
+    {
+        float cos = Mathf.Cos(angleRadians);
+        float sin = Mathf.Sin(angleRadians);
+        return new Vector2(vector.x * cos - vector.y * sin, vector.x * sin + vector.y * cos);
     }
 
     private SurfaceInfo FindClosestSurface(Vector2 origin)
