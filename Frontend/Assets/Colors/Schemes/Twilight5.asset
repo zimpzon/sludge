@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b59a7e3ce81504cb41ef646da45b30, type: 3}
+  m_Name: Twilight5
+  m_EditorClassIdentifier: 
+  schemeName: twilight 5
+  IsDefault: 0
+  Palette:
+  - {r: 0.16078432, g: 0.15686275, b: 0.19215688, a: 0}
+  - {r: 0.20000002, g: 0.24705884, b: 0.34509805, a: 0}
+  - {r: 0.2901961, g: 0.4784314, b: 0.5882353, a: 0}
+  - {r: 0.9333334, g: 0.5254902, b: 0.58431375, a: 0}
+  - {r: 0.9843138, g: 0.73333335, b: 0.6784314, a: 0}
+  Black: {r: 0, g: 0, b: 0, a: 0}
+  Background: {r: 0.16078432, g: 0.15686275, b: 0.19215688, a: 0}
+  Walls: {r: 0.20000002, g: 0.24705884, b: 0.34509805, a: 0}
+  PlayerTint: {r: 0.93333334, g: 0.5254902, b: 0.58431375, a: 0}
+  Exit: {r: 0.93333334, g: 0.5254902, b: 0.58431375, a: 0}
+  Key: {r: 0.93333334, g: 0.5254902, b: 0.58431375, a: 0}
+  Conveyor: {r: 0, g: 0, b: 0, a: 0}
+  PlayerScheme_A1: {r: 0.9333334, g: 0.5254902, b: 0.58431375, a: 0}
+  PlayerScheme_A2: {r: 0.14509805, g: 0.3372549, b: 0.18039216, a: 0}
+  PlayerScheme_B1: {r: 0.64705884, g: 0.1882353, b: 0.1882353, a: 0}
+  PlayerScheme_B2: {r: 0.64705884, g: 0.1882353, b: 0.1882353, a: 0}
+  TimePill: {r: 0.93333334, g: 0.5254902, b: 0.58431375, a: 0}
+  EnemyScheme_A1: {r: 0.2901961, g: 0.47843137, b: 0.5882353, a: 0}
+  EnemyScheme_A2: {r: 0.2901961, g: 0.47843137, b: 0.5882353, a: 0}
+  EnemyScheme_B1: {r: 0.2901961, g: 0.47843137, b: 0.5882353, a: 0}
+  EnemyScheme_B2: {r: 0.2901961, g: 0.47843137, b: 0.5882353, a: 0}
+  UiTextTitle: {r: 1, g: 0.83137256, b: 0.6392157, a: 1}
+  UiTextHighlighted: {r: 1, g: 0.83137256, b: 0.6392157, a: 1}
+  UiTextDefault: {r: 1, g: 0.83137256, b: 0.6392157, a: 1}
+  UiSelectionMarker: {r: 1, g: 0.83137256, b: 0.6392157, a: 1}
+  UiButtonFaceDark: {r: 0.1254902, g: 0.23529412, b: 0.3372549, a: 0}
+  UiButtonFaceLight: {r: 0.1254902, g: 0.23529412, b: 0.3372549, a: 0}
+  UiMenuBackground: {r: 0.050980393, g: 0.16862746, b: 0.27058825, a: 0}
+  UiTitleBackground: {r: 0.050980393, g: 0.16862746, b: 0.27058825, a: 0}
+  Mines: {r: 0.2901961, g: 0.47843137, b: 0.5882353, a: 0}
