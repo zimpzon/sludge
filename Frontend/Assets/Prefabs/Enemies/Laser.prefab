@@ -5001,6 +5001,7 @@ GameObject:
   - component: {fileID: 5287462854484810115}
   - component: {fileID: 5287462854484810114}
   - component: {fileID: 899749876}
+  - component: {fileID: 6551022050670259713}
   m_Layer: 20
   m_Name: Laser
   m_TagString: Untagged
@@ -5085,7 +5086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Active: 0
   StartT: 0
-  ScaleT: 5
+  ScaleT: 2
   TimeMultiplier: 0.2
   PingPong: 1
   Easing: 0
@@ -5101,10 +5102,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e220f1eb05008a64fa908f35610d6268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Active: 1
+  Active: 0
   OnFrom: 0.5
   OnTo: 1
   TimeMultiplier: 1
+--- !u!114 &6551022050670259713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5287462854484810112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee17d84a35a7eff4fbc4efe5f0c068ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 1
+  RoundsPerSecond: 0.5
+  StartDegrees: 0
+  UseRealTime: 0
+  UseExistingRotation: 0
 --- !u!1 &5287462855557816857
 GameObject:
   m_ObjectHideFlags: 0
@@ -5276,6 +5294,7 @@ MonoBehaviour:
   RoundsPerSecond: 0.1
   StartDegrees: 0
   UseRealTime: 0
+  UseExistingRotation: 0
 --- !u!1 &5287462855566625273
 GameObject:
   m_ObjectHideFlags: 0
