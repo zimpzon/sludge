@@ -41,7 +41,7 @@ public class EditorLevelSerializer : MonoBehaviour
         LevelData level = LevelSerializer.Run(levelElements, levelSettings);
         string json = JsonConvert.SerializeObject(level);
 
-        string filePath = EditorUtility.SaveFilePanel("Save level", LevelFolder, defaultName: null, "json");
+        string filePath = EditorUtility.SaveFilePanel("Save level: " + level.LevelName, LevelFolder, defaultName: level.LevelName, "json");
         if (string.IsNullOrEmpty(filePath))
             return;
 
