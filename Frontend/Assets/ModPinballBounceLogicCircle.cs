@@ -3,7 +3,7 @@ using Sludge.Modifiers;
 using Sludge.Utility;
 using UnityEngine;
 
-public class ModPinballBounceLogic : SludgeModifier
+public class ModPinballBounceLogicCircle : SludgeModifier
 {
     Transform trans;
     Transform bodyTrans;

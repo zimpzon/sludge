@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 173946131881399727}
   - component: {fileID: 896364198868817772}
   - component: {fileID: 1371626410651018327}
-  - component: {fileID: 229340709421838422}
+  - component: {fileID: 8044085040263317159}
   m_Layer: 22
   m_Name: PinballBounceCircle
   m_TagString: Untagged
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Modifiers: []
---- !u!114 &229340709421838422
+--- !u!114 &8044085040263317159
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 913969911842215282}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 482f7d338e9bafe40a1f99418b90aa94, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d156a54f7ab04d479c92d03891828b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1478051677019423274
