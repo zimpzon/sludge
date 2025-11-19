@@ -20,6 +20,12 @@ namespace Sludge.Modifiers
             initialRotation = trans.eulerAngles.z;
         }
 
+        public override void OnLoaded()
+        {
+            trans = transform;
+            initialRotation = trans.eulerAngles.z;
+        }
+
         public override void Reset()
         {
             if (Active)

@@ -27,5 +27,6 @@
         Sticker,
         WallFollower,
         KillerTilemap,
+        OneWay,
     };
 }
