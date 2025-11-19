@@ -60,46 +60,28 @@ public class ModContourFollowerSimple : SludgeModifier
 
         Vector2 currentPos = rb.position;
 
-        // Wall following algorithm (left-hand or right-hand rule)
-        Vector2 wallDirection = KeepLeftWall ?
-            new Vector2(-forwardDirection.y, forwardDirection.x) :  // 90° left
-            new Vector2(forwardDirection.y, -forwardDirection.x);   // 90° right
+        // Simple approach: just move forward and turn when hitting walls
+        RaycastHit2D forwardHit = Physics2D.Raycast(currentPos, forwardDirection, wallDetectionDistance, SurfaceLayer);
 
-        // Check if there's a wall on our preferred side
-        RaycastHit2D wallCheck = Physics2D.Raycast(currentPos, wallDirection, wallDetectionDistance, SurfaceLayer);
-
-        if (wallCheck.collider != null)
+        if (forwardHit.collider != null)
         {
-            // Wall detected on our side - check if we can move forward
-            RaycastHit2D forwardCheck = Physics2D.Raycast(currentPos, forwardDirection, wallDetectionDistance, SurfaceLayer);
-
-            if (forwardCheck.collider == null)
-            {
-                // Path clear, move forward while following wall
-                Vector2 newPos = currentPos + forwardDirection * MoveSpeed * (float)GameManager.TickSize;
-                rb.MovePosition(newPos);
-            }
-            else
-            {
-                // Forward blocked, turn toward the wall (follow the corner)
-                forwardDirection = wallDirection;
-            }
+            // Hit a wall ahead, turn
+            float turnAngle = KeepLeftWall ? -90f : 90f; // Turn left or right based on preference
+            forwardDirection = RotateVector(forwardDirection, turnAngle * Mathf.Deg2Rad);
         }
         else
         {
-            // No wall on our side - turn toward where the wall should be to find it again
-            Vector2 searchDirection = wallDirection;
-
-            // Move forward and turn toward wall to follow the contour
-            Vector2 moveStep = forwardDirection * MoveSpeed * (float)GameManager.TickSize;
-            Vector2 turnStep = searchDirection * MoveSpeed * 0.5f * (float)GameManager.TickSize;
-            Vector2 newPos = currentPos + moveStep + turnStep;
-
-            // Update direction to follow the contour
-            forwardDirection = (moveStep + turnStep).normalized;
-
+            // Path is clear, move forward
+            Vector2 newPos = currentPos + forwardDirection * MoveSpeed * (float)GameManager.TickSize;
             rb.MovePosition(newPos);
         }
+    }
+
+    private Vector2 RotateVector(Vector2 vector, float angleRadians)
+    {
+        float cos = Mathf.Cos(angleRadians);
+        float sin = Mathf.Sin(angleRadians);
+        return new Vector2(vector.x * cos - vector.y * sin, vector.x * sin + vector.y * cos);
     }
 
     private void OnTriggerStay2D(Collider2D collision)

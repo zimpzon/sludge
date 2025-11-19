@@ -26,7 +26,6 @@
         EnemyBehindStaticLevel,
         Sticker,
         WallFollower,
-        ContourFollower,
         KillerTilemap,
     };
 }
