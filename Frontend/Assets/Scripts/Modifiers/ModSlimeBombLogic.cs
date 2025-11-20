@@ -19,7 +19,7 @@ public class ModSlimeBombLogic : SludgeModifier
     int explodeTimeMs;
     int currentSecond = -1;
     const double slimeSpeedStart = 20;
-    const double slimeSpeedMin = 1.5;
+    const double slimeSpeedMin = 2.5;
     const double slimeSpeedDampen = 0.93;
     double slimeSpeed;
     double slimeScale = 1;
