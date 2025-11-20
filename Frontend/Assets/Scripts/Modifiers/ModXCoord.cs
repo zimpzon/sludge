@@ -51,8 +51,9 @@ namespace Sludge.Modifiers
         private void SetPosition()
         {
             float t = GetT();
-            Vector3 newPos = GetTargetPosition(t);
-            trans.position = newPos;
+            Vector3 targetPos = GetTargetPosition(t);
+            Vector3 currentPos = trans.position;
+            trans.position = new Vector3(targetPos.x, currentPos.y, currentPos.z);
         }
         public override void EngineTick()
         {
