@@ -452,7 +452,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
                     // Wall jump grants a full air jump refresh
                     ResetJumpCount(param);
-                    StateParam.force.x = jumpRight ? RunPeak * 2f : -RunPeak * 2f;
+                    StateParam.force.x = jumpRight ? RunPeak * 2.0f : -RunPeak * 2.0f;
+                    StateParam.force.y = jumpVelocity * 1.2f;
 
                     StartJump(param);
                     SetState(param, JumpState.AscendingActive);
@@ -611,29 +612,33 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             earlSpritesRenderer.sprite = StateParam.force.y > 0 ? SpriteJump : SpriteIdle;
         }
 
-        if (direction != 0)
+        if (!horizontalDisabled)
         {
-            float airborneModifier = HasGroundContact() ? 1.0f : AirControl;
-            StateParam.force.x += acceleration * direction * (float)GameManager.TickSize * airborneModifier;
-            StateParam.force.x = Mathf.Clamp(StateParam.force.x, -RunPeak, RunPeak);
-        }
-        else
-        {
-            // decelerate
-            if (StateParam.force.x < 0)
+            if (direction != 0)
             {
-                StateParam.force.x += deceleration * (float)GameManager.TickSize;
-                StateParam.force.x = Mathf.Min(StateParam.force.x, 0);
+                float airborneModifier = HasGroundContact() ? 1.0f : AirControl;
+                StateParam.force.x += acceleration * direction * (float)GameManager.TickSize * airborneModifier;
+                StateParam.force.x = Mathf.Clamp(StateParam.force.x, -RunPeak, RunPeak);
             }
             else
             {
-                StateParam.force.x -= deceleration * (float)GameManager.TickSize;
-                StateParam.force.x = Mathf.Max(StateParam.force.x, 0);
+                // decelerate
+                if (StateParam.force.x < 0)
+                {
+                    StateParam.force.x += deceleration * (float)GameManager.TickSize;
+                    StateParam.force.x = Mathf.Min(StateParam.force.x, 0);
+                }
+                else
+                {
+                    StateParam.force.x -= deceleration * (float)GameManager.TickSize;
+                    StateParam.force.x = Mathf.Max(StateParam.force.x, 0);
+                }
             }
         }
 
         bool wasWallSliding = StateParam.isWallSliding;
         bool wasHuggingLeftWall = StateParam.isHuggingLeftWall;
+        bool wasHuggingRightWall = StateParam.isHuggingRightWall;
 
         StateParam.isHuggingLeftWall = circleDrawer.hasLeftContact && !HasGroundContact();
         StateParam.isHuggingRightWall = circleDrawer.hasRightContact && !HasGroundContact();
@@ -643,8 +648,11 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         StateParam.isWallSliding = (StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall) && StateParam.isDescending;
         StateParam.isWallSliding &= StateParam.hasWallJumpEnabled; // Only slide if wall jump is enabled
 
-        // NEW: Set wall coyote time when leaving a wall
-        if (wasWallSliding && !StateParam.isWallSliding && !HasGroundContact())
+        // Set wall coyote time when leaving ANY wall contact (not just wall sliding)
+        bool wasHuggingAnyWall = wasHuggingLeftWall || wasHuggingRightWall;
+        bool isHuggingAnyWall = StateParam.isHuggingLeftWall || StateParam.isHuggingRightWall;
+
+        if (wasHuggingAnyWall && !isHuggingAnyWall && !HasGroundContact())
         {
             StateParam.wallCoyoteJumpEndTime = GameManager.I.EngineTimeMs + CoyoteJumpMs;
             // Remember which wall we were on for the jump direction
