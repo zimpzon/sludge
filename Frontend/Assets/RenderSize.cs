@@ -1,6 +1,14 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
+
+// Helper component to store original canvas settings
+public class OriginalCanvasSettings : MonoBehaviour
+{
+    public Vector2 originalReferenceResolution;
+    public float originalMatchMode;
+}
 
 public class RenderSize : MonoBehaviour
 {
@@ -54,7 +62,59 @@ public class RenderSize : MonoBehaviour
             cam.rect = cameraRect;
         }
 
+        // Handle Screen Space Overlay canvases - they don't use camera rects
+        ApplyCanvasLetterboxing(cameraRect);
+
         Debug.Log($"Applied aspect ratio correction to {Camera.allCamerasCount} cameras: Screen {Screen.width}x{Screen.height} ({currentAspectRatio:F3}), Target {targetAspectRatio:F3}, Camera Rect: {cameraRect}");
+    }
+
+    private void ApplyCanvasLetterboxing(Rect cameraRect)
+    {
+        var canvases = FindObjectsOfType<Canvas>();
+
+        foreach (var canvas in canvases)
+        {
+            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            {
+                // For 2D games, switching to camera mode can be tricky
+                // Let's try a different approach - adjust the CanvasScaler to respect letterboxing
+                var canvasScaler = canvas.GetComponent<CanvasScaler>();
+                if (canvasScaler == null)
+                {
+                    canvasScaler = canvas.gameObject.AddComponent<CanvasScaler>();
+                }
+
+                // Store original settings to restore if needed
+                if (!canvas.gameObject.TryGetComponent<OriginalCanvasSettings>(out var originalSettings))
+                {
+                    originalSettings = canvas.gameObject.AddComponent<OriginalCanvasSettings>();
+                    originalSettings.originalReferenceResolution = canvasScaler.referenceResolution;
+                    originalSettings.originalMatchMode = canvasScaler.matchWidthOrHeight;
+                }
+
+                // Configure the CanvasScaler to handle letterboxing while staying in overlay mode
+                canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+
+                // Adjust reference resolution based on letterboxing
+                if (cameraRect.width < 1.0f) // Pillarboxing (ultrawide)
+                {
+                    canvasScaler.referenceResolution = new Vector2(800 / cameraRect.width, 450);
+                    canvasScaler.matchWidthOrHeight = 1.0f; // Match height
+                }
+                else if (cameraRect.height < 1.0f) // Letterboxing (16:10 -> 16:9)
+                {
+                    canvasScaler.referenceResolution = new Vector2(800, 450 / cameraRect.height);
+                    canvasScaler.matchWidthOrHeight = 0.0f; // Match width
+                }
+                else // Perfect match
+                {
+                    canvasScaler.referenceResolution = new Vector2(800, 450);
+                    canvasScaler.matchWidthOrHeight = 1.0f;
+                }
+
+                canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            }
+        }
     }
 
     bool showStats;
