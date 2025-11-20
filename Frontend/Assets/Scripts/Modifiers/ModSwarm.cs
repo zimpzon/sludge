@@ -9,6 +9,7 @@ public class ModSwarm : SludgeModifier
 {
     public int Count = 10;
 
+    public Vector2 ElementScale = Vector2.one;
     public bool ArmedIfBullets = true;
 
     public double Width = 5;
@@ -91,6 +92,8 @@ public class ModSwarm : SludgeModifier
     {
         for (int i = 0; i < Count; ++i)
         {
+            members[i].transform.localScale = ElementScale;
+
             double tx = SludgeUtil.TimeMod(t * TimeXMul + TimeXAddPerItem * i + TimeXAdd, PingPongX);
             double x = SludgeUtil.Stabilize(Ease.Apply(EasingPositionX, tx) * Width);
 
