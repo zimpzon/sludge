@@ -35,6 +35,7 @@ public class StateParam
     public bool isWallSliding;
     public bool hasWallJumpEnabled = true;  // NEW: separate wall jump flag
     public int LatestDirection = 1;
+    public int oneWayDropThroughEndTime = int.MinValue;
 }
 
 public class Player : MonoBehaviour, IConveyorBeltPassenger
@@ -562,6 +563,12 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             StateParam.LatestDirection = direction;
         }
 
+        // Check for one-way platform drop through
+        if (GameManager.PlayerInput.DownActive() && HasGroundContact())
+        {
+            StateParam.oneWayDropThroughEndTime = GameManager.I.EngineTimeMs + 200;
+        }
+
         // Look left or right
         var lookDir = 0;
         if (StateParam.isHuggingLeftWall || StateParam.LatestDirection == -1)
@@ -716,7 +723,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         // Handle one-way platform collision based on movement direction
         bool movingUp = StateParam.force.y > 0;
-        Physics2D.IgnoreLayerCollision(SludgeUtil.PlayerLayerNumber, SludgeUtil.OneWayLayerNumber, movingUp);
+        bool dropThroughActive = GameManager.I.EngineTimeMs < StateParam.oneWayDropThroughEndTime;
+        Physics2D.IgnoreLayerCollision(SludgeUtil.PlayerLayerNumber, SludgeUtil.OneWayLayerNumber, movingUp || dropThroughActive);
 
         physicsBody.MovePosition(physicsBody.position + moveStep);
         CheckSquashed();
