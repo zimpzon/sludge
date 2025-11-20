@@ -1,12 +1,13 @@
 using Assets.Scripts.Game;
+using DG.Tweening;
 using Sludge.Modifiers;
 using Sludge.Utility;
-using TMPro;
 using UnityEngine;
 
 public class ModExitLogic : SludgeModifier
 {
     SpriteRenderer[] childSprites;
+    Transform cow;
     ParticleSystem particles;
     bool isActive;
 
@@ -14,11 +15,13 @@ public class ModExitLogic : SludgeModifier
     {
         childSprites = GetComponentsInChildren<SpriteRenderer>();
         particles = SludgeUtil.FindByName(transform, "HighlightParticles").GetComponentInChildren<ParticleSystem>();
+        cow = SludgeUtil.FindByName(transform, "Cow");
     }
 
     public override void Reset()
     {
         SetActive(false);
+        cow.transform.DOKill();
     }
 
     void SetAlpha(float alpha)
@@ -33,6 +36,9 @@ public class ModExitLogic : SludgeModifier
 
     void SetActive(bool active)
     {
+        cow.transform.DOKill();
+        cow.transform.localScale = Vector3.one;
+
         particles.gameObject.SetActive(active);
         SetAlpha(active ? 1.0f : 0.4f);
         isActive = active;
@@ -52,7 +58,7 @@ public class ModExitLogic : SludgeModifier
         if (entity == EntityType.Player)
         {
             GameManager.I.LevelCompleted();
-            SetActive(false);
+            ShowCowPopup();
             return;
         }
 
@@ -78,5 +84,11 @@ public class ModExitLogic : SludgeModifier
             SoundManager.Play(FxList.Instance.ExitOpen);
             SetActive(true);
         }
+    }
+
+    void ShowCowPopup()
+    {
+        cow.transform.DOKill();
+        cow.transform.DOScale(Vector3.one * 2.0f, 0.3f);
     }
 }
