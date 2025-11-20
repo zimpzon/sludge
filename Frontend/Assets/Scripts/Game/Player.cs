@@ -452,7 +452,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
                     // Wall jump grants a full air jump refresh
                     ResetJumpCount(param);
-                    StateParam.force.x = jumpRight ? RunPeak * 2 : -RunPeak * 2;
+                    StateParam.force.x = jumpRight ? RunPeak * 2f : -RunPeak * 2f;
 
                     StartJump(param);
                     SetState(param, JumpState.AscendingActive);

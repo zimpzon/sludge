@@ -20,8 +20,17 @@ public class ModPinballBounceLogicBox : SludgeModifier
         if (entity == EntityType.Player)
         {
             var normal = collision.contacts[0].normal;
-            var direction = Vector2.Dot(normal, Vector2.up) > 0.7f ? Vector2.down : Vector2.up;
-            Player.I.AddForceDirection(direction);
+
+            if (Vector2.Dot(normal, Vector2.up) > 0.7f)
+            {
+                var direction = Vector2.down;
+                Player.I.AddForceDirection(direction);
+            }
+            else
+            {
+                var reflectedDirection = Vector2.Reflect(Vector2.down, normal);
+                Player.I.AddForceDirection(reflectedDirection.normalized);
+            }
             bodyTrans.DOKill(complete: true);
             bodyTrans.DOPunchScale(Vector3.one * 0.2f, 0.2f);
             SoundManager.Play(FxList.Instance.PlayerJumpJumpPad);
