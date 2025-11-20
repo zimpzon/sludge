@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text TextLevelName;
     public TMP_Text TextBetweenRoundsHint;
     public TMP_Text TextVersion;
+    public TMP_Text TextSelectedLevelStats;
 
     public Material OutlineMaterial;
 

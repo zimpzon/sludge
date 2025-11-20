@@ -3,6 +3,7 @@ using Sludge.PlayerInputs;
 using Sludge.Utility;
 using System;
 using System.Collections;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -249,6 +250,22 @@ namespace Sludge.UI
 			}
 		}
 
+		StringBuilder sb = new StringBuilder();
+		void UpdateSelectedLevelStats(UiLevel uiLevel)
+		{
+            var savedStats = PlayerProgress.GetSavedStats(uiLevel.LevelData.Namespace, uiLevel.LevelData.LevelId);
+            string bestPart = savedStats.BestTime >= 0 ? $"{savedStats.BestTime,8:0.000}" : "       -";
+
+            sb.Clear();
+            sb.AppendLine($"<size=+2>{uiLevel.LevelData.LevelName}</size>");
+			sb.AppendLine();
+            sb.AppendLine($"Gold time\t{uiLevel.LevelData.TargetTime,8:0.000}");
+            sb.AppendLine($"Best time\t{bestPart}");
+            sb.AppendLine($"Attempts\t{savedStats.Attempts,8}");
+
+            GameManager.I.TextSelectedLevelStats.text = sb.ToString();
+		}
+
 		IEnumerator LevelSelectLoop(PlayerProgress.LevelNamespace levelNamespace)
 		{
             ActiveNavigationGroup = UiNavigationGroup.LevelSelect;
@@ -312,7 +329,9 @@ namespace Sludge.UI
 					levelText = "<Locked>";
 				}
 
-				uilevelSelection.TextLevelName.text = levelText;
+                UpdateSelectedLevelStats(uiLevel);
+
+                uilevelSelection.TextLevelName.text = levelText;
 
 				charsShown = 0;
 			}
