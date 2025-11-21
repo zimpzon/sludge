@@ -31,11 +31,7 @@ public class ModKeyToggle : SludgeModifier
 
     private void Awake()
     {
-        doorCollider = GetComponent<Collider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        mat = spriteRenderer.material;
         GameManager.OnColorSchemeChanged += ColorSchemeChanged;
-        originalPosition = transform.position;
     }
 
     private void OnDestroy()
@@ -45,22 +41,17 @@ public class ModKeyToggle : SludgeModifier
 
     public override void OnLoaded()
     {
+        // Initialize components with correct loaded values
+        doorCollider = GetComponent<Collider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+            mat = spriteRenderer.material;
+
+        // Capture original position after level loading
         originalPosition = transform.position;
+
         Reset();
     }
-
-    //private void OnValidate()
-    //{
-    //    // Update shader visibility in editor when values change
-    //    if (!Application.isPlaying && Active)
-    //    {
-    //        var sr = GetComponent<SpriteRenderer>();
-    //        if (sr != null && sr.sharedMaterial != null)
-    //        {
-    //            sr.sharedMaterial.SetFloat("_Visibility", StartEnabled ? 0.8f : 0.1f);
-    //        }
-    //    }
-    //}
 
     void ColorSchemeChanged()
     {
@@ -69,19 +60,26 @@ public class ModKeyToggle : SludgeModifier
 
     void UpdateColor()
     {
-        spriteRenderer.color = ColorScheme.GetColor(GameManager.I?.CurrentColorScheme, SchemeColor.Walls);
+        if (spriteRenderer != null)
+            spriteRenderer.color = ColorScheme.GetColor(GameManager.I?.CurrentColorScheme, SchemeColor.Walls);
     }
 
     public override void Reset()
     {
         StopAllCoroutines();
 
-        doorCollider.enabled = StartEnabled;
+        // Safe component operations with null checks
+        if (doorCollider != null)
+            doorCollider.enabled = StartEnabled;
 
-        if (Active)
-            mat.SetFloat("_Visibility", StartEnabled ? 0.8f : 0.1f);
-        else
-            mat.SetFloat("_Visibility", 1.0f);
+        // Safe material operations
+        if (mat != null)
+        {
+            if (Active)
+                mat.SetFloat("_Visibility", StartEnabled ? 0.8f : 0.1f);
+            else
+                mat.SetFloat("_Visibility", 1.0f);
+        }
 
         UpdateColor();
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
@@ -94,7 +92,8 @@ public class ModKeyToggle : SludgeModifier
         if (originalPosition != Vector3.zero)
             transform.position = originalPosition;
 
-        if (StartEnabled)
+        // Safe LevelCells access - only in play mode with valid instance
+        if (StartEnabled && Application.isPlaying && LevelCells.Instance != null)
         {
             LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: true);
         }
