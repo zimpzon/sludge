@@ -434,7 +434,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9607843, g: 0.39607844, b: 0.39607844, a: 1}
+      maxColor: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}
@@ -5086,7 +5086,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.15109056, g: 0.18466622, b: 0.24901962, a: 1}
+  m_Color: {r: 0.115686275, g: 0.07572193, b: 0.09044564, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5484,7 +5484,7 @@ Tilemap:
     m_Data: {r: 2.48526e-40, g: 2.48526e-40, b: 2.48526e-40, a: 2.48526e-40}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.9607843, g: 0.39607844, b: 0.39607844, a: 1}
+  m_Color: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
   m_Origin: {x: -2, y: -23, z: 0}
   m_Size: {x: 7, y: 1, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 0}
@@ -5876,7 +5876,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4509804, g: 0.52156866, b: 0.67058825, a: 1}
+  m_Color: {r: 0.3372549, g: 0.25490198, b: 0.27450982, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6178,7 +6178,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 40
   m_Sprite: {fileID: 21300000, guid: 28364fc0b531cb5429d474bba007af2c, type: 3}
-  m_Color: {r: 0.9607843, g: 0.39607844, b: 0.39607844, a: 1}
+  m_Color: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6280,7 +6280,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 42
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: -60.46239, g: -73.89847, b: -99.65098, a: 1}
+  m_Color: {r: -99.78432, g: -65.31338, b: -78.0132, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -11293,7 +11293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.21176471, g: 0.25882354, b: 0.34901962, a: 1}
+  m_Color: {r: 0.3372549, g: 0.25490198, b: 0.27450982, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -18087,7 +18087,7 @@ Tilemap:
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.4509804, g: 0.52156866, b: 0.67058825, a: 1}
+  m_Color: {r: 0.3372549, g: 0.25490198, b: 0.27450982, a: 1}
   m_Origin: {x: -29, y: -16, z: 0}
   m_Size: {x: 58, y: 32, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -19403,7 +19403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: b774435ab2bbad046a40eb5cd9d3ff29, type: 2}
-  m_Color: {r: 0.21176471, g: 0.25882354, b: 0.34901962, a: 1}
+  m_Color: {r: 0.21568628, g: 0.14117648, b: 0.16862746, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -19533,8 +19533,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282034943
-  m_fontColor: {r: 1, g: 0.6666667, b: 0.22745098, a: 1}
+    rgba: 4280661860
+  m_fontColor: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -20078,7 +20078,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9607843, g: 0.39607844, b: 0.39607844, a: 1}
+      maxColor: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}
@@ -24874,7 +24874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4509804, g: 0.52156866, b: 0.67058825, a: 1}
+  m_Color: {r: 0.3372549, g: 0.25490198, b: 0.27450982, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -25562,7 +25562,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 41
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 60.885925, g: 74.41612, b: 100.34902, a: 1}
+  m_Color: {r: 100.21568, g: 65.595726, b: 78.35045, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -25836,7 +25836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0.6666667, b: 0.22745098, a: 1}
+  m_Color: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -25942,8 +25942,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282034943
-  m_fontColor: {r: 1, g: 0.6666667, b: 0.22745098, a: 1}
+    rgba: 4292533983
+  m_fontColor: {r: 0.8745098, g: 0.87058824, b: 0.85490197, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -26822,7 +26822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.21176471, g: 0.25882354, b: 0.34901962, a: 1}
+  m_Color: {r: 0.3372549, g: 0.25490198, b: 0.27450982, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -27087,7 +27087,7 @@ Tilemap:
     m_Data: {r: -1.7470226e-28, g: -1.7470226e-28, b: -1.7470226e-28, a: -1.7470226e-28}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 1, g: 0.6666667, b: 0.22745098, a: 1}
+  m_Color: {r: 0.8745098, g: 0.87058824, b: 0.85490197, a: 1}
   m_Origin: {x: 22, y: -21, z: 0}
   m_Size: {x: 8, y: 2, z: 1}
   m_TileAnchor: {x: 0, y: 0, z: 0}
@@ -27130,6 +27130,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1823264093}
     m_Modifications:
+    - target: {fileID: 478032073792002691, guid: 30227a86be2eeb74a88d3343a5dc210c, type: 3}
+      propertyPath: m_Color.b
+      value: 0.14509805
+      objectReference: {fileID: 0}
+    - target: {fileID: 478032073792002691, guid: 30227a86be2eeb74a88d3343a5dc210c, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7176471
+      objectReference: {fileID: 0}
+    - target: {fileID: 478032073792002691, guid: 30227a86be2eeb74a88d3343a5dc210c, type: 3}
+      propertyPath: m_Color.r
+      value: 0.39215687
+      objectReference: {fileID: 0}
     - target: {fileID: 7945868062974577792, guid: 30227a86be2eeb74a88d3343a5dc210c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.5
@@ -27275,7 +27287,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.21176471, g: 0.25882354, b: 0.34901962, a: 1}
+  m_BackGroundColor: {r: 0.21568628, g: 0.14117648, b: 0.16862746, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -27347,7 +27359,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &968647631
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27362,6 +27374,7 @@ RectTransform:
   m_Children:
   - {fileID: 514681607}
   - {fileID: 791343682}
+  - {fileID: 1122850720}
   - {fileID: 169547721}
   - {fileID: 1691106025}
   - {fileID: 1428689433}
@@ -27475,7 +27488,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 41
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 60.885925, g: 74.41612, b: 100.34902, a: 1}
+  m_Color: {r: 100.21568, g: 65.595726, b: 78.35045, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -27688,7 +27701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0.6666667, b: 0.22745098, a: 1}
+  m_Color: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -27778,7 +27791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0.6666667, b: 0.22745098, a: 1}
+  m_Color: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -28167,6 +28180,157 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1073893599}
+  m_CullTransparentMesh: 1
+--- !u!1 &1122850719
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1122850720}
+  - component: {fileID: 1122850723}
+  - component: {fileID: 1122850722}
+  - component: {fileID: 1122850721}
+  m_Layer: 5
+  m_Name: TextCompletePercent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1122850720
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122850719}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 968647631}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: -291.84366, y: -62.61533}
+  m_SizeDelta: {x: 96.3127, y: 25.0765}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1122850721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122850719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef221f3a00efa0a488cbe070feaeaf05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SchemeColor: 18
+  BrightnessOffset: 0
+--- !u!114 &1122850722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122850719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: 0% complete
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
+  m_sharedMaterial: {fileID: 8997945079433574995, guid: 34726888a3cfcf9489fb27b4898f696b, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 2040614331}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4292533983
+  m_fontColor: {r: 0.8745098, g: 0.87058824, b: 0.85490197, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 12
+  m_fontSizeBase: 12
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 32
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 0
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1122850723
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1122850719}
   m_CullTransparentMesh: 1
 --- !u!1 &1127773637
 GameObject:
@@ -28749,7 +28913,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9607843, g: 0.39607844, b: 0.39607844, a: 1}
+      maxColor: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -33584,7 +33748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0.6666667, b: 0.22745098, a: 1}
+  m_Color: {r: 0.39215687, g: 0.7176471, b: 0.14509805, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -34287,7 +34451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4509804, g: 0.52156866, b: 0.67058825, a: 1}
+  m_Color: {r: 0.3372549, g: 0.25490198, b: 0.27450982, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -34829,7 +34993,7 @@ SpriteRenderer:
   m_SortingLayer: 5
   m_SortingOrder: 42
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: -60.46239, g: -73.89847, b: -99.65098, a: 1}
+  m_Color: {r: -99.78432, g: -65.31338, b: -78.0132, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -34890,7 +35054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.15109056, g: 0.18466622, b: 0.24901962, a: 1}
+  m_Color: {r: 0.115686275, g: 0.07572193, b: 0.09044564, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -34980,6 +35144,7 @@ MonoBehaviour:
   TextLevelName: {fileID: 1359649104}
   TextBetweenRoundsHint: {fileID: 1821860622}
   TextVersion: {fileID: 1825053575}
+  TextCompletePercent: {fileID: 1122850722}
   TextSelectedLevelStats: {fileID: 805521183}
   OutlineMaterial: {fileID: 2100000, guid: 54dcd712949eab84aaca959d08bb232a, type: 2}
   Player: {fileID: 0}
@@ -35121,7 +35286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4509804, g: 0.52156866, b: 0.67058825, a: 1}
+  m_Color: {r: 0.3372549, g: 0.25490198, b: 0.27450982, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -36447,7 +36612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381e1a9f1ab4188458fbad610fac8769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartCurrentScene: 1
+  StartCurrentScene: 0
   LevelLayoutCasual: {fileID: 74663400}
   LevelLayoutHard: {fileID: 639610381}
   ButtonPlayCasual: {fileID: 169547720}
@@ -36841,7 +37006,7 @@ Tilemap:
   m_TileColorArray: []
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
-  m_Color: {r: 0.4509804, g: 0.52156866, b: 0.67058825, a: 1}
+  m_Color: {r: 0.3372549, g: 0.25490198, b: 0.27450982, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
@@ -42881,7 +43046,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
-      maxColor: {r: 1, g: 0.6666667, b: 0.22745098, a: 1}
+      maxColor: {r: 0.8745098, g: 0.87058824, b: 0.85490197, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 0, g: 0, b: 0, a: 1}

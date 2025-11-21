@@ -209,12 +209,13 @@ namespace Sludge.UI
 
 			LevelLayoutCasual.UpdateVisualHints();
 			LevelLayoutHard.UpdateVisualHints();
+			GameManager.I.UpdateTextComplete();
 
 			UiPanels.Instance.HidePanel(UiPanel.Game);
 			UiPanels.Instance.ShowPanel(UiPanel.MainMenu);
 			UiPanels.Instance.ShowPanel(UiPanel.LevelSelect);
 			UiPanels.Instance.ShowBackground();
-            
+
 			StopAllCoroutines();
             StartCoroutine(LevelSelectLoop(latestSelectedLevelNamespace));
 		}

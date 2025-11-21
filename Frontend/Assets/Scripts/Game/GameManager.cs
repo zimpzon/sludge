@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text TextLevelName;
     public TMP_Text TextBetweenRoundsHint;
     public TMP_Text TextVersion;
+    public TMP_Text TextCompletePercent;
     public TMP_Text TextSelectedLevelStats;
 
     public Material OutlineMaterial;
@@ -100,6 +101,47 @@ public class GameManager : MonoBehaviour
     {
         SetDefaultColorScheme();
         ShowBetweenRoundsActionsText(false);
+        UpdateTextComplete();
+    }
+
+    public void UpdateTextComplete()
+    {
+        int totalCasualLevels = LevelList.CasualLevels.Count;
+        int totalHardLevels = LevelList.HardLevels.Count;
+
+        // Count actual completions and gold times
+        int completedCasual = 0;
+        int completedHard = 0;
+        int goldCasual = 0;
+        int goldHard = 0;
+
+        // Count casual completions and gold times
+        foreach (var level in LevelList.CasualLevels)
+        {
+            var stats = PlayerProgress.GetSavedStats(level.Namespace, level.LevelId);
+            if (stats.IsCompleted)
+                completedCasual++;
+            if (PlayerProgress.HasGoldTime(stats, level.TargetTime))
+                goldCasual++;
+        }
+
+        // Count hard completions and gold times
+        foreach (var level in LevelList.HardLevels)
+        {
+            var stats = PlayerProgress.GetSavedStats(level.Namespace, level.LevelId);
+            if (stats.IsCompleted)
+                completedHard++;
+            if (PlayerProgress.HasGoldTime(stats, level.TargetTime))
+                goldHard++;
+        }
+
+        // Calculate completion: completed levels + gold levels out of total possible points
+        int currentPoints = completedCasual + completedHard + goldCasual + goldHard;
+        int maxPoints = (totalCasualLevels + totalHardLevels) * 2; // Each level can give max 2 points
+
+        float percentage = maxPoints > 0 ? (currentPoints * 100f) / maxPoints : 0f;
+
+        TextCompletePercent.text = $"{percentage:0.0}% complete";
     }
 
     public void KillEnemy(GameObject goEnemy)
