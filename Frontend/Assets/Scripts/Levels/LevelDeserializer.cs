@@ -64,15 +64,23 @@ public static class LevelDeserializer
                     tilePos.x = x + data.TilesX;
                     tilePos.y = y + data.TilesY;
                     int tileIdx = data.TileIndices[y * data.TilesW + x];
-                    // Tile rotation is stored as rot * 1000
-                    int tileRotation = tileIdx / 1000;
-                    tileIdx %= 1000;
+                    // Transform data is stored as transformData * 10000
+                    int transformData = tileIdx / 10000;
+                    tileIdx %= 10000;
+
+                    // Decode transform data
+                    bool flipY = transformData >= 2000;
+                    if (flipY) transformData -= 2000;
+                    bool flipX = transformData >= 1000;
+                    if (flipX) transformData -= 1000;
+                    int tileRotation = transformData;
+
                     var tile = elements.TileList.Tiles[tileIdx];
                     tilemap.SetTile(tilePos, tile);
 
-                    var tileTransform = new Matrix4x4();
-
-                    tileTransform.SetTRS(Vector3.zero, Quaternion.Euler(0, 0, tileRotation), Vector3.one);
+                    // Create transform matrix with rotation and flips
+                    Vector3 scale = new Vector3(flipX ? -1 : 1, flipY ? -1 : 1, 1);
+                    Matrix4x4 tileTransform = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, 0, tileRotation), scale);
                     tilemap.SetTransformMatrix(tilePos, tileTransform);
                 }
             }

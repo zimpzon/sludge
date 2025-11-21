@@ -80,10 +80,20 @@ public static class LevelSerializer
                 var tilePos = new Vector3Int();
                 tilePos.x = x + result.TilesX;
                 tilePos.y = y + result.TilesY;
-                int tileRotation = (int)map.GetTransformMatrix(tilePos).rotation.eulerAngles.z;
 
-                // Include rotation information in stored tileIdx
-                result.TileIndices.Add(tileIdx + tileRotation * 1000);
+                Matrix4x4 matrix = map.GetTransformMatrix(tilePos);
+                int tileRotation = Mathf.RoundToInt(matrix.rotation.eulerAngles.z);
+
+                // Check for flips by examining the scale
+                bool flipX = matrix.m00 < 0; // Scale X component
+                bool flipY = matrix.m11 < 0; // Scale Y component
+
+                // Encode: rotation (0-360) + flipX*1000 + flipY*2000
+                int transformData = tileRotation;
+                if (flipX) transformData += 1000;
+                if (flipY) transformData += 2000;
+
+                result.TileIndices.Add(tileIdx + transformData * 10000);
             }
         }
 
