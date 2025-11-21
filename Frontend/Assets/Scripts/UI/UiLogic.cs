@@ -258,8 +258,6 @@ namespace Sludge.UI
             string bestPart = savedStats.BestTime >= 0 ? $"{savedStats.BestTime,8:0.000}" : "       -";
 
             sb.Clear();
-            sb.AppendLine($"<size=+2>{uiLevel.LevelData.LevelName}</size>");
-			sb.AppendLine();
             sb.AppendLine($"Gold time\t{uiLevel.LevelData.TargetTime,8:0.000}");
             sb.AppendLine($"Best time\t{bestPart}");
             sb.AppendLine($"Attempts\t{savedStats.Attempts,8}");
@@ -287,6 +285,7 @@ namespace Sludge.UI
 
             double charsShown = 0;
 			double charRevealSpeed = 150;
+            double statsCharsShown = 0;
 
             UiNavigation.OnNavigationSelected = (go) =>
 			{
@@ -335,6 +334,7 @@ namespace Sludge.UI
                 uilevelSelection.TextLevelName.text = levelText;
 
 				charsShown = 0;
+                statsCharsShown = 0;
 			}
 
             // show either casual or hard levels
@@ -357,7 +357,11 @@ namespace Sludge.UI
 				int intCharsShown = (int)charsShown;
 				uilevelSelection.TextLevelName.maxVisibleCharacters = intCharsShown >> 1;
 
+				int intStatsCharsShown = (int)statsCharsShown;
+				GameManager.I.TextSelectedLevelStats.maxVisibleCharacters = intStatsCharsShown;
+
 				charsShown += charRevealSpeed * Time.deltaTime;
+                statsCharsShown += charRevealSpeed * Time.deltaTime;
 
 				if (GameManager.PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
