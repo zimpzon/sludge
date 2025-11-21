@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
     public SludgeObject[] SludgeObjects;
     public SlimeBomb[] SlimeBombs;
 
+    float completionPercent;
     public double UnityTime;
     public double EngineTime;
     public int EngineTimeMs;
@@ -141,6 +142,7 @@ public class GameManager : MonoBehaviour
 
         float percentage = maxPoints > 0 ? (currentPoints * 100f) / maxPoints : 0f;
 
+        completionPercent = percentage;
         TextCompletePercent.text = $"{percentage:0.0}% complete";
     }
 
@@ -303,7 +305,6 @@ public class GameManager : MonoBehaviour
                 betweenRoundsSb.AppendLine("<size=-5>Gold score unlocked!</size>");
             if (latestRoundResult.GotPersonalBest)
                 betweenRoundsSb.AppendLine("<size=-5>New personal best!</size>");
-
         }
         TextBetweenRoundsHint.text = betweenRoundsSb.ToString();
     }
@@ -316,6 +317,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Sending stats...");
             var dic = new Dictionary<string, int>();
             dic.Add("total_attempts", PlayerProgress.saveGame.TotalAttempts);
+            dic.Add("completion_pct", (int)completionPercent);
             Playfab.PlayerStat(dic);
 
             _nextSendStats = Time.realtimeSinceStartup + 60 * 10; // 10 min
