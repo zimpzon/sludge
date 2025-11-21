@@ -44,7 +44,7 @@ public class ModKeyToggle : SludgeModifier
         // Initialize components with correct loaded values
         doorCollider = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
+        if (spriteRenderer != null && Application.isPlaying)
             mat = spriteRenderer.material;
 
         // Capture original position after level loading
