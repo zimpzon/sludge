@@ -13,10 +13,21 @@ public class ModKeyToggle : SludgeModifier
     public bool StartEnabled = true;
     public bool FlipWhenLastPillCollected = false;
 
+    [Header("Crumbling Wall Settings")]
+    [Tooltip("If true, wall will shake and crumble before disappearing")]
+    public bool IsCrumblingWall = false;
+    [Tooltip("Duration of shake effect in seconds")]
+    public float ShakeDuration = 1.0f;
+    [Tooltip("Intensity of shake effect")]
+    public float ShakeStrength = 0.2f;
+
     Collider2D doorCollider;
     SpriteRenderer spriteRenderer;
     Material mat;
     bool flipAtLastPillCollectedExecuted;
+    bool crumbleTriggered = false;
+    Vector3 originalPosition;
+    bool isShaking = false;
 
     private void Awake()
     {
@@ -24,6 +35,7 @@ public class ModKeyToggle : SludgeModifier
         spriteRenderer = GetComponent<SpriteRenderer>();
         mat = spriteRenderer.material;
         GameManager.OnColorSchemeChanged += ColorSchemeChanged;
+        originalPosition = transform.position;
     }
 
     private void OnDestroy()
@@ -31,8 +43,9 @@ public class ModKeyToggle : SludgeModifier
         GameManager.OnColorSchemeChanged -= ColorSchemeChanged;
     }
 
-    private void Start()
+    public override void OnLoaded()
     {
+        originalPosition = transform.position;
         Reset();
     }
 
@@ -74,6 +87,12 @@ public class ModKeyToggle : SludgeModifier
         this.gameObject.layer = SludgeUtil.OutlinedLayerNumber;
 
         flipAtLastPillCollectedExecuted = false;
+        crumbleTriggered = false;
+        isShaking = false;
+
+        // Reset position to original
+        if (originalPosition != Vector3.zero)
+            transform.position = originalPosition;
 
         if (StartEnabled)
         {
@@ -86,10 +105,31 @@ public class ModKeyToggle : SludgeModifier
         if (!Active)
             return;
 
-        if (doorCollider.enabled && GameManager.I.Keys == DisableAtKeyCount)
+        // Handle custom shake effect
+        if (isShaking)
         {
+            Vector3 shakeOffset = new Vector3(
+                Random.Range(-ShakeStrength, ShakeStrength),
+                Random.Range(-ShakeStrength, ShakeStrength),
+                0
+            );
+            transform.position = originalPosition + shakeOffset;
+        }
+
+        if (doorCollider.enabled && GameManager.I.Keys == DisableAtKeyCount && !crumbleTriggered)
+        {
+            crumbleTriggered = true;
+            Debug.Log($"Key trigger detected! Keys: {GameManager.I.Keys}, DisableAtKeyCount: {DisableAtKeyCount}, IsCrumblingWall: {IsCrumblingWall}");
             StopAllCoroutines();
-            StartCoroutine(DisableMe());
+            if (IsCrumblingWall)
+            {
+                Debug.Log("Starting crumble sequence");
+                StartCoroutine(CrumbleAndDisable());
+            }
+            else
+            {
+                StartCoroutine(DisableMe());
+            }
         }
 
         if (!doorCollider.enabled && GameManager.I.Keys == EnableAtKeyCount)
@@ -105,7 +145,14 @@ public class ModKeyToggle : SludgeModifier
             if (doorCollider.enabled)
             {
                 StopAllCoroutines();
-                StartCoroutine(DisableMe());
+                if (IsCrumblingWall)
+                {
+                    StartCoroutine(CrumbleAndDisable());
+                }
+                else
+                {
+                    StartCoroutine(DisableMe());
+                }
             }
             else
             {
@@ -156,5 +203,23 @@ public class ModKeyToggle : SludgeModifier
             yield return null;
         }
         mat.SetFloat("_Visibility", 0.8f);
+    }
+
+    IEnumerator CrumbleAndDisable()
+    {
+        Debug.Log("Starting shake effect");
+        // Start custom shaking
+        isShaking = true;
+
+        // Wait for shake to complete
+        yield return new WaitForSeconds(ShakeDuration);
+
+        // Stop shaking and reset position
+        isShaking = false;
+        transform.position = originalPosition;
+
+        Debug.Log("Starting normal disable");
+        // Now disable normally
+        yield return StartCoroutine(DisableMe());
     }
 }
