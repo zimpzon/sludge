@@ -23,6 +23,7 @@ public class StateParam
 
     public int wallCoyoteJumpEndTime = int.MinValue;
     public int jumpHoldStartTime = int.MaxValue;
+    public int jumpHoldDuration = 0;  // Duration of button hold for current jump
     public int coyoteJumpEndTime = int.MinValue;
     public int queuedJumpEndTime = int.MinValue;
     public int horizontalMovementIdleTime = int.MaxValue;
@@ -62,10 +63,16 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public AnimationClip AnimIdle;
     string currentAnim;
 
+    [Header("Jump Settings")]
+    [Tooltip("Exact jump height in world units")]
     public float JumpHeight = 2.0f;
-    public float JumpTimeToPeak = 0.1f;
-    public float JumpTimeToDescend = 0.1f;
+    [Tooltip("Maximum time jump can be held for variable height")]
     public float JumpMaxHoldTime = 0.2f;
+
+    // Private gravity values - tuned for best feel
+    private float holdJumpGravity = -20.0f;     // Light gravity while holding jump
+    private float earlyReleaseGravity = -60.0f; // Heavy gravity after early release
+    private float fallGravity = -45.0f;         // Normal falling gravity
     public float MaxFallVelocity = 15.0f;
     public float WallSlideMaxFall = 1.0f;
     public int WallJumpDisableHorizontalBreakingMs = 100; // no effect?
@@ -81,8 +88,6 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public float WallDistance = 0.02f;
 
     float jumpVelocity;
-    float jumpGravity;
-    float fallGravity;
 
     float acceleration;
     float deceleration;
@@ -218,7 +223,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         force.Normalize();
         //Debug.DrawRay(trans.position, force * 5, Color.red);
-        StateParam.force = force * 45;
+        StateParam.force = force * 35; // magic number, but currently only called from bouonce pads
     }
 
     void Update()
@@ -378,6 +383,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         bool jumpReleased = !GameManager.PlayerInput.JumpActive();
         if (jumpReleased)
         {
+            // Store how long the jump was held for falling gravity calculation
+            param.jumpHoldDuration = GameManager.I.EngineTimeMs - param.jumpHoldStartTime;
             SetState(param, JumpState.AscendingPassive);
             return;
         }
@@ -385,6 +392,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         bool reachedMaxJumpHold = GameManager.I.EngineTimeMs - param.jumpHoldStartTime > JumpMaxHoldTime * 1000;
         if (reachedMaxJumpHold)
         {
+            // Store max hold duration for falling gravity calculation
+            param.jumpHoldDuration = (int)(JumpMaxHoldTime * 1000);
             SetState(param, JumpState.AscendingPassive);
             return;
         }
@@ -533,10 +542,9 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         if (IsJumpTapped())
             StateParam.queuedJumpEndTime = GameManager.I.EngineTimeMs + QueuedJumpMs;
 
-        // set every frame to reflect editor changes
-        jumpVelocity = (2.0f * JumpHeight) / JumpTimeToPeak;
-        jumpGravity = (-2.0f * JumpHeight) / (JumpTimeToPeak * JumpTimeToPeak);
-        fallGravity = (-2.0f * JumpHeight) / (JumpTimeToDescend * JumpTimeToDescend);
+        // Calculate jump velocity for exact height using kinematic equation: v² = u² + 2as
+        // Use early release gravity for calculation since that determines max height when released
+        jumpVelocity = Mathf.Sqrt(2.0f * Mathf.Abs(earlyReleaseGravity) * JumpHeight);
         acceleration = RunPeak / RunTimeToPeak;
         deceleration = RunPeak / RunTimeToStop;
 
@@ -668,12 +676,25 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
 
         // update simulation
-        // do not apply gravity while holding jump on a new jump (state = ascending active)
+        // NO gravity while holding jump on a new jump (state = ascending active)
         bool isOnConveyorBelt = onConveyorBeltCount > 0;
         bool useGravity = StateParam.jumpState != JumpState.AscendingActive && !isOnConveyorBelt;
+
         if (useGravity)
         {
-            float gravity = StateParam.force.y < 0 ? fallGravity : jumpGravity;
+            float gravity;
+
+            if (StateParam.jumpState == JumpState.AscendingPassive && StateParam.force.y > 0)
+            {
+                // Heavy gravity after releasing jump early (cuts off ascent quickly)
+                gravity = earlyReleaseGravity;
+            }
+            else
+            {
+                // Normal falling gravity
+                gravity = fallGravity;
+            }
+
             StateParam.force.y += gravity * (float)GameManager.TickSize;
         }
 

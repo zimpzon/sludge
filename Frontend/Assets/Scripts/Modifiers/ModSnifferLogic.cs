@@ -1,11 +1,10 @@
 using Sludge.Modifiers;
 using Sludge.Utility;
-using TMPro;
 using UnityEngine;
 
 public class ModSnifferLogic : SludgeModifier
 {
-    static double FollowDelay = 3;
+    static double FollowDelay = 4;
     const double followDelayIncrease = 0.2;
     double myFollowDelay;
     double speed = 1.0;
