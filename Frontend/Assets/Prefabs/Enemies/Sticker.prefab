@@ -119,6 +119,7 @@ MonoBehaviour:
   RoundsPerSecond: 2
   StartDegrees: 0
   UseRealTime: 1
+  UseExistingRotation: 0
 --- !u!1 &2480648689199343186
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,11 +205,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   StartLeft: 0
-  IsStatic: 0
-  PlatformLayer:
+  IsStatic: 1
+  WallLayer:
     serializedVersion: 2
-    m_Bits: 8389184
-  RaycastDistanceMultiplier: 1.1
+    m_Bits: 33555008
 --- !u!114 &521858791632362155
 MonoBehaviour:
   m_ObjectHideFlags: 0
