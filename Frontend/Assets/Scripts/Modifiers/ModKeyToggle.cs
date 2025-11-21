@@ -118,11 +118,9 @@ public class ModKeyToggle : SludgeModifier
         if (doorCollider.enabled && GameManager.I.Keys == DisableAtKeyCount && !crumbleTriggered)
         {
             crumbleTriggered = true;
-            Debug.Log($"Key trigger detected! Keys: {GameManager.I.Keys}, DisableAtKeyCount: {DisableAtKeyCount}, IsCrumblingWall: {IsCrumblingWall}");
             StopAllCoroutines();
             if (IsCrumblingWall)
             {
-                Debug.Log("Starting crumble sequence");
                 StartCoroutine(CrumbleAndDisable());
             }
             else
@@ -206,7 +204,6 @@ public class ModKeyToggle : SludgeModifier
 
     IEnumerator CrumbleAndDisable()
     {
-        Debug.Log("Starting shake effect");
         // Start custom shaking
         isShaking = true;
 
@@ -217,7 +214,6 @@ public class ModKeyToggle : SludgeModifier
         isShaking = false;
         transform.position = originalPosition;
 
-        Debug.Log("Starting normal disable");
         // Now disable normally
         yield return StartCoroutine(DisableMe());
     }
