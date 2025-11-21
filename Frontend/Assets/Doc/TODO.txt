@@ -1,11 +1,18 @@
 The legend of Vox Machina
 
 
+show round stats earlier
+reveal text for menu stats
+
+
 BUG: 16 did not unlock 17. Probably wrong names!
+
 
 REQUIRED: a way to keep player in a confined space, for a while.
   FUSE bricks like in Super Meat Boy. Should be tilemap so it can be used a lot.
- 
+  Can spread. List of timers. On timeout remove from tilemap and show shrinking tile (
+  ---- ALTERNATIVE: bool in fake walls, counts down before disappearing. Shakes.
+
 
 Write % completion (normal + gold)
 
