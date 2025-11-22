@@ -440,35 +440,10 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
             if (IsJumpTapped() || HasQueuedJump())
             {
-                // Check if player is touching a wall while grounded - do wall jump instead of normal jump
-                bool touchingLeftWall = circleDrawer.hasLeftContact;
-                bool touchingRightWall = circleDrawer.hasRightContact;
-
-                if (StateParam.hasWallJumpEnabled && (touchingLeftWall || touchingRightWall))
-                {
-
-                    // Determine which direction to jump based on wall contact
-                    bool jumpRight = touchingLeftWall;
-                    StateParam.LatestDirection = jumpRight ? 1 : -1;
-
-                    // Wall jump from ground
-                    StateParam.force.x = jumpRight ? RunPeak * 2.0f : -RunPeak * 2.0f;
-                    StateParam.force.y = jumpVelocity * 1.2f;
-
-                    StartJump(param);
-                    SetState(param, JumpState.AscendingActive);
-
-                    StateParam.disableHorizontalDirectionEndTime = GameManager.I.EngineTimeMs + WallJumpDisableHorizontalBreakingMs;
-                    StateParam.disabledHorizontalDirection = jumpRight ? 1 : -1;
-                    return;
-                }
-                else
-                {
-                    // Normal ground jump
-                    StartJump(param);
-                    SetState(param, JumpState.AscendingActive);
-                    return;
-                }
+                // Normal ground jump
+                StartJump(param);
+                SetState(param, JumpState.AscendingActive);
+                return;
             }
         }
         else
