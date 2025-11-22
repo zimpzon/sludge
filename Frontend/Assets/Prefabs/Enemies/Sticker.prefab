@@ -132,6 +132,9 @@ GameObject:
   - component: {fileID: 721875519797631889}
   - component: {fileID: 4702531724267739185}
   - component: {fileID: 521858791632362155}
+  - component: {fileID: 1781656315891477806}
+  - component: {fileID: 5725546514658607341}
+  - component: {fileID: 4830372563558246240}
   m_Layer: 21
   m_Name: Sticker
   m_TagString: Untagged
@@ -205,6 +208,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 10
   StartLeft: 0
+  IsStatic: 0
+  FollowPlatforms: 1
   PlatformLayer:
     serializedVersion: 2
     m_Bits: 41943616
@@ -223,3 +228,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Modifiers: []
+--- !u!114 &1781656315891477806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480648689199343186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42fe4142cc461e646a48116d84d1b3f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 0
+  StartT: 0
+  ScaleT: 5
+  TimeMultiplier: 1
+  PingPong: 1
+  Easing: 0
+--- !u!114 &5725546514658607341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480648689199343186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd72679db0ecbe49b08122779222bff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 0
+  StartT: 0
+  ScaleT: 5
+  TimeMultiplier: 1
+  PingPong: 1
+  Easing: 0
+--- !u!114 &4830372563558246240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480648689199343186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e220f1eb05008a64fa908f35610d6268, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 0
+  OnFrom: 0.5
+  OnTo: 1
+  TimeMultiplier: 1

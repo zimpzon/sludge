@@ -11,6 +11,8 @@ public class ModStickerLogic : SludgeModifier
     [Header("Movement")]
     public float MoveSpeed = 2f;
     public bool StartLeft = false;
+    public bool IsStatic = false;
+    public bool FollowPlatforms = true;
 
     [Header("Detection")]
     public LayerMask PlatformLayer;
@@ -72,10 +74,10 @@ public class ModStickerLogic : SludgeModifier
         float angle = Mathf.Round(transform.eulerAngles.z / 90f) * 90f;
 
         // Calculate directions based on rotation
-        // Default (0°): moves horizontally, ground is down
-        // 90°: moves vertically, ground is left
-        // 180°: moves horizontally, ground is up
-        // 270°: moves vertically, ground is right
+        // Default (0ï¿½): moves horizontally, ground is down
+        // 90ï¿½: moves vertically, ground is left
+        // 180ï¿½: moves horizontally, ground is up
+        // 270ï¿½: moves vertically, ground is right
 
         switch (Mathf.RoundToInt(angle))
         {
@@ -125,12 +127,22 @@ public class ModStickerLogic : SludgeModifier
 
     public override void EngineTick()
     {
+        if (IsStatic)
+            return;
+
         // Move the enemy
         Vector2 movement = (movingLeft ? -moveDirection : moveDirection) * MoveSpeed * (float)GameManager.TickSize;
         transform.position += (Vector3)movement;
 
         // Check if we should turn around
-        CheckEdge();
+        if (FollowPlatforms)
+        {
+            CheckEdge();
+        }
+        else
+        {
+            CheckSimpleWallHit();
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -140,6 +152,25 @@ public class ModStickerLogic : SludgeModifier
         if (entity == EntityType.Player)
         {
             GameManager.I.Player.Kill(PlayerDeathType.Saw);
+        }
+    }
+
+    private void CheckSimpleWallHit()
+    {
+        Vector2 forwardDir = movingLeft ? -moveDirection : moveDirection;
+        float rayDistance = colRadius + 0.2f;
+
+        // Simple forward wall detection
+        RaycastHit2D wallHit = Physics2D.Raycast(
+            transform.position,
+            forwardDir,
+            rayDistance,
+            PlatformLayer
+        );
+
+        if (wallHit.collider != null)
+        {
+            movingLeft = !movingLeft;
         }
     }
 
@@ -204,27 +235,45 @@ public class ModStickerLogic : SludgeModifier
             return;
         }
 
-        // Calculate offset origin during play
-        Vector2 playOffsetOrigin = (Vector2)transform.position - groundDirection * 0.25f;
+        if (FollowPlatforms)
+        {
+            // Platform following mode - show complex raycasts
+            Vector2 playOffsetOrigin = (Vector2)transform.position - groundDirection * 0.25f;
 
-        // Draw platform raycast during play
-        Gizmos.color = Color.cyan;
-        Vector2 playRayEnd = playOffsetOrigin + groundDirection * (initialGroundDistance * RaycastDistanceMultiplier);
-        Gizmos.DrawLine(playOffsetOrigin, playRayEnd);
+            // Draw platform raycast during play
+            Gizmos.color = Color.cyan;
+            Vector2 playRayEnd = playOffsetOrigin + groundDirection * (initialGroundDistance * RaycastDistanceMultiplier);
+            Gizmos.DrawLine(playOffsetOrigin, playRayEnd);
 
-        // Draw initial distance threshold
-        Gizmos.color = Color.yellow;
-        Vector2 thresholdPoint = playOffsetOrigin + groundDirection * initialGroundDistance;
-        Gizmos.DrawWireSphere(thresholdPoint, 0.1f);
+            // Draw initial distance threshold
+            Gizmos.color = Color.yellow;
+            Vector2 thresholdPoint = playOffsetOrigin + groundDirection * initialGroundDistance;
+            Gizmos.DrawWireSphere(thresholdPoint, 0.1f);
 
-        // Draw wall detection raycast
-        Gizmos.color = Color.red;
-        Vector2 forwardDirection = movingLeft ? -moveDirection : moveDirection;
-        Vector2 wallRayEnd = playOffsetOrigin + forwardDirection * WallDetectionDistance;
-        Gizmos.DrawLine(playOffsetOrigin, wallRayEnd);
+            // Draw wall detection raycast
+            Gizmos.color = Color.red;
+            Vector2 forwardDirection = movingLeft ? -moveDirection : moveDirection;
+            Vector2 wallRayEnd = playOffsetOrigin + forwardDirection * WallDetectionDistance;
+            Gizmos.DrawLine(playOffsetOrigin, wallRayEnd);
 
-        // Show offset origin
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(playOffsetOrigin, 0.05f);
+            // Show offset origin
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(playOffsetOrigin, 0.05f);
+        }
+        else
+        {
+            // Simple mode - show only forward wall detection
+            Vector2 forwardDir = movingLeft ? -moveDirection : moveDirection;
+            float rayDistance = colRadius + 0.2f;
+
+            Gizmos.color = Color.red;
+            Vector2 rayEnd = (Vector2)transform.position + forwardDir * rayDistance;
+            Gizmos.DrawLine(transform.position, rayEnd);
+            Gizmos.DrawWireSphere(rayEnd, 0.05f);
+
+            // Show object radius
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, colRadius);
+        }
     }
 }
