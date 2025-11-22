@@ -318,9 +318,11 @@ public class GameManager : MonoBehaviour
             var dic = new Dictionary<string, int>();
             dic.Add("total_attempts", PlayerProgress.saveGame.TotalAttempts);
             dic.Add("completion_pct", (int)completionPercent);
+            dic.Add("completed_casual", PlayerProgress.saveGame.CasualLevelsCompleted.Count);
+            dic.Add("completed_hard", PlayerProgress.saveGame.HardLevelsCompleted.Count);
             Playfab.PlayerStat(dic);
 
-            _nextSendStats = Time.realtimeSinceStartup + 60 * 10; // 10 min
+            _nextSendStats = Time.realtimeSinceStartup + 60 * 5; // 5 min
         }
     }
 
