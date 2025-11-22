@@ -130,10 +130,10 @@ public class ModKeyToggle : SludgeModifier
 
         if (doorCollider.enabled && GameManager.I.Keys == DisableAtKeyCount && !crumbleTriggered)
         {
-            crumbleTriggered = true;
             StopAllCoroutines();
             if (IsCrumblingWall)
             {
+                crumbleTriggered = true;
                 StartCoroutine(CrumbleAndDisable());
             }
             else
