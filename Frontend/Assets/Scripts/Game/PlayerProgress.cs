@@ -36,8 +36,8 @@ namespace Sludge.Utility
             public int TotalAttempts = 0;
             public int TotalDeaths = 0;
             public Dictionary<PlayerDeathType, int> DeathsByType = new();
-            public Dictionary<int, LevelStats> CasualLevelsCompleted = new();
-            public Dictionary<int, LevelStats> HardLevelsCompleted = new();
+            public Dictionary<int, LevelStats> CasualLevelsSeen = new();
+            public Dictionary<int, LevelStats> HardLevelsSeen = new();
         }
 
         private const string PrefsName = "earl-in-space-savegame-v1";
@@ -58,7 +58,7 @@ namespace Sludge.Utility
             if (ns == LevelNamespace.NotSet)
                 return new LevelStats();
 
-            var dict = ns == LevelNamespace.Casual ? saveGame.CasualLevelsCompleted : saveGame.HardLevelsCompleted;
+            var dict = ns == LevelNamespace.Casual ? saveGame.CasualLevelsSeen : saveGame.HardLevelsSeen;
             if (!dict.TryGetValue(levelId, out var stats))
                 stats = new LevelStats();
 
@@ -110,11 +110,11 @@ namespace Sludge.Utility
 
             if (roundResult.LevelNamespace == LevelNamespace.Casual)
             {
-                return UpdateSavedStats(roundResult, saveGame.CasualLevelsCompleted, out newBestTime);
+                return UpdateSavedStats(roundResult, saveGame.CasualLevelsSeen, out newBestTime);
             }
             else if (roundResult.LevelNamespace == LevelNamespace.Hard)
             {
-                return UpdateSavedStats(roundResult, saveGame.HardLevelsCompleted, out newBestTime);
+                return UpdateSavedStats(roundResult, saveGame.HardLevelsSeen, out newBestTime);
             }
             return new LevelStats();
         }
@@ -148,11 +148,11 @@ namespace Sludge.Utility
                 saveGame = JsonConvert.DeserializeObject<SaveGame>(json) ?? new SaveGame();
             }
 
-            if (saveGame.CasualLevelsCompleted is null)
-                saveGame.CasualLevelsCompleted = new();
+            if (saveGame.CasualLevelsSeen is null)
+                saveGame.CasualLevelsSeen = new();
 
-            if (saveGame.HardLevelsCompleted is null)
-                saveGame.HardLevelsCompleted = new();
+            if (saveGame.HardLevelsSeen is null)
+                saveGame.HardLevelsSeen = new();
 
             Debug.Log("Existing SaveGame loaded");
             FirstLoadComplete = true;
