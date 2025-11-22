@@ -168,6 +168,46 @@ public class ModKeyToggle : SludgeModifier
 
         LevelCells.Instance.SetDynamicWallRectangle(transform.position, transform.localScale.x, transform.localScale.y, blocked: false);
 
+        // Add poof particles when disappearing due to timer (not manual enable/disable)
+        if (crumbleTriggered && GameManager.I?.DustParticles != null)
+        {
+            // Loop through every 1x1 square and emit particles in each square
+            Vector3 wallSize = transform.localScale;
+            int particlesPerSquare = 2; // Fixed particles per 1x1 square
+
+            // Calculate number of 1x1 squares in each dimension
+            int squaresX = Mathf.RoundToInt(wallSize.x);
+            int squaresY = Mathf.RoundToInt(wallSize.y);
+
+            // Loop through each 1x1 square
+            for (int x = 0; x < squaresX; x++)
+            {
+                for (int y = 0; y < squaresY; y++)
+                {
+                    // Calculate center of this 1x1 square relative to wall center
+                    Vector3 squareCenter = new Vector3(
+                        (x - (squaresX - 1) * 0.5f), // Center the grid on the wall
+                        (y - (squaresY - 1) * 0.5f),
+                        0
+                    );
+
+                    // Emit particles within this specific square
+                    for (int p = 0; p < particlesPerSquare; p++)
+                    {
+                        // Random position within this 1x1 square
+                        Vector3 particleOffset = new Vector3(
+                            Random.Range(-0.5f, 0.5f),
+                            Random.Range(-0.5f, 0.5f),
+                            0
+                        );
+
+                        GameManager.I.DustParticles.transform.position = transform.position + squareCenter + particleOffset;
+                        GameManager.I.DustParticles.Emit(1);
+                    }
+                }
+            }
+        }
+
         while (true)
         {
             float t = (float)(GameManager.I.EngineTime - startTime) / AnimTime;
