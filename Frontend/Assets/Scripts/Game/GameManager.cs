@@ -304,7 +304,9 @@ public class GameManager : MonoBehaviour
         {
             if (latestRoundResult.GotFirstTarget)
                 betweenRoundsSb.AppendLine("<size=-5>Gold score unlocked!</size>");
-            if (latestRoundResult.GotPersonalBest)
+
+            bool isFirstAttempt = savedStats.Attempts <= 0;
+            if (latestRoundResult.GotPersonalBest && !isFirstAttempt)
                 betweenRoundsSb.AppendLine("<size=-5>New personal best!</size>");
         }
         TextBetweenRoundsHint.text = betweenRoundsSb.ToString();
