@@ -93,7 +93,7 @@ public class ModStickerLogic : SludgeModifier
         }
 
         // Move the enemy
-        Vector2 movement = (movingLeft ? -moveDirection : moveDirection) * MoveSpeed * Time.deltaTime;
+        Vector2 movement = (movingLeft ? -moveDirection : moveDirection) * MoveSpeed * (float)GameManager.TickSize;
         transform.position += (Vector3)movement;
 
         // Check if we should turn around

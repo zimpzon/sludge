@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour
     LevelSettings levelSettings;
     bool levelComplete;
     RoundResult latestRoundResult;
+    bool wasFocused;
 
     public static int MajorVersion = 0;
     public static int MinorVersion = 1;
@@ -496,9 +497,22 @@ public class GameManager : MonoBehaviour
         SoundManager.Play(FxList.Instance.StartRound);
         Player.RoundStartTime = Time.time;
 
+        // Initialize focus tracking for this round
+        wasFocused = Application.isFocused;
+
         while (Player.Alive)
         {
-            UnityTime += Time.deltaTime;
+            // Check for focus return after being lost - reset level to prevent timing issues
+            if (Application.isFocused && !wasFocused)
+            {
+                Debug.Log("Focus regained - resetting level to prevent timing issues");
+                latestRoundResult.Cancelled = true;
+                yield break;
+            }
+            wasFocused = Application.isFocused;
+
+            float clampedDeltaTime = Math.Min(0.033f, Time.deltaTime);
+            UnityTime += clampedDeltaTime;
 
             while (EngineTime <= UnityTime)
             {
@@ -679,6 +693,14 @@ public class GameManager : MonoBehaviour
         SetColorScheme(ColorSchemeList.ColorSchemes[IdxCurrentColorScheme]);
     }
 
+    private void CheckFullScreen()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Screen.fullScreen = true;
+        }
+    }
+
     private void CheckChangeColorScheme(PlayerInput input)
     {
         if (Input.GetKeyDown(KeyCode.X))
@@ -699,6 +721,7 @@ public class GameManager : MonoBehaviour
         //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedHardLevelId", UiLogic.Instance.lastSelectedHardLevelId);
 
         CheckChangeColorScheme(PlayerInput);
+        CheckFullScreen();
 
         // Out of Tweens: search for TODO TWEEN to eventually replace later.
         //DebugLinesScript.Instance.SetLine("TotalPlayingTweens", DOTween.TotalPlayingTweens());
