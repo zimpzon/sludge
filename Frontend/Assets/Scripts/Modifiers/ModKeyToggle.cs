@@ -19,7 +19,13 @@ public class ModKeyToggle : SludgeModifier
     [Tooltip("Duration of shake effect in seconds")]
     public float ShakeDuration = 1.0f;
     [Tooltip("Intensity of shake effect")]
-    public float ShakeStrength = 0.2f;
+    float ShakeStrength = 0.1f;
+
+    [Header("Visibility Settings")]
+    [Tooltip("Visibility when wall is enabled")]
+    private float VisibilityEnabled = 0.8f;
+    [Tooltip("Visibility when wall is disabled")]
+    private float VisibilityDisabled = 0.1f;
 
     Collider2D doorCollider;
     SpriteRenderer spriteRenderer;
@@ -27,6 +33,7 @@ public class ModKeyToggle : SludgeModifier
     bool flipAtLastPillCollectedExecuted;
     bool crumbleTriggered = false;
     Vector3 originalPosition;
+    Vector3 originalSpritePosition;
     bool isShaking = false;
 
     private void Awake()
@@ -43,12 +50,14 @@ public class ModKeyToggle : SludgeModifier
     {
         // Initialize components with correct loaded values
         doorCollider = GetComponent<Collider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         if (spriteRenderer != null && Application.isPlaying)
             mat = spriteRenderer.material;
 
         // Capture original position after level loading
         originalPosition = transform.position;
+        if (spriteRenderer != null)
+            originalSpritePosition = spriteRenderer.transform.localPosition;
 
         Reset();
     }
@@ -76,7 +85,7 @@ public class ModKeyToggle : SludgeModifier
         if (mat != null)
         {
             if (Active)
-                mat.SetFloat("_Visibility", StartEnabled ? 0.8f : 0.1f);
+                mat.SetFloat("_Visibility", StartEnabled ? VisibilityEnabled : VisibilityDisabled);
             else
                 mat.SetFloat("_Visibility", 1.0f);
         }
@@ -92,6 +101,10 @@ public class ModKeyToggle : SludgeModifier
         if (originalPosition != Vector3.zero)
             transform.position = originalPosition;
 
+        // Reset sprite position to original
+        if (spriteRenderer != null && originalSpritePosition != Vector3.zero)
+            spriteRenderer.transform.localPosition = originalSpritePosition;
+
         // Safe LevelCells access - only in play mode with valid instance
         if (StartEnabled && Application.isPlaying && LevelCells.Instance != null)
         {
@@ -105,14 +118,14 @@ public class ModKeyToggle : SludgeModifier
             return;
 
         // Handle custom shake effect
-        if (isShaking)
+        if (isShaking && spriteRenderer != null)
         {
             Vector3 shakeOffset = new Vector3(
                 Random.Range(-ShakeStrength, ShakeStrength),
                 Random.Range(-ShakeStrength, ShakeStrength),
                 0
             );
-            transform.position = originalPosition + shakeOffset;
+            spriteRenderer.transform.localPosition = originalSpritePosition + shakeOffset;
         }
 
         if (doorCollider.enabled && GameManager.I.Keys == DisableAtKeyCount && !crumbleTriggered)
@@ -214,11 +227,11 @@ public class ModKeyToggle : SludgeModifier
             if (t >= 0.80f)
                 break;
 
-            mat.SetFloat("_Visibility", 0.8f - t);
+            mat.SetFloat("_Visibility", VisibilityEnabled - t);
 
             yield return null;
         }
-        mat.SetFloat("_Visibility", 0.1f);
+        mat.SetFloat("_Visibility", VisibilityDisabled);
     }
 
     IEnumerator EnableMe()
@@ -239,7 +252,7 @@ public class ModKeyToggle : SludgeModifier
             mat.SetFloat("_Visibility", t);
             yield return null;
         }
-        mat.SetFloat("_Visibility", 0.8f);
+        mat.SetFloat("_Visibility", VisibilityEnabled);
     }
 
     IEnumerator CrumbleAndDisable()
@@ -252,7 +265,8 @@ public class ModKeyToggle : SludgeModifier
 
         // Stop shaking and reset position
         isShaking = false;
-        transform.position = originalPosition;
+        if (spriteRenderer != null)
+            spriteRenderer.transform.localPosition = originalSpritePosition;
 
         // Now disable normally
         yield return StartCoroutine(DisableMe());

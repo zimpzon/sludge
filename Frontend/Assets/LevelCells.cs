@@ -7,7 +7,7 @@ public class LevelCells : MonoBehaviour
 
     public Tile FloorTile;
 
-    readonly Vector2Int OutOfBounds = new Vector2Int(int.MaxValue, int.MaxValue);
+    readonly Vector2Int OutOfBounds = new Vector2Int(int.MaxValue - 1, int.MaxValue - 1);
 
     const byte Free = 0;
     const byte StaticWall = 1;
@@ -161,7 +161,7 @@ public class LevelCells : MonoBehaviour
             for (int x = rectLeft; x < rectLeft + intRectW; ++x)
             {
                 int cellIdx = (y * w) + x;
-                if (cellIdx < 0 || cellIdx > cells.Length)
+                if (cellIdx < 0 || cellIdx >= cells.Length)
                     continue;
 
                 cells[cellIdx] = value;
