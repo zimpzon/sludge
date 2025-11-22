@@ -7,6 +7,7 @@ public class ParticleEmitter : MonoBehaviour
     public ParticleSystem DustParticles;
     public ParticleSystem PillParticles;
     public ParticleSystem EnergyArmParticles;
+    public ParticleSystem HeartParticles;
 
     private void Awake()
     {
