@@ -31,8 +31,6 @@ namespace Sludge.Modifiers
 
             trans = transform;
             basePos = trans.position;
-
-            SetPosition();
         }
 
         private float GetT()

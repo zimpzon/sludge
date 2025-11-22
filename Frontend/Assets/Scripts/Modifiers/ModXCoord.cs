@@ -23,7 +23,6 @@ namespace Sludge.Modifiers
             if (!Active) return;
             trans = transform;
             basePos = trans.position;
-            SetPosition();
         }
         private float GetT()
         {
