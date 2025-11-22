@@ -413,7 +413,10 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     void JumpStateDescending(StateParam param)
     {
-        if (param.jumpState != JumpState.Gravity) return;
+        if (param.jumpState != JumpState.Gravity)
+        {
+            return;
+        }
 
         bool isGrounded = HasGroundContact();
         if (isGrounded)
@@ -437,9 +440,32 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
             if (IsJumpTapped() || HasQueuedJump())
             {
-                StartJump(param);
-                SetState(param, JumpState.AscendingActive);
-                return;
+                // Check if player is touching a wall while grounded - do wall jump instead of normal jump
+                bool touchingLeftWall = circleDrawer.hasLeftContact;
+                bool touchingRightWall = circleDrawer.hasRightContact;
+
+                if (StateParam.hasWallJumpEnabled && (touchingLeftWall || touchingRightWall))
+                {
+
+                    // Determine which direction to jump based on wall contact
+                    bool jumpRight = touchingLeftWall;
+                    StateParam.LatestDirection = jumpRight ? 1 : -1;
+
+                    // Wall jump from ground
+                    StateParam.force.x = jumpRight ? RunPeak * 2.0f : -RunPeak * 2.0f;
+                    StateParam.force.y = jumpVelocity * 1.2f;
+
+                    StartJump(param);
+                    SetState(param, JumpState.AscendingActive);
+                    return;
+                }
+                else
+                {
+                    // Normal ground jump
+                    StartJump(param);
+                    SetState(param, JumpState.AscendingActive);
+                    return;
+                }
             }
         }
         else
@@ -525,6 +551,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     {
         if (!Alive)
             return;
+
 
         if (deathScheduled)
         {
@@ -657,6 +684,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         StateParam.isHuggingLeftWall = circleDrawer.hasLeftContact && !HasGroundContact();
         StateParam.isHuggingRightWall = circleDrawer.hasRightContact && !HasGroundContact();
+
         StateParam.isDescending = StateParam.force.y < 0;
 
         // Wall sliding - automatic when touching wall and descending

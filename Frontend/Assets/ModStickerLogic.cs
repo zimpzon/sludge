@@ -128,9 +128,6 @@ public class ModStickerLogic : SludgeModifier
         if (wallHit.collider != null)
         {
             movingLeft = !movingLeft;
-
-            // Debug info
-            Debug.Log($"Sticker hit wall: {wallHit.collider.name} on layer {wallHit.collider.gameObject.layer}");
         }
     }
 
