@@ -457,6 +457,9 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
                     StartJump(param);
                     SetState(param, JumpState.AscendingActive);
+
+                    StateParam.disableHorizontalDirectionEndTime = GameManager.I.EngineTimeMs + WallJumpDisableHorizontalBreakingMs;
+                    StateParam.disabledHorizontalDirection = jumpRight ? 1 : -1;
                     return;
                 }
                 else
