@@ -28,5 +28,6 @@
         WallFollower,
         KillerTilemap,
         OneWay,
+        Default,
     };
 }
