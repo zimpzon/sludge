@@ -39,6 +39,7 @@ namespace Sludge.Colors
         public Color UiMenuBackground;
         public Color UiTitleBackground;
         public Color Mines;
+        public Color Edges;
 
         public void OnValidate()
         {
@@ -110,7 +111,7 @@ namespace Sludge.Colors
             foreach (var applier in allColorAppliers)
                 applier.ApplyColor(scheme);
 
-            Shader.SetGlobalColor("_EdgeColor", scheme.Walls);
+            Shader.SetGlobalColor("_EdgeColor", scheme.Edges);
             Shader.SetGlobalColor("_WallColor", scheme.Walls);
 
             ApplyUiColors(scheme);

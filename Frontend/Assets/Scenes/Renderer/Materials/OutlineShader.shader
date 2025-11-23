@@ -1,64 +1,86 @@
-Shader "Hidden/Custom/CustomEffect"
+﻿Shader "Custom/RT_Outline"
 {
-	Properties 
-	{
-	    _MainTex ("Main Texture", 2D) = "white" {}
-	}
-	SubShader 
-	{
-		Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline" }
-		
-		Pass
-		{
+    Properties
+    {
+        _MainTex ("Render Texture", 2D) = "white" {}
+        _OutlineThickness ("Outline Thickness (px)", Float) = 1
+    }
+
+    SubShader
+    {
+        Tags {
+            "RenderType"="Transparent"
+            "Queue"="Transparent"
+        }
+
+        Pass
+        {
+            Tags { "LightMode"="UniversalForward" }
+
+            ZWrite Off
+            Blend SrcAlpha OneMinusSrcAlpha
+
             HLSLPROGRAM
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
-            
-			#pragma vertex vert
-			#pragma fragment frag
-			
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
-            
-			float _Intensity;
-            float4 _OverlayColor;
-            
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma target 3.0
+
+            // URP includes
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
             struct Attributes
             {
-                float4 positionOS       : POSITION;
-                float2 uv               : TEXCOORD0;
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
             };
 
             struct Varyings
             {
-                float2 uv        : TEXCOORD0;
-                float4 vertex : SV_POSITION;
-                UNITY_VERTEX_OUTPUT_STEREO
+                float4 positionHCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
             };
-            
-            
-            Varyings vert(Attributes input)
-            {
-                Varyings output = (Varyings)0;
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
-                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-                output.vertex = vertexInput.positionCS;
-                output.uv = input.uv;
-                
-                return output;
-            }
-            
-            float4 frag (Varyings input) : SV_Target 
-            {
-                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+            float4 _MainTex_TexelSize;
 
-				float4 color = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
-				return lerp(color, _OverlayColor, _Intensity);
-            	
+            float4 _EdgeColor;
+            float _OutlineThickness;
+
+            Varyings vert (Attributes v)
+            {
+                Varyings o;
+                o.positionHCS = TransformObjectToHClip(v.positionOS.xyz);
+                o.uv = v.uv;
+                return o;
             }
-            
-			ENDHLSL
-		}
-	} 
-	FallBack "Diffuse"
+
+            float4 frag (Varyings i) : SV_Target
+            {
+                float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+
+                // Draw normal pixels (alpha > threshold)
+                if (col.a > 0.01)
+                    return col;
+
+                // Outline sampling offsets
+                float2 px = _OutlineThickness * _MainTex_TexelSize.xy;
+
+                float alphaN =
+                      SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(px.x, 0)).a
+                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(-px.x, 0)).a
+                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(0, px.y)).a
+                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(0,-px.y)).a;
+
+                // If any neighbour is opaque → outline
+                if (alphaN > 0.01)
+                    return _EdgeColor;
+
+                // Otherwise transparent
+                return float4(0,0,0,0);
+            }
+
+            ENDHLSL
+        }
+    }
 }

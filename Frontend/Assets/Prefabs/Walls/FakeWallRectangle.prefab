@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4320786223382837319}
   - component: {fileID: 6567645885448189581}
   - component: {fileID: 3046842660721559686}
-  m_Layer: 9
+  m_Layer: 22
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 7502035862330199760}
   - component: {fileID: 7502035862330199766}
   - component: {fileID: 7502035862330199753}
-  m_Layer: 9
+  m_Layer: 22
   m_Name: FakeWallRectangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,8 @@ MonoBehaviour:
   FlipWhenLastPillCollected: 0
   IsCrumblingWall: 0
   ShakeDuration: 1
-  ShakeStrength: 0.2
+  VisibilityEnabled: 0.8
+  VisibilityDisabled: 0.1
 --- !u!50 &7502035862330199766
 Rigidbody2D:
   serializedVersion: 5
