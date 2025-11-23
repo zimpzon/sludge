@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour
         foreach (var level in LevelList.CasualLevels)
         {
             var stats = PlayerProgress.GetSavedStats(level.Namespace, level.LevelId);
-            if (stats.IsCompleted)
+            if (stats.Completions > 0)
                 completedCasual++;
             if (PlayerProgress.HasGoldTime(stats, level.TargetTime))
                 goldCasual++;
@@ -131,7 +131,7 @@ public class GameManager : MonoBehaviour
         foreach (var level in LevelList.HardLevels)
         {
             var stats = PlayerProgress.GetSavedStats(level.Namespace, level.LevelId);
-            if (stats.IsCompleted)
+            if (stats.Completions > 0)
                 completedHard++;
             if (PlayerProgress.HasGoldTime(stats, level.TargetTime))
                 goldHard++;
@@ -305,8 +305,8 @@ public class GameManager : MonoBehaviour
             if (latestRoundResult.GotFirstTarget)
                 betweenRoundsSb.AppendLine("<size=-5>Gold score unlocked!</size>");
 
-            bool isFirstAttempt = savedStats.Attempts <= 0;
-            if (latestRoundResult.GotPersonalBest && !isFirstAttempt)
+            bool isFirstCompletion = savedStats.Completions <= 1;
+            if (latestRoundResult.GotPersonalBest && !isFirstCompletion)
                 betweenRoundsSb.AppendLine("<size=-5>New personal best!</size>");
         }
         TextBetweenRoundsHint.text = betweenRoundsSb.ToString();
@@ -321,8 +321,8 @@ public class GameManager : MonoBehaviour
             var dic = new Dictionary<string, int>();
             dic.Add("total_attempts", PlayerProgress.saveGame.TotalAttempts);
             dic.Add("completion_pct", (int)completionPercent);
-            dic.Add("completed_casual", PlayerProgress.saveGame.CasualLevelsSeen.Where(l => l.Value.IsCompleted).Count());
-            dic.Add("completed_hard", PlayerProgress.saveGame.HardLevelsSeen.Where(l => l.Value.IsCompleted).Count());
+            dic.Add("completed_casual", PlayerProgress.saveGame.CasualLevelsSeen.Where(l => l.Value.Completions > 0).Count());
+            dic.Add("completed_hard", PlayerProgress.saveGame.HardLevelsSeen.Where(l => l.Value.Completions > 0).Count());
             Playfab.PlayerStat(dic);
 
             _nextSendStats = Time.realtimeSinceStartup + 60 * 5; // 5 min
@@ -358,11 +358,16 @@ public class GameManager : MonoBehaviour
                     PlayerInput.ClearState(); // Make sure starting round with a tap jump will "eat" the tap when round stars. Eg. we want to start with a jump in that case.
                 }
 
-                if (PlayerInput.IsTapped(PlayerInput.InputType.Select) && CanGoToNextLevel())
+                if (PlayerInput.IsTapped(PlayerInput.InputType.Select))
                 {
-                    GoToNextLevel();
-                    abort = true;
-                    break;
+                    bool canGoToNextLevel = CanGoToNextLevel();
+                    Debug.Log($"Space pressed, canGoToNextLevel: {canGoToNextLevel}");
+                    if (canGoToNextLevel)
+                    {
+                        GoToNextLevel();
+                        abort = true;
+                        break;
+                    }
                 }
 
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))

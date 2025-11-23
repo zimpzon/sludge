@@ -167,13 +167,13 @@ namespace Sludge.UI
 					for (int i = 0; i < LevelList.CasualLevels.Count; i++)
 					{
 						var level = LevelList.CasualLevels[i];
-						PlayerProgress.saveGame.CasualLevelsSeen[level.LevelId] = new PlayerProgress.LevelStats { IsCompleted = true };
+						PlayerProgress.saveGame.CasualLevelsSeen[level.LevelId] = new PlayerProgress.LevelStats { Completions = 1 };
 
 					}
                     for (int i = 0; i < LevelList.HardLevels.Count; i++)
                     {
                         var level = LevelList.HardLevels[i];
-                        PlayerProgress.saveGame.HardLevelsSeen[level.LevelId] = new PlayerProgress.LevelStats { IsCompleted = true };
+                        PlayerProgress.saveGame.HardLevelsSeen[level.LevelId] = new PlayerProgress.LevelStats { Completions = 1 };
 
                     }
                 }

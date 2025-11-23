@@ -28,7 +28,7 @@ namespace Sludge.Utility
             public int LevelId = -1;
             public float? BestTime;
             public int Attempts = 0;
-            public bool IsCompleted;
+            public int Completions = 0;
         }
 
         public class SaveGame
@@ -45,7 +45,7 @@ namespace Sludge.Utility
         public static bool IsLevelCompleted(LevelNamespace ns, int levelId)
         {
             var stats = GetSavedStats(ns, levelId);
-            return stats.IsCompleted;
+            return stats.Completions > 0;
         }
 
         public static bool HasGoldTime(LevelStats stats, float target)
@@ -70,21 +70,24 @@ namespace Sludge.Utility
             newBestTime = false;
             if (!levelsCompleted.ContainsKey(roundResult.LevelId))
             {
-                // New level completed
-                Debug.Log($"New stats for {roundResult.LevelNamespace} levelId: {roundResult.LevelId}");
+                // Round done for new level
+                Debug.Log($"Round done for first seen level {roundResult.LevelNamespace} levelId: {roundResult.LevelId}, completed: {roundResult.Completed}");
                 float? bestTime = roundResult.Completed ? roundResult.Time : null;
                 newBestTime = roundResult.Completed; // first round and completed - always best time
-                var newLevelStats = new LevelStats { LevelId = roundResult.LevelId, BestTime = bestTime, Attempts = 1, IsCompleted = roundResult.Completed };
+                var newLevelStats = new LevelStats { LevelId = roundResult.LevelId, BestTime = bestTime, Attempts = 1, Completions = roundResult.Completed ? 1 : 0 };
                 levelsCompleted.Add(roundResult.LevelId, newLevelStats);
                 Save();
                 return newLevelStats;
             }
             else
             {
-                // Already completed
+                // Round done for existing level
                 var existingLevelStats = levelsCompleted[roundResult.LevelId];
                 existingLevelStats.Attempts++;
-                existingLevelStats.IsCompleted |= roundResult.Completed;
+                if (roundResult.Completed)
+                    existingLevelStats.Completions++;
+
+                Debug.Log($"Round done for already seen level {roundResult.LevelNamespace} levelId: {roundResult.LevelId}, completed: {existingLevelStats.Completions}");
 
                 // New best if completed + faster then previous OR no existing best
                 if (roundResult.Completed && (roundResult.Time < existingLevelStats.BestTime || !existingLevelStats.BestTime.HasValue))
