@@ -5,49 +5,50 @@ using UnityEngine;
 public class ModBouncerLogic : SludgeModifier
 {
     public float speed = 8.0f;
-    public float startingAngle = 45f; // Angle in degrees
-    public Transform displayBody;
+    public Vector2 startDirection = new Vector2(1, 1).normalized;
+    public LayerMask bounceLayer;
+
     Transform eye;
     Transform pupil;
     float eyeScale;
     float eyeScaleTarget;
-    Transform trans;
     System.Random rnd;
     Vector2 basePos;
-    Vector2 baseScale;
-    int frameLastWallHit;
-    int squashCounter;
-    Rigidbody2D rigidBody;
-    bool isHeld;
+    Vector2 velocity;
+    float bouncerRadius;
 
     public override void Reset()
     {
-        trans.position = basePos;
-        trans.localScale = baseScale;
-        // Convert angle to radians and create velocity vector
-        float angleRad = startingAngle * Mathf.Deg2Rad;
-        Vector2 direction = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
-        rigidBody.linearVelocity = direction * speed;
-        frameLastWallHit = 0;
-        squashCounter = 0;
-        base.Reset();
+        transform.position = basePos;
+        velocity = startDirection.normalized * speed;
     }
 
     private void Awake()
     {
-        trans = transform;
-        basePos = trans.position;
-        baseScale = trans.localScale;
-        rigidBody = GetComponent<Rigidbody2D>();
         eye = transform.Find("Eye").transform;
         pupil = transform.Find("Pupil").transform;
-        rnd = new System.Random((int)(trans.position.x * 100 + trans.position.y * 100));
+        rnd = new System.Random((int)(transform.position.x * 100 + transform.position.y * 100));
+
+    }
+
+    public override void OnLoaded()
+    {
+        basePos = transform.position;
+        // Get the bouncer's radius from its collider
+        var collider = GetComponent<CircleCollider2D>();
+        if (collider != null)
+        {
+            bouncerRadius = collider.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y);
+        }
+        else
+        {
+            bouncerRadius = 0.5f; // Default fallback
+        }
         Reset();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        ContactPoint2D contactPoint = collision.contacts[0];
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
 
         if (entity == EntityType.Player)
@@ -55,34 +56,34 @@ public class ModBouncerLogic : SludgeModifier
             Player.I.Kill(Assets.Scripts.PlayerDeathType.None);
             return;
         }
-    }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        ContactPoint2D contactPoint = collision.contacts[0];
-        var entity = SludgeUtil.GetEntityType(collision.gameObject);
-
-        bool wallHit = entity == EntityType.FakeWall || entity == EntityType.StaticLevel;
-        if (wallHit)
+        // Bounce off objects in the bounce layer
+        if (((1 << collision.gameObject.layer) & bounceLayer) != 0)
         {
-            frameLastWallHit = GameManager.I.FrameCounter;
-            if (squashCounter++ > 2)
-            {
-                Kill();
-                return;
-            }
-        }
-    }
+            // Always bounce at 45-degree angles - flip X or Y component
+            Vector2 newVelocity = velocity;
 
-    void Kill()
-    {
-        SoundManager.Play(FxList.Instance.BallCollectorDie);
-        gameObject.SetActive(false);
+            // Determine which axis to flip based on the collision direction
+            Vector2 relativePosition = transform.position - collision.transform.position;
+
+            if (Mathf.Abs(relativePosition.x) > Mathf.Abs(relativePosition.y))
+            {
+                // Hit from horizontal side - flip X
+                newVelocity.x = -newVelocity.x;
+            }
+            else
+            {
+                // Hit from vertical side - flip Y
+                newVelocity.y = -newVelocity.y;
+            }
+
+            velocity = newVelocity.normalized * speed;
+        }
     }
 
     void UpdateEye()
     {
-        var playerDir = Player.Position - trans.position;
+        var playerDir = Player.Position - transform.position;
         float sqrPlayerDist = playerDir.sqrMagnitude;
         playerDir.Normalize();
         const float SqrLookRange = 999 * 999;
@@ -91,7 +92,7 @@ public class ModBouncerLogic : SludgeModifier
         if (GameManager.I.FrameCounter != 0)
         {
             bool playerIsClose = sqrPlayerDist < SqrLookRange;
-            bool hasOpenEye = !isHeld && playerIsClose;
+            bool hasOpenEye = playerIsClose;
             eyeScaleTarget = hasOpenEye ? MaxScale : 0;
         }
 
@@ -106,15 +107,42 @@ public class ModBouncerLogic : SludgeModifier
 
     public override void EngineTick()
     {
-        // Maintain constant speed by normalizing velocity every physics tick
-        if (rigidBody.linearVelocity.sqrMagnitude > 0.01f)
-        {
-            rigidBody.linearVelocity = rigidBody.linearVelocity.normalized * speed;
-        }
+        Vector2 movement = velocity * (float)GameManager.TickSize;
 
-        // Reset squash counter if not hitting wall for a few frames
-        if (GameManager.I.FrameCounter > frameLastWallHit + 1)
-            squashCounter = 0;
+        // Spherecast to check for walls before moving (accounts for bouncer size)
+        RaycastHit2D hit = Physics2D.CircleCast(
+            transform.position,
+            bouncerRadius,
+            movement.normalized,
+            movement.magnitude,
+            bounceLayer
+        );
+
+        if (hit.collider != null)
+        {
+            // Hit a wall - flip velocity component based on hit direction
+            Vector2 relativePosition = transform.position - (Vector3)hit.point;
+
+            if (Mathf.Abs(relativePosition.x) > Mathf.Abs(relativePosition.y))
+            {
+                // Hit from horizontal side - flip X
+                velocity.x = -velocity.x;
+            }
+            else
+            {
+                // Hit from vertical side - flip Y
+                velocity.y = -velocity.y;
+            }
+
+            // Move a tiny bit away from the wall
+            Vector2 awayFromWall = (transform.position - (Vector3)hit.point).normalized * 0.1f;
+            transform.position += (Vector3)awayFromWall;
+        }
+        else
+        {
+            // No collision, move normally
+            transform.position += (Vector3)movement;
+        }
     }
 
     void Update()
