@@ -36,10 +36,11 @@ public class ModStickerLogic : SludgeModifier
 
     public override void OnLoaded()
     {
+        basePos = transform.position;
+
         if (col != null)
             colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);   // world space radius
 
-        basePos = transform.position;
         // Determine directions based on rotation
         SetupDirections();
 
@@ -131,18 +132,17 @@ public class ModStickerLogic : SludgeModifier
         if (IsStatic)
             return;
 
-        // Move the enemy
+        // Calculate intended movement
         Vector2 movement = (movingLeft ? -moveDirection : moveDirection) * MoveSpeed * (float)GameManager.TickSize;
-        transform.position += (Vector3)movement;
 
-        // Check if we should turn around
+        // Check for collisions and apply movement with bounce
         if (FollowPlatforms)
         {
-            CheckEdge();
+            CheckEdgeAndMove(movement);
         }
         else
         {
-            CheckSimpleWallHit();
+            CheckSimpleWallHitAndMove(movement);
         }
     }
 
@@ -156,31 +156,110 @@ public class ModStickerLogic : SludgeModifier
         }
     }
 
-    private void CheckSimpleWallHit()
+    private void CheckSimpleWallHitAndMove(Vector2 intendedMovement)
     {
         Vector2 forwardDir = movingLeft ? -moveDirection : moveDirection;
-        float rayDistance = colRadius + 0.2f;
+        float movementDistance = intendedMovement.magnitude;
 
-        // Simple forward wall detection
+        // Check for wall collision along movement path
         RaycastHit2D wallHit = Physics2D.Raycast(
             transform.position,
             forwardDir,
-            rayDistance,
+            movementDistance + colRadius,
             PlatformLayer
         );
 
         if (wallHit.collider != null)
         {
+            // Calculate how much we can move before hitting the wall
+            float distanceToWall = wallHit.distance - colRadius - 0.01f;
+            float remainingDistance = movementDistance - distanceToWall;
+
+            // Move to wall
+            Vector2 moveToWall = forwardDir * Mathf.Max(0, distanceToWall);
+            transform.position += (Vector3)moveToWall;
+
+            // Change direction
             movingLeft = !movingLeft;
+
+            // Apply remaining movement in new direction
+            if (remainingDistance > 0)
+            {
+                Vector2 newForwardDir = movingLeft ? -moveDirection : moveDirection;
+                Vector2 bounceMovement = newForwardDir * remainingDistance;
+                transform.position += (Vector3)bounceMovement;
+            }
+        }
+        else
+        {
+            // No collision, move full distance
+            transform.position += (Vector3)intendedMovement;
         }
     }
 
-    private void CheckEdge()
+    private void CheckEdgeAndMove(Vector2 intendedMovement)
     {
+        Vector2 forwardDir = movingLeft ? -moveDirection : moveDirection;
+        float movementDistance = intendedMovement.magnitude;
+
+        // ----- WALL CHECK FIRST -----
+        RaycastHit2D wallHit = Physics2D.Raycast(
+            transform.position,
+            forwardDir,
+            movementDistance + WallDetectionDistance,
+            PlatformLayer
+        );
+
+        if (wallHit.collider != null)
+        {
+            // Calculate how much we can move before hitting the wall
+            float distanceToWall = wallHit.distance - colRadius - 0.01f;
+            float remainingDistance = movementDistance - distanceToWall;
+
+            // Move to wall, but only snap the movement axis
+            Vector2 moveToWall = forwardDir * Mathf.Max(0, distanceToWall);
+            Vector3 currentPos = transform.position;
+            Vector3 newPos = currentPos + (Vector3)moveToWall;
+
+            // Only update the axis we're moving in to maintain platform contact
+            if (Mathf.Abs(forwardDir.x) > Mathf.Abs(forwardDir.y))
+            {
+                // Horizontal movement - only update X
+                transform.position = new Vector3(newPos.x, currentPos.y, currentPos.z);
+            }
+            else
+            {
+                // Vertical movement - only update Y
+                transform.position = new Vector3(currentPos.x, newPos.y, currentPos.z);
+            }
+
+            // Change direction
+            movingLeft = !movingLeft;
+
+            // Apply remaining movement in new direction
+            if (remainingDistance > 0)
+            {
+                Vector2 newForwardDir = movingLeft ? -moveDirection : moveDirection;
+                Vector2 bounceMovement = newForwardDir * remainingDistance;
+
+                // Again, only update movement axis for bounce
+                Vector3 bouncePos = transform.position + (Vector3)bounceMovement;
+                if (Mathf.Abs(newForwardDir.x) > Mathf.Abs(newForwardDir.y))
+                {
+                    transform.position = new Vector3(bouncePos.x, transform.position.y, transform.position.z);
+                }
+                else
+                {
+                    transform.position = new Vector3(transform.position.x, bouncePos.y, transform.position.z);
+                }
+            }
+            return;
+        }
+
+        // ----- EDGE CHECK -----
         Vector2 sideOffset = GetSideOffset();
         Vector2 offsetOrigin = GetGroundAdjustedOffset(sideOffset);
 
-        // ----- EDGE CHECK -----
         RaycastHit2D groundHit = Physics2D.Raycast(
             offsetOrigin,
             groundDirection,
@@ -191,21 +270,25 @@ public class ModStickerLogic : SludgeModifier
         if (groundHit.collider == null || groundHit.distance > initialGroundDistance * RaycastDistanceMultiplier)
         {
             movingLeft = !movingLeft;
+            // Still need to apply some movement after direction change
+            Vector2 newForwardDir = movingLeft ? -moveDirection : moveDirection;
+            Vector2 bounceMovement = newForwardDir * movementDistance;
+
+            // Only update movement axis
+            Vector3 bouncePos = transform.position + (Vector3)bounceMovement;
+            if (Mathf.Abs(newForwardDir.x) > Mathf.Abs(newForwardDir.y))
+            {
+                transform.position = new Vector3(bouncePos.x, transform.position.y, transform.position.z);
+            }
+            else
+            {
+                transform.position = new Vector3(transform.position.x, bouncePos.y, transform.position.z);
+            }
             return;
         }
 
-        // ----- WALL CHECK -----
-        Vector2 forwardDir = movingLeft ? -moveDirection : moveDirection;
-
-        RaycastHit2D wallHit = Physics2D.Raycast(
-            offsetOrigin,
-            forwardDir,
-            WallDetectionDistance,
-            PlatformLayer
-        );
-
-        if (wallHit.collider != null)
-            movingLeft = !movingLeft;
+        // No collision, move full distance
+        transform.position += (Vector3)intendedMovement;
     }
 
     // Debug visualization
