@@ -89,7 +89,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public float WallDistance = 0.02f;
 
     private float rippleT;
-    private Vector3 deathPosition;
+    private Vector3 completionPosition;
     float jumpVelocity;
 
     float acceleration;
@@ -240,8 +240,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
             // Set ripple properties on the outline material
             if (OutlineRippleMat != null)
             {
-                // Convert death position to screen space, then to UV coordinates (0-1)
-                Vector3 screenPos = Camera.main.WorldToScreenPoint(deathPosition);
+                // Convert completion position to screen space, then to UV coordinates (0-1)
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(completionPosition);
                 Vector2 uvPos = new Vector2(
                     screenPos.x / Screen.width,
                     screenPos.y / Screen.height
@@ -323,14 +323,16 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.PlayerTint));
 
-        // Store death position before moving player away
-        deathPosition = trans.position;
-
         bodyRoot.SetActive(false);
         trans.position = Vector3.one * 5544; // move out of the way
-        rippleT = 1.0f;
 
         Alive = false;
+    }
+
+    public void TriggerRippleEffect(Vector3 position)
+    {
+        completionPosition = position;
+        rippleT = 1.0f;
     }
 
     void PlayAnim(string name)

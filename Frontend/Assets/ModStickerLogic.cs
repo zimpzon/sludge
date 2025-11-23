@@ -32,12 +32,13 @@ public class ModStickerLogic : SludgeModifier
     private void Awake()
     {
         col = GetComponent<CircleCollider2D>();
-        if (col != null)
-            colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);   // world space radius
     }
 
     public override void OnLoaded()
     {
+        if (col != null)
+            colRadius = col.radius * Mathf.Abs(transform.lossyScale.x);   // world space radius
+
         basePos = transform.position;
         // Determine directions based on rotation
         SetupDirections();

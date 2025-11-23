@@ -609,6 +609,9 @@ public class GameManager : MonoBehaviour
         //MarkerParticles.transform.position = pos;
         //MarkerParticles.Emit(30);
 
+        // Trigger ripple effect at completion position
+        Player.TriggerRippleEffect(pos);
+
         levelComplete = true;
     }
 
