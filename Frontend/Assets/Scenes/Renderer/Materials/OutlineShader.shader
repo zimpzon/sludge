@@ -4,6 +4,12 @@
     {
         _MainTex ("Render Texture", 2D) = "white" {}
         _OutlineThickness ("Outline Thickness (px)", Float) = 1
+
+        // --- Ripple effect properties ---
+        _RippleCenter ("Ripple Center (0-1)", Vector) = (0.5, 0.5, 0, 0)
+        _RippleTime ("Ripple Time (0-1)", Float) = 0
+        _RippleStrength ("Ripple Strength", Float) = 0.03
+        _RippleRadius ("Ripple Radius", Float) = 0.25
     }
 
     SubShader
@@ -25,7 +31,6 @@
             #pragma fragment frag
             #pragma target 3.0
 
-            // URP includes
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct Attributes
@@ -47,6 +52,12 @@
             float4 _EdgeColor;
             float _OutlineThickness;
 
+            // --- Ripple uniforms ---
+            float2 _RippleCenter;
+            float _RippleTime;
+            float _RippleStrength;
+            float _RippleRadius;
+
             Varyings vert (Attributes v)
             {
                 Varyings o;
@@ -57,9 +68,32 @@
 
             float4 frag (Varyings i) : SV_Target
             {
-                float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+                float2 uv = i.uv;
 
-                // Draw normal pixels (alpha > threshold)
+                // ====================================================
+                //    EXPLOSIVE RIPPLE DISTORTION
+                // ====================================================
+                if (_RippleTime > 0.001)
+                {
+                    float dist = distance(uv, _RippleCenter);
+
+                    // Explosion wave - starts strong, fades quickly
+                    float explosionRadius = (1.0 - _RippleTime) * _RippleRadius * 3.0; // Expands outward as _RippleTime goes 1->0
+                    float wave = (explosionRadius - dist) * 20.0; // Higher frequency for sharper effect
+
+                    // Multiple ripples for explosion effect
+                    float ripple = sin(wave) * sin(wave * 0.3) * _RippleStrength;
+
+                    // Sharp falloff - explosion effect concentrated near blast center
+                    float explosionFade = 1.0 - smoothstep(0.0, explosionRadius * 1.5, dist);
+                    float timeFade = _RippleTime; // Fades as time goes 1->0
+
+                    uv += normalize(uv - _RippleCenter) * ripple * explosionFade * timeFade;
+                }
+
+                float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+
+                // Normal alpha → return original pixel
                 if (col.a > 0.01)
                     return col;
 
@@ -67,16 +101,14 @@
                 float2 px = _OutlineThickness * _MainTex_TexelSize.xy;
 
                 float alphaN =
-                      SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(px.x, 0)).a
-                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(-px.x, 0)).a
-                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(0, px.y)).a
-                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv + float2(0,-px.y)).a;
+                      SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2(px.x, 0)).a
+                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2(-px.x, 0)).a
+                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2(0, px.y)).a
+                    + SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv + float2(0,-px.y)).a;
 
-                // If any neighbour is opaque → outline
                 if (alphaN > 0.01)
                     return _EdgeColor;
 
-                // Otherwise transparent
                 return float4(0,0,0,0);
             }
 

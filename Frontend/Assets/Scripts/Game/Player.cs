@@ -57,6 +57,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public bool DisableConveyors = false;
     public bool DoubleJumpEnabled = true;
 
+    public Material OutlineRippleMat;
     public GameObject Eyes;
     public AnimationClip AnimMoveLeft;
     public AnimationClip AnimMoveRight;
@@ -87,6 +88,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     public float WallDistance = 0.02f;
 
+    private float rippleT;
+    private Vector3 deathPosition;
     float jumpVelocity;
 
     float acceleration;
@@ -228,6 +231,26 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
     void Update()
     {
+        // Handle death ripple effect
+        if (rippleT > 0)
+        {
+            rippleT -= Time.deltaTime * 1.0f; // Faster, more explosive
+            if (rippleT < 0) rippleT = 0;
+
+            // Set ripple properties on the outline material
+            if (OutlineRippleMat != null)
+            {
+                // Convert death position to screen space, then to UV coordinates (0-1)
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(deathPosition);
+                Vector2 uvPos = new Vector2(
+                    screenPos.x / Screen.width,
+                    screenPos.y / Screen.height
+                );
+
+                OutlineRippleMat.SetVector("_RippleCenter", new Vector4(uvPos.x, uvPos.y, 0, 0));
+                OutlineRippleMat.SetFloat("_RippleTime", rippleT); // Use rippleT directly - starts at 1, fades to 0
+            }
+        }
     }
 
     public void AddConveyorPulse(Vector2 pulse)
@@ -300,8 +323,12 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.PlayerTint));
 
+        // Store death position before moving player away
+        deathPosition = trans.position;
+
         bodyRoot.SetActive(false);
         trans.position = Vector3.one * 5544; // move out of the way
+        rippleT = 1.0f;
 
         Alive = false;
     }
