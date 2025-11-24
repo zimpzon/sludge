@@ -4,8 +4,6 @@ using Sludge.Utility;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Sludge.Utility.PlayerProgress;
-
 public static class Playfab
 {
     public static string DisplayStatus = "not logged in";

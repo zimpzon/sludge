@@ -40,7 +40,8 @@ namespace Sludge.Utility
             public Dictionary<int, LevelStats> HardLevelsSeen = new();
         }
 
-        private const string PrefsName = "earl-in-space-savegame-v1";
+        //private const string PrefsName = "earl-in-space-savegame-v1";
+        private const string PrefsName = "earl-in-space-savegame-beta";
 
         public static bool IsLevelCompleted(LevelNamespace ns, int levelId)
         {
