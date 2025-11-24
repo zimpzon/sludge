@@ -17,14 +17,16 @@ public static class LevelList
 		for (int i = 0; i < allLevels.Length; ++i)
         {
 			LevelData levelData = JsonConvert.DeserializeObject<LevelData>(allLevels[i].text);
-			if (levelData.EditorOnly)
-			{
-				Debug.Log($"Skipping editor only level: {levelData.Namespace}/{levelData.LevelName}");
-				continue;
-			}
+
 			levelData.SetNamespaceAndIdFromFilename(allLevels[i].name);
 
-			if (levelData.LevelId <= 0)
+			if (levelData.LevelId >= 900)
+			{
+				Debug.LogWarning($"skipping level id {levelData.LevelId} because it is a test level");
+				continue;
+			}
+
+            if (levelData.LevelId <= 0)
 				Debug.LogError("missing level id, it should have been auto-set when saving a level in the format [namespace]-[levelId]");
 
 			if (levelData.Namespace == Sludge.Utility.PlayerProgress.LevelNamespace.NotSet)
