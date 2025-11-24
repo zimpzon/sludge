@@ -42,6 +42,15 @@ public static class LevelSerializer
         for (int i = 0; i < objects.Length; ++i)
         {
             var obj = objects[i];
+            SludgeObject parentSludgeObject = obj.transform.parent.gameObject.GetComponent<SludgeObject>();
+            bool parentIsSludgeObject = parentSludgeObject != null;
+
+            // If parent is sludgeobject we assume it is a SLudge prefab with Sludge children (like 10X1 mines in a parent)
+            // Deserialization works automatically because we only have the parent to deserialize and that is a prefab and
+            // wull thus instantiate all teh children.
+            if (parentSludgeObject)
+                continue;
+
             var modifiers = obj.GetComponentsInChildren<SludgeModifier>();
             var storedObject = new LevelDataObject
             {
