@@ -52,6 +52,15 @@ public class UiControls : MonoBehaviour
         if (isInit)
             return;
         SoundManager.MusicVolume = SliderMusicVolume.value;
+
+        // Update volume of currently playing music immediately
+        if (FxList.Instance.Music.audioSource != null && FxList.Instance.Music.audioSource.isPlaying)
+        {
+            float volume = FxList.Instance.Music.volume * SoundManager.MusicVolume;
+            FxList.Instance.Music.audioSource.volume = volume;
+        }
+
+        SaveSettings();
     }
 
     void SaveSettings()

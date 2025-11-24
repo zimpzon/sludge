@@ -104,6 +104,8 @@ public class GameManager : MonoBehaviour
         SetDefaultColorScheme();
         ShowBetweenRoundsActionsText(false);
         UpdateTextComplete();
+
+        SoundManager.PlayMusic(FxList.Instance.Music);
     }
 
     public void UpdateTextComplete()

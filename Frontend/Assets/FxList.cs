@@ -5,6 +5,7 @@ public class FxList : MonoBehaviour
 {
     public static FxList Instance;
 
+    public SoundItem Music;
     public SoundItem UiNope;
     public SoundItem UiShowMenu;
     public SoundItem UiHideMenu;
