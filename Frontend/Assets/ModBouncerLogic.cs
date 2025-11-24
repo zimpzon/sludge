@@ -8,11 +8,6 @@ public class ModBouncerLogic : SludgeModifier
     public Vector2 startDirection = new Vector2(1, 1).normalized;
     public LayerMask bounceLayer;
 
-    Transform eye;
-    Transform pupil;
-    float eyeScale;
-    float eyeScaleTarget;
-    System.Random rnd;
     Vector2 basePos;
     Vector2 velocity;
     float bouncerRadius;
@@ -21,14 +16,6 @@ public class ModBouncerLogic : SludgeModifier
     {
         transform.position = basePos;
         velocity = startDirection.normalized * speed;
-    }
-
-    private void Awake()
-    {
-        eye = transform.Find("Eye").transform;
-        pupil = transform.Find("Pupil").transform;
-        rnd = new System.Random((int)(transform.position.x * 100 + transform.position.y * 100));
-
     }
 
     public override void OnLoaded()
@@ -81,30 +68,6 @@ public class ModBouncerLogic : SludgeModifier
         }
     }
 
-    void UpdateEye()
-    {
-        var playerDir = Player.Position - transform.position;
-        float sqrPlayerDist = playerDir.sqrMagnitude;
-        playerDir.Normalize();
-        const float SqrLookRange = 999 * 999;
-        const float MaxScale = 0.9f;
-
-        if (GameManager.I.FrameCounter != 0)
-        {
-            bool playerIsClose = sqrPlayerDist < SqrLookRange;
-            bool hasOpenEye = playerIsClose;
-            eyeScaleTarget = hasOpenEye ? MaxScale : 0;
-        }
-
-        eyeScale += (float)((eyeScaleTarget > eyeScale) ? GameManager.TickSize * 4.0f : -GameManager.TickSize * 4.0f);
-        eyeScale = Mathf.Clamp(eyeScale, 0, MaxScale);
-        bool doBlink = rnd.NextDouble() < (1 / 200.0);
-        if (doBlink)
-            eyeScale = 0;
-
-        pupil.localPosition = eyeScale < 0.2f ? Vector2.one * 10000 : new Vector2(playerDir.x * 0.15f, playerDir.y * 0.08f * MaxScale);
-    }
-
     public override void EngineTick()
     {
         Vector2 movement = velocity * (float)GameManager.TickSize;
@@ -143,11 +106,5 @@ public class ModBouncerLogic : SludgeModifier
             // No collision, move normally
             transform.position += (Vector3)movement;
         }
-    }
-
-    void Update()
-    {
-        UpdateEye();
-        eye.transform.localScale = new Vector2(1, eyeScale);
     }
 }
