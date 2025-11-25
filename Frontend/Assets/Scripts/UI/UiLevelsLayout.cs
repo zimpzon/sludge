@@ -76,7 +76,6 @@ public class UiLevelsLayout : MonoBehaviour
             {
                 isUnlocked = true;
                 levelsToUnlock = ForwardUnlockCount;
-                Debug.Log($"-----------> {_levelNamespace} LevelId {levelItem.levelScript.LevelData.LevelId} unlocked = {isUnlocked} (levelCompleted)");
             }
             else if (levelsToUnlock > 0)
             {

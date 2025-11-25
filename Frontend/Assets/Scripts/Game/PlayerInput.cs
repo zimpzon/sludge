@@ -39,13 +39,24 @@ namespace Sludge.PlayerInputs
         public bool RestartKey() => Input.GetKeyDown(KeyCode.R);
         public bool CustomCheatKey() => Input.GetKeyDown(KeyCode.P);
 
-        public bool UpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
-        public bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.75f;
-        public bool LeftActive() => Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.75f;
-        public bool RightActive() => Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.75f;
+        public bool UpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0.75f || Input.GetKey(KeyCode.Joystick1Button15);
+        public bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.75f || Input.GetKey(KeyCode.Joystick1Button12);
+        public bool LeftActive() => Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.75f || Input.GetKey(KeyCode.Joystick1Button13);
+        public bool RightActive() => Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.75f || Input.GetKey(KeyCode.Joystick1Button14);
         public bool JumpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Keypad5) || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.Joystick1Button0);
         public bool BackActive() => Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Backspace) || Input.GetKey(KeyCode.Joystick1Button1);
-        public bool SelectActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Joystick1Button2) || Input.GetKey(KeyCode.Joystick1Button3);
+        public bool SelectActive()
+        {
+            bool baseSelect = Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Joystick1Button2) || Input.GetKey(KeyCode.Joystick1Button3);
+
+            // Allow jump buttons as select only in menus
+            if (GameManager.IsInMenu)
+            {
+                baseSelect = baseSelect || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Keypad5) || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.Joystick1Button0);
+            }
+
+            return baseSelect;
+        }
         public bool ShootActive() => Input.GetKey(KeyCode.E) || Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.LeftShift);
 
         public bool IsTapped(InputType inputType, bool claimEvent = false)

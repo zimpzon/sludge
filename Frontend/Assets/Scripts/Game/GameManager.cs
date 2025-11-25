@@ -84,6 +84,8 @@ public class GameManager : MonoBehaviour
     RoundResult latestRoundResult;
     bool wasFocused;
 
+    public static bool IsInMenu { get; private set; } = true;
+
     public static int MajorVersion = 1;
     public static int MinorVersion = 0;
 
@@ -340,6 +342,7 @@ public class GameManager : MonoBehaviour
         bool lastRoundCancelled = false;
         bool abort = false;
         Debug.Log("Enter: BetweenRoundsLoop");
+        IsInMenu = true;
         UpdateTimer(-1);
 
         while (true)
@@ -506,6 +509,11 @@ public class GameManager : MonoBehaviour
     IEnumerator Playing()
     {
         Debug.Log("Enter: Playing");
+        IsInMenu = false;
+
+        // Clear input state to prevent held buttons from carrying over from menu
+        PlayerInput.ClearState();
+
         SoundManager.Play(FxList.Instance.StartRound);
         Player.RoundStartTime = Time.time;
 
@@ -734,6 +742,18 @@ public class GameManager : MonoBehaviour
         //DebugLinesScript.Instance.SetLine("currentLevelData.Namespace", currentLevelData.Namespace);
         //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedCasualLevelId", UiLogic.Instance.lastSelectedCasualLevelId);
         //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedHardLevelId", UiLogic.Instance.lastSelectedHardLevelId);
+
+        // Debug D-pad axes
+        if (Input.inputString != "") Debug.LogWarning(Input.inputString);
+        
+        //for (int axis = 1; axis <= 10; axis++)
+        //{
+        //    float value = Input.GetAxisRaw($"Joy1 Axis {axis}");
+        //    if (Mathf.Abs(value) > 0.1f)
+        //    {
+        //        Debug.LogWarning($"Joy1 Axis {axis} = {value}");
+        //    }
+        //}
 
         CheckChangeColorScheme(PlayerInput);
         CheckFullScreen();

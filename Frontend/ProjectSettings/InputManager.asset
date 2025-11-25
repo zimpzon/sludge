@@ -454,7 +454,7 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Debug Vertical
+    m_Name: DPAD_Vertical
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: down
@@ -470,7 +470,7 @@ InputManager:
     axis: 6
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Debug Horizontal
+    m_Name: DPAD_Horizontal
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: left
@@ -485,3 +485,4 @@ InputManager:
     type: 2
     axis: 5
     joyNum: 0
+  m_UsePhysicalKeys: 1
