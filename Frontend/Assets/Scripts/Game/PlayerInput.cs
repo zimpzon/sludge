@@ -52,7 +52,7 @@ namespace Sludge.PlayerInputs
             // Allow jump buttons as select only in menus
             if (GameManager.IsInMenu)
             {
-                baseSelect = baseSelect || Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Keypad5) || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.Joystick1Button0);
+                baseSelect = baseSelect || Input.GetKey(KeyCode.Keypad5) || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.Joystick1Button0);
             }
 
             return baseSelect;

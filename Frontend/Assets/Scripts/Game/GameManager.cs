@@ -743,9 +743,6 @@ public class GameManager : MonoBehaviour
         //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedCasualLevelId", UiLogic.Instance.lastSelectedCasualLevelId);
         //DebugLinesScript.Instance.SetLine("UiLogic.Instance.lastSelectedHardLevelId", UiLogic.Instance.lastSelectedHardLevelId);
 
-        // Debug D-pad axes
-        if (Input.inputString != "") Debug.LogWarning(Input.inputString);
-        
         //for (int axis = 1; axis <= 10; axis++)
         //{
         //    float value = Input.GetAxisRaw($"Joy1 Axis {axis}");
