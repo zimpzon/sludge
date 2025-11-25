@@ -363,6 +363,7 @@ public class GameManager : MonoBehaviour
                 {
                     startRound = true;
                     PlayerInput.ClearState(); // Make sure starting round with a tap jump will "eat" the tap when round stars. Eg. we want to start with a jump in that case.
+                    Player.ClearMovementTrail();
                 }
 
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Select))
@@ -371,6 +372,7 @@ public class GameManager : MonoBehaviour
                     Debug.Log($"Space pressed, canGoToNextLevel: {canGoToNextLevel}");
                     if (canGoToNextLevel)
                     {
+                        Player.ClearMovementTrail();
                         GoToNextLevel();
                         abort = true;
                         break;
@@ -380,6 +382,7 @@ public class GameManager : MonoBehaviour
                 if (PlayerInput.IsTapped(PlayerInput.InputType.Back))
                 {
                     ShowBetweenRoundsActionsText(show: false);
+                    Player.ClearMovementTrail();
                     UiLogic.Instance.BackFromGame();
                     StopAllCoroutines();
                 }
@@ -555,6 +558,10 @@ public class GameManager : MonoBehaviour
 
                 Debug.Log("Round over, cancelled");
                 PlayerProgress.UpdateWithRoundResult(latestRoundResult, out bool _);
+
+                // Show movement trail on manual reset
+                Player.ShowMovementTrail();
+
                 yield break;
             }
 
@@ -628,6 +635,9 @@ public class GameManager : MonoBehaviour
 
         // Trigger ripple effect at completion position
         Player.TriggerRippleEffect(pos);
+
+        // Show player movement trail on completion
+        Player.ShowMovementTrail();
 
         levelComplete = true;
     }

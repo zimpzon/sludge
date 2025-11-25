@@ -8,13 +8,15 @@ public class SchemeColorApplier : MonoBehaviour
 {
     public SchemeColor SchemeColor;
     public float BrightnessOffset = 0.0f;
+    public bool OverrideAlpha = false;
+    public float AlphaOverride = 1.0f;
 
     Material material; // If applicable
 
     Color GetColor(Color baseColor, ColorSchemeScriptableObject scheme)
     {
         var schemeColor = ColorScheme.GetColor(scheme, SchemeColor);
-        schemeColor.a = baseColor.a;
+        schemeColor.a = OverrideAlpha ? AlphaOverride : baseColor.a;
 
         if (BrightnessOffset != 0.0f)
         {

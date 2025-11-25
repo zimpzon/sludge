@@ -62,6 +62,7 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
     public AnimationClip AnimMoveLeft;
     public AnimationClip AnimMoveRight;
     public AnimationClip AnimIdle;
+    private LineRenderer lineRenderer;
     string currentAnim;
 
     [Header("Jump Settings")]
@@ -145,6 +146,8 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
         allColliders = GetComponentsInChildren<Collider2D>();
         pillCollector = GetComponentInChildren<PillCollectorScript>();
         animator = GetComponentInChildren<Animator>();
+        lineRenderer = GetComponentInChildren<LineRenderer>();
+        ClearMovementTrail();
     }
 
     public void Prepare()
@@ -323,10 +326,41 @@ public class Player : MonoBehaviour, IConveyorBeltPassenger
 
         EmitDeathExplosionParticles(trans.position, ColorScheme.GetColor(GameManager.I.CurrentColorScheme, SchemeColor.PlayerTint));
 
+        ShowMovementTrail();
+
         bodyRoot.SetActive(false);
         trans.position = Vector3.one * 5544; // move out of the way
 
         Alive = false;
+    }
+
+    public void ShowMovementTrail()
+    {
+        // Show player movement trail using LineRenderer
+        if (lineRenderer != null && PositionSampleIdx > 0)
+        {
+            lineRenderer.positionCount = PositionSampleIdx + 1;
+            for (int i = 0; i <= PositionSampleIdx; i++)
+            {
+                // Use first recorded position for index 0
+                if (i == 0)
+                {
+                    lineRenderer.SetPosition(i, GameManager.PlayerSamples[1].Pos);
+                }
+                else
+                {
+                    lineRenderer.SetPosition(i, GameManager.PlayerSamples[i].Pos);
+                }
+            }
+        }
+    }
+
+    public void ClearMovementTrail()
+    {
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = 0;
+        }
     }
 
     public void TriggerRippleEffect(Vector3 position)
