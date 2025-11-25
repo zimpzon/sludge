@@ -205,9 +205,11 @@ namespace Sludge.UI
 
 		public void BackFromGame()
         {
-			//UpdateWorldWideAttempts();
+            //UpdateWorldWideAttempts();
 
-			LevelLayoutCasual.UpdateVisualHints();
+            GameManager.IsInMenu = true;
+
+            LevelLayoutCasual.UpdateVisualHints();
 			LevelLayoutHard.UpdateVisualHints();
 			GameManager.I.UpdateTextComplete();
 

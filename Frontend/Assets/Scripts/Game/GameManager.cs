@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
     RoundResult latestRoundResult;
     bool wasFocused;
 
-    public static bool IsInMenu { get; private set; } = true;
+    public static bool IsInMenu = true;
 
     public static int MajorVersion = 1;
     public static int MinorVersion = 0;
@@ -342,7 +342,6 @@ public class GameManager : MonoBehaviour
         bool lastRoundCancelled = false;
         bool abort = false;
         Debug.Log("Enter: BetweenRoundsLoop");
-        IsInMenu = true;
         UpdateTimer(-1);
 
         while (true)
