@@ -311,6 +311,9 @@ public class GameManager : MonoBehaviour
             if (latestRoundResult.GotPersonalBest && !isFirstCompletion)
                 betweenRoundsSb.AppendLine("<size=-5>New personal best!</size>");
         }
+
+        betweenRoundsSb.AppendLine("\n\n\n<size=-18>Retry: Q, R, Backspace");
+
         TextBetweenRoundsHint.text = betweenRoundsSb.ToString();
     }
 
