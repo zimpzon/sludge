@@ -39,10 +39,10 @@ namespace Sludge.PlayerInputs
         public bool RestartKey() => Input.GetKeyDown(KeyCode.R);
         public bool CustomCheatKey() => Input.GetKeyDown(KeyCode.P);
 
-        public bool UpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0.75f || Input.GetKey(KeyCode.Joystick1Button15);
-        public bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.75f || Input.GetKey(KeyCode.Joystick1Button12);
-        public bool LeftActive() => Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.75f || Input.GetKey(KeyCode.Joystick1Button13);
-        public bool RightActive() => Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.75f || Input.GetKey(KeyCode.Joystick1Button14);
+        public bool UpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetAxisRaw("Vertical") > 0.75f || Input.GetAxisRaw("DPAD_Vertical") > 0.75f;
+        public bool DownActive() => Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow) || Input.GetAxisRaw("Vertical") < -0.75f || Input.GetAxisRaw("DPAD_Vertical") < -0.75f;
+        public bool LeftActive() => Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetAxisRaw("Horizontal") < -0.75f || Input.GetAxisRaw("DPAD_Horizontal") < -0.75f;
+        public bool RightActive() => Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow) || Input.GetAxisRaw("Horizontal") > 0.75f || Input.GetAxisRaw("DPAD_Horizontal") > 0.75f;
         public bool JumpActive() => Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Keypad5) || Input.GetKey(KeyCode.J) || Input.GetKey(KeyCode.Joystick1Button0);
         public bool BackActive() => Input.GetKey(KeyCode.Q) || Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.Backspace) || Input.GetKey(KeyCode.Joystick1Button1);
         public bool SelectActive()
