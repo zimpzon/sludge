@@ -87,6 +87,6 @@ public class SoundManager : MonoBehaviour
         Instance = this;
 
         MusicVolume = PlayerPrefs.GetFloat("music_volume", 0.5f);
-        FxVolume = PlayerPrefs.GetFloat("fx_volume", 0.8f);
+        FxVolume = PlayerPrefs.GetFloat("fx_volume", 1.0f);
 }
 }
