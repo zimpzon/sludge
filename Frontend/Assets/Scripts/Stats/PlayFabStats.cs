@@ -3,6 +3,7 @@ using PlayFab.ClientModels;
 using Sludge.Utility;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 public static class Playfab
 {
@@ -19,6 +20,9 @@ public static class Playfab
 
     private static string PlayerIdKey = "earl-in-space-player-id";
     private static string PlayerId;
+
+    [DllImport("__Internal")]
+    public static extern string GetURLFromPage();
 
     public static void Login()
     {
@@ -71,6 +75,21 @@ public static class Playfab
             { "total_attempts", $"{PlayerProgress.saveGame.TotalAttempts}" },
             //{ "hosting_info", JsMappings.GetHostingInfo() },
         };
+
+        // Add WebGL URL info if on WebGL platform
+        if (Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            data["hosting_url"] = Application.absoluteURL;
+            try
+            {
+                data["page_top_url"] = GetURLFromPage();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to get page URL: {e.Message}");
+                data["page_top_url"] = "unavailable";
+            }
+        }
 
         PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest
         {

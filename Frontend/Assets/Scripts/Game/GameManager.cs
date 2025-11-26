@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
     public static bool IsInMenu = true;
 
     public static int MajorVersion = 1;
-    public static int MinorVersion = 0;
+    public static int MinorVersion = 1;
 
     void Awake()
     {
