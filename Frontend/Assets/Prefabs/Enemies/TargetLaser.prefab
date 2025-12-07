@@ -135,6 +135,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SchemeColor: 12
   BrightnessOffset: 0
+  OverrideAlpha: 0
+  AlphaOverride: 1
 --- !u!1 &9121944031299064275
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,7 +387,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.05
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -454,8 +456,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc781e40144fab146b22f37dc5a943db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  KillTime: 0.5
   BulletSpeed: 5
   BulletDelay: 2
+  ChaseSpeed: 1
   Body: {fileID: 0}
 --- !u!114 &9121944031736377771
 MonoBehaviour:
@@ -471,6 +475,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SchemeColor: 13
   BrightnessOffset: 0
+  OverrideAlpha: 0
+  AlphaOverride: 1
 --- !u!114 &6355696647986761276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -589,3 +595,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SchemeColor: 13
   BrightnessOffset: 0
+  OverrideAlpha: 0
+  AlphaOverride: 1
