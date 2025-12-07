@@ -57,7 +57,7 @@ public class ModExitLogic : SludgeModifier
         var entity = SludgeUtil.GetEntityType(collision.gameObject);
         if (entity == EntityType.Player)
         {
-            ParticleEmitter.I.HeartParticles.transform.position = transform.position + Vector3.up * 3.5f;
+            ParticleEmitter.I.HeartParticles.transform.position = transform.position + Vector3.up;
             ParticleEmitter.I.HeartParticles.Emit(5);
             GameManager.I.LevelCompleted();
             ShowCowPopup();
