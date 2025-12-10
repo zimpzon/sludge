@@ -159,6 +159,13 @@ namespace Sludge.UI
 				GameManager.PlayerInput.GetHumanInput();
 				DoUiNavigation(GameManager.PlayerInput);
 
+				CheckCheats();
+                yield return null;
+			}
+		}
+
+		void CheckCheats()
+		{
 				if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.RightShift) && Input.GetKey(KeyCode.RightControl))
 					PlayerPrefs.DeleteAll();
 
@@ -178,8 +185,6 @@ namespace Sludge.UI
                     }
                 }
 
-                yield return null;
-			}
 		}
 
 		IEnumerator PlayLoop(UiLevel uiLevel)
@@ -231,7 +236,6 @@ namespace Sludge.UI
             
 			SoundManager.Play(FxList.Instance.UiShowMenu);
             yield return UiPanels.Instance.ShowPanel(UiPanel.Settings);
-
 
 			//UiPanels.Instance.PanelSettings.transform.DOKill();
 			//UiPanels.Instance.PanelSettings.transform.DOPunchPosition(Vector3.up * 4, 0.3f); // TODO TWEEN
